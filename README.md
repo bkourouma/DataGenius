@@ -28,11 +28,13 @@ Dans **Source → Groupes et droits d’accès aux données**, créez des groupe
 
 Un jeu combiné hérite des restrictions d’accès de ses entrées. Si une entrée est filtrée ou comporte des colonnes masquées pour un lecteur, la combinaison est écartée de son catalogue. La révision des droits invalide le cache des jeux. Quand des règles sont en vigueur, les conversations et les artefacts antérieurs à la dernière révision sont retirés du périmètre des membres, car leur texte peut inclure des résultats du périmètre précédent. Les partages et les envois de rapports vérifient le périmètre des destinataires.
 
+Dans **Gérer les espaces de données**, regroupez des jeux par équipe ou activité et choisissez les groupes qui peuvent consulter l’espace. L’accès à un jeu cumule les règles de son espace et ses propres restrictions. Les membres retrouvent leurs jeux dans **Espaces**. Pour une connexion au fournisseur d’identité de l’entreprise, suivez la [configuration OpenID Connect](docs/connexion-entreprise.md).
+
 ## Configurer les sources et l’entrepôt
 
 - `DATABASE_URL` pointe vers la base appartenant à Data Genius. Les migrations y créent les tables applicatives et le schéma `warehouse`, qui stocke les copies publiées et l’état des synchronisations.
 - `DATAGENIUS_WAREHOUSE_READ_URL` pointe vers la même base avec un compte dédié. Après migration, accordez-lui `CONNECT` sur la base, `USAGE` sur le schéma `warehouse` et `SELECT` sur `warehouse.snapshots`. Ce compte sert aux calculs et au SQL contrôlé.
-1. Dans **Source**, sélectionnez **Ajouter une base PostgreSQL**. Renseignez l’hôte, le port, le nom de la base et le compte de lecture. Choisissez le mode TLS adapté à votre serveur. Data Genius teste la connexion et chiffre les identifiants dans sa propre base.
+1. Dans **Source**, choisissez PostgreSQL, MySQL, API REST ou fichier CSV/Excel. Data Genius teste la connexion et chiffre les identifiants dans sa propre base. [Configuration des connecteurs](docs/connecteurs.md)
 2. Ouvrez la source, recherchez une table puis choisissez les colonnes à importer. La liste reflète les droits de lecture du compte PostgreSQL.
 3. Donnez un nom au jeu et indiquez la fréquence en minutes. Le jeu apparaît immédiatement dans **Source**, où vous pouvez modifier la fréquence ou lancer la synchronisation manuellement.
 
@@ -47,6 +49,8 @@ Le diagnostic de l’aperçu couvre les jeux complets. Il indique les lignes rap
 Une combinaison enregistre la définition du rapprochement dans Data Genius. Ses résultats sont calculés sur les dernières copies publiées des imports. Chaque correspondance produit une ligne, y compris lorsque plusieurs lignes partagent la même clé.
 
 Les nouveaux imports sont lus directement dans la base de Data Genius par l’application et le worker. `DATAGENIUS_CATALOGUE` reste facultatif pour les catalogues historiques, la démonstration et les combinaisons SQL historiques. Le [catalogue de démonstration](config/demo-postgresql.json) combine deux bases fictives.
+
+Dans **Source → Catalogue métier**, vous pouvez associer une colonne de type date à un jeu et choisir le mois de début de son exercice. Les filtres par exercice suivent ce mois de début. Les regroupements par trimestre et par année suivent le calendrier civil.
 
 ### Publier les définitions métier
 
@@ -66,7 +70,9 @@ La première commande traite les jeux échus. `--force` déclenche une vérifica
 
 Chaque vérification relit les colonnes sélectionnées. Data Genius compare le contenu et publie atomiquement une copie si des lignes ont été ajoutées, modifiées ou supprimées. En cas d’échec, la dernière copie publiée reste disponible et la page **Source** indique l’erreur. Les analyses précisent la date de publication des copies utilisées. Les combinaisons utilisent la dernière copie de chacun de leurs jeux et peuvent donc réunir des données publiées à des moments différents.
 
-Cette version utilise des copies complètes, limitées à 50 000 lignes et environ 20 Mio par jeu. Elle convient à un premier data mart de taille limitée. Le moteur d’import disponible est PostgreSQL. La capture continue des changements et les autres moteurs demandent des connecteurs supplémentaires.
+Les imports complets sont limités à 50 000 lignes et environ 20 Mio par jeu.
+
+Les imports PostgreSQL peuvent activer la [synchronisation incrémentale](docs/synchronisation-incrementale.md). Le plafond est de 100 000 lignes et 20 Mio par jeu. La réconciliation complète périodique ou manuelle détecte les suppressions.
 
 Pour les rapports programmés, configurez le SMTP de Data Genius et l’appel de `POST /api/taches/medic-assist` avec le jeton `JETON_TACHES_PLANIFIEES` dans l’en-tête `Authorization: Bearer …`.
 
@@ -75,6 +81,12 @@ Ouvrez **Qualité et suivi** depuis un import pour configurer ses filtres, norma
 ## Tableaux de bord
 
 Dans **Tableaux**, créez des tuiles à partir d’un indicateur publié ou d’un artefact accessible. Les tuiles d’indicateurs peuvent recevoir un filtre commun, une dimension de détail et un objectif. Le propriétaire choisit les lecteurs et retrouve dans **Tableaux** les notifications de franchissement de seuil. L’évaluation des alertes utilise la même tâche serveur que les rapports programmés.
+
+Dans **Tendances**, sélectionnez un indicateur mensuel et une période. Data Genius signale les écarts atypiques et, lorsque l’historique le permet, affiche une prévision et son erreur de validation chronologique. [Méthode et conditions d’utilisation](docs/tendances.md)
+
+## Intégrer Data Genius à une application
+
+L’API `/api/v1` consulte les jeux et calcule les indicateurs autorisés. L’intégration embarquée affiche un tableau avec le contexte de filtres de l’application hôte et le périmètre du lecteur. [API et démonstration du tableau embarqué](docs/integration.md)
 
 ## Reproduire la recette PostgreSQL
 

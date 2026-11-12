@@ -29,7 +29,7 @@ import {
 } from '@/lib/medic-assist/contrats'
 
 /** Version du texte du prompt : a incrementer a chaque changement de consigne. */
-export const VERSION_PROMPT = '2026-11-12.1'
+export const VERSION_PROMPT = '2026-11-12.2'
 
 export interface EntreePromptSysteme {
   contexte: ContexteExecution
@@ -92,7 +92,7 @@ function sectionLangue(): string {
 }
 
 function sectionMethode(): string {
-  return 'Consulte le catalogue avant de calculer. Privilégie interroger_donnees pour les mesures définies. Utilise requete_sql sur les vues publiées si nécessaire. Mentionne la source, les filtres et les limites des résultats. Indique la date de la copie locale lorsque sa fraîcheur importe.'
+  return 'Consulte le catalogue avant de calculer. Pour une mesure publiée, utilise interroger_donnees avec sa définition. Pour une exploration sans mesure publiée, utilise requete_sql sur les vues autorisées si nécessaire. Demande une précision quand plusieurs définitions, périodes ou devises plausibles changent le résultat. Garde les devises distinctes sauf conversion définie dans le catalogue. Mentionne la mesure, la période, la source et les filtres appliqués. Signale toute fraîcheur en retard ou synchronisation en échec indiquée par l’outil.'
 }
 
 function sectionArtefacts(): string {

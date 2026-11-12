@@ -6,10 +6,15 @@ import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { synchroniserEntrepot } from '@/lib/warehouse/synchronisation'
 import {
   ajouterSource,
+  ajouterSourceMySql,
+  ajouterSourceRest,
+  ajouterSourceFichier,
+  remplacerSourceFichier,
   creerImport,
   modifierFrequence,
   ErreurAdministrationSource,
 } from '@/lib/warehouse/sources-admin'
+import { MAX_FICHIER } from '@/lib/warehouse/connecteurs/fichier'
 
 type Etat = { erreur?: string; succes?: string }
 
@@ -17,15 +22,57 @@ export async function ajouterConnexion(_etat: Etat, formulaire: FormData): Promi
   if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
   let id: string
   try {
-    id = await ajouterSource({
-      titre: formulaire.get('titre'), hote: formulaire.get('hote'), port: formulaire.get('port'),
+    const connexion = {
+      hote: formulaire.get('hote'), port: formulaire.get('port'),
       base: formulaire.get('base'), utilisateur: formulaire.get('utilisateur'),
       motDePasse: formulaire.get('motDePasse'), tls: formulaire.get('tls'),
-    })
+    }
+    const titre = formulaire.get('titre')
+    id = formulaire.get('moteur') === 'mysql' ? await ajouterSourceMySql(titre, connexion) : await ajouterSource({ titre, ...connexion })
   } catch {
     return { erreur: 'Connexion impossible. Vérifiez les paramètres, le compte de lecture et la configuration du serveur.' }
   }
   revalidatePath('/sources')
+  redirect('/sources/' + id)
+}
+
+export async function ajouterConnexionRest(_etat: Etat, formulaire: FormData): Promise<Etat> {
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  let id: string
+  try {
+    id = await ajouterSourceRest(formulaire.get('titre'), {
+      url: formulaire.get('url'), token: formulaire.get('token'),
+      chemin: formulaire.get('chemin'), parametrePage: formulaire.get('parametrePage'),
+    })
+  } catch {
+    return { erreur: 'API indisponible. Vérifiez l’URL autorisée, le jeton et le chemin vers le tableau JSON.' }
+  }
+  revalidatePath('/sources')
+  redirect('/sources/' + id)
+}
+
+export async function importerFichierSource(_etat: Etat, formulaire: FormData): Promise<Etat> {
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  const fichier = formulaire.get('fichier')
+  if (!(fichier instanceof File) || !fichier.size || fichier.size > MAX_FICHIER) return { erreur: 'Choisissez un fichier CSV ou Excel de 5 Mio maximum.' }
+  const source = formulaire.get('sourceId')
+  let id: string
+  try {
+    const config = { nom: fichier.name, contenu: new Uint8Array(await fichier.arrayBuffer()) }
+    if (typeof source === 'string') {
+      await remplacerSourceFichier(source, config)
+      id = source
+    } else {
+      id = await ajouterSourceFichier(formulaire.get('titre'), config)
+    }
+  } catch {
+    return { erreur: 'Fichier non enregistré. Vérifiez son format et la présence d’au moins une feuille importable de 5 000 lignes au plus.' }
+  }
+  revalidatePath('/sources')
+  if (typeof source === 'string') {
+    revalidatePath('/sources/' + id)
+    return { succes: 'Fichier remplacé. Relancez les imports liés pour publier les nouvelles données.' }
+  }
   redirect('/sources/' + id)
 }
 

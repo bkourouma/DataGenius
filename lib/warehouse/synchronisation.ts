@@ -4,12 +4,14 @@ import { prisma } from '@/lib/db/client'
 import { citer, jeuxEntrepot, typeSql, type JeuEntrepot } from './configuration'
 import { transactionLecture, transactionLectureUrl } from './postgres'
 import { preparerLignes, validerDefinitionQualite, type LigneImport } from './qualite'
-import { urlSource } from './sources-admin'
+import { lireSourceExterne, urlSource } from './sources-admin'
+import { ErreurIncrementale, lireIncremental, type EtatIncremental } from './incremental'
 
 const MAX_LIGNES = 50_000
 const MAX_OCTETS = 20 * 1024 * 1024
 
 async function lireSource({ jeu, source }: JeuEntrepot) {
+  if (source.type && source.type !== 'postgresql') return lireSourceExterne(source.id, source.type, jeu)
   async function lire(tx: Prisma.TransactionClient) {
     const colonnes = jeu.colonnes.map(c =>
       Prisma.sql`(${citer(c.origine ?? c.nom)}::${typeSql(c.type)})::text AS ${citer(c.nom)}`,
@@ -53,7 +55,7 @@ function codeLecture(erreur: unknown) {
   return ['42703', '42P01', '42846', '22P02', '22003'].includes(sqlstate ?? '') ? 'schema' : 'source'
 }
 
-async function synchroniserJeu(entree: JeuEntrepot, forcer: boolean): Promise<Statut> {
+async function synchroniserJeu(entree: JeuEntrepot, forcer: boolean, reconcilier: boolean): Promise<Statut> {
   const { jeu, empreinte } = entree
   return prisma.$transaction(async tx => {
     const [lock] = await tx.$queryRaw<{ acquis: boolean }[]>`
@@ -65,10 +67,22 @@ async function synchroniserJeu(entree: JeuEntrepot, forcer: boolean): Promise<St
       SELECT version, definition FROM warehouse.qualite_imports WHERE jeu = ${jeu.cle}
     `
     const version = qualite?.version ?? 0
-    const [dernier] = await tx.$queryRaw<{ verifie_a: Date; qualite_version: number }[]>`
-      SELECT verifie_a, qualite_version FROM warehouse.synchronisations WHERE jeu = ${jeu.cle} AND empreinte = ${empreinte}
+    const [dernier] = await tx.$queryRaw<{ verifie_a: Date; qualite_version: number; incremental_version: number | null }[]>`
+      SELECT verifie_a, qualite_version, incremental_version
+      FROM warehouse.synchronisations WHERE jeu = ${jeu.cle} AND empreinte = ${empreinte}
     `
-    if (!forcer && dernier?.qualite_version === version && Date.now() - dernier.verifie_a.getTime() < jeu.frequenceMinutes * 60_000) {
+    const [configurationIncrementale] = await tx.$queryRaw<{ version: number; frequence: number; reconcilie_a: Date | null }[]>`
+      SELECT version, reconcilie_a, (definition->>'reconciliationMinutes')::int AS frequence
+      FROM warehouse.incremental WHERE jeu = ${jeu.cle}
+    `
+    const versionIncrementale = configurationIncrementale?.version ?? null
+    const frequence = Math.min(jeu.frequenceMinutes, configurationIncrementale?.frequence ?? jeu.frequenceMinutes)
+    const prochaineReconciliation = configurationIncrementale?.reconcilie_a
+      ? configurationIncrementale.reconcilie_a.getTime() + configurationIncrementale.frequence * 60_000 : Infinity
+    const reconciliationEchue = Date.now() >= prochaineReconciliation &&
+      (!dernier || dernier.verifie_a.getTime() < prochaineReconciliation)
+    if (!forcer && !reconcilier && !reconciliationEchue && dernier?.incremental_version === versionIncrementale &&
+        dernier?.qualite_version === version && Date.now() - dernier.verifie_a.getTime() < frequence * 60_000) {
       return 'pas_echu'
     }
 
@@ -77,14 +91,22 @@ async function synchroniserJeu(entree: JeuEntrepot, forcer: boolean): Promise<St
     let contenu: string | null = null
     let lignesLues: number | null = null
     let lignesValides: number | null = null
+    let lectureIncrementale: Awaited<ReturnType<typeof lireIncremental>> | undefined
     try {
-      const lecture = await lireSource(entree)
-      lignesLues = lecture.lignes
+      if (configurationIncrementale) {
+        const [etat] = await tx.$queryRaw<EtatIncremental[]>`
+          SELECT version, definition, empreinte, contenu, curseur, reconcilie_a
+          FROM warehouse.incremental WHERE jeu = ${jeu.cle}
+        `
+        lectureIncrementale = await lireIncremental(entree, etat, reconcilier)
+      }
+      const lecture = lectureIncrementale ?? await lireSource(entree)
+      lignesLues = lectureIncrementale?.lignesLues ?? lecture.lignes
       lignesValides = lecture.contenu === null ? null : lecture.lignes
       contenu = lecture.contenu
       if (contenu === null) code = 'volume'
     } catch (erreur) {
-      code = codeLecture(erreur)
+      code = erreur instanceof ErreurIncrementale ? erreur.code : codeLecture(erreur)
     }
 
     if (qualite && contenu !== null) {
@@ -118,36 +140,48 @@ async function synchroniserJeu(entree: JeuEntrepot, forcer: boolean): Promise<St
         WHERE (snapshots.empreinte, snapshots.hash) IS DISTINCT FROM (EXCLUDED.empreinte, EXCLUDED.hash)
       `
       statut = modifie ? 'publie' : 'identique'
+      if (lectureIncrementale) {
+        const { contenu: brut, curseur, reconciliation } = lectureIncrementale
+        await tx.$executeRaw`
+          UPDATE warehouse.incremental SET empreinte = ${empreinte}, contenu = ${brut}::jsonb, curseur = ${curseur},
+            reconcilie_a = CASE WHEN ${reconciliation} THEN clock_timestamp() ELSE reconcilie_a END
+          WHERE jeu = ${jeu.cle}
+        `
+      }
     }
 
     await tx.$executeRaw`
-      INSERT INTO warehouse.synchronisations (jeu, empreinte, verifie_a, statut, qualite_version, reussi_a)
-      VALUES (${jeu.cle}, ${empreinte}, clock_timestamp(), ${statut}, ${version},
+      INSERT INTO warehouse.synchronisations (jeu, empreinte, verifie_a, statut, qualite_version, incremental_version, reussi_a)
+      VALUES (${jeu.cle}, ${empreinte}, clock_timestamp(), ${statut}, ${version}, ${versionIncrementale},
         CASE WHEN ${statut} = 'echec' THEN NULL ELSE clock_timestamp() END)
       ON CONFLICT (jeu) DO UPDATE SET empreinte = EXCLUDED.empreinte,
         verifie_a = EXCLUDED.verifie_a, statut = EXCLUDED.statut, qualite_version = EXCLUDED.qualite_version,
+        incremental_version = EXCLUDED.incremental_version,
         reussi_a = coalesce(EXCLUDED.reussi_a, warehouse.synchronisations.reussi_a)
     `
     await tx.$executeRaw`
       UPDATE warehouse.snapshots s
       SET verifie_a = t.verifie_a, verification_ok = t.statut <> 'echec',
-        fraiche_jusqua = t.reussi_a + ${jeu.frequenceMinutes}::int * interval '1 minute'
+        fraiche_jusqua = t.reussi_a + ${frequence}::int * interval '1 minute',
+        reconcilie_a = CASE WHEN t.statut = 'echec' THEN s.reconcilie_a
+          ELSE (SELECT reconcilie_a FROM warehouse.incremental WHERE jeu = ${jeu.cle}) END
       FROM warehouse.synchronisations t
       WHERE s.jeu = ${jeu.cle} AND s.jeu = t.jeu AND s.empreinte = t.empreinte
     `
     await tx.$executeRaw`
-      INSERT INTO warehouse.executions (jeu, empreinte, qualite_version, duree_ms, statut, lignes_lues, lignes_valides, code)
-      VALUES (${jeu.cle}, ${empreinte}, ${version}, ${Math.max(0, Date.now() - debut)}, ${statut}, ${lignesLues}, ${lignesValides}, ${code})
+      INSERT INTO warehouse.executions (jeu, empreinte, qualite_version, duree_ms, statut, lignes_lues, lignes_valides, code, mode_lecture)
+      VALUES (${jeu.cle}, ${empreinte}, ${version}, ${Math.max(0, Date.now() - debut)}, ${statut}, ${lignesLues}, ${lignesValides}, ${code},
+        ${lectureIncrementale ? lectureIncrementale.reconciliation ? 'reconciliation' : 'delta' : null})
     `
     return statut
   }, { timeout: 30_000, maxWait: 5_000 })
 }
 
-export async function synchroniserEntrepot(options: { forcer?: boolean; jeu?: string } = {}) {
+export async function synchroniserEntrepot(options: { forcer?: boolean; reconcilier?: boolean; jeu?: string } = {}) {
   const entrees = (await jeuxEntrepot()).filter(e => !options.jeu || e.jeu.cle === options.jeu)
   const resultats: { jeu: string; statut: Statut }[] = []
   for (const entree of entrees) {
-    const statut = await synchroniserJeu(entree, options.forcer ?? false)
+    const statut = await synchroniserJeu(entree, options.forcer ?? false, options.reconcilier ?? false)
     resultats.push({ jeu: entree.jeu.cle, statut })
   }
   return resultats

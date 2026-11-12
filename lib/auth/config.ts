@@ -2,6 +2,9 @@ import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/db/client'
 import { verifyPassword } from './password'
+import { configurationOidc, FOURNISSEUR_OIDC, fournisseurOidc, trouverUtilisateurOidc } from './oidc'
+
+const oidc = configurationOidc()
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -26,9 +29,25 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
+    ...(oidc ? [fournisseurOidc(oidc)] : []),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    async signIn({ account }) {
+      if (account?.provider !== FOURNISSEUR_OIDC) return true
+      return Boolean(oidc && await trouverUtilisateurOidc(oidc.emetteur, account.providerAccountId))
+    },
+    async jwt({ token, user, account }) {
+      if (account?.provider === FOURNISSEUR_OIDC) {
+        token.emetteurOidc = oidc?.emetteur
+        token.sujetOidc = account.providerAccountId
+      }
+      if (token.sujetOidc !== undefined) {
+        const utilisateur = oidc && oidc.emetteur === token.emetteurOidc
+          ? await trouverUtilisateurOidc(oidc.emetteur, token.sujetOidc) : null
+        const utilisateurConnu = utilisateur && (account || token.sub === utilisateur.id) ? utilisateur : null
+        return { ...token, sub: utilisateurConnu?.id ?? '', roleName: utilisateurConnu?.roleName ?? 'Member',
+          email: utilisateurConnu?.email, name: utilisateurConnu?.nom }
+      }
       if (user) token.roleName = user.roleName
       return token
     },

@@ -18,6 +18,7 @@ const agregats = {
   nombre: 'Nombre de valeurs', nombre_distinct: 'Nombre de valeurs distinctes', rapport: 'Rapport de deux sommes',
 }
 const select = 'min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm'
+const mois = Array.from({ length: 12 }, (_, index) => new Intl.DateTimeFormat('fr', { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2026, index, 1))))
 
 function Champ({ nom, enfants }: { nom: string; enfants: ReactNode }) {
   return <label className="block min-w-0 space-y-1 text-sm font-medium"><span>{nom}</span>{enfants}</label>
@@ -27,6 +28,7 @@ export function FormulaireCatalogue({ catalogue }: { catalogue: Catalogue }) {
   const { jeu, definition, version, colonnes } = catalogue
   const [etat, action] = useFormState(publier.bind(null, jeu, version), {})
   const [mesures, setMesures] = useState(() => definition.mesures.map((mesure, id) => ({ id, mesure })))
+  const [colonneDate, setColonneDate] = useState(definition.calendrierFiscal?.colonneDate ?? '')
   const prochainId = useRef(mesures.length)
   const metadonnees = new Map(definition.colonnes.map(c => [c.nom, c]))
 
@@ -38,7 +40,15 @@ export function FormulaireCatalogue({ catalogue }: { catalogue: Catalogue }) {
         <Champ nom="Ce que représente une ligne" enfants={<Input name="grain" required maxLength={300} defaultValue={definition.grain} />} />
         <div className="grid gap-3 sm:grid-cols-2">
           <Champ nom="Responsable" enfants={<Input name="responsable" maxLength={300} defaultValue={definition.responsable} />} />
-          <Champ nom="Calendrier" enfants={<Input name="calendrier" maxLength={300} defaultValue={definition.calendrier} />} />
+          <Champ nom="Note sur le calendrier" enfants={<Input name="calendrier" maxLength={300} defaultValue={definition.calendrier} />} />
+          <Champ nom="Colonne date du calendrier" enfants={<select className={select} name="colonne-date" value={colonneDate} onChange={event => setColonneDate(event.target.value)}>
+            <option value="">Aucun calendrier de calcul</option>
+            {colonnes.filter(colonne => colonne.type === 'date').map(colonne => <option key={colonne.nom} value={colonne.nom}>{colonne.description}</option>)}
+            {colonneDate && !colonnes.some(colonne => colonne.type === 'date' && colonne.nom === colonneDate) && <option value={colonneDate}>{colonneDate} (indisponible)</option>}
+          </select>} />
+          <Champ nom="Début de l’exercice" enfants={<select className={select} name="debut-exercice" disabled={!colonneDate} defaultValue={definition.calendrierFiscal?.moisDebutExercice ?? 1}>
+            {mois.map((nom, index) => <option key={nom} value={index + 1}>{nom}</option>)}
+          </select>} />
         </div>
       </section>
 

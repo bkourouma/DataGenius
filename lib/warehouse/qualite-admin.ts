@@ -19,9 +19,10 @@ export async function chargerQualite(cle: string) {
     prisma.$queryRaw<{
       statut: 'publie' | 'identique' | 'echec'; verifieA: Date; lignesLues: number | null;
       lignesValides: number | null; code: string | null; dureeMs: number; qualiteVersion: number;
+      modeLecture: 'delta' | 'reconciliation' | null;
     }[]>`
       SELECT statut, verifie_a AS "verifieA", lignes_lues AS "lignesLues", lignes_valides AS "lignesValides",
-        code, duree_ms AS "dureeMs", qualite_version AS "qualiteVersion"
+        code, duree_ms AS "dureeMs", qualite_version AS "qualiteVersion", mode_lecture AS "modeLecture"
       FROM warehouse.executions WHERE jeu = ${cle} ORDER BY verifie_a DESC, id DESC LIMIT 30
     `,
     registrePostgres(),
@@ -34,6 +35,7 @@ export async function chargerQualite(cle: string) {
     definition: qualite ? validerDefinitionQualite(jeu, qualite.definition) : definitionQualiteVide,
     historique, dependances, publication: etat.publication, derniereReussite: etat.derniereReussite,
     frequenceMinutes: jeu.frequenceMinutes,
+    incrementalPossible: 'type' in entree.source && entree.source.type === 'postgresql',
   }
 }
 

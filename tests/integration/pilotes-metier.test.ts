@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import ExcelJS from 'exceljs'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { prisma } from '@/lib/db/client'
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
@@ -24,6 +25,12 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier D
   let reglements: string
   let tickets: string
   let ecritures: string
+  const definitionFactures = {
+    description: 'Une ligne par facture émise', grain: 'Une ligne par facture émise',
+    cles: ['facture_id'], dimensions: ['devise'], colonnes: [],
+    mesures: [{ cle: 'facture_xof', libelle: 'Montant facturé en XOF', description: 'Somme des factures en XOF',
+      colonne: 'montant', agregat: 'somme', devise: 'XOF', filtres: [{ colonne: 'devise', operateur: 'egal', valeur: 'XOF' }] }],
+  }
 
   async function ajouterBase(variable: string, titre: string, base: string) {
     const url = new URL(process.env[variable] ?? '')
@@ -49,7 +56,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier D
     const operations = await ajouterBase('DATAGENIUS_SOURCE_SUPPORT', 'Pilote opérations', 'dg_support')
     await prisma.user.create({ data: { id: contexte.userId, email: contexte.userId + '@example.test',
       firstName: 'Pilote', passwordHash: 'fixture', roleName: 'TenantAdmin' } })
-    factures = await importer(entreprise, 'Factures du pilote', 'finance', 'factures', ['facture_id', 'equipe', 'devise', 'montant'])
+    factures = await importer(entreprise, 'Factures du pilote', 'finance', 'factures', ['facture_id', 'equipe', 'devise', 'montant', 'emise_le'])
     ecritures = await importer(entreprise, 'Écritures précises', 'finance', 'ecritures', ['libelle', 'montant'])
     reglements = await importer(operations, 'Règlements du pilote', 'facturation', 'reglements', ['reglement_id', 'facture_id', 'montant'])
     tickets = await importer(operations, 'Tickets du pilote', 'support', 'tickets', ['ticket_id', 'equipe', 'statut', 'resolution_minutes'])
@@ -72,12 +79,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier D
   })
 
   it('calcule les factures et encaissements partiels à leurs granularités respectives', async () => {
-    const description = 'Une ligne par facture émise'
-    await expect(publierCatalogueMetier(factures, 0, {
-      description, grain: description, cles: ['facture_id'], dimensions: ['devise'], colonnes: [],
-      mesures: [{ cle: 'facture_xof', libelle: 'Montant facturé en XOF', description: 'Somme des factures en XOF',
-        colonne: 'montant', agregat: 'somme', devise: 'XOF', filtres: [{ colonne: 'devise', operateur: 'egal', valeur: 'XOF' }] }],
-    }, contexte.userId)).resolves.toBe(1)
+    await expect(publierCatalogueMetier(factures, 0, definitionFactures, contexte.userId)).resolves.toBe(1)
 
     const choix = { gauche: factures, droite: reglements, type: 'gauche',
       liens: [{ gauche: 'facture_id', droite: 'facture_id' }],
@@ -124,7 +126,25 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier D
     expect(resultat.totaux).toEqual({ delai_moyen: 80 })
   })
 
-  it('conserve les montants décimaux exacts de PostgreSQL jusqu’à l’export CSV', async () => {
+  it('applique un exercice de novembre à octobre et conserve les trimestres civils', async () => {
+    const catalogue = (await chargerCatalogueMetier(factures))!
+    const calendrierFiscal = { colonneDate: 'emise_le', moisDebutExercice: 11 }
+    await publierCatalogueMetier(factures, catalogue.version, { ...definitionFactures, calendrierFiscal }, contexte.userId)
+    const requete = { jeu: factures, mesures: ['facture_xof'] }
+    const resultat = await calculerSemantique({ ...requete, granularite: 'exercice', filtres: { periode: { exercice: 2025 } } }, contexte)
+    expect(resultat.lignes).toEqual([{ exercice: '2025/2026', facture_xof: 380 }])
+    expect(resultat.provenance.periode).toMatchObject({ debut: '2025-11', fin: '2026-10' })
+    expect(resultat.provenance.periode?.libelle).toContain('2025/2026')
+    expect((await calculerSemantique({ ...requete, granularite: 'mois', filtres: { periode: { exercice: 2026 } } }, contexte)).lignes).toEqual([])
+    expect((await calculerSemantique({ ...requete, granularite: 'mois' }, contexte)).lignes)
+      .toEqual([{ periode: '2026-10', facture_xof: 380 }])
+    expect((await calculerSemantique({ ...requete, granularite: 'trimestre' }, contexte)).lignes)
+      .toEqual([{ trimestre: '2026-T4', facture_xof: 380 }])
+    expect((await calculerSemantique({ ...requete, granularite: 'annee' }, contexte)).lignes)
+      .toEqual([{ annee: '2026', facture_xof: 380 }])
+  })
+
+  it('conserve les montants décimaux exacts de PostgreSQL jusqu’aux exports CSV et Excel', async () => {
     await publierCatalogueMetier(ecritures, 0, {
       description: 'Journal comptable', grain: 'Une ligne par écriture', cles: ['libelle'], dimensions: ['libelle'], colonnes: [],
       mesures: [{ cle: 'solde', libelle: 'Solde', description: 'Somme signée des écritures', colonne: 'montant', agregat: 'somme' }],
@@ -138,5 +158,12 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier D
     const csv = (await construireExport(contexte, artefact.artefactId, 'csv')).buffer.toString('utf8')
     expect(csv).toContain('9007199254740993,25')
     expect(csv).toContain('9007199254740993,15')
+    const excel = await construireExport(contexte, artefact.artefactId, 'xlsx')
+    const classeur = new ExcelJS.Workbook()
+    await classeur.xlsx.load(excel.buffer as unknown as ArrayBuffer)
+    const cellules: unknown[] = []
+    classeur.worksheets[0].eachRow(ligne => ligne.eachCell(cellule => { cellules.push(cellule.value) }))
+    expect(cellules).toContain('9007199254740993.25')
+    expect(cellules).toContain('9007199254740993.15')
   })
 })

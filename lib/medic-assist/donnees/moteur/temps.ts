@@ -8,11 +8,12 @@
  */
 
 import { libellePeriodeVentes } from '@/lib/reports/plage-ventes-defaut'
-import { exerciceDePeriode, libelleExercice } from '@/lib/utils/exercice'
+import { MOIS_DEBUT_EXERCICE } from '@/lib/utils/exercice'
+import { citer } from '@/lib/warehouse/configuration'
 
 import type { Locale } from '@/i18n/config'
 import { libelleDe } from '../catalogue/communs'
-import type { DefinitionDimension, DefinitionJeu, RequeteNormalisee } from '../catalogue/types'
+import type { DefinitionDimension, DefinitionJeu, RequeteNormalisee, TempsJeu } from '../catalogue/types'
 import { TEXTES_MOTEUR } from './libelles'
 
 export type Granularite = NonNullable<RequeteNormalisee['granularite']>
@@ -65,6 +66,30 @@ export const DIMENSIONS_TEMPORELLES: Record<Granularite, DefinitionDimension> = 
 /** Cles des dimensions temporelles generiques. */
 export const CLES_TEMPORELLES = new Set(Object.values(DIMENSIONS_TEMPORELLES).map(d => d.cle))
 
+export function bornesExerciceCalendaire(annee: number, mois: number): { debut: string; fin: string } {
+  const format = (a: number, m: number) => `${a}-${String(m).padStart(2, '0')}`
+  return { debut: format(annee, mois), fin: mois === 1 ? format(annee, 12) : format(annee + 1, mois - 1) }
+}
+
+function dimensionCalendaire(granularite: Granularite, { colonneDate, moisDebutExercice }: NonNullable<TempsJeu['calendrier']>): DefinitionDimension {
+  const date = citer(colonneDate).sql
+  const annee = `EXTRACT(YEAR FROM ${date})::int`
+  const trimestre = `EXTRACT(QUARTER FROM ${date})::int`
+  const exercice = `EXTRACT(YEAR FROM (${date} - INTERVAL '${moisDebutExercice - 1} months'))::int`
+  const expressions = {
+    mois: `TO_CHAR(${date}, 'YYYY-MM')`,
+    trimestre: `${annee}::text || '-T' || ${trimestre}::text`,
+    annee: `${annee}::text`,
+    exercice: moisDebutExercice === 1 ? `${annee}::text` : `${exercice}::text || '/' || (${exercice} + 1)::text`,
+  }
+  const base = DIMENSIONS_TEMPORELLES[granularite]
+  return {
+    ...base,
+    definition: granularite === 'exercice' ? `Exercice dont le mois de début est ${moisDebutExercice}.` : base.definition,
+    expression: expressions[granularite],
+  }
+}
+
 /**
  * Dimensions selectionnables d'un jeu : celles du catalogue, plus, pour un jeu a temps, les
  * dimensions temporelles generiques que le catalogue ne declare pas lui-meme (une
@@ -73,7 +98,7 @@ export const CLES_TEMPORELLES = new Set(Object.values(DIMENSIONS_TEMPORELLES).ma
 export function dimensionsDisponibles(jeu: DefinitionJeu): DefinitionDimension[] {
   if (!jeu.temps) return [...jeu.dimensions]
   const declarees = new Set(jeu.dimensions.map(d => d.cle))
-  const generiques = GRANULARITES.map(g => DIMENSIONS_TEMPORELLES[g]).filter(
+  const generiques = GRANULARITES.map(g => dimensionDeGranularite(jeu, g)).filter(
     d => !declarees.has(d.cle)
   )
   return [...jeu.dimensions, ...generiques]
@@ -84,7 +109,7 @@ export function dimensionDeGranularite(
   jeu: DefinitionJeu,
   granularite: Granularite
 ): DefinitionDimension {
-  const generique = DIMENSIONS_TEMPORELLES[granularite]
+  const generique = jeu.temps?.calendrier ? dimensionCalendaire(granularite, jeu.temps.calendrier) : DIMENSIONS_TEMPORELLES[granularite]
   return jeu.dimensions.find(d => d.cle === generique.cle) ?? generique
 }
 
@@ -126,10 +151,15 @@ export function estAuGrainDuMois(dimension: DefinitionDimension): boolean {
  * « 09/26 », « 04/26 – 09/26 ». Quand plusieurs mois tiennent dans un meme exercice, on
  * ajoute « ; exercice 2026/2027 » (mot traduit, millesime identique dans toutes les langues).
  */
-export function libellePeriode(debut: string, fin: string, locale: Locale): string {
+export function libellePeriode(debut: string, fin: string, locale: Locale, moisDebut = MOIS_DEBUT_EXERCICE): string {
   const base = libellePeriodeVentes(`${debut}-01`, `${fin}-01`)
   if (debut === fin) return base
+  const exerciceDePeriode = (periode: string) => {
+    const [annee, mois] = periode.split('-').map(Number)
+    return mois >= moisDebut ? annee : annee - 1
+  }
   const exercice = exerciceDePeriode(debut)
   if (exercice !== exerciceDePeriode(fin)) return base
-  return `${base} ; ${libelleDe(TEXTES_MOTEUR.exercice, locale)} ${libelleExercice(exercice)}`
+  const libelle = moisDebut === 1 ? String(exercice) : `${exercice}/${exercice + 1}`
+  return `${base} ; ${libelleDe(TEXTES_MOTEUR.exercice, locale)} ${libelle}`
 }

@@ -115,7 +115,9 @@ function detailJeu(entree: EntreeCatalogue, ctx: Ctx): DetailJeuCatalogue {
             {
               cle: 'periode',
               libelle: t(TEXTES_MOTEUR.periode),
-              definition: DEFINITION_PERIODE,
+              definition: jeu.temps.calendrier
+                ? `Période du calcul sur ${jeu.temps.calendrier.colonneDate} : {debut: 'YYYY-MM', fin: 'YYYY-MM'}, {exercice: 2026} (année de début, mois ${jeu.temps.calendrier.moisDebutExercice}) ou {dernierMoisClos: true}.`
+                : DEFINITION_PERIODE,
               type: 'periode' as const,
             },
           ]
@@ -137,7 +139,8 @@ function detailJeu(entree: EntreeCatalogue, ctx: Ctx): DetailJeuCatalogue {
     vueSql: {
       nom: vue.nom,
       description: vue.description,
-      colonnes: vue.colonnes.map(c => ({ nom: c.nom, type: c.type, description: c.description })),
+      colonnes: vue.colonnes.map(c => ({ nom: c.nom, type: c.type, description: c.description,
+        ...(c.synonymes?.length ? { synonymes: c.synonymes } : {}) })),
     },
   }
 }

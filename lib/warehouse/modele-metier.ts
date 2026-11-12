@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { z } from 'zod'
 import type { ColonneVue, DefinitionMesure, EntreeCatalogue, Libelle } from '@/lib/medic-assist/donnees/catalogue/types'
+import { CLES_TEMPORELLES } from '@/lib/medic-assist/donnees/moteur/temps'
 import { citer, empreinte, identifiant, typeSql } from './configuration'
 
 const texte = z.string().trim().min(1).max(300)
@@ -17,6 +18,7 @@ export const DefinitionMetierSchema = z.strictObject({
   cles: z.array(identifiant).max(8), dimensions: z.array(identifiant).max(30),
   colonnes: z.array(z.strictObject({ nom: identifiant, description: texte, synonymes: z.array(texte).max(10) })).max(50),
   mesures: z.array(mesure).max(30), calendrier: texte.optional(), responsable: texte.optional(),
+  calendrierFiscal: z.strictObject({ colonneDate: identifiant, moisDebutExercice: z.number().int().min(1).max(12) }).optional(),
 })
 
 export type DefinitionMetier = z.infer<typeof DefinitionMetierSchema>
@@ -27,6 +29,7 @@ export class ErreurCatalogueMetier extends Error {}
 export function colonnesUtiliseesParCatalogue(definition: DefinitionMetier): string[] {
   return [...new Set([
     ...definition.cles, ...definition.dimensions, ...definition.colonnes.map(c => c.nom),
+    ...(definition.calendrierFiscal ? [definition.calendrierFiscal.colonneDate] : []),
     ...definition.mesures.flatMap(m => [m.colonne, ...(m.denominateur ? [m.denominateur] : []), ...(m.filtres ?? []).map(f => f.colonne)]),
   ])]
 }
@@ -62,6 +65,12 @@ export function appliquerPublicationMetier(entree: EntreeCatalogue, publication:
 
   const trouver = indexerColonnes(entree.vue.colonnes)
   for (const nom of [...definition.cles, ...definition.colonnes.map(c => c.nom)]) trouver(nom)
+  const calendrier = definition.calendrierFiscal
+  if (calendrier) {
+    if (trouver(calendrier.colonneDate).type !== 'date') throw new ErreurCatalogueMetier('Sélectionnez une colonne de type date pour le calendrier.')
+    const conflit = [...definition.dimensions, ...definition.mesures.map(m => m.cle)].find(cle => CLES_TEMPORELLES.has(cle))
+    if (conflit) throw new ErreurCatalogueMetier(`La clé « ${conflit} » est utilisée par le calendrier. Retirez la dimension ou renommez l’indicateur.`)
+  }
   const descriptions = new Map(definition.colonnes.map(c => [c.nom, c]))
   const colonnes = entree.vue.colonnes.map(c => ({ ...c, ...descriptions.get(c.nom) }))
   const enrichie = indexerColonnes(colonnes)
@@ -108,6 +117,7 @@ export function appliquerPublicationMetier(entree: EntreeCatalogue, publication:
     jeu: {
       ...entree.jeu, description: definition.description, granularite: definition.grain,
       dimensions, mesures, cles: definition.cles, calendrier: definition.calendrier,
+      temps: calendrier ? { defaut: 'aucune', calendrier } : entree.jeu.temps?.calendrier ? undefined : entree.jeu.temps,
       responsable: definition.responsable, versionMetier: version,
       filtres: dimensions.filter(d => d.type === 'texte' || d.type === 'periode').map(d => ({
         cle: d.cle, libelle: d.libelle, definition: `Valeur exacte : ${d.definition}`, type: 'texte',

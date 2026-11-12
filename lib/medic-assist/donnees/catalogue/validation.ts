@@ -15,7 +15,7 @@
 import { z } from 'zod'
 
 import { moisParDefaut } from '@/lib/reports/plage-ventes-defaut'
-import { periodesExercice } from '@/lib/utils/exercice'
+import { MOIS_DEBUT_EXERCICE } from '@/lib/utils/exercice'
 
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 import type {
@@ -25,6 +25,7 @@ import type {
 import {
   CLES_TEMPORELLES,
   GRANULARITES,
+  bornesExerciceCalendaire,
   type Granularite,
   dimensionsDisponibles,
   dimensionsSelectionnees,
@@ -320,7 +321,7 @@ function validerValeurFiltre(def: DefinitionFiltre, valeur: unknown): unknown {
 }
 
 const FORMES_PERIODE =
-  "{debut: 'YYYY-MM', fin: 'YYYY-MM'}, {exercice: 2026} (avril 2026 à mars 2027) ou {dernierMoisClos: true}"
+  "{debut: 'YYYY-MM', fin: 'YYYY-MM'}, {exercice: 2026} (année de début) ou {dernierMoisClos: true}"
 
 function erreurPeriode(detail: string): ErreurDonnees {
   return new ErreurDonnees(
@@ -352,7 +353,7 @@ function validerExercice(valeur: unknown): number {
     valeur > BORNES_REQUETE.anneeMax
   ) {
     throw erreurPeriode(
-      `exercice doit être une année entière de ${BORNES_REQUETE.anneeMin} à ${BORNES_REQUETE.anneeMax} (année d'avril)`
+      `exercice doit être une année entière de ${BORNES_REQUETE.anneeMin} à ${BORNES_REQUETE.anneeMax} (année de début)`
     )
   }
   return valeur
@@ -399,11 +400,11 @@ function resoudrePeriode(
   }
   if (memesCles(objet, ['exercice'])) {
     const exercice = validerExercice(objet.exercice)
-    const periodes = periodesExercice(exercice)
+    const { debut, fin } = bornesExerciceCalendaire(exercice, jeu.temps.calendrier?.moisDebutExercice ?? MOIS_DEBUT_EXERCICE)
     return {
       periode: {
-        debut: periodes[0],
-        fin: periodes[periodes.length - 1],
+        debut,
+        fin,
         origine: 'exercice',
         exercice,
       },
@@ -579,9 +580,15 @@ export function verifierRegistre(registre: Registre): string[] {
         if (jeu.mesures.some(m => m.cle === cle))
           anomalies.push(`${ou} : mesure "${cle}" masque une dimension temporelle`)
       }
-      for (const nom of ['periode', 'annee', 'mois', 'exercice']) {
-        if (!vue.colonnes.some(c => c.nom === nom))
-          anomalies.push(`${ou} : jeu date sans colonne ${nom}`)
+      const calendrier = jeu.temps.calendrier
+      if (calendrier) {
+        if (!vue.colonnes.some(c => c.nom === calendrier.colonneDate && c.type === 'date')) {
+          anomalies.push(`${ou} : colonne de calendrier ${calendrier.colonneDate} indisponible`)
+        }
+      } else {
+        for (const nom of ['periode', 'annee', 'mois', 'exercice']) {
+          if (!vue.colonnes.some(c => c.nom === nom)) anomalies.push(`${ou} : jeu date sans colonne ${nom}`)
+        }
       }
     }
     const filtres = new Set<string>()

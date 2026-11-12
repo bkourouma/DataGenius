@@ -4,11 +4,12 @@ import { etatEntrepot } from '@/lib/warehouse/synchronisation'
 import Link from 'next/link'
 import { listerCombinaisons } from '@/lib/warehouse/combinaisons-admin'
 import { listerSources } from '@/lib/warehouse/sources-admin'
-import { FormulaireConnexion, FormulaireFrequence, Soumettre } from './formulaires'
+import { FormulaireConnexion, FormulaireConnexionRest, FormulaireFichierSource, FormulaireFrequence, Soumettre } from './formulaires'
 import { actualiserJeu } from './actions'
 
 export const dynamic = 'force-dynamic'
 
+const typeSource = { postgresql: 'PostgreSQL', mysql: 'MySQL', rest: 'API REST', fichier: 'Fichier' }
 const date = new Intl.DateTimeFormat('fr', { dateStyle: 'short', timeStyle: 'short', timeZone: 'UTC' })
 
 export default async function Sources() {
@@ -27,14 +28,26 @@ export default async function Sources() {
         <summary className="cursor-pointer font-semibold">Ajouter une base PostgreSQL</summary>
         <div className="mt-4"><FormulaireConnexion /></div>
       </details>
+      <details className="rounded-lg border bg-card p-5">
+        <summary className="cursor-pointer font-semibold">Ajouter une base MySQL</summary>
+        <div className="mt-4"><FormulaireConnexion moteur="mysql" /></div>
+      </details>
+      <details className="rounded-lg border bg-card p-5">
+        <summary className="cursor-pointer font-semibold">Ajouter une API REST</summary>
+        <div className="mt-4"><FormulaireConnexionRest /></div>
+      </details>
+      <details className="rounded-lg border bg-card p-5">
+        <summary className="cursor-pointer font-semibold">Ajouter un fichier CSV ou Excel</summary>
+        <div className="mt-4"><FormulaireFichierSource /></div>
+      </details>
       {!!sources?.length && (
         <section className="space-y-2">
-          <h2 className="font-semibold">Bases connectées</h2>
+          <h2 className="font-semibold">Sources connectées</h2>
           <ul className="divide-y rounded-lg border bg-card">
             {sources.map(source => (
               <li key={source.id} className="flex flex-wrap items-center justify-between gap-2 p-4">
-                <div><p className="font-medium">{source.titre}</p><p className="text-sm text-muted-foreground">{source.hote} · {source.base}</p></div>
-                <Link className="text-sm text-primary hover:underline" href={'/sources/' + source.id} prefetch={false}>Explorer les tables<span className="sr-only"> de {source.titre}</span></Link>
+                <div><p className="font-medium">{source.titre}</p><p className="text-sm text-muted-foreground">{typeSource[source.type]} · {source.type === 'fichier' ? source.base : source.hote}</p></div>
+                <Link className="text-sm text-primary hover:underline" href={'/sources/' + source.id} prefetch={false}>Explorer {source.type === 'fichier' ? 'les feuilles' : source.type === 'rest' ? 'les données' : 'les tables'}<span className="sr-only"> de {source.titre}</span></Link>
               </li>
             ))}
           </ul>
@@ -72,7 +85,7 @@ export default async function Sources() {
       </section>
       <h2 className="font-semibold">Imports et publications</h2>
       {(jeux === null || sources === null) && <p role="status">Entrepôt indisponible. Vérifiez la configuration et les migrations.</p>}
-      {jeux?.length === 0 && <p role="status">Ajoutez une base, puis ouvrez une table pour configurer un import.</p>}
+      {jeux?.length === 0 && <p role="status">Ajoutez une source, puis ouvrez ses données pour configurer un import.</p>}
       <ul className="space-y-3">
         {jeux?.map(({ cle, titre, source, frequence, modifiable, etat }) => (
           <li key={cle} className="space-y-3 rounded-lg border bg-card p-5">

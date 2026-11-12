@@ -23,6 +23,8 @@ export const messagesExecution: Readonly<Record<string, string>> = {
   non_nul: 'Une valeur obligatoire est absente.',
   unique: 'Une clé se répète dans les données préparées.',
   plage: 'Une valeur est hors des bornes autorisées.',
+  incremental_cle: 'Une clé de synchronisation est vide ou dupliquée.',
+  incremental_date: 'Un horodatage de modification est absent ou invalide.',
   configuration: 'La définition de préparation est incompatible avec les colonnes de cet import.',
 }
 

@@ -139,7 +139,7 @@ function nomDeFeuille(nomFichier?: string): string {
   return sansExtension.slice(0, 31) || 'Feuille1'
 }
 
-export function extraireCsv(octets: Uint8Array, nomFichier?: string): ContenuTableau {
+export function extraireCsv(octets: Uint8Array, nomFichier?: string, options: { preserverTexte?: boolean } = {}): ContenuTableau {
   const texte = decoderTexte(octets)
   const separateur = detecterSeparateur(texte)
   const { enregistrements, total } = analyserCsv(texte, separateur, ENREGISTREMENTS_GARDES)
@@ -159,6 +159,7 @@ export function extraireCsv(octets: Uint8Array, nomFichier?: string): ContenuTab
 
   const feuille = construireFeuille({
     nom: nomDeFeuille(nomFichier),
+    preserverTexte: options.preserverTexte,
     lignes,
     numeros: lignes.map((_, i) => i + 1),
     indexColonnes: Array.from({ length: largeur }, (_, c) => c + 1),

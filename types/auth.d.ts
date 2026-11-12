@@ -8,5 +8,5 @@ declare module 'next-auth' {
 }
 
 declare module 'next-auth/jwt' {
-  interface JWT { roleName: string }
+  interface JWT { roleName: string; emetteurOidc?: string; sujetOidc?: string }
 }

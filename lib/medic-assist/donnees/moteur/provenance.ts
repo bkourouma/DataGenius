@@ -3,7 +3,7 @@ import { REGLES, libelleDe } from '../catalogue/communs'
 import type { DefinitionJeu, EntreeCatalogue, Libelle } from '../catalogue/types'
 import type { RequeteValidee } from '../catalogue/validation'
 import { TEXTES_MOTEUR } from './libelles'
-import { DIMENSIONS_TEMPORELLES, libellePeriode } from './temps'
+import { DIMENSIONS_TEMPORELLES, dimensionDeGranularite, libellePeriode } from './temps'
 
 /** Filtres de la requete, dans l'ordre du catalogue, avec des noms et des valeurs lisibles. */
 export async function filtresLisibles(
@@ -70,8 +70,14 @@ export async function construireProvenance(e: EntreeProvenance): Promise<Provena
     if (!regles.includes(texte)) regles.push(texte)
   }
   jeu.regles.forEach(ajouter)
-  for (const cle of normalisee.mesures)
-    jeu.mesures.find(m => m.cle === cle)?.regles?.forEach(ajouter)
+  for (const cle of normalisee.mesures) {
+    const mesure = jeu.mesures.find(m => m.cle === cle)
+    if (mesure && jeu.versionMetier) {
+      const unite = mesure.unite ? ` (${mesure.unite})` : ''
+      regles.push(`Indicateur : ${libelleDe(mesure.libelle, locale)}${unite} · ${mesure.definition}`)
+    }
+    mesure?.regles?.forEach(ajouter)
+  }
   if (!ctx.scope.voitTout) ajouter(REGLES.perimetre)
   if (normalisee.periodeParDefaut && normalisee.periode?.origine === 'dernier_mois_clos') {
     ajouter(REGLES.dernierMoisClos)
@@ -104,7 +110,7 @@ export async function construireProvenance(e: EntreeProvenance): Promise<Provena
           periode: {
             debut: normalisee.periode.debut,
             fin: normalisee.periode.fin,
-            libelle: libellePeriode(normalisee.periode.debut, normalisee.periode.fin, locale),
+            libelle: libellePeriode(normalisee.periode.debut, normalisee.periode.fin, locale, jeu.temps?.calendrier?.moisDebutExercice),
           },
         }
       : {}),
@@ -117,6 +123,7 @@ export async function construireProvenance(e: EntreeProvenance): Promise<Provena
 }
 
 /** Vrai si la dimension trimestre rendue est la generique (trimestre civil). */
-export function trimestreGeneriqueRendu(dimensions: readonly { expression: string }[]): boolean {
-  return dimensions.some(d => d.expression === DIMENSIONS_TEMPORELLES.trimestre.expression)
+export function trimestreGeneriqueRendu(dimensions: readonly { expression: string }[], jeu?: DefinitionJeu): boolean {
+  const trimestre = jeu?.temps?.calendrier ? dimensionDeGranularite(jeu, 'trimestre') : DIMENSIONS_TEMPORELLES.trimestre
+  return dimensions.some(d => d.expression === trimestre.expression)
 }

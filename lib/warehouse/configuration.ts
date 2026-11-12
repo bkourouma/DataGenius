@@ -53,9 +53,10 @@ const configuration = z.strictObject({
 
 export type JeuCompose = z.infer<typeof combinaison>
 export type JeuConfigure = z.infer<typeof jeuSchema>
+export type TypeSource = 'postgresql' | 'mysql' | 'rest' | 'fichier'
 export type JeuEntrepot = {
   jeu: JeuConfigure
-  source: { id: string; titre: string; connexion?: string }
+  source: { id: string; titre: string; connexion?: string; type?: TypeSource }
   empreinte: string
 }
 
@@ -103,15 +104,15 @@ export function configurationFichier() {
 export async function configurationEntrepot(client: Pick<Prisma.TransactionClient, '$queryRaw'> = prisma) {
   const fichier = configurationFichier()
   const imports = await client.$queryRaw<{
-    id: string; titre: string; definition: object; frequence_minutes: number
+    id: string; titre: string; type: TypeSource; definition: object; frequence_minutes: number
   }[]>`
-    SELECT s.id, s.titre, i.definition, i.frequence_minutes
+    SELECT s.id, s.titre, s.type, i.definition, i.frequence_minutes
     FROM warehouse.imports i JOIN warehouse.sources s ON i.source_id = s.id ORDER BY i.cle
   `
-  const geres: JeuEntrepot[] = imports.map(({ id, titre, definition, frequence_minutes }) => {
+  const geres: JeuEntrepot[] = imports.map(({ id, titre, type, definition, frequence_minutes }) => {
     const jeu = jeuSchema.parse({ ...definition, frequenceMinutes: frequence_minutes })
     const projection = jeu.colonnes.map(c => [c.nom, c.origine ?? c.nom, c.type])
-    return { jeu, source: { id, titre }, empreinte: empreinte([id, jeu.schema, jeu.table, projection]) }
+    return { jeu, source: { id, titre, type }, empreinte: empreinte([id, jeu.schema, jeu.table, projection]) }
   })
   return { jeux: [...fichier.jeux, ...geres], combinaisons: fichier.combinaisons }
 }

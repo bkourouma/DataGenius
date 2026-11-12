@@ -1,6 +1,6 @@
 {
   "name": "datagenius",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "engines": {
     "node": ">=22"
@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:postgres": "node scripts/recette-postgresql.mjs",
+    "test:mysql": "node scripts/recette-mysql.mjs",
     "db:generate": "prisma generate",
     "db:deploy": "prisma migrate deploy",
     "user:create": "tsx --env-file-if-exists=.env scripts/create-user.ts",
@@ -47,6 +48,7 @@
     "exceljs": "^4.4.0",
     "jszip": "^3.10.1",
     "lucide-react": "^0.544.0",
+    "mysql2": "3.24.6",
     "next": "^14.2.0",
     "next-auth": "^4.24.11",
     "next-intl": "^4.14.2",

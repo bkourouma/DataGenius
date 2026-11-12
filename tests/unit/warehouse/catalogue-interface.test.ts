@@ -33,6 +33,7 @@ describe('Publication du catalogue métier depuis le formulaire', () => {
     const donnees = new FormData()
     for (const [champ, valeur] of Object.entries({
       description: 'Factures', grain: 'Une ligne par facture', 'synonymes-montant': ' prix, total ',
+      'colonne-date': 'emise_le', 'debut-exercice': '11',
       mesures: '2', 'cle-2': 'total_net', 'libelle-2': 'Total net', 'definition-2': 'Somme des montants',
       'colonne-2': 'montant', 'agregat-2': 'somme', 'devise-2': 'xof',
       'filtres-2': '4', 'colonne-filtre-2-4': 'statut', 'operateur-filtre-2-4': 'different', 'valeur-filtre-2-4': 'annule',
@@ -40,6 +41,7 @@ describe('Publication du catalogue métier depuis le formulaire', () => {
 
     await expect(publier('factures', 3, {}, donnees)).rejects.toThrow('navigation')
     expect(publierDefinition).toHaveBeenCalledWith('factures', 3, expect.objectContaining({
+      calendrierFiscal: { colonneDate: 'emise_le', moisDebutExercice: 11 },
       colonnes: [{ nom: 'montant', description: 'Montant', synonymes: ['prix', 'total'] }],
       mesures: [expect.objectContaining({
         cle: 'total_net', agregat: 'somme', devise: 'XOF',

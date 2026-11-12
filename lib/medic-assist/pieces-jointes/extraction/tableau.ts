@@ -236,9 +236,10 @@ function typeDe(lectures: Lecture[]): { type: TypeColonne; unite?: string } {
   return { type: 'texte' }
 }
 
-function valeurTypee(cellule: CelluleBrute, lecture: Lecture, type: TypeColonne): Cellule {
+function valeurTypee(cellule: CelluleBrute, lecture: Lecture, type: TypeColonne, preserverTexte = false): Cellule {
   if (lecture.genre === 'vide') return null
   if (type === 'texte') {
+    if (preserverTexte && cellule.genre === 'brut') return cellule.texte
     return lecture.genre === 'booleen' ? lecture.valeur : texteDe(cellule, lecture)
   }
   return (lecture as { valeur: Cellule }).valeur
@@ -246,6 +247,7 @@ function valeurTypee(cellule: CelluleBrute, lecture: Lecture, type: TypeColonne)
 
 export interface EntreeFeuille {
   nom: string
+  preserverTexte?: boolean
   /** Lignes lues, titres inclus, depuis le debut de la feuille. */
   lignes: CelluleBrute[][]
   /** Numero de ligne de la feuille pour chaque ligne de `lignes` (1 = premiere). */
@@ -320,7 +322,8 @@ export function construireFeuille(entree: EntreeFeuille): FeuilleExtraite {
       ligne[col.cle] = valeurTypee(
         r.cellules[c] ?? CELLULE_VIDE,
         lecturesParColonne[c][i],
-        col.type
+        col.type,
+        entree.preserverTexte,
       )
     })
     return ligne

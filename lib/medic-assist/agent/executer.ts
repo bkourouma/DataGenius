@@ -16,6 +16,7 @@
  * - la persistance de fin de tour ne bloque jamais la fermeture du flux.
  */
 
+import { restrictionsActives } from '@/lib/auth/data-access'
 import {
   consumeStream,
   convertToModelMessages,
@@ -379,7 +380,7 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
     const droits = contexte.scope.donnees
     let conversation = corps.conversationId
       ? await lireConversationProprietaire(userId, corps.conversationId,
-        droits?.regles.size && !droits.administrateur ? droits.depuis : undefined)
+        restrictionsActives(droits) && !droits.administrateur ? droits.depuis : undefined)
       : null
     if (corps.conversationId && !conversation) {
       return erreur(404, 'not_found', 'Conversation not found')

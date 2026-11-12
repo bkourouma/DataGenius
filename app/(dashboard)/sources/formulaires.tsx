@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { ajouterConnexion, ajouterImport, changerFrequence } from './actions'
+import { ajouterConnexion, ajouterConnexionRest, ajouterImport, changerFrequence, importerFichierSource } from './actions'
 
 export function Soumettre({ texte, attente, variant }: {
   texte: string
@@ -23,25 +23,63 @@ function Retour({ erreur, succes }: { erreur?: string; succes?: string }) {
   return null
 }
 
-export function FormulaireConnexion() {
+export function FormulaireConnexion({ moteur = 'postgresql' }: { moteur?: 'postgresql' | 'mysql' }) {
+  const id = useId()
   const [etat, action] = useFormState(ajouterConnexion, {})
   return (
     <form action={action} className="space-y-4">
+      <input type="hidden" name="moteur" value={moteur} />
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="grid gap-2"><Label htmlFor="source-titre">Nom de la source</Label><Input id="source-titre" name="titre" required maxLength={120} /></div>
-        <div className="grid gap-2"><Label htmlFor="source-base">Nom de la base</Label><Input id="source-base" name="base" required maxLength={63} /></div>
-        <div className="grid gap-2"><Label htmlFor="source-hote">Hôte</Label><Input id="source-hote" name="hote" required maxLength={253} /></div>
-        <div className="grid gap-2"><Label htmlFor="source-port">Port</Label><Input id="source-port" name="port" type="number" defaultValue={5432} min={1} max={65535} required /></div>
-        <div className="grid gap-2"><Label htmlFor="source-utilisateur">Utilisateur de lecture</Label><Input id="source-utilisateur" name="utilisateur" required maxLength={63} autoComplete="off" /></div>
-        <div className="grid gap-2"><Label htmlFor="source-mdp">Mot de passe</Label><Input id="source-mdp" name="motDePasse" type="password" maxLength={1024} autoComplete="new-password" /></div>
-        <div className="grid gap-2"><Label htmlFor="source-tls">Connexion TLS</Label>
-          <select id="source-tls" name="tls" defaultValue="require" className="h-10 rounded-md border border-input bg-background px-3 text-sm">
+        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>Nom de la source</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-base'}>Nom de la base</Label><Input id={id + '-base'} name="base" required maxLength={63} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-hote'}>Hôte</Label><Input id={id + '-hote'} name="hote" required maxLength={253} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-port'}>Port</Label><Input id={id + '-port'} name="port" type="number" defaultValue={moteur === 'mysql' ? 3306 : 5432} min={1} max={65535} required /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-utilisateur'}>Utilisateur de lecture</Label><Input id={id + '-utilisateur'} name="utilisateur" required maxLength={63} autoComplete="off" /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-mdp'}>Mot de passe</Label><Input id={id + '-mdp'} name="motDePasse" type="password" maxLength={1024} autoComplete="new-password" /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-tls'}>Connexion TLS</Label>
+          <select id={id + '-tls'} name="tls" defaultValue="require" className="h-10 rounded-md border border-input bg-background px-3 text-sm">
             <option value="require">Requise</option><option value="disable">Désactivée (réseau de confiance)</option>
           </select>
         </div>
       </div>
       <Retour {...etat} />
       <Soumettre texte="Tester et ajouter la source" attente="Connexion en cours…" />
+    </form>
+  )
+}
+
+export function FormulaireConnexionRest() {
+  const id = useId()
+  const [etat, action] = useFormState(ajouterConnexionRest, {})
+  return (
+    <form action={action} className="space-y-4">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>Nom de la source</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-url'}>URL de l’API</Label><Input id={id + '-url'} name="url" type="url" required maxLength={2000} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-token'}>Jeton d’accès (facultatif)</Label><Input id={id + '-token'} name="token" type="password" autoComplete="new-password" /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-chemin'}>Chemin du tableau JSON (facultatif)</Label><Input id={id + '-chemin'} name="chemin" placeholder="data.resultats" /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-page'}>Paramètre de page (facultatif)</Label><Input id={id + '-page'} name="parametrePage" placeholder="page" /></div>
+      </div>
+      <Retour {...etat} />
+      <Soumettre texte="Tester et ajouter la source" attente="Connexion en cours…" />
+    </form>
+  )
+}
+
+export function FormulaireFichierSource({ sourceId }: { sourceId?: string }) {
+  const id = useId()
+  const [etat, action] = useFormState(importerFichierSource, {})
+  return (
+    <form action={action} className="space-y-4">
+      {sourceId ? <input type="hidden" name="sourceId" value={sourceId} /> :
+        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>Nom de la source</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>}
+      <div className="grid gap-2">
+        <Label htmlFor={id + '-fichier'}>Fichier CSV ou Excel (.xlsx)</Label>
+        <Input id={id + '-fichier'} name="fichier" type="file" required accept=".csv,.xlsx" />
+        <p className="text-sm text-muted-foreground">5 Mio et 5 000 lignes de données par feuille au maximum.</p>
+      </div>
+      <Retour {...etat} />
+      <Soumettre texte={sourceId ? 'Remplacer le fichier' : 'Ajouter la source'} attente="Import en cours…" />
     </form>
   )
 }

@@ -84,7 +84,7 @@ export function FormulaireQualite({ jeu }: { jeu: Jeu }) {
       })}
       <Button type="button" variant="outline" disabled={!colonneInitiale || controles.length >= 20} onClick={() => setDefinition({ ...definition, controles: [...controles, { type: 'non_nul', colonnes: [colonneInitiale] }] })}>Ajouter un contrôle</Button>
     </fieldset>
-    {etat.erreur && <p role="alert" className="text-sm text-destructive">{etat.erreur}</p>}
+    {etat?.erreur && <p role="alert" className="text-sm text-destructive">{etat.erreur}</p>}
     <Soumettre texte="Enregistrer les règles" attente="Enregistrement…" />
   </form>
 }
@@ -92,7 +92,7 @@ export function FormulaireQualite({ jeu }: { jeu: Jeu }) {
 export function RelancerImport({ cle }: { cle: string }) {
   const [etat, action] = useFormState(relancer.bind(null, cle), {})
   return <form action={action} className="space-y-2">
-    {etat.erreur && <p role="alert" className="text-sm text-destructive">{etat.erreur}</p>}
+    {etat?.erreur && <p role="alert" className="text-sm text-destructive">{etat.erreur}</p>}
     <Soumettre texte="Relancer la synchronisation" attente="Synchronisation…" variant="outline" />
   </form>
 }

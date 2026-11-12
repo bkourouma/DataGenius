@@ -29,4 +29,5 @@ jobs:
           sudo apt-get install -y postgresql
           printf 'PG_BIN=%s\n' "$(pg_config --bindir)" >> "$GITHUB_ENV"
       - run: npm run test:postgres
+      - run: npm run test:mysql
       - run: npm run build

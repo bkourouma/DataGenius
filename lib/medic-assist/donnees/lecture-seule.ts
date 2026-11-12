@@ -9,6 +9,7 @@ type Publication = {
   verifie_a: Date | null
   verification_ok: boolean | null
   en_retard: boolean | null
+  reconcilie_a: Date | null
 }
 
 export async function lireEntrepot(requetes: Prisma.Sql[], vues: DefinitionVue[], delaiMs?: number) {
@@ -17,7 +18,7 @@ export async function lireEntrepot(requetes: Prisma.Sql[], vues: DefinitionVue[]
     for (const snapshot of vues.flatMap(vue => vue.snapshots ?? [])) {
       if (publications.has(snapshot.jeu)) continue
       const [copie] = await tx.$queryRaw<Publication[]>`
-        SELECT publie_a, verifie_a, verification_ok, fraiche_jusqua < now() AS en_retard
+        SELECT publie_a, verifie_a, verification_ok, fraiche_jusqua < now() AS en_retard, reconcilie_a
         FROM warehouse.snapshots WHERE jeu = ${snapshot.jeu} AND empreinte = ${snapshot.empreinte}
       `
       if (!copie) throw new ErreurDonnees('Ce jeu attend sa première synchronisation.', 'sql_erreur')
@@ -38,6 +39,7 @@ export function reglesPublication(vues: DefinitionVue[], publications: Map<strin
     if (copie.verification_ok === false) regles.push('Source : ' + source + ' · dernière synchronisation en échec. La dernière copie valide est utilisée.')
     else if (copie.en_retard) regles.push('Source : ' + source + ' · vérification en retard.')
     else if (copie.verifie_a) regles[0] += ' · vérifiée le ' + copie.verifie_a.toISOString()
+    if (copie.reconcilie_a) regles[0] += ' · réconciliation complète le ' + copie.reconcilie_a.toISOString()
     return regles
   })
 }

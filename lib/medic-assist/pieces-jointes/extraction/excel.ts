@@ -60,7 +60,7 @@ function erreurDeChargement(erreur: unknown): ExtractionError {
   return new ExtractionError('classeurIllisible')
 }
 
-export async function extraireExcel(octets: Uint8Array): Promise<ContenuTableau> {
+export async function extraireExcel(octets: Uint8Array, options: { preserverTexte?: boolean } = {}): Promise<ContenuTableau> {
   // Avant exceljs : refuse une bombe ZIP sans rien decompresser.
   await verifierTailleDecompressee(octets, erreurDeChargement)
 
@@ -92,6 +92,7 @@ export async function extraireExcel(octets: Uint8Array): Promise<ContenuTableau>
 
     return construireFeuille({
       nom: feuille.name,
+      preserverTexte: options.preserverTexte,
       lignes,
       numeros,
       indexColonnes: Array.from({ length: largeur }, (_, c) => c + 1),

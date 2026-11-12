@@ -43,8 +43,10 @@ export async function publier(
         unite: facultatif(`unite-${id}`), devise: facultatif(`devise-${id}`)?.toUpperCase(), filtres,
       }
     })
+    const colonneDate = facultatif('colonne-date')
     await publierCatalogueMetier(cle, version, {
       description: lire('description'), grain: lire('grain'), calendrier: facultatif('calendrier'),
+      calendrierFiscal: colonneDate ? { colonneDate, moisDebutExercice: Number(lire('debut-exercice')) } : undefined,
       responsable: facultatif('responsable'), cles: donnees.getAll('cles'), dimensions: donnees.getAll('dimensions'),
       colonnes, mesures,
     }, garde.contexte.userId)

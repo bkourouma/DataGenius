@@ -15,6 +15,7 @@
  */
 
 import { Prisma } from '@prisma/client'
+import { citer } from '@/lib/warehouse/configuration'
 
 import type { ColonneJeu, ContexteExecution } from '@/lib/medic-assist/contrats'
 import { libelleDe } from '../catalogue/communs'
@@ -132,9 +133,14 @@ export function construireSql(
   // dans l'ordre du catalogue, pour un texte SQL stable.
   const conditions: Prisma.Sql[] = []
   if (normalisee.periode) {
-    conditions.push(
-      Prisma.sql`periode BETWEEN ${normalisee.periode.debut} AND ${normalisee.periode.fin}`
-    )
+    const { debut, fin } = normalisee.periode
+    const calendrier = jeu.temps?.calendrier
+    if (calendrier) {
+      const date = citer(calendrier.colonneDate)
+      conditions.push(Prisma.sql`${date} >= ${debut + '-01'}::date AND ${date} < (${fin + '-01'}::date + INTERVAL '1 month')`)
+    } else {
+      conditions.push(Prisma.sql`periode BETWEEN ${debut} AND ${fin}`)
+    }
   }
   for (const filtre of jeu.filtres) {
     const valeur = normalisee.filtres[filtre.cle]

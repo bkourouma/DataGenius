@@ -10,7 +10,7 @@
 import { z } from 'zod'
 
 import { prisma } from '@/lib/db/client'
-import { auteurDansPerimetreLecteur, contenuAuPerimetreCourant } from '@/lib/auth/data-access'
+import { auteurDansPerimetreLecteur, contenuAuPerimetreCourant, restrictionsActives } from '@/lib/auth/data-access'
 import { supprimerPieceJointe } from '@/lib/medic-assist/pieces-jointes/service'
 import type { ActionProposee } from '@/lib/medic-assist/contrats/actions'
 import {
@@ -179,7 +179,7 @@ export async function listerConversations(
   const recherche = query.recherche?.trim() ?? ''
   const curseur = decoderCurseur(query.curseur)
   const droits = ctx.scope?.donnees
-  const dateMin = droits?.regles.size && !droits.administrateur ? droits.depuis : undefined
+  const dateMin = restrictionsActives(droits) && !droits.administrateur ? droits.depuis : undefined
 
   const idsParTexte = recherche ? await conversationsParTexteDeMessage(userId, recherche) : []
   const filtreRecherche = recherche

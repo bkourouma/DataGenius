@@ -5,7 +5,10 @@ import { prisma } from '@/lib/db/client'
 import type { TypeColonne } from '@/lib/medic-assist/contrats'
 import { transactionLectureUrl } from './postgres'
 import { chiffrerSource, dechiffrerSource } from './secret-source'
-import { configurationFichier, jeuSchema } from './configuration'
+import { configurationFichier, jeuSchema, type JeuConfigure, type TypeSource } from './configuration'
+import { ConnexionMySql, mysql, testerMySql } from './connecteurs/mysql'
+import { ConnexionRest, rest, testerRest } from './connecteurs/rest'
+import { fichier, testerFichier, type ConfigurationFichier } from './connecteurs/fichier'
 
 export const FrequenceSchema = z.coerce.number().int().min(1).max(10080)
 export const CleImportSchema = z.string().regex(/^[a-z][a-z0-9_]{0,59}$/)
@@ -39,16 +42,16 @@ function prefixe(nom: string, defaut: string) {
   return /^[a-z]/.test(cle) ? cle : defaut + (cle ? '_' + cle : '')
 }
 
-type Source = { id: string; titre: string; hote: string; base: string }
+type Source = { id: string; titre: string; hote: string; base: string; type: TypeSource }
 type Table = z.infer<typeof TableSchema>
 type Colonne = { nom: string; typePostgres: string; type: TypeColonne }
 
 export async function listerSources(): Promise<Source[]> {
-  return prisma.$queryRaw`SELECT id, titre, hote, base FROM warehouse.sources ORDER BY titre, id`
+  return prisma.$queryRaw`SELECT id, titre, hote, base, type FROM warehouse.sources ORDER BY titre, id`
 }
 
 export async function trouverSource(id: string): Promise<Source | null> {
-  const [source] = await prisma.$queryRaw<Source[]>`SELECT id, titre, hote, base FROM warehouse.sources WHERE id = ${id}`
+  const [source] = await prisma.$queryRaw<Source[]>`SELECT id, titre, hote, base, type FROM warehouse.sources WHERE id = ${id}`
   return source ?? null
 }
 
@@ -81,7 +84,88 @@ export async function ajouterSource(entree: unknown) {
   return id
 }
 
+export async function ajouterSourceMySql(nom: unknown, entree: unknown) {
+  const libelle = titre.parse(nom)
+  const config = ConnexionMySql.parse(entree)
+  await testerMySql(config)
+  const id = 'source_' + randomUUID().replaceAll('-', '')
+  const secret = chiffrerSource(id, JSON.stringify(config))
+  await prisma.$executeRaw`
+    INSERT INTO warehouse.sources (id, titre, hote, base, secret, type)
+    VALUES (${id}, ${libelle}, ${config.hote + ':' + config.port}, ${config.base}, ${secret}, 'mysql')
+  `
+  return id
+}
+
+export async function ajouterSourceRest(nom: unknown, entree: unknown) {
+  const libelle = titre.parse(nom)
+  const config = ConnexionRest.parse(entree)
+  await testerRest(config)
+  const id = 'source_' + randomUUID().replaceAll('-', '')
+  const secret = chiffrerSource(id, JSON.stringify(config))
+  await prisma.$executeRaw`
+    INSERT INTO warehouse.sources (id, titre, hote, base, secret, type)
+    VALUES (${id}, ${libelle}, ${new URL(config.url).host}, 'API REST', ${secret}, 'rest')
+  `
+  return id
+}
+
+export async function ajouterSourceFichier(nom: unknown, config: ConfigurationFichier) {
+  const libelle = titre.parse(nom)
+  await testerFichier(config)
+  const id = 'source_' + randomUUID().replaceAll('-', '')
+  await prisma.$transaction(async tx => {
+    await tx.$executeRaw`
+      INSERT INTO warehouse.sources (id, titre, hote, base, secret, type)
+      VALUES (${id}, ${libelle}, 'Fichier local', ${config.nom}, '', 'fichier')
+    `
+    await tx.$executeRaw`
+      INSERT INTO warehouse.source_fichiers (source_id, nom, contenu)
+      VALUES (${id}, ${config.nom}, ${config.contenu})
+    `
+  })
+  return id
+}
+
+export async function remplacerSourceFichier(idBrut: unknown, config: ConfigurationFichier) {
+  const id = IdSourceSchema.parse(idBrut)
+  await testerFichier(config)
+  await prisma.$transaction(async tx => {
+    const nombre = await tx.$executeRaw`UPDATE warehouse.sources SET base = ${config.nom} WHERE id = ${id} AND type = 'fichier'`
+    if (!nombre) throw new ErreurAdministrationSource('Source fichier introuvable.')
+    await tx.$executeRaw`UPDATE warehouse.source_fichiers SET nom = ${config.nom}, contenu = ${config.contenu} WHERE source_id = ${id}`
+  })
+}
+
+async function chargerFichier(id: string) {
+  const [config] = await prisma.$queryRaw<ConfigurationFichier[]>`SELECT nom, contenu FROM warehouse.source_fichiers WHERE source_id = ${id}`
+  if (!config) throw new ErreurAdministrationSource('Fichier introuvable.')
+  return config
+}
+
+async function typeSource(id: string) {
+  const source = await trouverSource(id)
+  if (!source) throw new ErreurAdministrationSource('Source introuvable.')
+  return source.type
+}
+
+async function configMySql(id: string) { return ConnexionMySql.parse(JSON.parse(await urlSource(id))) }
+async function configRest(id: string) { return ConnexionRest.parse(JSON.parse(await urlSource(id))) }
+
+export async function lireSourceExterne(id: string, type: Exclude<TypeSource, 'postgresql'>, jeu: JeuConfigure) {
+  switch (type) {
+    case 'mysql': return mysql.lire(await configMySql(id), jeu)
+    case 'rest': return rest.lire(await configRest(id), jeu)
+    case 'fichier': return fichier.lire(await chargerFichier(id), jeu)
+  }
+}
+
 export async function listerTables(id: string, recherche = '') {
+  switch (await typeSource(id)) {
+    case 'mysql': return mysql.tables(await configMySql(id), recherche)
+    case 'rest': return rest.tables(await configRest(id), recherche)
+    case 'fichier': return fichier.tables(await chargerFichier(id), recherche)
+  }
   const filtre = '%' + recherche.slice(0, 120).replace(/[\\%_]/g, c => '\\' + c) + '%'
   const tables = await transactionLectureUrl(await urlSource(id), tx => tx.$queryRaw<Table[]>`
     SELECT n.nspname::text AS schema, c.relname::text AS "table"
@@ -105,6 +189,11 @@ function typeColonne(type: string): TypeColonne {
 
 export async function listerColonnes(id: string, selection: Table) {
   const { schema, table } = TableSchema.parse(selection)
+  switch (await typeSource(id)) {
+    case 'mysql': return mysql.colonnes(await configMySql(id), { schema, table })
+    case 'rest': return rest.colonnes(await configRest(id), { schema, table })
+    case 'fichier': return fichier.colonnes(await chargerFichier(id), { schema, table })
+  }
   const lignes = await transactionLectureUrl(await urlSource(id), tx => tx.$queryRaw<{
     nom: string; typePostgres: string; typeBase: string
   }[]>`

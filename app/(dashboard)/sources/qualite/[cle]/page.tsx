@@ -34,6 +34,8 @@ export default async function QualiteImport({ params, searchParams }: {
             !jeu.derniereReussite ? 'En attente de vérification' : enRetard ? 'Vérification en retard' : 'À jour'}</dd></div>
         </dl>
         <RelancerImport cle={jeu.cle} />
+        {jeu.incrementalPossible && <Link href={'/sources/incremental/' + jeu.cle}
+          className="inline-block text-sm text-primary hover:underline">Configurer la synchronisation incrémentale</Link>}
       </section>
       {searchParams.etat === 'enregistre' && <p role="status" className="text-sm">Configuration enregistrée. Les règles seront appliquées à la prochaine synchronisation.</p>}
       <FormulaireQualite key={jeu.version} jeu={jeu} />
@@ -42,10 +44,12 @@ export default async function QualiteImport({ params, searchParams }: {
         {jeu.historique.length === 0 ? <p className="text-sm text-muted-foreground">Aucune synchronisation enregistrée.</p> : (
           <div className="overflow-auto">
             <table className="w-full text-left text-sm">
-              <thead><tr><th scope="col">Date</th><th scope="col">Résultat</th><th scope="col">Lues</th><th scope="col">Retenues</th></tr></thead>
+              <thead><tr><th scope="col">Date</th><th scope="col">Mode</th><th scope="col">Résultat</th><th scope="col">Lues</th><th scope="col">Retenues</th></tr></thead>
               <tbody className="divide-y">
                 {jeu.historique.map((ligne, index) => <tr key={index}>
-                  <td className="py-2">{date(ligne.verifieA)}</td><td>{statuts[ligne.statut]}{ligne.code && messagesExecution[ligne.code] ? ' · ' + messagesExecution[ligne.code] : ''}</td>
+                  <td className="py-2">{date(ligne.verifieA)}</td>
+                  <td>{ligne.modeLecture === 'delta' ? 'Modifications' : ligne.modeLecture === 'reconciliation' ? 'Réconciliation' : '—'}</td>
+                  <td>{statuts[ligne.statut]}{ligne.code && messagesExecution[ligne.code] ? ' · ' + messagesExecution[ligne.code] : ''}</td>
                   <td>{ligne.lignesLues ?? '—'}</td><td>{ligne.lignesValides ?? '—'}</td>
                 </tr>)}
               </tbody>

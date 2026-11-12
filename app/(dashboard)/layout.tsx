@@ -24,6 +24,8 @@ export default async function WorkspaceLayout({ children }: { children: ReactNod
           <Link className="hidden hover:underline sm:inline" href="/medic-assist">Conversations</Link>
           <Link className="hover:underline" href="/medic-assist/analyses">Analyses</Link>
           <Link className="hover:underline" href="/tableaux">Tableaux</Link>
+          <Link className="hover:underline" href="/tendances">Tendances</Link>
+          <Link className="hover:underline" href="/espaces">Espaces</Link>
           {scope.roleName === 'TenantAdmin' && (
             <>
               <Link className="hover:underline" href="/sources">Source</Link>

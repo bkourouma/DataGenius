@@ -95,7 +95,7 @@ export async function calculerSemantique(
     ctx,
     tronque,
     avecTotaux: totaux !== undefined && construit.dimensions.length > 0,
-    trimestreCivil: trimestreGeneriqueRendu(construit.dimensions),
+    trimestreCivil: trimestreGeneriqueRendu(construit.dimensions, entree.jeu),
   })
 
   provenance.regles.push(...reglesPublication([entree.vue], lecture.publications))

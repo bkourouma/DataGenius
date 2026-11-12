@@ -116,6 +116,8 @@ export interface TempsJeu {
    * 'dernier_mois_clos' (ventes, stocks...), 'aucune' (budget : toutes les periodes).
    */
   defaut: 'dernier_mois_clos' | 'aucune'
+  /** Colonne date et premier mois de l’exercice pour un calendrier administré. */
+  calendrier?: { colonneDate: string; moisDebutExercice: number }
   /**
    * Instantane : les valeurs de mois differents ne s'additionnent pas (stock). Le moteur
    * exige alors UN seul mois, ou la dimension `periode`, et refuse sinon avec un message clair.

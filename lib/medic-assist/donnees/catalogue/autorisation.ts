@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 import { citer } from '@/lib/warehouse/configuration'
-import type { DroitsDonnees, RegleDonnees } from '@/lib/auth/data-access'
+import { peutConsulterJeu, restrictionsActives, type DroitsDonnees, type RegleDonnees } from '@/lib/auth/data-access'
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 import { empreinteEntrees, registrePostgres } from './registre'
 import type { EntreeCatalogue, Registre } from './types'
@@ -19,6 +19,7 @@ function restreindre(entree: EntreeCatalogue, regle: RegleDonnees): EntreeCatalo
   const restreinte: EntreeCatalogue = {
     jeu: masque ? {
       ...jeu,
+      temps: jeu.temps?.calendrier && !noms.has(jeu.temps.calendrier.colonneDate) ? undefined : jeu.temps,
       dimensions: jeu.dimensions.filter(d => noms.has(d.cle)),
       filtres: jeu.filtres.filter(f => noms.has(f.cle)),
       cles: jeu.cles?.filter(c => noms.has(c)),
@@ -39,17 +40,17 @@ function restreindre(entree: EntreeCatalogue, regle: RegleDonnees): EntreeCatalo
 }
 
 export function appliquerDroitsRegistre(registre: Registre, droits: DroitsDonnees | undefined): Registre {
-  if (!droits?.regles.size || droits.administrateur) return registre
+  if (!restrictionsActives(droits) || droits.administrateur) return registre
   const autorise = new Map<string, { entree: EntreeCatalogue; restreinte: boolean }>()
   // Les imports précèdent les combinaisons et chaque combinaison précède celles qui l'utilisent.
   for (const entree of registre) {
     if (entree.vue.dependances?.some(cle => autorise.get(cle)?.restreinte !== false)) continue
+    if (!peutConsulterJeu(droits, entree.jeu.cle)) continue
     const regle = droits.regles.get(entree.jeu.cle)
     if (!regle) {
       autorise.set(entree.jeu.cle, { entree, restreinte: false })
       continue
     }
-    if (!regle.groupes.some(id => droits.groupes.has(id))) continue
     const restreinte = regle.filtre !== null || regle.masquer.length > 0
     const selection = restreinte ? restreindre(entree, regle) : entree
     if (selection) autorise.set(entree.jeu.cle, { entree: selection, restreinte })

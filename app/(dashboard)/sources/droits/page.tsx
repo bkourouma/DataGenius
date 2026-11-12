@@ -18,6 +18,7 @@ export default async function DroitsSourcesPage() {
       <Link href="/sources" className="text-sm text-primary hover:underline">Sources</Link>
       <h1 className="text-2xl font-bold">Droits sur les jeux de données</h1>
       <p className="text-sm text-muted-foreground">Les administrateurs ont accès à tous les jeux. Limitez la consultation des membres en configurant une règle par jeu.</p>
+      <Link className="text-sm font-medium text-primary hover:underline" href="/sources/droits/espaces">Gérer les espaces de données</Link>
     </header>
     <section className="space-y-3" aria-labelledby="groupes-acces">
       <h2 id="groupes-acces" className="text-lg font-semibold">Groupes d’accès</h2>

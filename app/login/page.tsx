@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
-import { signIn } from 'next-auth/react'
+import { useEffect, useState, type FormEvent } from 'react'
+import { getProviders, signIn } from 'next-auth/react'
 import { Database } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,6 +10,26 @@ import { Label } from '@/components/ui/label'
 export default function Connexion() {
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
+  const [entreprise, setEntreprise] = useState(false)
+
+  useEffect(() => {
+    const parametres = new URLSearchParams(window.location.search)
+    if (parametres.has('error')) setError('Connexion impossible. Vérifiez que votre compte est autorisé.')
+    void getProviders().then(fournisseurs => setEntreprise(Boolean(fournisseurs?.entreprise)), () => setEntreprise(false))
+  }, [])
+
+  function destination() {
+    const parametre = new URLSearchParams(window.location.search).get('retour')
+    try {
+      const retour = parametre ? new URL(parametre, window.location.origin) : null
+      if (retour?.origin === window.location.origin && retour.pathname === '/integration/autoriser') {
+        return retour.pathname + retour.search
+      }
+    } catch {
+      // Un retour invalide utilise l'accueil de l'application.
+    }
+    return '/medic-assist'
+  }
 
   async function connecter(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -22,11 +42,22 @@ export default function Connexion() {
         password: form.get('password'),
         redirect: false,
       })
-      if (result?.ok) window.location.assign('/medic-assist')
+      if (result?.ok) window.location.assign(destination())
       else setError('Identifiants invalides.')
     } catch {
       setError('Connexion indisponible. Réessayez.')
     } finally {
+      setPending(false)
+    }
+  }
+
+  async function connecterEntreprise() {
+    setPending(true)
+    setError('')
+    try {
+      await signIn('entreprise', { callbackUrl: destination() })
+    } catch {
+      setError('Connexion entreprise indisponible. Réessayez.')
       setPending(false)
     }
   }
@@ -51,6 +82,9 @@ export default function Connexion() {
           {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
           <Button disabled={pending}>{pending ? 'Connexion…' : 'Se connecter'}</Button>
         </form>
+        {entreprise && <Button className="mt-3 w-full" variant="outline" disabled={pending} onClick={connecterEntreprise}>
+          Connexion entreprise
+        </Button>}
       </section>
     </main>
   )
