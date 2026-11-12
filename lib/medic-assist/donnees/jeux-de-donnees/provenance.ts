@@ -6,6 +6,7 @@
 
 import type { ContexteExecution, Provenance } from '@/lib/medic-assist/contrats'
 import { peutAdministrerMedicAssist } from '@/lib/medic-assist/contrats/droits'
+import { estNombreAnalytique, type NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 
 /** Clé privée de la colonne `provenance` qui porte les totaux du jeu. */
 export const CLE_TOTAUX_STOCKES = 'totauxJeu'
@@ -35,13 +36,13 @@ export function provenanceVisible(
 }
 
 /** Totaux rangés dans la provenance stockée (ou undefined). */
-export function totauxStockes(provenance: unknown): Record<string, number> | undefined {
+export function totauxStockes(provenance: unknown): Record<string, NombreAnalytique> | undefined {
   if (typeof provenance !== 'object' || provenance === null) return undefined
   const brut = (provenance as Record<string, unknown>)[CLE_TOTAUX_STOCKES]
   if (typeof brut !== 'object' || brut === null) return undefined
-  const totaux: Record<string, number> = {}
+  const totaux: Record<string, NombreAnalytique> = {}
   for (const [cle, valeur] of Object.entries(brut)) {
-    if (typeof valeur === 'number' && Number.isFinite(valeur)) totaux[cle] = valeur
+    if (estNombreAnalytique(valeur)) totaux[cle] = valeur
   }
   return Object.keys(totaux).length > 0 ? totaux : undefined
 }

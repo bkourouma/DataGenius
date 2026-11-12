@@ -2,7 +2,7 @@
  * Construction du SQL d'une requete semantique VALIDEE.
  *
  *   WITH <vue> AS (<vue.cte(ctx)>)
- *   SELECT <dimensions>, (<mesure>)::float8 AS "<cle>"
+ *   SELECT <dimensions>, (<mesure>) AS "<cle>"
  *   FROM <vue> WHERE <periode> AND <filtres>
  *   GROUP BY <dimensions> ORDER BY <tri> LIMIT <limite + 1>
  *
@@ -10,9 +10,8 @@
  * choisis par cle ; aucune chaine de la requete n'entre dans le texte SQL. Les valeurs
  * (bornes de periode, valeurs de filtres) passent par Prisma.sql, donc en parametres.
  *
- * EXACTITUDE : le moteur ne fait que `::float8` sur l'expression d'agregat du catalogue,
- * qui porte l'arrondi. Les totaux relancent les MEMES expressions sans GROUP BY, sur les
- * memes filtres : un rapport (taux) reste un rapport de sommes, jamais une somme de taux.
+ * Les expressions d'agrégat portent l'arrondi. Les totaux relancent ces mêmes expressions
+ * sans GROUP BY, sur les mêmes filtres, pour recalculer les rapports sur le jeu entier.
  */
 
 import { Prisma } from '@prisma/client'
@@ -152,7 +151,7 @@ export function construireSql(
     d => Prisma.sql`${expression(d.expression)} AS ${alias(d.cle)}`
   )
   const colonneMesure = (m: DefinitionMesure) => typeof m.expression === 'string'
-    ? Prisma.sql`${expression(m.expression)}::float8 AS ${alias(m.cle)}`
+    ? Prisma.sql`${expression(m.expression)}::numeric AS ${alias(m.cle)}`
     : Prisma.sql`(${m.expression}) AS ${alias(m.cle)}`
   const select = Prisma.join([...colonnesDimensions, ...mesures.map(colonneMesure)], ', ')
 

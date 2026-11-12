@@ -3,6 +3,7 @@
  * du périmètre, rattachement au lecteur (et à sa conversation).
  */
 
+import type { NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import type { Prisma } from '@prisma/client'
 
 import { prisma } from '@/lib/db/client'
@@ -24,7 +25,7 @@ export interface ContenuJeu {
   colonnes: ColonneJeu[]
   lignes: LigneJeu[]
   tronque: boolean
-  totaux?: Record<string, number>
+  totaux?: Record<string, NombreAnalytique>
   provenance: Provenance
 }
 
@@ -34,7 +35,7 @@ export interface EntreeContenu {
   lignes: readonly Record<string, unknown>[]
   tronque?: boolean
   /** Totaux du moteur (`null` : le moteur n'en a pas) ; absent : on les calcule. */
-  totaux?: Record<string, number> | null
+  totaux?: Record<string, NombreAnalytique> | null
   provenance: Provenance
   /** Nombre maximal de lignes gardées (LIMITES.lignesMaxStockees par défaut ; un export, plus). */
   plafond?: number
@@ -49,7 +50,7 @@ export function preparerContenu(entree: EntreeContenu): ContenuJeu {
   const lignes = lignesVersCellules(colonnes, gardees)
   const tronque = entree.tronque === true || entree.lignes.length > plafond
 
-  let totaux: Record<string, number> | undefined
+  let totaux: Record<string, NombreAnalytique> | undefined
   if (entree.totaux === null) totaux = undefined
   else if (entree.totaux !== undefined) totaux = entree.totaux
   else {

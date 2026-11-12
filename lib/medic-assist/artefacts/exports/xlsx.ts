@@ -27,6 +27,7 @@ import {
 import { toIntlTag } from '@/i18n/config';
 
 import type { FormatColonne } from '@/lib/medic-assist/contrats';
+import { estDecimalExact } from '@/lib/medic-assist/contrats/numerique';
 import { creerFormateur, enNombre, estFormatNumerique } from '../formats';
 import type { IndicateurResolu, ModeleTableau } from '../types-rendu';
 import { tableauIndicateurs } from './tableau-indicateurs';
@@ -76,6 +77,7 @@ export function valeurBrute(
   if (valeur === undefined || valeur === null || valeur === '') return null;
   if (format === 'periode' && locale) return creerFormateur('periode', locale)(valeur);
   if (estFormatNumerique(format)) {
+    if (estDecimalExact(valeur)) return valeur;
     const n = enNombre(valeur);
     return n === null ? String(valeur) : n;
   }

@@ -11,6 +11,7 @@
  */
 
 import { toIntlTag } from '@/i18n/config'
+import { estDecimalExact } from '@/lib/medic-assist/contrats/numerique'
 
 import type { ColonneJeu, FormatColonne } from '@/lib/medic-assist/contrats'
 
@@ -93,6 +94,20 @@ export function creerFormateur(
   format: FormatColonne | undefined,
   locale: string,
   options: OptionsFormateur = {}
+): FormateurValeur {
+  const formater = creerFormateurStandard(format, locale, options)
+  if (!estFormatNumerique(format)) return formater
+  const separateur = nombre(toIntlTag(locale), {}).formatToParts(1.1).find(p => p.type === 'decimal')?.value ?? '.'
+  const unite = options.unite || (format === 'montant' || format === 'montant_compact' ? 'EUR' : format === 'pourcentage' ? '%' : '')
+  return valeur => estDecimalExact(valeur)
+    ? valeur.replace('.', separateur) + (unite ? ` ${unite}` : '')
+    : formater(valeur)
+}
+
+function creerFormateurStandard(
+  format: FormatColonne | undefined,
+  locale: string,
+  options: OptionsFormateur,
 ): FormateurValeur {
   const tag = toIntlTag(locale)
   const unite = options.unite?.trim()

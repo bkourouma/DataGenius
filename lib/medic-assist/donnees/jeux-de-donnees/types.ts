@@ -2,6 +2,7 @@
  * Types et constantes du stockage des jeux de données (lot 2).
  */
 
+import type { NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import { z } from 'zod'
 
 import type { ColonneJeu, LigneJeu, Provenance, SourceJeu } from '@/lib/medic-assist/contrats'
@@ -33,7 +34,7 @@ export interface JeuCompletPourExport {
   colonnes: ColonneJeu[]
   lignes: LigneJeu[]
   /** Totaux exacts du jeu rejoué (mêmes que ceux de `lireJeu`), absents si le jeu n'en porte pas. */
-  totaux?: Record<string, number>
+  totaux?: Record<string, NombreAnalytique>
   /** Provenance dans le périmètre du lecteur (le SQL n'y figure que pour un admin). */
   provenance: Provenance
 }

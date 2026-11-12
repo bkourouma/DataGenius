@@ -7,6 +7,7 @@
  */
 
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
+import { estNombreAnalytique, type NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import type { RequeteSemantique } from '@/lib/medic-assist/donnees/requete-interne'
 import { empreinteEntreesAutorisees, registreAutorise } from '../catalogue/autorisation'
 import type { Registre } from '../catalogue/types'
@@ -74,7 +75,7 @@ export async function calculerSemantique(
   if (tronque) lignes = lignes.slice(0, construit.limite)
   lignes = trierLignes(lignes, construit.tri, ctx.locale)
 
-  let totaux: Record<string, number> | undefined
+  let totaux: Record<string, NombreAnalytique> | undefined
   if (construit.mesuresTotalisees.length > 0) {
     // Sans dimension, la ligne unique est deja le total : pas de seconde requete.
     const ligneTotaux = construit.totaux
@@ -84,7 +85,7 @@ export async function calculerSemantique(
     for (const cle of construit.mesuresTotalisees) {
       const valeur = ligneTotaux[cle]
       // Un total NULL (taux sans denominateur, aucune ligne) n'est pas un zero : on l'omet.
-      if (typeof valeur === 'number' && Number.isFinite(valeur)) totaux[cle] = valeur
+      if (estNombreAnalytique(valeur)) totaux[cle] = valeur
     }
   }
 

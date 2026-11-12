@@ -6,6 +6,7 @@
  */
 
 import { enNombre, estFormatNumerique, formatParDefaut } from './formats'
+import { estDecimalExact, estNombreAnalytique, sommerDecimaux, type NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import { comparerLibelles } from '@/lib/tri/libelles'
 import { calculerPivot, creerComparateur } from './pivot'
 
@@ -360,7 +361,7 @@ export function construireModeleTableau(
         }
         const rapport = jeu.totaux?.[c.id]
         totaux[c.id] =
-          actifs === 0 && typeof rapport === 'number' && Number.isFinite(rapport) ? rapport : null
+          actifs === 0 && estNombreAnalytique(rapport) ? rapport : null
         continue
       }
       if (!estFormatAdditif(c.format)) {
@@ -369,20 +370,17 @@ export function construireModeleTableau(
       }
       // Les totaux serveur couvrent tout le jeu : valables seulement sans filtre et si tronqué.
       const serveur = jeu.totaux?.[c.id]
-      if (!limite && actifs === 0 && jeu.tronque && typeof serveur === 'number' && Number.isFinite(serveur)) {
+      if (!limite && actifs === 0 && (jeu.tronque || estDecimalExact(serveur)) && estNombreAnalytique(serveur)) {
         totaux[c.id] = serveur
         continue
       }
-      let somme = 0
-      let vues = 0
+      const valeurs: NombreAnalytique[] = []
       for (const l of triees) {
-        const n = enNombre(l[c.id])
-        if (n !== null) {
-          somme += n
-          vues += 1
-        }
+        const valeur = l[c.id]
+        const n = estDecimalExact(valeur) ? valeur : enNombre(valeur)
+        if (n !== null) valeurs.push(n)
       }
-      totaux[c.id] = vues > 0 ? somme : null
+      totaux[c.id] = valeurs.length ? sommerDecimaux(valeurs) : null
     }
   }
 

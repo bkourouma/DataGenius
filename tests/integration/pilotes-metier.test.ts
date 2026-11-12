@@ -2,7 +2,10 @@ import { randomUUID } from 'node:crypto'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { prisma } from '@/lib/db/client'
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
+import { construireExport } from '@/lib/medic-assist/artefacts/exports'
+import { creerArtefact } from '@/lib/medic-assist/artefacts/stockage'
 import { calculerSemantique } from '@/lib/medic-assist/donnees/moteur/calculer'
+import { interrogerDonnees } from '@/lib/medic-assist/donnees/outils'
 import { chargerCatalogueMetier, publierCatalogueMetier } from '@/lib/warehouse/catalogue-metier'
 import { creerCombinaison, previsualiserCombinaison } from '@/lib/warehouse/combinaisons-admin'
 import { deconnecterPostgres } from '@/lib/warehouse/postgres'
@@ -20,6 +23,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier D
   let factures: string
   let reglements: string
   let tickets: string
+  let ecritures: string
 
   async function ajouterBase(variable: string, titre: string, base: string) {
     const url = new URL(process.env[variable] ?? '')
@@ -43,13 +47,17 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier D
     }
     const entreprise = await ajouterBase('DATAGENIUS_SOURCE_DISTRIBUTION', 'Pilote services', 'dg_source')
     const operations = await ajouterBase('DATAGENIUS_SOURCE_SUPPORT', 'Pilote opérations', 'dg_support')
+    await prisma.user.create({ data: { id: contexte.userId, email: contexte.userId + '@example.test',
+      firstName: 'Pilote', passwordHash: 'fixture', roleName: 'TenantAdmin' } })
     factures = await importer(entreprise, 'Factures du pilote', 'finance', 'factures', ['facture_id', 'equipe', 'devise', 'montant'])
+    ecritures = await importer(entreprise, 'Écritures précises', 'finance', 'ecritures', ['libelle', 'montant'])
     reglements = await importer(operations, 'Règlements du pilote', 'facturation', 'reglements', ['reglement_id', 'facture_id', 'montant'])
     tickets = await importer(operations, 'Tickets du pilote', 'support', 'tickets', ['ticket_id', 'equipe', 'statut', 'resolution_minutes'])
   })
 
   afterAll(async () => {
     try {
+      await prisma.user.deleteMany({ where: { id: contexte.userId } })
       for (const jeu of [...combinaisons, ...imports]) await prisma.$executeRaw`DELETE FROM warehouse.catalogue_metier WHERE jeu = ${jeu}`
       for (const jeu of combinaisons) await prisma.$executeRaw`DELETE FROM warehouse.combinaisons WHERE cle = ${jeu}`
       for (const jeu of imports) {
@@ -114,5 +122,21 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier D
     expect(Object.fromEntries(resultat.lignes.map(ligne => [ligne.equipe, ligne.delai_moyen])))
       .toEqual({ Nord: 60, Sud: 120 })
     expect(resultat.totaux).toEqual({ delai_moyen: 80 })
+  })
+
+  it('conserve les montants décimaux exacts de PostgreSQL jusqu’à l’export CSV', async () => {
+    await publierCatalogueMetier(ecritures, 0, {
+      description: 'Journal comptable', grain: 'Une ligne par écriture', cles: ['libelle'], dimensions: ['libelle'], colonnes: [],
+      mesures: [{ cle: 'solde', libelle: 'Solde', description: 'Somme signée des écritures', colonne: 'montant', agregat: 'somme' }],
+    }, contexte.userId)
+    const resultat = await interrogerDonnees(contexte, { jeu: ecritures, mesures: ['solde'], dimensions: ['libelle'] })
+    expect(resultat.apercu).toContainEqual({ libelle: 'Crédit', solde: '9007199254740993.25' })
+    expect(resultat.totaux).toEqual({ solde: '9007199254740993.15' })
+    const artefact = await creerArtefact(contexte, {
+      spec: { type: 'tableau', titre: 'Journal comptable', jeuDeDonneesId: resultat.jeuDeDonneesId, totaux: true },
+    })
+    const csv = (await construireExport(contexte, artefact.artefactId, 'csv')).buffer.toString('utf8')
+    expect(csv).toContain('9007199254740993,25')
+    expect(csv).toContain('9007199254740993,15')
   })
 })

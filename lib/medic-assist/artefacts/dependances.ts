@@ -5,6 +5,7 @@
  * « non implemente : lot 2 » et l'erreur remonte (elle n'est pas masquee).
  */
 
+import type { NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import { LIMITES, type ContexteExecution } from '@/lib/medic-assist/contrats';
 import { lignesCompletesPourExport, lireJeu } from '@/lib/medic-assist/donnees/outils';
 
@@ -69,7 +70,7 @@ async function chargerJeuComplet(
           viaArtefact: { proprietaireId: viaArtefact.proprietaireId },
         })
       : await lignesCompletesPourExport(jeuId, contexte);
-    const totaux = (jeu as { totaux?: Record<string, number> }).totaux;
+    const totaux = (jeu as { totaux?: Record<string, NombreAnalytique> }).totaux;
     return {
       jeuDeDonneesId: jeuId,
       colonnes: jeu.colonnes,
@@ -96,7 +97,7 @@ async function chargerLignesPourAffichage(
   options: { recalculer: boolean; viaArtefact?: ViaArtefact }
 ): Promise<DonneesJeuReponse | null> {
   const lignes: DonneesJeuReponse['lignes'] = [];
-  let totaux: Record<string, number> | undefined;
+  let totaux: Record<string, NombreAnalytique> | undefined;
   for (let page = 1; page <= PAGES_MAX; page++) {
     const lue = await lireJeu(jeuId, contexte, {
       recalculer: options.recalculer && page === 1,

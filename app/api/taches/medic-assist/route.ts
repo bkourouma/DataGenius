@@ -17,6 +17,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { traiterRapportsEchus } from '@/lib/medic-assist/suivi/rapports-programmes'
 import { nomErreur } from '@/lib/medic-assist/suivi/erreurs'
+import { traiterAlertesTableaux } from '@/lib/warehouse/tableaux-alertes'
 
 export const dynamic = 'force-dynamic'
 
@@ -43,9 +44,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const bilan = await traiterRapportsEchus()
+    const [bilan, alertes] = await Promise.all([traiterRapportsEchus(), traiterAlertesTableaux()])
     console.info('[medic-assist] Rapports programmés :', JSON.stringify(bilan))
-    return NextResponse.json(bilan)
+    return NextResponse.json({ ...bilan, alertes })
   } catch (error) {
     console.error('[medic-assist] Rapports programmés interrompus :', nomErreur(error))
     return NextResponse.json(

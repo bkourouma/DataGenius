@@ -2,6 +2,7 @@
  * Types internes de la couche de donnees (lot 2), hors contrats partages.
  */
 
+import type { NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import type { ColonneJeu, Provenance } from '@/lib/medic-assist/contrats'
 import type { RequeteSemantique } from '@/lib/medic-assist/donnees/requete-interne'
 
@@ -30,7 +31,7 @@ export interface ResultatCalcule {
   lignes: Record<string, unknown>[]
   /** Vrai si le resultat complet depasse `lignes` (limite atteinte). */
   tronque: boolean
-  totaux?: Record<string, number>
+  totaux?: Record<string, NombreAnalytique>
   provenance: Provenance
 }
 

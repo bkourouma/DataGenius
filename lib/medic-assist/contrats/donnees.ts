@@ -11,6 +11,7 @@
  */
 
 import { z } from 'zod'
+import { estDecimalExact } from './numerique'
 
 import {
   CelluleSchema,
@@ -129,7 +130,7 @@ export const ResultatJeuSchema = z.object({
   /** Vrai si le jeu a été coupé à LIMITES.lignesMaxStockees. */
   tronque: z.boolean(),
   /** Totaux des colonnes additives, calculés par le serveur sur tout le jeu. */
-  totaux: z.record(z.string(), z.number()).optional(),
+  totaux: z.record(z.string(), z.union([z.number(), z.string().refine(estDecimalExact)])).optional(),
   provenance: ProvenanceSchema,
 })
 /**

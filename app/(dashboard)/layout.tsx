@@ -15,14 +15,15 @@ export default async function WorkspaceLayout({ children }: { children: ReactNod
 
   return (
     <>
-      <header className="flex h-14 items-center gap-3 border-b bg-card px-3 sm:gap-6 sm:px-6">
+      <header className="flex min-h-14 flex-wrap items-center gap-x-3 gap-y-1 border-b bg-card px-3 py-1 sm:flex-nowrap sm:gap-6 sm:px-6 sm:py-0">
         <Link href="/medic-assist" className="flex shrink-0 items-center gap-2 font-semibold">
           <Database size={19} className="text-primary" aria-hidden />
           Data Genius
         </Link>
-        <nav aria-label="Espace de travail" className="flex min-w-0 flex-1 items-center gap-3 text-sm sm:gap-5">
+        <nav aria-label="Espace de travail" className="order-last flex min-w-0 basis-full flex-wrap items-center gap-x-3 gap-y-2 pb-2 text-sm sm:order-none sm:basis-auto sm:flex-1 sm:gap-5 sm:pb-0">
           <Link className="hidden hover:underline sm:inline" href="/medic-assist">Conversations</Link>
           <Link className="hover:underline" href="/medic-assist/analyses">Analyses</Link>
+          <Link className="hover:underline" href="/tableaux">Tableaux</Link>
           {scope.roleName === 'TenantAdmin' && (
             <>
               <Link className="hover:underline" href="/sources">Source</Link>
@@ -30,7 +31,7 @@ export default async function WorkspaceLayout({ children }: { children: ReactNod
             </>
           )}
         </nav>
-        <Deconnexion />
+        <div className="ml-auto"><Deconnexion /></div>
       </header>
       <main className="mx-auto max-w-[1800px] px-4 py-4 sm:px-6 lg:px-8">{children}</main>
     </>

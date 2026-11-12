@@ -52,6 +52,8 @@ Les nouveaux imports sont lus directement dans la base de Data Genius par l’ap
 
 Depuis un import administré ou un jeu combiné, ouvrez **Catalogue métier**. Renseignez la granularité, les clés, les descriptions et les synonymes. Définissez les dimensions et les indicateurs avec leurs filtres, unités et devises. Chaque publication apparaît dans l’historique. Le moteur sémantique et le chat utilisent la dernière définition publiée.
 
+Les calculs numériques conservent les décimales dans PostgreSQL. Les valeurs qui dépassent la précision des nombres de tableur sont transportées sous forme de chaînes décimales et exportées en texte dans les cellules Excel pour préserver leurs chiffres.
+
 ## Exploiter la synchronisation
 
 ```powershell
@@ -67,6 +69,12 @@ Chaque vérification relit les colonnes sélectionnées. Data Genius compare le 
 Cette version utilise des copies complètes, limitées à 50 000 lignes et environ 20 Mio par jeu. Elle convient à un premier data mart de taille limitée. Le moteur d’import disponible est PostgreSQL. La capture continue des changements et les autres moteurs demandent des connecteurs supplémentaires.
 
 Pour les rapports programmés, configurez le SMTP de Data Genius et l’appel de `POST /api/taches/medic-assist` avec le jeton `JETON_TACHES_PLANIFIEES` dans l’en-tête `Authorization: Bearer …`.
+
+Ouvrez **Qualité et suivi** depuis un import pour configurer ses filtres, normalisations et contrôles, consulter les exécutions et relancer une synchronisation. Les analyses indiquent les échecs et les échéances de vérification dépassées. [Préparation des imports](docs/preparation-imports.md)
+
+## Tableaux de bord
+
+Dans **Tableaux**, créez des tuiles à partir d’un indicateur publié ou d’un artefact accessible. Les tuiles d’indicateurs peuvent recevoir un filtre commun, une dimension de détail et un objectif. Le propriétaire choisit les lecteurs et retrouve dans **Tableaux** les notifications de franchissement de seuil. L’évaluation des alertes utilise la même tâche serveur que les rapports programmés.
 
 ## Reproduire la recette PostgreSQL
 

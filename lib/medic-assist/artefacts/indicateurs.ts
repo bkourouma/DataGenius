@@ -4,6 +4,7 @@
  */
 
 import { SEUIL_TAUX_ATTEINT } from '@/lib/reports/seuils-objectifs'
+import { estDecimalExact, type NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 
 import { creerFormateur, enNombre, formatParDefaut } from './formats'
 
@@ -34,7 +35,7 @@ export function statutObjectif(valeur: number, objectif: number): StatutObjectif
 const SEUIL_STABLE = 0.05
 
 interface Resolution {
-  valeur: number | null
+  valeur: NombreAnalytique | null
   format: FormatColonne
   unite?: string
 }
@@ -85,7 +86,7 @@ function resoudreSource(
   } else {
     brut = valeurSansLigne(jeu, source.colonne)
   }
-  return { valeur: enNombre(brut), format, unite }
+  return { valeur: estDecimalExact(brut) ? brut : enNombre(brut), format, unite }
 }
 
 export function resoudreIndicateurs(
@@ -108,7 +109,7 @@ export function resoudreIndicateurs(
     if (carte.comparaison) {
       const ref = resoudreSource(carte.comparaison.source, jeux, carte.format)
       let variationPct: number | null = null
-      if (principale.valeur !== null && ref.valeur !== null && ref.valeur !== 0) {
+      if (typeof principale.valeur === 'number' && typeof ref.valeur === 'number' && ref.valeur !== 0) {
         variationPct = ((principale.valeur - ref.valeur) / Math.abs(ref.valeur)) * 100
       }
       resolu.comparaison = {
@@ -129,7 +130,7 @@ export function resoudreIndicateurs(
 
     if (carte.objectif) {
       const cible = resoudreSource(carte.objectif.source, jeux, carte.format)
-      const calculable = principale.valeur !== null && cible.valeur !== null && cible.valeur !== 0
+      const calculable = typeof principale.valeur === 'number' && typeof cible.valeur === 'number' && cible.valeur !== 0
       resolu.objectif = {
         libelle: carte.objectif.libelle,
         valeur: cible.valeur,

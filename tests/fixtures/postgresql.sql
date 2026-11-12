@@ -43,3 +43,7 @@ INSERT INTO finance.factures VALUES
   ('F-004', 'Sud', '2026-10-03', 'EUR', 70.01);
 GRANT USAGE ON SCHEMA finance TO dg_reader;
 GRANT SELECT ON finance.factures TO dg_reader;
+
+CREATE TABLE finance.ecritures (libelle text PRIMARY KEY, montant numeric(24, 2) NOT NULL);
+INSERT INTO finance.ecritures VALUES ('Crédit', 9007199254740993.25), ('Débit', -0.10);
+GRANT SELECT ON finance.ecritures TO dg_reader;

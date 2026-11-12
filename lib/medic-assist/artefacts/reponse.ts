@@ -7,12 +7,13 @@
  * Fichier de types : importable côté client et côté serveur.
  */
 
+import type { NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import type { ArtefactDto, LigneJeu } from '@/lib/medic-assist/contrats'
 
 export interface DonneesJeuReponse {
   /** Au plus LIMITES.lignesMaxStockees lignes. */
   lignes: LigneJeu[]
-  totaux?: Record<string, number>
+  totaux?: Record<string, NombreAnalytique>
 }
 
 /** Jeu non lu parce que le lecteur a dépassé la limite de rejeux : quand réessayer. */

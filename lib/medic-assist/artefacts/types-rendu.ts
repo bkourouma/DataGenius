@@ -5,6 +5,7 @@
  * Les formes sont figées par le chef de lot ; une évolution se signale dans le rapport.
  */
 
+import type { NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import type {
   ArtefactSpec,
   ColonneJeu,
@@ -26,7 +27,7 @@ export interface JeuClient {
   lignes: Record<string, unknown>[]
   nbLignes: number
   tronque: boolean
-  totaux?: Record<string, number>
+  totaux?: Record<string, NombreAnalytique>
   provenance: Provenance
   /** Lignes non chargées : limite de rejeux atteinte, à réessayer dans ce délai. */
   limiteDebit?: { reessayerDansSecondes: number }
@@ -140,12 +141,12 @@ export type StatutObjectif = 'atteint' | 'en_cours' | 'a_risque'
 export interface IndicateurResolu {
   libelle: string
   /** `null` si la source est introuvable (jeu, colonne ou ligne absents). */
-  valeur: number | null
+  valeur: NombreAnalytique | null
   format: FormatColonne
   valeurFormatee: string
   comparaison?: {
     libelle: string
-    valeur: number | null
+    valeur: NombreAnalytique | null
     valeurFormatee: string
     /** Variation relative en points de pourcentage ; null si la référence est nulle ou absente. */
     variationPct: number | null
@@ -153,7 +154,7 @@ export interface IndicateurResolu {
   }
   objectif?: {
     libelle?: string
-    valeur: number | null
+    valeur: NombreAnalytique | null
     valeurFormatee: string
     /** Taux de réalisation en points (valeur / objectif × 100) ; null si objectif nul ou absent. */
     taux: number | null

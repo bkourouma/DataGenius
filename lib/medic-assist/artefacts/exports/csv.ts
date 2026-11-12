@@ -18,6 +18,7 @@
  */
 
 import type { FormatColonne } from '@/lib/medic-assist/contrats';
+import { estDecimalExact } from '@/lib/medic-assist/contrats/numerique';
 import { enNombre, estFormatNumerique } from '../formats';
 import type { ModeleTableau } from '../types-rendu';
 import { tableauIndicateurs } from './tableau-indicateurs';
@@ -58,6 +59,7 @@ function cellule(valeur: unknown, format: FormatColonne | undefined, virgule: bo
     return Number.isNaN(valeur.getTime()) ? '' : valeur.toISOString().slice(0, 10);
   }
   if (estFormatNumerique(format)) {
+    if (estDecimalExact(valeur)) return virgule ? valeur.replace('.', ',') : valeur;
     const n = enNombre(valeur);
     if (n !== null) return nombreTexte(n, virgule);
   }

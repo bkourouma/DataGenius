@@ -8,6 +8,7 @@
  * ErreurApi).
  */
 
+import type { NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import { z } from 'zod'
 
 import {
@@ -188,7 +189,7 @@ export interface JeuPagineDto {
   /** Lignes du jeu (après plafond de stockage). */
   total: number
   tronque: boolean
-  totaux?: Record<string, number>
+  totaux?: Record<string, NombreAnalytique>
   /** Provenance ; `sql` n'est présent que pour un administrateur. */
   provenance: Provenance
   calculeA: string

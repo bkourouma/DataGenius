@@ -11,6 +11,7 @@
  * ou si l'élément n'existe pas (même réponse : on ne révèle pas l'existence).
  */
 
+import type { NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 import type {
   ArtefactSpec,
   ColonneJeu,
@@ -48,7 +49,7 @@ export interface JeuComplet {
   lignes: Record<string, unknown>[];
   nbLignes: number;
   tronque: boolean;
-  totaux?: Record<string, number>;
+  totaux?: Record<string, NombreAnalytique>;
   provenance: Provenance;
 }
 
