@@ -1,0 +1,432 @@
+{
+  "titre": "Data Genius",
+  "actionResume": {
+    "creerTache": "创建任务“{titre}”并指派给 {assigne}。",
+    "creerTacheEcheance": "创建任务“{titre}”并指派给 {assigne}，截止日期为 {echeance}。",
+    "envoyerEmail": "将分析“{titre}”通过电子邮件发送给 {destinataires}，并附上 {formats} 文件。",
+    "notifier": "向 {destinataires} 发送通知：“{message}”。",
+    "notifierArtefact": "向 {destinataires} 发送通知，并附上分析“{titre}”：“{message}”。",
+    "programmerRapport": "将分析“{titre}”以 {formats} 格式发送给 {destinataires}，{frequence}。",
+    "partageNote": "该分析将以只读方式与这些人共享，他们将在各自的权限范围内查看。",
+    "frequence": {
+      "quotidien": "每天 {heure}（巴黎时间）",
+      "hebdomadaire": "每{jour} {heure}（巴黎时间）",
+      "hebdomadaireSansJour": "每周 {heure}（巴黎时间）",
+      "mensuel": "每月 {jourMois} 日 {heure}（巴黎时间）",
+      "mensuelSansJour": "每月 {heure}（巴黎时间）"
+    },
+    "notifierSansAcces": "{nombre, plural, other {{destinataires} 无权访问 Data Genius，只会收到消息，不含分析。}}"
+  },
+  "actionResultat": {
+    "creerTache": "已为 {assigne} 创建任务。",
+    "envoyerEmail": "{envoyes, plural, other {已发送 # 封电子邮件。}}",
+    "envoyerEmailEchecs": "{echecs, plural, other {# 封发送失败。}}",
+    "notifier": "{nombre, plural, other {已向 # 人发送通知。}}",
+    "programmerRapport": "已安排报告“{titre}”。",
+    "echec": {
+      "generique": "无法执行该操作。",
+      "export_impossible": "分析导出失败：未发送任何内容。",
+      "mail_non_envoye": "无法发送任何电子邮件。",
+      "destinataire_invalide": "有收件人已无权访问 Data Genius。",
+      "artefact_non_proprietaire": "只有分析的所有者才能共享、发送或定时发送该分析。"
+    },
+    "lien": {
+      "taches": "查看我的任务",
+      "rapports": "查看我的报告"
+    }
+  },
+  "emailArtefact": {
+    "sujet": "{expediteur} 向您发送了“{titre}”",
+    "salutation": "{nom}，您好：",
+    "intro": "{expediteur} 通过 Data Genius 向您发送了分析“{titre}”。",
+    "messageDe": "{expediteur} 的留言：",
+    "formats": "附件：{formats}。",
+    "note": "附件中的数字是发送者在发送时的数据。在 Data Genius 中打开该分析时，数字将按您自己的权限范围重新计算。",
+    "bouton": "打开分析",
+    "lienTexte": "打开分析：{url}",
+    "pied": "Data Genius 自动发送的邮件，请勿回复。"
+  },
+  "notifMessage": {
+    "titre": "{expediteur} 给您留言了"
+  },
+  "notifTache": {
+    "titre": "{expediteur} 指派了一项任务给您",
+    "message": "“{titre}”",
+    "messageEcheance": "“{titre}”，截止日期 {echeance}"
+  },
+  "erreurs": {
+    "titre": "无法执行",
+    "introuvable": "找不到此项目，或已无法访问。",
+    "invalide": "输入的信息无效。",
+    "interdit": "您无权执行此操作。",
+    "conflit": "此项目已被处理或修改，请刷新后重试。",
+    "destinataire_invalide": "其中一位收件人无权使用 Data Genius。",
+    "export_impossible": "无法生成文件，请稍后重试。",
+    "artefact_non_proprietaire": "只有分析的所有者才能执行此操作。",
+    "interne": "发生错误，请稍后重试。",
+    "reseau": "服务器无响应，请检查网络连接后重试。",
+    "mail_non_envoye": "未能发送任何电子邮件。",
+    "execution_impossible": "操作未能完成。"
+  },
+  "carteAction": {
+    "titre": {
+      "creer_tache": "创建任务",
+      "envoyer_email": "通过电子邮件发送",
+      "notifier": "发送通知",
+      "programmer_rapport": "定时发送报告"
+    },
+    "statut": {
+      "proposee": "待确认",
+      "executee": "已完成",
+      "annulee": "已取消",
+      "echec": "失败"
+    },
+    "chargement": "正在加载操作…",
+    "erreurLecture": "无法重新读取此操作。",
+    "reessayer": "重试",
+    "confirmer": "确认",
+    "annuler": "取消",
+    "enCours": "正在处理…",
+    "nonExecute": "在您确认之前，不会执行任何操作。",
+    "destinataires": "收件人",
+    "assigne": "指派给",
+    "echeance": "截止日期",
+    "destinatairesRequis": "请至少选择一位收件人后再确认。",
+    "assigneRequis": "请选择任务的负责人。",
+    "nomsIndisponibles": "无法加载姓名。您可以不作修改直接确认。",
+    "executee": {
+      "creer_tache": "已为{noms}创建任务。",
+      "envoyer_email": "电子邮件已发送给{noms}。",
+      "notifier": "通知已发送给{noms}。",
+      "programmer_rapport": "已为{noms}设置定时报告。"
+    },
+    "executeeSimple": {
+      "creer_tache": "任务已创建。",
+      "envoyer_email": "电子邮件已发送。",
+      "notifier": "通知已发送。",
+      "programmer_rapport": "定时报告已设置。"
+    },
+    "annulee": "操作已取消，未执行任何内容。",
+    "annuleeLe": "已于 {date} 取消。",
+    "confirmeeLe": "操作已于 {date} 确认。",
+    "confirmee": "操作已确认。",
+    "echec": "无法执行此操作。",
+    "echecRaison": "原因：{raison}",
+    "voirResultat": "打开"
+  },
+  "selecteurUtilisateurs": {
+    "placeholder": "搜索人员…",
+    "aide": "输入姓名，然后用方向键和回车键选择。",
+    "listeLabel": "搜索结果",
+    "chargement": "正在搜索…",
+    "aucunResultat": "未找到任何人。",
+    "erreur": "搜索失败。",
+    "reessayer": "重试",
+    "retirer": "移除{nom}",
+    "selectionLabel": "已选人员",
+    "aucuneSelection": "尚未选择任何人。",
+    "resultats": "{nombre, plural, =0 {没有结果} other {# 条结果}}",
+    "selection": "{nombre, plural, =0 {尚未选择任何人} other {已选择 # 人}}",
+    "plafond": "已达上限：{max} 人。",
+    "moi": "我",
+    "moiAide": "在列表中添加或移除您自己的账户。"
+  },
+  "dialoguePartage": {
+    "titre": "分享“{titre}”",
+    "explication": "所选人员看到的是在其自身权限范围内重新计算的数据，可能与您看到的不同。",
+    "destinataires": "人员",
+    "message": "留言（可选）",
+    "messagePlaceholder": "添加一句话说明此次分享",
+    "partager": "分享",
+    "annuler": "取消",
+    "enCours": "正在分享…",
+    "aucunDestinataire": "请至少选择一位人员。",
+    "succes": "{nombre, plural, other {已分享给 # 人。}}"
+  },
+  "dialogueProgrammer": {
+    "titre": "定时发送“{titre}”",
+    "explication": "每次发送时都会重新计算分析结果，并通过电子邮件发送给所选人员。",
+    "frequence": "频率",
+    "frequences": {
+      "quotidien": "每天",
+      "hebdomadaire": "每周",
+      "mensuel": "每月"
+    },
+    "jourSemaine": "星期",
+    "jourMois": "每月几号",
+    "jourMoisAide": "1 至 28，以确保每个月都能发送。",
+    "heure": "发送时间",
+    "heureHeures": "小时",
+    "heureMinutes": "分钟",
+    "heureAide": "巴黎时间，与您所在的时区无关。将在所选时间之后的下一个刻钟发送。",
+    "destinataires": "收件人",
+    "formats": "附件格式",
+    "format": {
+      "xlsx": "Excel (.xlsx)",
+      "pdf": "PDF (.pdf)",
+      "csv": "CSV (.csv)"
+    },
+    "erreurDestinataires": "请至少选择一位收件人。",
+    "erreurFormats": "请至少勾选一种格式。",
+    "programmer": "定时发送",
+    "annuler": "取消",
+    "enCours": "正在设置…",
+    "succes": "定时发送已设置。"
+  },
+  "actionsArtefact": {
+    "groupe": "分析操作",
+    "enregistrer": "保存到“我的分析”",
+    "enregistrerCourt": "保存",
+    "epingler": "固定到仪表板",
+    "epinglerCourt": "固定",
+    "partager": "分享",
+    "programmer": "定时发送",
+    "chargementEtat": "正在加载状态…",
+    "proprietaireSeulement": "只有分析的所有者才能保存、分享或定时发送该分析。",
+    "enregistreOk": "分析已保存到“我的分析”。",
+    "retireOk": "分析已从“我的分析”中移除。",
+    "epingleOk": "分析已固定到仪表板。",
+    "desepingleOk": "分析已从仪表板移除。",
+    "enregistrerProprietaire": "只有分析的所有者可以保存它。您仍然可以将其固定。"
+  },
+  "notifPartage": {
+    "titreConversation": "{expediteur} 与您分享了一段对话",
+    "titreArtefact": "{expediteur} 与您分享了一份分析",
+    "message": "“{titre}”"
+  },
+  "emailRapport": {
+    "sujet": "定期报告：“{titre}”",
+    "salutation": "{nom}，您好：",
+    "intro": "{proprietaire} 向您发送了 Data Genius 分析“{titre}”。",
+    "automatique": "此报告{frequence}自动发送，直到 {proprietaire} 停止为止。",
+    "formats": "附件：{formats}。",
+    "note": "附件中的数字是报告所有者在发送日期的数据。在 Data Genius 中打开分析时，数字会按您自己的范围重新计算。",
+    "bouton": "打开分析",
+    "lienTexte": "打开分析：{url}",
+    "pied": "Data Genius 自动邮件，请勿回复。",
+    "frequence": {
+      "quotidien": "每天",
+      "hebdomadaire": "每周",
+      "mensuel": "每月"
+    }
+  },
+  "notifRapport": {
+    "titre": "报告：“{titre}”",
+    "message": "由 {proprietaire} {frequence}发送。打开分析即可查看您范围内的数字。",
+    "frequence": {
+      "quotidien": "每天",
+      "hebdomadaire": "每周",
+      "mensuel": "每月"
+    }
+  },
+  "analyses": {
+    "page": {
+      "titre": "我的分析",
+      "description": "查看您保存的分析、他人与您共享的分析、您的任务以及定时报告。"
+    },
+    "onglets": {
+      "aria": "我的分析分区",
+      "analyses": "已保存的分析",
+      "partages": "与我共享",
+      "taches": "我的任务",
+      "rapports": "定时报告"
+    },
+    "recherche": {
+      "label": "搜索我的分析",
+      "placeholder": "搜索分析…"
+    },
+    "total": "{count, plural, other {# 项分析}}",
+    "type": {
+      "tableau": "表格",
+      "graphique": "图表",
+      "indicateurs": "指标",
+      "document": "文档"
+    },
+    "enregistreeLe": "保存于 {date}",
+    "partagee": "已共享",
+    "ouvrir": "打开",
+    "ouvrirAria": "打开分析“{titre}”",
+    "retirer": "移除",
+    "retirerAria": "从“我的分析”中移除分析“{titre}”",
+    "retirerTitre": "从“我的分析”中移除此分析？",
+    "retirerTexte": "“{titre}”将不再显示在此列表中。分析本身不会被删除，您可以随时在助手中重新保存。",
+    "retirerConfirmer": "移除",
+    "annuler": "取消",
+    "retireOk": "已从“我的分析”中移除该分析。",
+    "chargerPlus": "加载更多",
+    "chargement": "正在加载分析…",
+    "vide": {
+      "titre": "没有已保存的分析",
+      "texte": "要添加分析，请向 Data Genius 助手提问，然后在结果下方选择“保存到我的分析”。",
+      "rechercheTitre": "没有结果",
+      "rechercheTexte": "没有与此搜索匹配的分析。"
+    },
+    "erreur": {
+      "titre": "无法加载此列表",
+      "texte": "发生错误，您的数据不会丢失。",
+      "reessayer": "重试"
+    },
+    "retour": "返回我的分析",
+    "titreRepli": "分析"
+  },
+  "partagesRecus": {
+    "titre": "与我共享",
+    "chargement": "正在加载共享内容…",
+    "chargerPlus": "加载更多",
+    "vide": {
+      "titre": "尚无与您共享的内容",
+      "texte": "当同事与您共享对话或分析时，将显示在此处。"
+    },
+    "de": "来自 {nom}",
+    "cible": {
+      "conversation": "对话",
+      "artefact": "分析"
+    },
+    "partageLe": "共享于 {date}",
+    "ouvrirConversation": "打开对话",
+    "ouvrirArtefact": "打开分析",
+    "ouvrirAria": "打开“{titre}”",
+    "compteDisparu": "账户不可用",
+    "erreur": {
+      "titre": "无法加载共享内容",
+      "texte": "发生错误，请稍后重试。",
+      "reessayer": "重试"
+    },
+    "envoyes": {
+      "titre": "我共享的内容",
+      "chargement": "正在加载您共享的内容…",
+      "vide": "您尚未共享任何内容。",
+      "a": "发给 {nom}"
+    },
+    "retirer": {
+      "annuler": "取消",
+      "envoye": {
+        "bouton": "撤销共享",
+        "aria": "撤销“{titre}”的共享",
+        "titre": "撤销此共享？",
+        "texte": "{nom}将无法再打开“{titre}”，其在仪表板上对该内容的固定项也会被删除。",
+        "confirmer": "撤销共享",
+        "ok": "共享已撤销"
+      },
+      "recu": {
+        "bouton": "不再查看",
+        "aria": "不再查看“{titre}”",
+        "titre": "不再查看此内容？",
+        "texte": "“{titre}”将从您的列表中消失，您在仪表板上对该内容的固定项也会被删除。您将无法再打开它。",
+        "confirmer": "不再查看",
+        "ok": "该内容已不在您的列表中"
+      }
+    }
+  },
+  "taches": {
+    "titre": "我的任务",
+    "filtres": {
+      "aria": "筛选任务",
+      "a_faire": "待办",
+      "en_retard": "已逾期",
+      "terminee": "已完成"
+    },
+    "priorite": {
+      "basse": "低优先级",
+      "normale": "普通优先级",
+      "haute": "高优先级"
+    },
+    "echeance": "截止：{date}",
+    "sansEcheance": "无截止日期",
+    "enRetard": "已逾期",
+    "termineeLe": "完成于 {date}",
+    "assigneA": "指派给 {nom}",
+    "assigneAMoi": "指派给您",
+    "creeePar": "创建人：{nom}",
+    "marquerTerminee": "标记为已完成",
+    "marquerAria": "将任务“{titre}”标记为已完成",
+    "rouvrir": "重新打开",
+    "rouvrirAria": "重新打开任务“{titre}”",
+    "voirConversation": "查看对话",
+    "chargement": "正在加载任务…",
+    "vide": {
+      "a_faire": "没有待办任务。由助手创建并指派给您的任务将显示在此处。",
+      "en_retard": "没有逾期任务。",
+      "terminee": "暂无已完成的任务。"
+    },
+    "erreur": {
+      "titre": "无法加载任务",
+      "texte": "发生错误，请稍后重试。",
+      "reessayer": "重试"
+    }
+  },
+  "rapports": {
+    "titre": "定时报告",
+    "chargement": "正在加载报告…",
+    "vide": {
+      "titre": "没有定时报告",
+      "texte": "要创建定时报告，请打开一项分析并选择“定时发送”：系统会在所选时间重新计算并通过电子邮件发送。"
+    },
+    "erreur": {
+      "titre": "无法加载报告",
+      "texte": "发生错误，请稍后重试。",
+      "reessayer": "重试"
+    },
+    "frequence": {
+      "quotidien": "每天 {heure}（巴黎时间）",
+      "hebdomadaire": "每{jour} {heure}（巴黎时间）",
+      "mensuel": "每月 {jourMois} 日 {heure}（巴黎时间）"
+    },
+    "jours": {
+      "1": "周一",
+      "2": "周二",
+      "3": "周三",
+      "4": "周四",
+      "5": "周五",
+      "6": "周六",
+      "7": "周日"
+    },
+    "formats": "格式：{formats}",
+    "format": {
+      "xlsx": "Excel",
+      "pdf": "PDF",
+      "csv": "CSV"
+    },
+    "destinataires": "收件人：{noms}",
+    "compteDisparu": "账户不可用",
+    "prochainEnvoi": "下次发送：{date}",
+    "aucunProchainEnvoi": "没有计划中的发送",
+    "dernierEnvoi": "上次发送：{date}",
+    "jamaisEnvoye": "尚未发送",
+    "statut": {
+      "ok": "已发送",
+      "partiel": "部分发送",
+      "echec": "失败"
+    },
+    "raison": {
+      "proprietaire_sans_acces": "您已无权访问 Data Genius，报告已暂停。",
+      "artefact_introuvable": "该分析已不存在。",
+      "planning_invalide": "此报告的发送计划已失效。",
+      "aucun_destinataire": "没有有效的收件人。",
+      "export_impossible": "无法生成文件。",
+      "envoi_impossible": "无法发送电子邮件。",
+      "erreur_interne": "发生内部错误。",
+      "destinataires_ecartes": "部分收件人已被排除，因为他们已无权访问 Data Genius。",
+      "envoi_partiel": "部分电子邮件无法发送。",
+      "inconnue": "原因未知。"
+    },
+    "actif": "已启用",
+    "pause": "已暂停",
+    "interrupteurAria": "报告“{titre}”：启用或暂停",
+    "ouvrirAnalyse": "打开分析",
+    "supprimer": "删除",
+    "supprimerAria": "删除定时报告“{titre}”",
+    "supprimerTitre": "删除此定时报告？",
+    "supprimerTexte": "将不再为“{titre}”发送电子邮件。分析本身不会被删除。",
+    "supprimerConfirmer": "删除",
+    "annuler": "取消",
+    "supprimeOk": "定时报告已删除。"
+  },
+  "epingles": {
+    "titre": "我的置顶",
+    "ouvrir": "打开",
+    "ouvrirAria": "打开分析“{titre}”",
+    "desepingler": "取消置顶",
+    "desepinglerAria": "从仪表板取消置顶“{titre}”"
+  }
+}

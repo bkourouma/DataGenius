@@ -1,0 +1,287 @@
+{
+  "titre": "Data Genius",
+  "page": {
+    "titre": "Data Genius administration",
+    "sousTitre": "Choose the provider and models, follow usage and costs, and review user feedback."
+  },
+  "acces": {
+    "titre": "Access restricted to administrators",
+    "description": "Data Genius administration is restricted to administrators. If you need this access, contact a Data Genius administrator.",
+    "retour": "Back to the dashboard"
+  },
+  "onglets": {
+    "liste": "Administration sections",
+    "configuration": "Configuration",
+    "usages": "Usage and costs",
+    "avis": "Feedback"
+  },
+  "fournisseurs": {
+    "anthropic": "Anthropic (Claude)",
+    "openai": "OpenAI",
+    "google": "Google (Gemini)",
+    "deepseek": "DeepSeek"
+  },
+  "modes": {
+    "standard": "Standard",
+    "profond": "Deep",
+    "rapide": "Fast",
+    "transcription": "Transcription"
+  },
+  "erreurs": {
+    "generique": "Something went wrong. Please try again in a moment.",
+    "reseau": "The server is not responding. Check your connection and try again.",
+    "nonAutorise": "Your session has expired. Sign in again and retry.",
+    "interdit": "You do not have the rights required for this action."
+  },
+  "erreursApi": {
+    "validationInvalide": "A submitted value was rejected. Check what you entered.",
+    "jeuIntrouvable": "This dataset cannot be found.",
+    "accesRefuse": "You do not have access to this data.",
+    "jeuNonRecalculable": "This dataset can no longer be recalculated.",
+    "limite_debit_donnees": "Too many heavy calculations in a short time. Wait a few minutes, then try again.",
+    "roleLectureAbsent": "Data is temporarily unavailable. An administrator needs to step in; please try again later.",
+    "briefingIndisponible": "The briefing is temporarily unavailable.",
+    "erreurServeur": "The server ran into an error. Please try again in a moment.",
+    "aucunChamp": "There are no changes to save.",
+    "fournisseurIndisponible": "This provider has no key installed on the server.",
+    "periodeInvalide": "The period is invalid: the start must come before the end, within the allowed limit.",
+    "fichierAbsent": "No file was received.",
+    "fichierTropGros": "This file is larger than 10 MB.",
+    "fichierTropVolumineuxDecompresse": "This workbook is too large once unzipped. Reduce it and try again.",
+    "extensionRefusee": "This file type is not accepted. Use an xlsx, csv, pdf or txt file.",
+    "formatXlsNonPrisEnCharge": "The xls format is not supported. Save the file as xlsx.",
+    "nomInvalide": "The file name is invalid. Rename it and try again.",
+    "fichierVide": "This file is empty.",
+    "signatureIncoherente": "The file content does not match its extension.",
+    "classeurIllisible": "This workbook is unreadable or damaged.",
+    "classeurProtege": "This workbook is password-protected. Remove the protection and try again.",
+    "pdfSansTexte": "This PDF has no readable text (a scanned document?).",
+    "pdfProtege": "This PDF is password-protected.",
+    "pdfIllisible": "This PDF is unreadable or damaged.",
+    "pdfNonDisponible": "PDF reading is not available on the server right now.",
+    "csvIllisible": "This CSV file is unreadable or malformed.",
+    "conversationIntrouvable": "This conversation cannot be found.",
+    "pieceJointeIntrouvable": "This attachment cannot be found.",
+    "feuilleIntrouvable": "This sheet cannot be found in the workbook.",
+    "plageInvalide": "The requested cell range is invalid.",
+    "fichierStockeIntrouvable": "The file is no longer available. Attach it again.",
+    "transcriptionIndisponible": "Server-side dictation is not enabled. Use your browser's dictation.",
+    "transcriptionEchec": "The transcription failed. Try again or type your message.",
+    "audioAbsent": "No audio recording was received.",
+    "audioTropGros": "This recording is larger than 10 MB.",
+    "audioFormatRefuse": "This audio format is not accepted.",
+    "audioVide": "The recording is empty. Speak closer to the microphone and try again."
+  },
+  "commun": {
+    "reessayer": "Retry",
+    "chargement": "Loading"
+  },
+  "configuration": {
+    "chargement": "Loading the configuration",
+    "erreurChargement": "Could not load the configuration.",
+    "maj": {
+      "par": "Changed by {nom} on {date}.",
+      "le": "Changed on {date}.",
+      "jamais": "Never changed: the default values apply."
+    },
+    "fournisseur": {
+      "titre": "AI provider",
+      "aide": "The provider answers every question put to Data Genius. Only providers whose key is installed on the server can be chosen.",
+      "disponible": "Key installed",
+      "indisponible": "Unavailable: add the variable {variable} on the server.",
+      "courantIndisponible": "The saved provider no longer has a key on the server. Add the variable {variable} or choose another provider."
+    },
+    "modeles": {
+      "titre": "Models",
+      "aide": "One model per mode. Enter the exact model identifier at the chosen provider.",
+      "libelle": "Model for the {mode} mode",
+      "defaut": "Default for this provider: {modele}",
+      "defautAChoisir": "This provider has no default model: choose one.",
+      "utiliserDefaut": "Default value",
+      "utiliserDefautPour": "Restore the default value for the {mode} mode",
+      "vide": "Enter a model.",
+      "invalide": "Identifier rejected: letters, digits, dot, hyphen, colon or slash, 100 characters at most.",
+      "aideMode": {
+        "standard": "Everyday answers to questions.",
+        "profond": "In-depth analysis, slower and more expensive.",
+        "rapide": "Short answers and suggested follow-ups."
+      },
+      "tarif": "Price: {entree} input and {sortie} output, per million tokens.",
+      "tarifInconnu": "Unknown price: the cost is not estimated."
+    },
+    "test": {
+      "bouton": "Test",
+      "boutonPour": "Test the model for the {mode} mode",
+      "enCours": "Testing",
+      "succes": "The model {modele} answers in {latence, number} ms.",
+      "echec": "Test failed: {erreur}",
+      "echecGenerique": "The test did not complete.",
+      "erreurs": {
+        "delai": "The model did not answer in time.",
+        "clefRefusee": "The provider rejected the key installed on the server.",
+        "modeleIntrouvable": "This model does not exist at the provider.",
+        "limite": "The provider is limiting calls right now. Try again later.",
+        "indisponible": "The provider is unavailable right now.",
+        "reseau": "The provider did not respond (network).",
+        "certificat": "Connection to the provider refused: certificate not recognised (firewall or proxy inspecting traffic).",
+        "inconnue": "The provider answered with an unexpected error."
+      }
+    },
+    "transcription": {
+      "titre": "Voice dictation",
+      "aide": "Choose who transcribes speech. Without a server engine, only browser dictation is offered.",
+      "libelle": "Transcription engine",
+      "navigateur": "Browser dictation only",
+      "navigateurDescription": "No recording is sent to the Data Genius server.",
+      "modele": "Transcription model",
+      "suggestion": "Suggestion: {modele}",
+      "utiliserSuggestion": "Use the suggestion"
+    },
+    "taux": {
+      "titre": "EUR/USD exchange rate",
+      "libelle": "Euros per 1 dollar",
+      "aide": "Default fixed rate: {defaut}, editable. It converts the costs computed in dollars into euros in the Usage and costs tab.",
+      "sourceConfig": "Rate entered by an administrator.",
+      "sourceDefaut": "No rate entered: the default rate applies.",
+      "invalide": "Enter a number greater than zero."
+    },
+    "actions": {
+      "enregistrer": "Save",
+      "enregistrement": "Saving",
+      "annuler": "Discard changes",
+      "nonEnregistre": "Unsaved changes",
+      "aJour": "No pending changes",
+      "succes": "Configuration saved.",
+      "erreur": "The configuration was not saved."
+    }
+  },
+  "usages": {
+    "chargement": "Loading usage",
+    "erreurChargement": "Could not load the usage.",
+    "periode": {
+      "debut": "From",
+      "fin": "To",
+      "raccourcis": "Period shortcuts",
+      "jours7": "7 days",
+      "jours30": "30 days",
+      "jours90": "90 days",
+      "moisCourant": "This month",
+      "ordreInvalide": "The start date must come before the end date.",
+      "tropLongue": "The period cannot exceed {jours, number} days."
+    },
+    "filtres": {
+      "fournisseur": "Provider",
+      "mode": "Mode",
+      "tous": "All"
+    },
+    "groupement": {
+      "libelle": "Group by",
+      "jour": "Day",
+      "mois": "Month"
+    },
+    "totaux": {
+      "titre": "Totals for the period",
+      "coutEur": "Cost (EUR)",
+      "coutUsd": "Cost (USD)",
+      "requetes": "Requests",
+      "tokensEntree": "Input tokens",
+      "tokensSortie": "Output tokens",
+      "tokensCacheLecture": "Tokens read from cache",
+      "tokensCacheEcriture": "Tokens written to cache",
+      "tauxConfig": "Converted at {taux} euro per dollar, rate entered by an administrator.",
+      "tauxDefaut": "Converted at {taux} euro per dollar, default rate."
+    },
+    "evolution": {
+      "titre": {
+        "jour": "Trend by day",
+        "mois": "Trend by month"
+      },
+      "metrique": "Show",
+      "coutEur": "Cost (EUR)",
+      "requetes": "Requests",
+      "jetons": "Tokens",
+      "graphique": {
+        "jour": "Chart: {metrique} by day, from {debut} to {fin}.",
+        "mois": "Chart: {metrique} by month, from {debut} to {fin}."
+      },
+      "voirTableau": "Show the chart data as a table"
+    },
+    "tableaux": {
+      "parUtilisateur": "By user",
+      "parModele": "By model",
+      "parMode": "By mode",
+      "triPar": "Sort by {colonne}",
+      "colonnes": {
+        "periode": "Period",
+        "utilisateur": "User",
+        "fournisseur": "Provider",
+        "modele": "Model",
+        "mode": "Mode",
+        "requetes": "Requests",
+        "tokensEntree": "Input tokens",
+        "tokensSortie": "Output tokens",
+        "tokensCacheLecture": "Cache read",
+        "tokensCacheEcriture": "Cache written",
+        "coutEur": "Cost EUR",
+        "coutUsd": "Cost USD"
+      }
+    },
+    "vide": {
+      "titre": "No usage in this period",
+      "description": "No AI call is recorded between these two dates. Choose a wider period."
+    },
+    "export": {
+      "bouton": "Export to Excel",
+      "enCours": "Exporting",
+      "erreur": "The Excel export failed."
+    }
+  },
+  "avis": {
+    "chargement": "Loading feedback",
+    "erreurChargement": "Could not load the feedback.",
+    "erreurSuite": "Could not load more feedback.",
+    "filtre": {
+      "libelle": "Feedback to show",
+      "negatif": "Thumbs down",
+      "positif": "Thumbs up",
+      "tous": "All feedback"
+    },
+    "liste": "User feedback",
+    "totaux": {
+      "positifs": "Thumbs up: {count, number}",
+      "negatifs": "Thumbs down: {count, number}"
+    },
+    "compteur": "Feedback shown: {count, number}",
+    "valeur": {
+      "negatif": "Thumbs down",
+      "positif": "Thumbs up"
+    },
+    "champs": {
+      "commentaire": "Comment",
+      "question": "Question",
+      "reponse": "Answer excerpt",
+      "modele": "Model"
+    },
+    "sansCommentaire": "No comment left",
+    "ouvrirConversation": "Open the conversation",
+    "chargerPlus": "Load more",
+    "chargementSuite": "Loading more",
+    "vide": {
+      "titre": "No feedback to show",
+      "negatif": "No thumbs down yet.",
+      "positif": "No thumbs up yet.",
+      "tous": "No feedback has been left yet."
+    }
+  },
+  "piecesJointes": {
+    "provenance": {
+      "perimetre": "Provided file (not Data Genius data)",
+      "filtreFeuille": "Sheet",
+      "filtrePlage": "Range",
+      "regleNonVerifie": "File content used as provided, not verified by Data Genius.",
+      "regleTypesInferes": "Column types (text, number, date, percentage) inferred from the file content.",
+      "reglePourcentage": "Percentages expressed in points (85 = 85%).",
+      "regleTronque": "Sheet truncated: first {max, number} rows read out of {total, number}."
+    }
+  }
+}

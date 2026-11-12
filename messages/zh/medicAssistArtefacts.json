@@ -1,0 +1,376 @@
+{
+  "titre": "Data Genius",
+  "graphique": {
+    "autres": "其他",
+    "total": "合计",
+    "objectif": "目标",
+    "aucuneDonnee": "没有可显示的数据",
+    "sansValeur": "未填写",
+    "titreAccessible": "{forme}图：{mesures}",
+    "descriptionAccessible": "{series, plural, other {# 个系列}}，{points, plural, other {# 个数据点}}",
+    "forme": {
+      "barres": "柱状",
+      "barres_empilees": "堆叠柱状",
+      "barres_horizontales": "横向柱状",
+      "lignes": "折线",
+      "aires": "面积",
+      "secteurs": "饼",
+      "anneau": "环形",
+      "nuage": "散点",
+      "combine": "柱状与折线",
+      "carte_chaleur": "热力",
+      "treemap": "树状",
+      "entonnoir": "漏斗",
+      "jauge": "仪表"
+    }
+  },
+  "tableau": {
+    "regionLabel": "表格：{titre}",
+    "chargement": "正在加载表格",
+    "erreur": "无法显示此表格。",
+    "total": "合计",
+    "nbLignes": "{n, plural, other {# 行}}",
+    "tronque": "仅显示前 {n, number} 行；请下载完整导出文件以获取全部数据。",
+    "agregats": {
+      "somme": "求和",
+      "moyenne": "平均值",
+      "min": "最小值",
+      "max": "最大值",
+      "nombre": "计数"
+    },
+    "vide": {
+      "titre": "没有符合筛选条件的行",
+      "description": "数据集中没有行符合此表格的筛选条件。",
+      "reinitialiser": "重置筛选",
+      "titreSansFiltre": "没有可显示的行",
+      "descriptionSansFiltre": "此期间和范围内的数据集为空。"
+    },
+    "copie": {
+      "succes": "表格已复制：可粘贴到 Excel",
+      "echec": "复制失败。请选中表格后手动复制。"
+    },
+    "modifierPivot": "修改交叉表",
+    "avertissements": {
+      "sommePourcentage": "百分比相加没有意义：请改选平均值、最小值或最大值。"
+    },
+    "pivot": {
+      "titre": "交叉表",
+      "aide": "按一个或多个字段对行分组，将其他字段展开为列，并选择要计算的值。",
+      "vue": "显示方式",
+      "vueTableau": "表格",
+      "vueCroise": "交叉表",
+      "lignes": "行字段",
+      "colonnes": "列字段",
+      "valeurs": "值",
+      "champLigne": "行字段 {n}",
+      "champColonne": "列字段 {n}",
+      "champValeur": "值 {n} 的字段",
+      "agregatValeur": "值 {n} 的计算方式",
+      "choisir": "选择字段",
+      "ajouterLigne": "添加行字段",
+      "ajouterColonne": "添加列字段",
+      "ajouterValeur": "添加值",
+      "retirerChamp": "移除字段 {n}",
+      "retirerValeur": "移除值 {n}",
+      "retirer": "移除交叉表",
+      "limiteLignes": "行字段最多三个。",
+      "limiteColonnes": "列字段最多两个。",
+      "limiteValeurs": "值最多六个。",
+      "minLignes": "至少需要一个行字段。",
+      "minValeurs": "至少需要一个值。",
+      "doublon": "每个字段只能使用一次，不能同时用作行和列。",
+      "doublonValeur": "此值已在表格中。",
+      "aucunChampLigne": "没有可用于行的字段。",
+      "aucunChampValeur": "没有可用于值的数值字段。"
+    }
+  },
+  "graphiqueUi": {
+    "chargement": "正在加载图表",
+    "erreurChargement": "无法加载图表。",
+    "reessayer": "重试",
+    "videTitre": "没有可显示的数据",
+    "videAide": "所选期间和范围内没有可绘制的数据点。",
+    "ariaLabel": "{titre}。{description}",
+    "pngIndisponible": "图表尚未就绪：请稍后重试。",
+    "selecteur": {
+      "libelle": "图表类型",
+      "indisponible": "{forme}（不可用）：{motif}"
+    },
+    "avertissements": {
+      "liste": "显示说明",
+      "forme_changee": "已切换为{vers}显示：类别超过 {max} 个",
+      "limite_appliquee": "前 {n} 项，共 {total} 项：其余已合并或隐藏",
+      "serie_ignoree": "{n, plural, other {# 项指标已忽略}}：{forme}图只显示一项"
+    },
+    "motifs": {
+      "trop_de_categories": "类别超过 {max} 个：此类型将难以阅读，横向柱状图更合适。",
+      "une_mesure_requise": "此类型只显示一项指标。",
+      "deux_mesures_requises": "此类型至少需要两项指标。",
+      "serie_requise": "此类型需要第二个维度来构成系列。",
+      "categories_insuffisantes": "此类型至少需要两个类别。"
+    },
+    "changement": {
+      "refuse": "无法切换：{motif}",
+      "remplace": "已改为「{forme}」：{motif}"
+    }
+  },
+  "indicateurs": {
+    "liste": "指标",
+    "aucun": "没有可显示的指标",
+    "donneeIndisponible": "数据不可用",
+    "tendance": {
+      "hausse": "上升",
+      "baisse": "下降",
+      "stable": "持平"
+    },
+    "variationIndisponible": "变化不可用",
+    "variation": "{variation} {sens}",
+    "reference": "{libelle}：{valeur}",
+    "objectif": "目标：{valeur}",
+    "objectifNomme": "{libelle}：{valeur}",
+    "taux": "达成率：{taux}",
+    "tauxIndisponible": "达成率不可用",
+    "statut": {
+      "atteint": "达标",
+      "en_cours": "进行中",
+      "a_risque": "有风险"
+    }
+  },
+  "document": {
+    "region": "文档：{titre}",
+    "indisponible": "文档中的此项内容已不可用。",
+    "artefactIndisponible": "工件不可用",
+    "artefactIndisponibleAide": "它可能已被删除，或您已无权访问。",
+    "graphiqueIndisponible": "此图表的数据不可用。",
+    "tableauIndisponible": "此表格的数据不可用。",
+    "vide": "此文档为空。",
+    "tableDesMatieres": {
+      "titre": "本文档内容",
+      "region": "目录",
+      "ouvrir": "显示目录",
+      "replier": "隐藏目录",
+      "aller": "跳转到“{titre}”部分"
+    }
+  },
+  "panneau": {
+    "titre": "工件",
+    "region": "工件面板",
+    "listeOnglets": "对话中的工件",
+    "contenu": "工件内容",
+    "fermer": "关闭面板",
+    "agrandir": "放大面板",
+    "reduire": "缩小面板",
+    "pleinEcran": "全屏工件面板",
+    "chargement": "正在加载工件",
+    "chargementListe": "正在加载工件列表",
+    "reessayer": "重试",
+    "vide": {
+      "titre": "暂无工件",
+      "texte": "在对话中请求表格、图表或报告，它将显示在这里。"
+    },
+    "lectureSeule": "只读",
+    "version": {
+      "etiquette": "版本",
+      "libelle": "v{n}",
+      "libelleDate": "v{n} · {date}",
+      "actuelle": "当前",
+      "bandeau": "您正在查看第 {n} 版（只读）。",
+      "revenir": "返回最新版本"
+    },
+    "vue": {
+      "groupe": "显示方式",
+      "graphique": "图表",
+      "tableau": "表格"
+    },
+    "copier": "复制",
+    "copieReussie": "表格已复制，可粘贴到 Excel",
+    "copieEchec": "复制失败",
+    "comment": "计算方式说明",
+    "jeuNumero": "数据集 {n}/{total}",
+    "apercu": {
+      "vide": "此工件没有可显示的内容。"
+    },
+    "enregistrement": {
+      "enCours": "正在保存…",
+      "enregistre": "已保存",
+      "erreur": "保存失败"
+    },
+    "types": {
+      "tableau": "表格",
+      "graphique": "图表",
+      "indicateurs": "指标",
+      "document": "文档"
+    }
+  },
+  "carte": {
+    "ouvrir": "打开",
+    "ouvrirAria": "打开工件 {titre}",
+    "types": {
+      "tableau": "表格",
+      "graphique": "图表",
+      "indicateurs": "指标",
+      "document": "文档"
+    },
+    "resume": {
+      "tableau": "表格 · {n, plural, =0 {无数据行} other {# 行}}",
+      "graphique": "图表 · {forme}",
+      "indicateurs": "{n, plural, =0 {无指标} other {# 项指标}}",
+      "document": "文档"
+    }
+  },
+  "provenance": {
+    "titre": "计算方式说明",
+    "source": "来源",
+    "periode": "期间",
+    "perimetre": "范围",
+    "filtres": "筛选",
+    "filtre": "{libelle}：{valeur}",
+    "aucunFiltre": "无筛选",
+    "regles": "适用规则",
+    "lienEcran": "对应的 Data Genius 页面",
+    "sql": "SQL 查询（仅限管理员）",
+    "copierSql": "复制查询",
+    "sqlCopiee": "查询已复制",
+    "copieEchec": "复制失败",
+    "calculeLe": "计算于 {date}"
+  },
+  "telechargement": {
+    "bouton": "下载",
+    "enCours": "正在下载",
+    "menu": "下载格式",
+    "formats": {
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "pdf": "PDF (.pdf)",
+      "png": "PNG 图片 (.png)",
+      "pptx": "PowerPoint (.pptx)"
+    },
+    "reussi": "{format} 已下载",
+    "echec": "下载失败"
+  },
+  "exports": {
+    "exporteLe": "导出于 {date}",
+    "page": "第 {page} 页，共 {total} 页",
+    "total": "合计",
+    "feuilleDonnees": "数据",
+    "feuilleProvenance": "来源",
+    "feuilleIndicateurs": "指标",
+    "fichierSansTitre": "Data Genius 导出",
+    "agregats": {
+      "somme": "求和",
+      "moyenne": "平均值",
+      "min": "最小值",
+      "max": "最大值",
+      "nombre": "计数"
+    },
+    "provenance": {
+      "source": "来源",
+      "periode": "期间",
+      "perimetre": "范围",
+      "filtres": "筛选",
+      "regles": "计算规则",
+      "calculeLe": "计算于",
+      "lienEcran": "来源页面",
+      "exportePar": "导出人：{nom}",
+      "aucun": "无"
+    },
+    "lignesContexte": {
+      "source": "来源：{valeur}",
+      "periode": "期间：{valeur}",
+      "perimetre": "范围：{valeur}"
+    },
+    "indicateurs": {
+      "indicateur": "指标",
+      "valeur": "值",
+      "comparaison": "对比",
+      "valeurComparaison": "对比值",
+      "variation": "变化 (%)",
+      "objectif": "目标",
+      "valeurObjectif": "目标值",
+      "taux": "达成率 (%)",
+      "statut": "状态",
+      "statuts": {
+        "atteint": "达标",
+        "enCours": "进行中",
+        "aRisque": "有风险"
+      }
+    },
+    "erreurs": {
+      "introuvable": "找不到此工件，或您无权访问。",
+      "formatNonSupporte": "此工件不支持该导出格式。",
+      "formatInvalide": "未知的导出格式。支持的格式：xlsx、csv、pdf、pptx。",
+      "tropDeLignes": "此工件行数过多，无法导出。请缩小筛选范围后重试。",
+      "limiteDebit": "数据重新计算请求过多。请在 {minutes, plural, other {# 分钟}}后重新导出。",
+      "echec": "导出失败。请稍后重试。"
+    }
+  },
+  "exportsPdf": {
+    "marque": "Data Genius",
+    "sommaire": "目录",
+    "sourcesEtCalcul": "来源与计算",
+    "troncature": "显示 {n, plural, other {# 行}}，共 {total, number} 行：请下载 Excel 导出文件以获取全部行。",
+    "partieColonnes": "第 {debut} 至 {fin} 列，共 {total} 列",
+    "graphiqueIndisponible": "无法绘制此图表：其数据已列在下方表格中。",
+    "limiteAppliquee": "图表显示前 {n} 项，共 {total} 项；其余已合并。",
+    "libelleValeur": "{libelle}：{valeur}",
+    "indicateurs": {
+      "nonDisponible": "不可用",
+      "variation": "变化：{valeur}",
+      "variationSens": "变化：{valeur}（{sens}）",
+      "realisation": "达成：{valeur}",
+      "sens": {
+        "hausse": "上升",
+        "baisse": "下降",
+        "stable": "持平"
+      }
+    }
+  },
+  "exportsPptx": {
+    "marque": "Data Genius",
+    "sourcesEtCalcul": "来源与计算",
+    "suite": "{titre}（续）",
+    "donneesDuGraphique": "{titre}：数据",
+    "imageNonModifiable": "PowerPoint 中没有此类图表：已作为图片插入，无法编辑。",
+    "graphiqueIndisponible": "无法生成此图表：其数据见下一张幻灯片。",
+    "troncature": "显示 {n, plural, other {# 行}}，共 {total, number} 行：请下载 Excel 导出文件以获取全部行。",
+    "partieColonnes": "第 {debut} 至 {fin} 列，共 {total} 列",
+    "limiteAppliquee": "图表显示前 {n} 项，共 {total} 项；其余已合并。",
+    "libelleValeur": "{libelle}：{valeur}",
+    "titresParDefaut": {
+      "texte": "文本",
+      "tableau": "表格",
+      "graphique": "图表",
+      "indicateurs": "指标"
+    },
+    "indicateurs": {
+      "nonDisponible": "不可用",
+      "variation": "变化：{valeur}",
+      "variationSens": "变化：{valeur}（{sens}）",
+      "realisation": "达成：{valeur}",
+      "sens": {
+        "hausse": "上升",
+        "baisse": "下降",
+        "stable": "持平"
+      }
+    }
+  },
+  "formes": {},
+  "erreurs": {
+    "chargement": "无法加载此工件。请检查网络连接后重试。",
+    "introuvable": "找不到此工件，或您无权访问。",
+    "liste": "无法加载工件列表。",
+    "jeuManquant": "此工件的数据不可用。",
+    "limiteDebit": "目前已达到重新计算次数上限。请在 {minutes, plural, other {# 分钟}}后重试。",
+    "enregistrement": "保存失败：已恢复为最近一次保存的版本。",
+    "conflit": "此工件在此期间已被修改：已显示最新版本，您的修改未保存。",
+    "telechargement": {
+      "reseau": "无法连接服务器。请检查网络连接后重试。",
+      "refuse": "您无权进行此下载。请重新登录后重试。",
+      "introuvable": "找不到此工件，或您无权访问。",
+      "format": "此工件不支持该格式。",
+      "tropDeLignes": "此工件行数过多，无法导出。请缩小筛选范围后重试。",
+      "echec": "下载失败。请稍后重试。",
+      "png": "无法生成图表图片。"
+    }
+  }
+}

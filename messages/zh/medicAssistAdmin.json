@@ -1,0 +1,287 @@
+{
+  "titre": "Data Genius",
+  "page": {
+    "titre": "Data Genius 管理",
+    "sousTitre": "选择服务商和模型，跟踪使用量与费用，查看用户的反馈。"
+  },
+  "acces": {
+    "titre": "仅限管理员访问",
+    "description": "Data Genius 的管理页面仅限管理员使用。如需此权限，请联系 Data Genius 管理员。",
+    "retour": "返回仪表板"
+  },
+  "onglets": {
+    "liste": "管理分区",
+    "configuration": "配置",
+    "usages": "使用量与费用",
+    "avis": "反馈"
+  },
+  "fournisseurs": {
+    "anthropic": "Anthropic (Claude)",
+    "openai": "OpenAI",
+    "google": "Google (Gemini)",
+    "deepseek": "DeepSeek"
+  },
+  "modes": {
+    "standard": "标准",
+    "profond": "深度",
+    "rapide": "快速",
+    "transcription": "转写"
+  },
+  "erreurs": {
+    "generique": "出现错误，请稍后重试。",
+    "reseau": "服务器没有响应。请检查网络连接后重试。",
+    "nonAutorise": "登录已过期。请重新登录后重试。",
+    "interdit": "您没有执行此操作所需的权限。"
+  },
+  "erreursApi": {
+    "validationInvalide": "提交的某个值被拒绝。请检查输入内容。",
+    "jeuIntrouvable": "找不到该数据集。",
+    "accesRefuse": "您无权访问这些数据。",
+    "jeuNonRecalculable": "该数据集已无法重新计算。",
+    "limite_debit_donnees": "短时间内的复杂计算过多。请稍等几分钟后重试。",
+    "roleLectureAbsent": "数据暂时不可用，需要管理员处理，请稍后再试。",
+    "briefingIndisponible": "简报暂时不可用。",
+    "erreurServeur": "服务器出现错误，请稍后重试。",
+    "aucunChamp": "没有需要保存的修改。",
+    "fournisseurIndisponible": "服务器上没有安装该提供商的密钥。",
+    "periodeInvalide": "时间段无效：开始日期必须早于结束日期，且不能超出允许范围。",
+    "fichierAbsent": "未收到任何文件。",
+    "fichierTropGros": "此文件超过 10 MB。",
+    "fichierTropVolumineuxDecompresse": "此工作簿解压后过大。请缩小后重试。",
+    "extensionRefusee": "不接受此文件类型。请使用 xlsx、csv、pdf 或 txt 文件。",
+    "formatXlsNonPrisEnCharge": "不支持 xls 格式。请将文件另存为 xlsx。",
+    "nomInvalide": "文件名无效。请重命名后重试。",
+    "fichierVide": "此文件为空。",
+    "signatureIncoherente": "文件内容与其扩展名不符。",
+    "classeurIllisible": "此工作簿无法读取或已损坏。",
+    "classeurProtege": "此工作簿受密码保护。请取消保护后重试。",
+    "pdfSansTexte": "此 PDF 不含可读文本（可能是扫描件）。",
+    "pdfProtege": "此 PDF 受密码保护。",
+    "pdfIllisible": "此 PDF 无法读取或已损坏。",
+    "pdfNonDisponible": "服务器目前无法读取 PDF。",
+    "csvIllisible": "此 CSV 文件无法读取或格式有误。",
+    "conversationIntrouvable": "找不到此对话。",
+    "pieceJointeIntrouvable": "找不到此附件。",
+    "feuilleIntrouvable": "工作簿中找不到此工作表。",
+    "plageInvalide": "请求的单元格区域无效。",
+    "fichierStockeIntrouvable": "该文件已不可用。请重新添加。",
+    "transcriptionIndisponible": "服务器听写未启用。请使用浏览器听写。",
+    "transcriptionEchec": "转写失败。请重试或直接输入消息。",
+    "audioAbsent": "未收到任何录音。",
+    "audioTropGros": "此录音超过 10 MB。",
+    "audioFormatRefuse": "不接受此音频格式。",
+    "audioVide": "录音为空。请靠近麦克风说话后重试。"
+  },
+  "commun": {
+    "reessayer": "重试",
+    "chargement": "加载中"
+  },
+  "configuration": {
+    "chargement": "正在加载配置",
+    "erreurChargement": "无法加载配置。",
+    "maj": {
+      "par": "由 {nom} 于 {date} 修改。",
+      "le": "于 {date} 修改。",
+      "jamais": "从未修改：使用默认值。"
+    },
+    "fournisseur": {
+      "titre": "AI 提供商",
+      "aide": "提供商负责回答提交给 Data Genius 的所有问题。只能选择服务器上已安装密钥的提供商。",
+      "disponible": "已安装密钥",
+      "indisponible": "不可用：请在服务器上添加变量 {variable}。",
+      "courantIndisponible": "已保存的提供商在服务器上不再有密钥。请添加变量 {variable} 或选择其他提供商。"
+    },
+    "modeles": {
+      "titre": "模型",
+      "aide": "每种模式一个模型。请输入所选提供商处的确切模型标识。",
+      "libelle": "{mode}模式的模型",
+      "defaut": "该提供商的默认值：{modele}",
+      "defautAChoisir": "该提供商没有默认模型：请自行选择。",
+      "utiliserDefaut": "默认值",
+      "utiliserDefautPour": "恢复{mode}模式的默认值",
+      "vide": "请输入模型。",
+      "invalide": "标识被拒绝：只能包含字母、数字、点、连字符、冒号或斜杠，最多 100 个字符。",
+      "aideMode": {
+        "standard": "日常问题的常规回答。",
+        "profond": "深入分析，速度更慢、成本更高。",
+        "rapide": "简短回答和建议的后续问题。"
+      },
+      "tarif": "价格：输入 {entree}，输出 {sortie}，每百万词元。",
+      "tarifInconnu": "价格未知：不估算成本。"
+    },
+    "test": {
+      "bouton": "测试",
+      "boutonPour": "测试{mode}模式的模型",
+      "enCours": "正在测试",
+      "succes": "模型 {modele} 在 {latence, number} 毫秒内响应。",
+      "echec": "测试失败：{erreur}",
+      "echecGenerique": "测试未完成。",
+      "erreurs": {
+        "delai": "模型未能及时响应。",
+        "clefRefusee": "提供商拒绝了服务器上安装的密钥。",
+        "modeleIntrouvable": "提供商处不存在此模型。",
+        "limite": "提供商暂时限制了调用。请稍后重试。",
+        "indisponible": "提供商暂时不可用。",
+        "reseau": "提供商没有响应（网络）。",
+        "certificat": "与提供商的连接被拒绝：证书不被识别（防火墙或代理正在检查流量）。",
+        "inconnue": "提供商返回了意外错误。"
+      }
+    },
+    "transcription": {
+      "titre": "语音听写",
+      "aide": "选择由谁转写语音。没有服务器引擎时，只提供浏览器听写。",
+      "libelle": "转写引擎",
+      "navigateur": "仅浏览器听写",
+      "navigateurDescription": "不会向 Data Genius 服务器发送任何录音。",
+      "modele": "转写模型",
+      "suggestion": "建议：{modele}",
+      "utiliserSuggestion": "使用建议值"
+    },
+    "taux": {
+      "titre": "欧元/美元汇率",
+      "libelle": "1 美元兑欧元",
+      "aide": "默认固定汇率：{defaut}，可修改。用于将“用量与成本”选项卡中以美元计算的成本换算为欧元。",
+      "sourceConfig": "汇率由管理员输入。",
+      "sourceDefaut": "未输入汇率：使用默认汇率。",
+      "invalide": "请输入大于零的数字。"
+    },
+    "actions": {
+      "enregistrer": "保存",
+      "enregistrement": "正在保存",
+      "annuler": "放弃修改",
+      "nonEnregistre": "有未保存的修改",
+      "aJour": "没有待保存的修改",
+      "succes": "配置已保存。",
+      "erreur": "配置未能保存。"
+    }
+  },
+  "usages": {
+    "chargement": "正在加载用量",
+    "erreurChargement": "无法加载用量。",
+    "periode": {
+      "debut": "从",
+      "fin": "到",
+      "raccourcis": "时间段快捷选项",
+      "jours7": "7 天",
+      "jours30": "30 天",
+      "jours90": "90 天",
+      "moisCourant": "本月",
+      "ordreInvalide": "开始日期必须早于结束日期。",
+      "tropLongue": "时间段不能超过 {jours, number} 天。"
+    },
+    "filtres": {
+      "fournisseur": "提供商",
+      "mode": "模式",
+      "tous": "全部"
+    },
+    "groupement": {
+      "libelle": "分组方式",
+      "jour": "按日",
+      "mois": "按月"
+    },
+    "totaux": {
+      "titre": "时间段合计",
+      "coutEur": "成本（EUR）",
+      "coutUsd": "成本（USD）",
+      "requetes": "请求数",
+      "tokensEntree": "输入词元",
+      "tokensSortie": "输出词元",
+      "tokensCacheLecture": "从缓存读取的词元",
+      "tokensCacheEcriture": "写入缓存的词元",
+      "tauxConfig": "按每美元 {taux} 欧元换算，汇率由管理员输入。",
+      "tauxDefaut": "按每美元 {taux} 欧元换算，为默认汇率。"
+    },
+    "evolution": {
+      "titre": {
+        "jour": "按日趋势",
+        "mois": "按月趋势"
+      },
+      "metrique": "显示",
+      "coutEur": "成本（EUR）",
+      "requetes": "请求数",
+      "jetons": "词元",
+      "graphique": {
+        "jour": "图表：按日的{metrique}，从 {debut} 到 {fin}。",
+        "mois": "图表：按月的{metrique}，从 {debut} 到 {fin}。"
+      },
+      "voirTableau": "以表格形式显示图表数据"
+    },
+    "tableaux": {
+      "parUtilisateur": "按用户",
+      "parModele": "按模型",
+      "parMode": "按模式",
+      "triPar": "按{colonne}排序",
+      "colonnes": {
+        "periode": "时间段",
+        "utilisateur": "用户",
+        "fournisseur": "提供商",
+        "modele": "模型",
+        "mode": "模式",
+        "requetes": "请求数",
+        "tokensEntree": "输入词元",
+        "tokensSortie": "输出词元",
+        "tokensCacheLecture": "缓存读取",
+        "tokensCacheEcriture": "缓存写入",
+        "coutEur": "成本 EUR",
+        "coutUsd": "成本 USD"
+      }
+    },
+    "vide": {
+      "titre": "该时间段内没有用量",
+      "description": "这两个日期之间没有任何 AI 调用记录。请选择更长的时间段。"
+    },
+    "export": {
+      "bouton": "导出为 Excel",
+      "enCours": "正在导出",
+      "erreur": "Excel 导出失败。"
+    }
+  },
+  "avis": {
+    "chargement": "正在加载反馈",
+    "erreurChargement": "无法加载反馈。",
+    "erreurSuite": "无法加载更多反馈。",
+    "filtre": {
+      "libelle": "要显示的反馈",
+      "negatif": "点踩",
+      "positif": "点赞",
+      "tous": "全部反馈"
+    },
+    "liste": "用户反馈",
+    "totaux": {
+      "positifs": "点赞：{count, number}",
+      "negatifs": "点踩：{count, number}"
+    },
+    "compteur": "已显示反馈：{count, number}",
+    "valeur": {
+      "negatif": "点踩",
+      "positif": "点赞"
+    },
+    "champs": {
+      "commentaire": "评论",
+      "question": "问题",
+      "reponse": "回答摘录",
+      "modele": "模型"
+    },
+    "sansCommentaire": "未留下评论",
+    "ouvrirConversation": "打开对话",
+    "chargerPlus": "加载更多",
+    "chargementSuite": "正在加载更多",
+    "vide": {
+      "titre": "没有可显示的反馈",
+      "negatif": "暂时没有点踩。",
+      "positif": "暂时没有点赞。",
+      "tous": "尚未收到任何反馈。"
+    }
+  },
+  "piecesJointes": {
+    "provenance": {
+      "perimetre": "所提供的文件（非 Data Genius 数据）",
+      "filtreFeuille": "工作表",
+      "filtrePlage": "范围",
+      "regleNonVerifie": "文件内容按原样使用，未经 Data Genius 核实。",
+      "regleTypesInferes": "列类型（文本、数字、日期、百分比）根据文件内容推断。",
+      "reglePourcentage": "百分比以百分点表示（85 = 85%）。",
+      "regleTronque": "工作表已截断：共 {total, number} 行，仅读取前 {max, number} 行。"
+    }
+  }
+}

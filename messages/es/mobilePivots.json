@@ -1,0 +1,42 @@
+{
+  "bandeau": {
+    "lignes": "{count, plural, one {# fila oculta} other {# filas ocultas}}",
+    "colonnes": "{count, plural, one {# columna oculta} other {# columnas ocultas}}",
+    "separateur": ", ",
+    "totaux": "{details}: los totales incluyen todos los datos"
+  },
+  "menus": {
+    "pays": "Países",
+    "produits": "Productos",
+    "grossistes": "Mayoristas",
+    "mesures": "Medidas"
+  },
+  "cumul": {
+    "libelle": "Acumulado",
+    "produits": "Detalle de productos retirado: una sola fila acumulada.",
+    "grossistes": "Detalle de mayoristas retirado: acumulado por país.",
+    "lesDeux": "Productos y mayoristas retirados: acumulado por país.",
+    "pays": "Detalle de países quitado: acumulado de todos los países.",
+    "paysProduits": "Países y productos quitados: acumulado por mayorista.",
+    "paysGrossistes": "Países y mayoristas quitados: acumulado por producto.",
+    "champs": "Campos quitados ({champs}): las cifras se acumulan."
+  },
+  "champs": {
+    "bouton": "Campos mostrados",
+    "titre": "Campos mostrados",
+    "aide": "Desmarque un campo para conservar solo su acumulado; vuelva a marcarlo para ver el detalle. Los totales no cambian.",
+    "afficherTout": "Mostrar todo",
+    "detail": "{affiches} de {total} mostrados",
+    "retires": "{count, plural, one {# campo quitado} other {# campos quitados}}",
+    "minimum": "Al menos {count, plural, one {# campo debe seguir mostrado} other {# campos deben seguir mostrados}}.",
+    "pays": "País",
+    "produit": "Producto",
+    "grossiste": "Mayorista",
+    "agence": "Agencia",
+    "mois": "Mes",
+    "periode": "Período"
+  },
+  "mesures": {
+    "caSeul": "Productos retirados: solo se muestra la cifra de negocios (EUR)."
+  }
+}

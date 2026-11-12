@@ -1,0 +1,287 @@
+{
+  "titre": "Data Genius",
+  "page": {
+    "titre": "Administration de Data Genius",
+    "sousTitre": "Choisissez le fournisseur et les modèles, suivez les usages et les coûts, relisez les avis des utilisateurs."
+  },
+  "acces": {
+    "titre": "Accès réservé aux administrateurs",
+    "description": "L'administration de Data Genius est réservée aux administrateurs. Si vous avez besoin de cet accès, adressez-vous à un administrateur de Data Genius.",
+    "retour": "Retour au tableau de bord"
+  },
+  "onglets": {
+    "liste": "Sections de l'administration",
+    "configuration": "Configuration",
+    "usages": "Usages et coûts",
+    "avis": "Avis"
+  },
+  "fournisseurs": {
+    "anthropic": "Anthropic (Claude)",
+    "openai": "OpenAI",
+    "google": "Google (Gemini)",
+    "deepseek": "DeepSeek"
+  },
+  "modes": {
+    "standard": "Standard",
+    "profond": "Approfondi",
+    "rapide": "Rapide",
+    "transcription": "Transcription"
+  },
+  "erreurs": {
+    "generique": "Une erreur est survenue. Réessayez dans un instant.",
+    "reseau": "Le serveur ne répond pas. Vérifiez votre connexion puis réessayez.",
+    "nonAutorise": "Votre session a expiré. Reconnectez-vous puis réessayez.",
+    "interdit": "Vous n'avez pas les droits nécessaires pour cette action."
+  },
+  "erreursApi": {
+    "validationInvalide": "Une valeur envoyée est refusée. Vérifiez la saisie.",
+    "jeuIntrouvable": "Ce jeu de données est introuvable.",
+    "accesRefuse": "Vous n'avez pas accès à ces données.",
+    "jeuNonRecalculable": "Ce jeu de données ne peut plus être recalculé.",
+    "limite_debit_donnees": "Trop de calculs lourds en peu de temps. Patientez quelques minutes, puis réessayez.",
+    "roleLectureAbsent": "Les données sont momentanément indisponibles. Un administrateur doit intervenir ; réessayez plus tard.",
+    "briefingIndisponible": "Le briefing est momentanément indisponible.",
+    "erreurServeur": "Le serveur a rencontré une erreur. Réessayez dans un instant.",
+    "aucunChamp": "Aucune modification à enregistrer.",
+    "fournisseurIndisponible": "Ce fournisseur n'a pas de clé installée sur le serveur.",
+    "periodeInvalide": "La période est invalide : le début doit précéder la fin, dans la limite autorisée.",
+    "fichierAbsent": "Aucun fichier n'a été reçu.",
+    "fichierTropGros": "Ce fichier dépasse 10 Mo.",
+    "fichierTropVolumineuxDecompresse": "Ce classeur est trop volumineux une fois décompressé. Réduisez-le puis réessayez.",
+    "extensionRefusee": "Ce type de fichier n'est pas accepté. Utilisez un fichier xlsx, csv, pdf ou txt.",
+    "formatXlsNonPrisEnCharge": "Le format xls n'est pas pris en charge. Enregistrez le fichier au format xlsx.",
+    "nomInvalide": "Le nom du fichier est invalide. Renommez-le puis réessayez.",
+    "fichierVide": "Ce fichier est vide.",
+    "signatureIncoherente": "Le contenu du fichier ne correspond pas à son extension.",
+    "classeurIllisible": "Ce classeur est illisible ou abîmé.",
+    "classeurProtege": "Ce classeur est protégé par un mot de passe. Retirez la protection puis réessayez.",
+    "pdfSansTexte": "Ce PDF ne contient pas de texte lisible (document scanné ?).",
+    "pdfProtege": "Ce PDF est protégé par un mot de passe.",
+    "pdfIllisible": "Ce PDF est illisible ou abîmé.",
+    "pdfNonDisponible": "La lecture des PDF n'est pas disponible sur le serveur pour le moment.",
+    "csvIllisible": "Ce fichier CSV est illisible ou mal formé.",
+    "conversationIntrouvable": "Cette conversation est introuvable.",
+    "pieceJointeIntrouvable": "Cette pièce jointe est introuvable.",
+    "feuilleIntrouvable": "Cette feuille est introuvable dans le classeur.",
+    "plageInvalide": "La plage de cellules demandée est invalide.",
+    "fichierStockeIntrouvable": "Le fichier n'est plus disponible. Joignez-le de nouveau.",
+    "transcriptionIndisponible": "La dictée par le serveur n'est pas activée. Utilisez la dictée du navigateur.",
+    "transcriptionEchec": "La transcription a échoué. Réessayez ou saisissez votre message.",
+    "audioAbsent": "Aucun enregistrement audio n'a été reçu.",
+    "audioTropGros": "Cet enregistrement dépasse 10 Mo.",
+    "audioFormatRefuse": "Ce format audio n'est pas accepté.",
+    "audioVide": "L'enregistrement est vide. Parlez plus près du micro puis réessayez."
+  },
+  "commun": {
+    "reessayer": "Réessayer",
+    "chargement": "Chargement en cours"
+  },
+  "configuration": {
+    "chargement": "Chargement de la configuration",
+    "erreurChargement": "Impossible de charger la configuration.",
+    "maj": {
+      "par": "Modifiée par {nom} le {date}.",
+      "le": "Modifiée le {date}.",
+      "jamais": "Jamais modifiée : les valeurs par défaut s'appliquent."
+    },
+    "fournisseur": {
+      "titre": "Fournisseur d'IA",
+      "aide": "Le fournisseur répond à toutes les questions posées à Data Genius. Seuls les fournisseurs dont la clé est installée sur le serveur peuvent être choisis.",
+      "disponible": "Clé installée",
+      "indisponible": "Indisponible : ajoutez la variable {variable} sur le serveur.",
+      "courantIndisponible": "Le fournisseur enregistré n'a plus de clé sur le serveur. Ajoutez la variable {variable} ou choisissez un autre fournisseur."
+    },
+    "modeles": {
+      "titre": "Modèles",
+      "aide": "Un modèle par mode. Saisissez l'identifiant exact du modèle chez le fournisseur choisi.",
+      "libelle": "Modèle du mode {mode}",
+      "defaut": "Par défaut chez ce fournisseur : {modele}",
+      "defautAChoisir": "Aucun modèle par défaut chez ce fournisseur : à choisir.",
+      "utiliserDefaut": "Valeur par défaut",
+      "utiliserDefautPour": "Remettre la valeur par défaut du mode {mode}",
+      "vide": "Saisissez un modèle.",
+      "invalide": "Identifiant refusé : lettres, chiffres, point, tiret, deux-points ou barre oblique, 100 caractères au plus.",
+      "aideMode": {
+        "standard": "Réponses courantes aux questions.",
+        "profond": "Analyse approfondie, plus lente et plus coûteuse.",
+        "rapide": "Réponses courtes et relances suggérées."
+      },
+      "tarif": "Tarif : {entree} en entrée et {sortie} en sortie, par million de jetons.",
+      "tarifInconnu": "Tarif inconnu : le coût n'est pas estimé."
+    },
+    "test": {
+      "bouton": "Tester",
+      "boutonPour": "Tester le modèle du mode {mode}",
+      "enCours": "Test en cours",
+      "succes": "Le modèle {modele} répond en {latence, number} ms.",
+      "echec": "Échec du test : {erreur}",
+      "echecGenerique": "Le test n'a pas abouti.",
+      "erreurs": {
+        "delai": "Le modèle n'a pas répondu à temps.",
+        "clefRefusee": "Le fournisseur a refusé la clé installée sur le serveur.",
+        "modeleIntrouvable": "Ce modèle n'existe pas chez le fournisseur.",
+        "limite": "Le fournisseur limite les appels pour le moment. Réessayez plus tard.",
+        "indisponible": "Le fournisseur est indisponible pour le moment.",
+        "reseau": "Le fournisseur n'a pas répondu (réseau).",
+        "certificat": "Connexion au fournisseur refusée : certificat non reconnu (pare-feu ou proxy qui inspecte le trafic).",
+        "inconnue": "Le fournisseur a répondu par une erreur inattendue."
+      }
+    },
+    "transcription": {
+      "titre": "Dictée vocale",
+      "aide": "Choisissez qui transcrit la voix. Sans moteur serveur, seule la dictée du navigateur est proposée.",
+      "libelle": "Moteur de transcription",
+      "navigateur": "Dictée du navigateur uniquement",
+      "navigateurDescription": "Aucun enregistrement n'est envoyé au serveur Data Genius.",
+      "modele": "Modèle de transcription",
+      "suggestion": "Suggestion : {modele}",
+      "utiliserSuggestion": "Utiliser la suggestion"
+    },
+    "taux": {
+      "titre": "Taux de change EUR/USD",
+      "libelle": "Euros pour 1 dollar",
+      "aide": "Taux fixe par défaut : {defaut}, modifiable. Il convertit en euros les coûts calculés en dollars dans l'onglet Usages et coûts.",
+      "sourceConfig": "Taux saisi par un administrateur.",
+      "sourceDefaut": "Aucun taux saisi : le taux par défaut s'applique.",
+      "invalide": "Saisissez un nombre supérieur à zéro."
+    },
+    "actions": {
+      "enregistrer": "Enregistrer",
+      "enregistrement": "Enregistrement",
+      "annuler": "Annuler les modifications",
+      "nonEnregistre": "Modifications non enregistrées",
+      "aJour": "Aucune modification en attente",
+      "succes": "Configuration enregistrée.",
+      "erreur": "La configuration n'a pas été enregistrée."
+    }
+  },
+  "usages": {
+    "chargement": "Chargement des usages",
+    "erreurChargement": "Impossible de charger les usages.",
+    "periode": {
+      "debut": "Du",
+      "fin": "Au",
+      "raccourcis": "Raccourcis de période",
+      "jours7": "7 jours",
+      "jours30": "30 jours",
+      "jours90": "90 jours",
+      "moisCourant": "Mois en cours",
+      "ordreInvalide": "La date de début doit précéder la date de fin.",
+      "tropLongue": "La période ne peut pas dépasser {jours, number} jours."
+    },
+    "filtres": {
+      "fournisseur": "Fournisseur",
+      "mode": "Mode",
+      "tous": "Tous"
+    },
+    "groupement": {
+      "libelle": "Regrouper par",
+      "jour": "Jour",
+      "mois": "Mois"
+    },
+    "totaux": {
+      "titre": "Totaux de la période",
+      "coutEur": "Coût (EUR)",
+      "coutUsd": "Coût (USD)",
+      "requetes": "Requêtes",
+      "tokensEntree": "Jetons en entrée",
+      "tokensSortie": "Jetons en sortie",
+      "tokensCacheLecture": "Jetons lus en cache",
+      "tokensCacheEcriture": "Jetons écrits en cache",
+      "tauxConfig": "Conversion au taux de {taux} euro pour 1 dollar, saisi par un administrateur.",
+      "tauxDefaut": "Conversion au taux de {taux} euro pour 1 dollar, taux par défaut."
+    },
+    "evolution": {
+      "titre": {
+        "jour": "Évolution par jour",
+        "mois": "Évolution par mois"
+      },
+      "metrique": "Afficher",
+      "coutEur": "Coût (EUR)",
+      "requetes": "Requêtes",
+      "jetons": "Jetons",
+      "graphique": {
+        "jour": "Graphique : {metrique} par jour, du {debut} au {fin}.",
+        "mois": "Graphique : {metrique} par mois, du {debut} au {fin}."
+      },
+      "voirTableau": "Afficher les données du graphique sous forme de tableau"
+    },
+    "tableaux": {
+      "parUtilisateur": "Par utilisateur",
+      "parModele": "Par modèle",
+      "parMode": "Par mode",
+      "triPar": "Trier par {colonne}",
+      "colonnes": {
+        "periode": "Période",
+        "utilisateur": "Utilisateur",
+        "fournisseur": "Fournisseur",
+        "modele": "Modèle",
+        "mode": "Mode",
+        "requetes": "Requêtes",
+        "tokensEntree": "Jetons entrée",
+        "tokensSortie": "Jetons sortie",
+        "tokensCacheLecture": "Cache lu",
+        "tokensCacheEcriture": "Cache écrit",
+        "coutEur": "Coût EUR",
+        "coutUsd": "Coût USD"
+      }
+    },
+    "vide": {
+      "titre": "Aucun usage sur la période",
+      "description": "Aucun appel à l'IA n'est enregistré entre ces deux dates. Choisissez une période plus large."
+    },
+    "export": {
+      "bouton": "Exporter en Excel",
+      "enCours": "Export en cours",
+      "erreur": "L'export Excel a échoué."
+    }
+  },
+  "avis": {
+    "chargement": "Chargement des avis",
+    "erreurChargement": "Impossible de charger les avis.",
+    "erreurSuite": "Impossible de charger la suite des avis.",
+    "filtre": {
+      "libelle": "Avis à afficher",
+      "negatif": "Pouces bas",
+      "positif": "Pouces hauts",
+      "tous": "Tous les avis"
+    },
+    "liste": "Avis des utilisateurs",
+    "totaux": {
+      "positifs": "Pouces hauts : {count, number}",
+      "negatifs": "Pouces bas : {count, number}"
+    },
+    "compteur": "Avis affichés : {count, number}",
+    "valeur": {
+      "negatif": "Pouce bas",
+      "positif": "Pouce haut"
+    },
+    "champs": {
+      "commentaire": "Commentaire",
+      "question": "Question",
+      "reponse": "Extrait de la réponse",
+      "modele": "Modèle"
+    },
+    "sansCommentaire": "Aucun commentaire laissé",
+    "ouvrirConversation": "Ouvrir la conversation",
+    "chargerPlus": "Charger plus",
+    "chargementSuite": "Chargement de la suite",
+    "vide": {
+      "titre": "Aucun avis à afficher",
+      "negatif": "Aucun pouce bas pour le moment.",
+      "positif": "Aucun pouce haut pour le moment.",
+      "tous": "Aucun avis n'a encore été laissé."
+    }
+  },
+  "piecesJointes": {
+    "provenance": {
+      "perimetre": "Fichier fourni (hors données Data Genius)",
+      "filtreFeuille": "Feuille",
+      "filtrePlage": "Plage",
+      "regleNonVerifie": "Contenu du fichier repris tel quel, non vérifié par Data Genius.",
+      "regleTypesInferes": "Types de colonnes (texte, nombre, date, pourcentage) déduits du contenu du fichier.",
+      "reglePourcentage": "Pourcentages exprimés en points (85 = 85 %).",
+      "regleTronque": "Feuille tronquée : {max, number} premières lignes lues sur {total, number}."
+    }
+  }
+}

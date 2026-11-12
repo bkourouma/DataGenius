@@ -1,0 +1,287 @@
+{
+  "titre": "Data Genius",
+  "page": {
+    "titre": "إدارة Data Genius",
+    "sousTitre": "اختر المزوّد والنماذج، وتابع الاستخدام والتكاليف، وراجع آراء المستخدمين."
+  },
+  "acces": {
+    "titre": "الوصول مقصور على المسؤولين",
+    "description": "إدارة Data Genius مقصورة على المسؤولين. إذا كنت بحاجة إلى هذا الوصول، فتواصل مع أحد مسؤولي Data Genius.",
+    "retour": "العودة إلى لوحة القيادة"
+  },
+  "onglets": {
+    "liste": "أقسام الإدارة",
+    "configuration": "الإعدادات",
+    "usages": "الاستخدام والتكاليف",
+    "avis": "الآراء"
+  },
+  "fournisseurs": {
+    "anthropic": "Anthropic (Claude)",
+    "openai": "OpenAI",
+    "google": "Google (Gemini)",
+    "deepseek": "DeepSeek"
+  },
+  "modes": {
+    "standard": "قياسي",
+    "profond": "معمّق",
+    "rapide": "سريع",
+    "transcription": "النسخ الصوتي"
+  },
+  "erreurs": {
+    "generique": "حدث خطأ. أعد المحاولة بعد قليل.",
+    "reseau": "الخادم لا يستجيب. تحقق من اتصالك ثم أعد المحاولة.",
+    "nonAutorise": "انتهت جلستك. سجّل الدخول من جديد ثم أعد المحاولة.",
+    "interdit": "ليست لديك الصلاحيات اللازمة لهذا الإجراء."
+  },
+  "erreursApi": {
+    "validationInvalide": "تم رفض قيمة مُرسلة. تحقق مما أدخلته.",
+    "jeuIntrouvable": "تعذّر العثور على مجموعة البيانات هذه.",
+    "accesRefuse": "ليس لديك صلاحية الوصول إلى هذه البيانات.",
+    "jeuNonRecalculable": "لم يعد من الممكن إعادة حساب مجموعة البيانات هذه.",
+    "limite_debit_donnees": "عدد كبير جدًا من العمليات الحسابية الثقيلة في وقت قصير. انتظر بضع دقائق ثم أعد المحاولة.",
+    "roleLectureAbsent": "البيانات غير متاحة مؤقتًا. يلزم تدخل مسؤول النظام؛ يرجى المحاولة لاحقًا.",
+    "briefingIndisponible": "الموجز غير متاح مؤقتًا.",
+    "erreurServeur": "واجه الخادم خطأً. أعد المحاولة بعد قليل.",
+    "aucunChamp": "لا توجد تعديلات لحفظها.",
+    "fournisseurIndisponible": "لا يوجد مفتاح مثبّت على الخادم لهذا المزوّد.",
+    "periodeInvalide": "الفترة غير صالحة: يجب أن تسبق البداية النهاية ضمن الحد المسموح.",
+    "fichierAbsent": "لم يتم استلام أي ملف.",
+    "fichierTropGros": "يتجاوز هذا الملف 10 ميغابايت.",
+    "fichierTropVolumineuxDecompresse": "هذا المصنّف كبير جدًا بعد فك الضغط. قلّل حجمه ثم أعد المحاولة.",
+    "extensionRefusee": "نوع الملف هذا غير مقبول. استخدم ملف xlsx أو csv أو pdf أو txt.",
+    "formatXlsNonPrisEnCharge": "صيغة xls غير مدعومة. احفظ الملف بصيغة xlsx.",
+    "nomInvalide": "اسم الملف غير صالح. غيّر الاسم ثم أعد المحاولة.",
+    "fichierVide": "هذا الملف فارغ.",
+    "signatureIncoherente": "محتوى الملف لا يطابق امتداده.",
+    "classeurIllisible": "هذا المصنّف غير قابل للقراءة أو تالف.",
+    "classeurProtege": "هذا المصنّف محمي بكلمة مرور. أزل الحماية ثم أعد المحاولة.",
+    "pdfSansTexte": "لا يحتوي ملف PDF هذا على نص مقروء (ربما مستند ممسوح ضوئيًا).",
+    "pdfProtege": "ملف PDF هذا محمي بكلمة مرور.",
+    "pdfIllisible": "ملف PDF هذا غير قابل للقراءة أو تالف.",
+    "pdfNonDisponible": "قراءة ملفات PDF غير متاحة على الخادم حاليًا.",
+    "csvIllisible": "ملف CSV هذا غير قابل للقراءة أو سيئ التنسيق.",
+    "conversationIntrouvable": "تعذّر العثور على هذه المحادثة.",
+    "pieceJointeIntrouvable": "تعذّر العثور على هذا المرفق.",
+    "feuilleIntrouvable": "تعذّر العثور على هذه الورقة في المصنّف.",
+    "plageInvalide": "نطاق الخلايا المطلوب غير صالح.",
+    "fichierStockeIntrouvable": "لم يعد الملف متاحًا. أرفقه من جديد.",
+    "transcriptionIndisponible": "الإملاء عبر الخادم غير مفعّل. استخدم إملاء المتصفح.",
+    "transcriptionEchec": "فشل التفريغ النصي. أعد المحاولة أو اكتب رسالتك.",
+    "audioAbsent": "لم يتم استلام أي تسجيل صوتي.",
+    "audioTropGros": "يتجاوز هذا التسجيل 10 ميغابايت.",
+    "audioFormatRefuse": "صيغة الصوت هذه غير مقبولة.",
+    "audioVide": "التسجيل فارغ. تحدّث بالقرب من الميكروفون ثم أعد المحاولة."
+  },
+  "commun": {
+    "reessayer": "إعادة المحاولة",
+    "chargement": "جارٍ التحميل"
+  },
+  "configuration": {
+    "chargement": "جارٍ تحميل الإعدادات",
+    "erreurChargement": "تعذّر تحميل الإعدادات.",
+    "maj": {
+      "par": "عدّلها {nom} في {date}.",
+      "le": "عُدّلت في {date}.",
+      "jamais": "لم تُعدَّل قط: تُطبَّق القيم الافتراضية."
+    },
+    "fournisseur": {
+      "titre": "مزوّد الذكاء الاصطناعي",
+      "aide": "يجيب المزوّد عن كل الأسئلة الموجّهة إلى Data Genius. لا يمكن اختيار إلا المزوّدين المثبَّت مفتاحهم على الخادم.",
+      "disponible": "المفتاح مثبّت",
+      "indisponible": "غير متاح: أضف المتغيّر {variable} على الخادم.",
+      "courantIndisponible": "لم يعد للمزوّد المحفوظ مفتاح على الخادم. أضف المتغيّر {variable} أو اختر مزوّدًا آخر."
+    },
+    "modeles": {
+      "titre": "النماذج",
+      "aide": "نموذج واحد لكل وضع. أدخل المعرّف الدقيق للنموذج لدى المزوّد المختار.",
+      "libelle": "نموذج وضع {mode}",
+      "defaut": "الافتراضي لدى هذا المزوّد: {modele}",
+      "defautAChoisir": "لا يوجد نموذج افتراضي لدى هذا المزوّد: اختر واحدًا.",
+      "utiliserDefaut": "القيمة الافتراضية",
+      "utiliserDefautPour": "استعادة القيمة الافتراضية لوضع {mode}",
+      "vide": "أدخل نموذجًا.",
+      "invalide": "المعرّف مرفوض: حروف وأرقام ونقطة وشرطة ونقطتان أو شرطة مائلة، 100 حرف على الأكثر.",
+      "aideMode": {
+        "standard": "إجابات اعتيادية عن الأسئلة.",
+        "profond": "تحليل معمّق، أبطأ وأعلى كلفة.",
+        "rapide": "إجابات قصيرة وأسئلة متابعة مقترحة."
+      },
+      "tarif": "السعر: {entree} للإدخال و{sortie} للإخراج، لكل مليون رمز.",
+      "tarifInconnu": "السعر غير معروف: لا تُقدَّر الكلفة."
+    },
+    "test": {
+      "bouton": "اختبار",
+      "boutonPour": "اختبار نموذج وضع {mode}",
+      "enCours": "جارٍ الاختبار",
+      "succes": "يستجيب النموذج {modele} خلال {latence, number} مللي ثانية.",
+      "echec": "فشل الاختبار: {erreur}",
+      "echecGenerique": "لم يكتمل الاختبار.",
+      "erreurs": {
+        "delai": "لم يستجب النموذج في الوقت المناسب.",
+        "clefRefusee": "رفض المزوّد المفتاح المثبّت على الخادم.",
+        "modeleIntrouvable": "هذا النموذج غير موجود لدى المزوّد.",
+        "limite": "يحدّ المزوّد من الطلبات حاليًا. أعد المحاولة لاحقًا.",
+        "indisponible": "المزوّد غير متاح حاليًا.",
+        "reseau": "لم يردّ المزوّد (الشبكة).",
+        "certificat": "رُفض الاتصال بالمزوّد: الشهادة غير معروفة (جدار حماية أو وكيل يفحص حركة المرور).",
+        "inconnue": "ردّ المزوّد بخطأ غير متوقع."
+      }
+    },
+    "transcription": {
+      "titre": "الإملاء الصوتي",
+      "aide": "اختر من يفرّغ الصوت نصًّا. من دون محرّك على الخادم، لا يُقترح إلا إملاء المتصفح.",
+      "libelle": "محرّك التفريغ النصي",
+      "navigateur": "إملاء المتصفح فقط",
+      "navigateurDescription": "لا يُرسَل أي تسجيل إلى خادم Data Genius.",
+      "modele": "نموذج التفريغ النصي",
+      "suggestion": "اقتراح: {modele}",
+      "utiliserSuggestion": "استخدام الاقتراح"
+    },
+    "taux": {
+      "titre": "سعر صرف اليورو/الدولار",
+      "libelle": "عدد اليوروهات لكل دولار",
+      "aide": "السعر الثابت الافتراضي: {defaut}، قابل للتعديل. يحوّل إلى اليورو التكاليف المحسوبة بالدولار في تبويب الاستخدام والتكاليف.",
+      "sourceConfig": "السعر أدخله مسؤول.",
+      "sourceDefaut": "لم يُدخَل أي سعر: يُطبَّق السعر الافتراضي.",
+      "invalide": "أدخل رقمًا أكبر من الصفر."
+    },
+    "actions": {
+      "enregistrer": "حفظ",
+      "enregistrement": "جارٍ الحفظ",
+      "annuler": "تجاهل التعديلات",
+      "nonEnregistre": "تعديلات غير محفوظة",
+      "aJour": "لا توجد تعديلات معلّقة",
+      "succes": "تم حفظ الإعدادات.",
+      "erreur": "لم يتم حفظ الإعدادات."
+    }
+  },
+  "usages": {
+    "chargement": "جارٍ تحميل الاستخدام",
+    "erreurChargement": "تعذّر تحميل الاستخدام.",
+    "periode": {
+      "debut": "من",
+      "fin": "إلى",
+      "raccourcis": "اختصارات الفترة",
+      "jours7": "7 أيام",
+      "jours30": "30 يومًا",
+      "jours90": "90 يومًا",
+      "moisCourant": "الشهر الحالي",
+      "ordreInvalide": "يجب أن يسبق تاريخ البداية تاريخ النهاية.",
+      "tropLongue": "لا يمكن أن تتجاوز الفترة {jours, number} يومًا."
+    },
+    "filtres": {
+      "fournisseur": "المزوّد",
+      "mode": "الوضع",
+      "tous": "الكل"
+    },
+    "groupement": {
+      "libelle": "التجميع حسب",
+      "jour": "اليوم",
+      "mois": "الشهر"
+    },
+    "totaux": {
+      "titre": "إجماليات الفترة",
+      "coutEur": "الكلفة (يورو)",
+      "coutUsd": "الكلفة (دولار)",
+      "requetes": "الطلبات",
+      "tokensEntree": "رموز الإدخال",
+      "tokensSortie": "رموز الإخراج",
+      "tokensCacheLecture": "رموز مقروءة من الذاكرة المؤقتة",
+      "tokensCacheEcriture": "رموز مكتوبة في الذاكرة المؤقتة",
+      "tauxConfig": "التحويل بسعر {taux} يورو لكل دولار، أدخله مسؤول.",
+      "tauxDefaut": "التحويل بسعر {taux} يورو لكل دولار، وهو السعر الافتراضي."
+    },
+    "evolution": {
+      "titre": {
+        "jour": "التطور حسب اليوم",
+        "mois": "التطور حسب الشهر"
+      },
+      "metrique": "عرض",
+      "coutEur": "الكلفة (يورو)",
+      "requetes": "الطلبات",
+      "jetons": "الرموز",
+      "graphique": {
+        "jour": "رسم بياني: {metrique} حسب اليوم، من {debut} إلى {fin}.",
+        "mois": "رسم بياني: {metrique} حسب الشهر، من {debut} إلى {fin}."
+      },
+      "voirTableau": "عرض بيانات الرسم البياني في جدول"
+    },
+    "tableaux": {
+      "parUtilisateur": "حسب المستخدم",
+      "parModele": "حسب النموذج",
+      "parMode": "حسب الوضع",
+      "triPar": "الترتيب حسب {colonne}",
+      "colonnes": {
+        "periode": "الفترة",
+        "utilisateur": "المستخدم",
+        "fournisseur": "المزوّد",
+        "modele": "النموذج",
+        "mode": "الوضع",
+        "requetes": "الطلبات",
+        "tokensEntree": "رموز الإدخال",
+        "tokensSortie": "رموز الإخراج",
+        "tokensCacheLecture": "قراءة الذاكرة المؤقتة",
+        "tokensCacheEcriture": "كتابة الذاكرة المؤقتة",
+        "coutEur": "الكلفة يورو",
+        "coutUsd": "الكلفة دولار"
+      }
+    },
+    "vide": {
+      "titre": "لا استخدام في هذه الفترة",
+      "description": "لا يوجد أي استدعاء للذكاء الاصطناعي مسجَّل بين هذين التاريخين. اختر فترة أوسع."
+    },
+    "export": {
+      "bouton": "تصدير إلى Excel",
+      "enCours": "جارٍ التصدير",
+      "erreur": "فشل التصدير إلى Excel."
+    }
+  },
+  "avis": {
+    "chargement": "جارٍ تحميل التقييمات",
+    "erreurChargement": "تعذّر تحميل التقييمات.",
+    "erreurSuite": "تعذّر تحميل المزيد من التقييمات.",
+    "filtre": {
+      "libelle": "التقييمات المراد عرضها",
+      "negatif": "إبهام لأسفل",
+      "positif": "إبهام لأعلى",
+      "tous": "كل التقييمات"
+    },
+    "liste": "تقييمات المستخدمين",
+    "totaux": {
+      "positifs": "إبهام لأعلى: {count, number}",
+      "negatifs": "إبهام لأسفل: {count, number}"
+    },
+    "compteur": "التقييمات المعروضة: {count, number}",
+    "valeur": {
+      "negatif": "إبهام لأسفل",
+      "positif": "إبهام لأعلى"
+    },
+    "champs": {
+      "commentaire": "التعليق",
+      "question": "السؤال",
+      "reponse": "مقتطف من الإجابة",
+      "modele": "النموذج"
+    },
+    "sansCommentaire": "لم يُترك أي تعليق",
+    "ouvrirConversation": "فتح المحادثة",
+    "chargerPlus": "تحميل المزيد",
+    "chargementSuite": "جارٍ تحميل المزيد",
+    "vide": {
+      "titre": "لا توجد تقييمات للعرض",
+      "negatif": "لا توجد تقييمات سلبية حتى الآن.",
+      "positif": "لا توجد تقييمات إيجابية حتى الآن.",
+      "tous": "لم يُترك أي تقييم بعد."
+    }
+  },
+  "piecesJointes": {
+    "provenance": {
+      "perimetre": "ملف مقدَّم (ليس من بيانات Data Genius)",
+      "filtreFeuille": "الورقة",
+      "filtrePlage": "النطاق",
+      "regleNonVerifie": "يُستخدم محتوى الملف كما هو دون أن تتحقق منه Data Genius.",
+      "regleTypesInferes": "أنواع الأعمدة (نص، رقم، تاريخ، نسبة مئوية) مستنتجة من محتوى الملف.",
+      "reglePourcentage": "النسب المئوية معبَّر عنها بالنقاط (85 = 85٪).",
+      "regleTronque": "تم اقتطاع الورقة: قُرئت أول {max, number} صفًّا من أصل {total, number}."
+    }
+  }
+}

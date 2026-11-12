@@ -1,0 +1,42 @@
+{
+  "bandeau": {
+    "lignes": "{count, plural, other {已隐藏 # 行}}",
+    "colonnes": "{count, plural, other {已隐藏 # 列}}",
+    "separateur": "，",
+    "totaux": "{details}，合计包含全部数据"
+  },
+  "menus": {
+    "pays": "国家",
+    "produits": "产品",
+    "grossistes": "批发商",
+    "mesures": "指标"
+  },
+  "cumul": {
+    "libelle": "累计",
+    "produits": "已移除产品明细：仅显示一行累计。",
+    "grossistes": "已移除批发商明细：按国家累计。",
+    "lesDeux": "已移除产品和批发商明细：按国家累计。",
+    "pays": "已移除国家明细：所有国家合计。",
+    "paysProduits": "已移除国家和产品：按批发商合计。",
+    "paysGrossistes": "已移除国家和批发商：按产品合计。",
+    "champs": "已移除字段（{champs}）：数据已汇总。"
+  },
+  "champs": {
+    "bouton": "显示的字段",
+    "titre": "显示的字段",
+    "aide": "取消勾选字段即可只保留其合计；重新勾选可查看明细。总计不会改变。",
+    "afficherTout": "全部显示",
+    "detail": "已显示 {affiches} / {total}",
+    "retires": "{count, plural, other {已移除 # 个字段}}",
+    "minimum": "{count, plural, other {至少须保留显示 # 个字段}}。",
+    "pays": "国家",
+    "produit": "产品",
+    "grossiste": "批发商",
+    "agence": "代理机构",
+    "mois": "月份",
+    "periode": "周期"
+  },
+  "mesures": {
+    "caSeul": "已移除产品：仅显示营业额（欧元）。"
+  }
+}

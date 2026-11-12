@@ -1,0 +1,432 @@
+{
+  "titre": "Data Genius",
+  "actionResume": {
+    "creerTache": "कार्य “{titre}” बनाएँ और उसे {assigne} को सौंपें।",
+    "creerTacheEcheance": "कार्य “{titre}” बनाएँ और उसे {assigne} को सौंपें, अंतिम तिथि {echeance}।",
+    "envoyerEmail": "विश्लेषण “{titre}” को {destinataires} को ईमेल से भेजें, {formats} फ़ाइलें संलग्न करके।",
+    "notifier": "{destinataires} को सूचना भेजें: “{message}”।",
+    "notifierArtefact": "{destinataires} को विश्लेषण “{titre}” के साथ सूचना भेजें: “{message}”।",
+    "programmerRapport": "विश्लेषण “{titre}” को {formats} में {destinataires} को भेजें, {frequence}।",
+    "partageNote": "यह विश्लेषण इन लोगों के साथ केवल-पढ़ने के रूप में साझा किया जाएगा, और वे इसे अपने दायरे में देखेंगे।",
+    "frequence": {
+      "quotidien": "हर दिन {heure} बजे (पेरिस समय)",
+      "hebdomadaire": "हर {jour} को {heure} बजे (पेरिस समय)",
+      "hebdomadaireSansJour": "हर सप्ताह {heure} बजे (पेरिस समय)",
+      "mensuel": "हर महीने की {jourMois} तारीख को {heure} बजे (पेरिस समय)",
+      "mensuelSansJour": "हर महीने {heure} बजे (पेरिस समय)"
+    },
+    "notifierSansAcces": "{nombre, plural, one {{destinataires} की Data Genius तक पहुँच नहीं है; उन्हें केवल संदेश मिलेगा, विश्लेषण नहीं।} other {{destinataires} की Data Genius तक पहुँच नहीं है; उन्हें केवल संदेश मिलेगा, विश्लेषण नहीं।}}"
+  },
+  "actionResultat": {
+    "creerTache": "{assigne} के लिए कार्य बनाया गया।",
+    "envoyerEmail": "{envoyes, plural, one {# ईमेल भेजा गया।} other {# ईमेल भेजे गए।}}",
+    "envoyerEmailEchecs": "{echecs, plural, one {# भेजना विफल रहा।} other {# भेजना विफल रहे।}}",
+    "notifier": "{nombre, plural, one {# व्यक्ति को सूचना भेजी गई।} other {# लोगों को सूचना भेजी गई।}}",
+    "programmerRapport": "रिपोर्ट «{titre}» शेड्यूल की गई।",
+    "echec": {
+      "generique": "कार्रवाई पूरी नहीं हो सकी।",
+      "export_impossible": "विश्लेषण का निर्यात विफल रहा: कुछ भी नहीं भेजा गया।",
+      "mail_non_envoye": "कोई ईमेल नहीं भेजा जा सका।",
+      "destinataire_invalide": "किसी प्राप्तकर्ता की अब Data Genius तक पहुँच नहीं है।",
+      "artefact_non_proprietaire": "केवल विश्लेषण का स्वामी ही इसे साझा कर सकता है, भेज सकता है या शेड्यूल कर सकता है।"
+    },
+    "lien": {
+      "taches": "मेरे कार्य देखें",
+      "rapports": "मेरी रिपोर्टें देखें"
+    }
+  },
+  "emailArtefact": {
+    "sujet": "{expediteur} ने आपको “{titre}” भेजा है",
+    "salutation": "नमस्ते {nom},",
+    "intro": "{expediteur} ने Data Genius से आपको विश्लेषण “{titre}” भेजा है।",
+    "messageDe": "{expediteur} का संदेश:",
+    "formats": "संलग्न फ़ाइलें: {formats}।",
+    "note": "संलग्न आँकड़े भेजने वाले के हैं, जो भेजते समय के हैं। Data Genius में विश्लेषण खोलने पर वे आपके अपने दायरे में दोबारा गणना किए जाते हैं।",
+    "bouton": "विश्लेषण खोलें",
+    "lienTexte": "विश्लेषण खोलें: {url}",
+    "pied": "Data Genius का स्वचालित संदेश, कृपया उत्तर न दें।"
+  },
+  "notifMessage": {
+    "titre": "{expediteur} ने आपको लिखा है"
+  },
+  "notifTache": {
+    "titre": "{expediteur} ने आपको एक कार्य सौंपा है",
+    "message": "“{titre}”",
+    "messageEcheance": "“{titre}”, अंतिम तिथि {echeance}"
+  },
+  "erreurs": {
+    "titre": "कार्रवाई संभव नहीं",
+    "introuvable": "यह आइटम नहीं मिला या अब उपलब्ध नहीं है।",
+    "invalide": "दर्ज की गई जानकारी मान्य नहीं है।",
+    "interdit": "आपको यह कार्रवाई करने की अनुमति नहीं है।",
+    "conflit": "यह आइटम पहले ही संसाधित या बदला जा चुका है। पेज फिर से लोड करके दोबारा प्रयास करें।",
+    "destinataire_invalide": "किसी एक प्राप्तकर्ता के पास Data Genius की पहुँच नहीं है।",
+    "export_impossible": "फ़ाइल नहीं बन सकी। कुछ देर बाद फिर प्रयास करें।",
+    "artefact_non_proprietaire": "यह कार्रवाई केवल विश्लेषण का स्वामी ही कर सकता है।",
+    "interne": "कोई त्रुटि हुई। कुछ देर बाद फिर प्रयास करें।",
+    "reseau": "सर्वर जवाब नहीं दे रहा। अपना कनेक्शन जाँचकर फिर प्रयास करें।",
+    "mail_non_envoye": "कोई ईमेल नहीं भेजा जा सका।",
+    "execution_impossible": "कार्रवाई पूरी नहीं हो सकी।"
+  },
+  "carteAction": {
+    "titre": {
+      "creer_tache": "कार्य बनाएँ",
+      "envoyer_email": "ईमेल से भेजें",
+      "notifier": "सूचना भेजें",
+      "programmer_rapport": "रिपोर्ट शेड्यूल करें"
+    },
+    "statut": {
+      "proposee": "पुष्टि बाकी",
+      "executee": "पूरा",
+      "annulee": "रद्द",
+      "echec": "विफल"
+    },
+    "chargement": "कार्रवाई लोड हो रही है…",
+    "erreurLecture": "इस कार्रवाई को दोबारा पढ़ा नहीं जा सका।",
+    "reessayer": "फिर प्रयास करें",
+    "confirmer": "पुष्टि करें",
+    "annuler": "रद्द करें",
+    "enCours": "प्रक्रिया जारी है…",
+    "nonExecute": "आपकी पुष्टि के बिना कुछ भी नहीं किया जाएगा।",
+    "destinataires": "प्राप्तकर्ता",
+    "assigne": "सौंपा गया",
+    "echeance": "अंतिम तिथि",
+    "destinatairesRequis": "पुष्टि के लिए कम से कम एक प्राप्तकर्ता चुनें।",
+    "assigneRequis": "वह व्यक्ति चुनें जिसे कार्य सौंपना है।",
+    "nomsIndisponibles": "नाम लोड नहीं हो सके। आप उन्हें बदले बिना पुष्टि कर सकते हैं।",
+    "executee": {
+      "creer_tache": "{noms} के लिए कार्य बनाया गया।",
+      "envoyer_email": "{noms} को ईमेल भेजा गया।",
+      "notifier": "{noms} को सूचना भेजी गई।",
+      "programmer_rapport": "{noms} के लिए रिपोर्ट शेड्यूल की गई।"
+    },
+    "executeeSimple": {
+      "creer_tache": "कार्य बनाया गया।",
+      "envoyer_email": "ईमेल भेजा गया।",
+      "notifier": "सूचना भेजी गई।",
+      "programmer_rapport": "रिपोर्ट शेड्यूल की गई।"
+    },
+    "annulee": "कार्रवाई रद्द की गई। कुछ भी नहीं किया गया।",
+    "annuleeLe": "{date} को रद्द किया गया।",
+    "confirmeeLe": "कार्रवाई की पुष्टि {date} को हुई।",
+    "confirmee": "कार्रवाई की पुष्टि हो गई।",
+    "echec": "कार्रवाई पूरी नहीं हो सकी।",
+    "echecRaison": "कारण: {raison}",
+    "voirResultat": "खोलें"
+  },
+  "selecteurUtilisateurs": {
+    "placeholder": "किसी व्यक्ति को खोजें…",
+    "aide": "नाम लिखें, फिर तीर कुंजियों और Enter से चुनें।",
+    "listeLabel": "खोज परिणाम",
+    "chargement": "खोज जारी है…",
+    "aucunResultat": "कोई व्यक्ति नहीं मिला।",
+    "erreur": "खोज विफल रही।",
+    "reessayer": "फिर प्रयास करें",
+    "retirer": "{nom} को हटाएँ",
+    "selectionLabel": "चुने गए लोग",
+    "aucuneSelection": "किसी को नहीं चुना गया।",
+    "resultats": "{nombre, plural, =0 {कोई परिणाम नहीं} one {# परिणाम} other {# परिणाम}}",
+    "selection": "{nombre, plural, =0 {किसी को नहीं चुना गया} one {# व्यक्ति चुना गया} other {# लोग चुने गए}}",
+    "plafond": "अधिकतम सीमा पूरी हुई: {max} लोग।",
+    "moi": "मैं",
+    "moiAide": "सूची में अपना खाता जोड़ें या हटाएँ।"
+  },
+  "dialoguePartage": {
+    "titre": "“{titre}” साझा करें",
+    "explication": "चुना गया व्यक्ति आँकड़े अपने दायरे में दोबारा गणना किए हुए देखता है, इसलिए वे आपके आँकड़ों से अलग हो सकते हैं।",
+    "destinataires": "लोग",
+    "message": "संदेश (वैकल्पिक)",
+    "messagePlaceholder": "इस साझाकरण के बारे में एक पंक्ति जोड़ें",
+    "partager": "साझा करें",
+    "annuler": "रद्द करें",
+    "enCours": "साझा किया जा रहा है…",
+    "aucunDestinataire": "कम से कम एक व्यक्ति चुनें।",
+    "succes": "{nombre, plural, one {# व्यक्ति के साथ साझा किया गया।} other {# लोगों के साथ साझा किया गया।}}"
+  },
+  "dialogueProgrammer": {
+    "titre": "“{titre}” का भेजना शेड्यूल करें",
+    "explication": "हर बार भेजने से पहले विश्लेषण दोबारा गणना किया जाता है, फिर चुने गए लोगों को ईमेल से भेजा जाता है।",
+    "frequence": "आवृत्ति",
+    "frequences": {
+      "quotidien": "हर दिन",
+      "hebdomadaire": "हर सप्ताह",
+      "mensuel": "हर महीने"
+    },
+    "jourSemaine": "सप्ताह का दिन",
+    "jourMois": "महीने का दिन",
+    "jourMoisAide": "1 से 28 तक, ताकि भेजना हर महीने हो सके।",
+    "heure": "भेजने का समय",
+    "heureHeures": "घंटे",
+    "heureMinutes": "मिनट",
+    "heureAide": "पेरिस का समय, आपके समय क्षेत्र की परवाह किए बिना। चुने गए समय के बाद आने वाले अगले पंद्रह मिनट के अंतराल पर भेजा जाता है।",
+    "destinataires": "प्राप्तकर्ता",
+    "formats": "संलग्न प्रारूप",
+    "format": {
+      "xlsx": "Excel (.xlsx)",
+      "pdf": "PDF (.pdf)",
+      "csv": "CSV (.csv)"
+    },
+    "erreurDestinataires": "कम से कम एक प्राप्तकर्ता चुनें।",
+    "erreurFormats": "कम से कम एक प्रारूप चुनें।",
+    "programmer": "शेड्यूल करें",
+    "annuler": "रद्द करें",
+    "enCours": "शेड्यूल हो रहा है…",
+    "succes": "भेजना शेड्यूल कर दिया गया।"
+  },
+  "actionsArtefact": {
+    "groupe": "विश्लेषण पर कार्रवाइयाँ",
+    "enregistrer": "मेरे विश्लेषण में सहेजें",
+    "enregistrerCourt": "सहेजें",
+    "epingler": "डैशबोर्ड पर पिन करें",
+    "epinglerCourt": "पिन करें",
+    "partager": "साझा करें",
+    "programmer": "शेड्यूल करें",
+    "chargementEtat": "स्थिति लोड हो रही है…",
+    "proprietaireSeulement": "विश्लेषण को केवल उसका स्वामी ही सहेज, साझा या भेजने के लिए निर्धारित कर सकता है।",
+    "enregistreOk": "विश्लेषण मेरे विश्लेषण में सहेजा गया।",
+    "retireOk": "विश्लेषण मेरे विश्लेषण से हटाया गया।",
+    "epingleOk": "विश्लेषण डैशबोर्ड पर पिन किया गया।",
+    "desepingleOk": "विश्लेषण डैशबोर्ड से हटाया गया।",
+    "enregistrerProprietaire": "केवल विश्लेषण का स्वामी ही इसे सहेज सकता है। फिर भी आप इसे पिन कर सकते हैं।"
+  },
+  "notifPartage": {
+    "titreConversation": "{expediteur} ने आपके साथ एक बातचीत साझा की है",
+    "titreArtefact": "{expediteur} ने आपके साथ एक विश्लेषण साझा किया है",
+    "message": "“{titre}”"
+  },
+  "emailRapport": {
+    "sujet": "निर्धारित रिपोर्ट: “{titre}”",
+    "salutation": "नमस्ते {nom},",
+    "intro": "{proprietaire} आपको Data Genius का विश्लेषण “{titre}” भेज रहे हैं।",
+    "automatique": "यह रिपोर्ट {frequence} अपने-आप भेजी जाती है, जब तक {proprietaire} इसे बंद नहीं कर देते।",
+    "formats": "संलग्न फ़ाइलें: {formats}।",
+    "note": "संलग्न आँकड़े भेजने की तारीख़ पर रिपोर्ट के मालिक के हैं। Data Genius में विश्लेषण खोलने पर वे आपके अपने दायरे में दोबारा गणना किए जाते हैं।",
+    "bouton": "विश्लेषण खोलें",
+    "lienTexte": "विश्लेषण खोलें: {url}",
+    "pied": "Data Genius का स्वचालित संदेश, कृपया उत्तर न दें।",
+    "frequence": {
+      "quotidien": "हर दिन",
+      "hebdomadaire": "हर सप्ताह",
+      "mensuel": "हर महीने"
+    }
+  },
+  "notifRapport": {
+    "titre": "रिपोर्ट: “{titre}”",
+    "message": "{proprietaire} द्वारा भेजा गया, {frequence}। अपने दायरे के आँकड़े देखने के लिए विश्लेषण खोलें।",
+    "frequence": {
+      "quotidien": "हर दिन",
+      "hebdomadaire": "हर सप्ताह",
+      "mensuel": "हर महीने"
+    }
+  },
+  "analyses": {
+    "page": {
+      "titre": "मेरे विश्लेषण",
+      "description": "अपने सहेजे हुए विश्लेषण, आपके साथ साझा किए गए विश्लेषण, अपने कार्य और निर्धारित रिपोर्ट यहाँ देखें।"
+    },
+    "onglets": {
+      "aria": "मेरे विश्लेषण के अनुभाग",
+      "analyses": "सहेजे हुए विश्लेषण",
+      "partages": "मेरे साथ साझा",
+      "taches": "मेरे कार्य",
+      "rapports": "निर्धारित रिपोर्ट"
+    },
+    "recherche": {
+      "label": "मेरे विश्लेषणों में खोजें",
+      "placeholder": "विश्लेषण खोजें…"
+    },
+    "total": "{count, plural, one {# विश्लेषण} other {# विश्लेषण}}",
+    "type": {
+      "tableau": "तालिका",
+      "graphique": "चार्ट",
+      "indicateurs": "संकेतक",
+      "document": "दस्तावेज़"
+    },
+    "enregistreeLe": "{date} को सहेजा गया",
+    "partagee": "साझा",
+    "ouvrir": "खोलें",
+    "ouvrirAria": "विश्लेषण «{titre}» खोलें",
+    "retirer": "हटाएँ",
+    "retirerAria": "विश्लेषण «{titre}» को मेरे विश्लेषण से हटाएँ",
+    "retirerTitre": "इस विश्लेषण को मेरे विश्लेषण से हटाएँ?",
+    "retirerTexte": "«{titre}» अब इस सूची में नहीं दिखेगा। विश्लेषण स्वयं नहीं हटाया जाता: आप इसे सहायक से दोबारा सहेज सकते हैं।",
+    "retirerConfirmer": "हटाएँ",
+    "annuler": "रद्द करें",
+    "retireOk": "विश्लेषण को मेरे विश्लेषण से हटा दिया गया।",
+    "chargerPlus": "और लोड करें",
+    "chargement": "विश्लेषण लोड हो रहे हैं…",
+    "vide": {
+      "titre": "कोई सहेजा हुआ विश्लेषण नहीं",
+      "texte": "विश्लेषण जोड़ने के लिए Data Genius सहायक से कोई प्रश्न पूछें, फिर परिणाम के नीचे «मेरे विश्लेषण में सहेजें» चुनें।",
+      "rechercheTitre": "कोई परिणाम नहीं",
+      "rechercheTexte": "इस खोज से मेल खाने वाला कोई विश्लेषण नहीं है।"
+    },
+    "erreur": {
+      "titre": "यह सूची लोड नहीं हो सकी",
+      "texte": "कोई त्रुटि हुई। आपका डेटा सुरक्षित है।",
+      "reessayer": "पुनः प्रयास करें"
+    },
+    "retour": "मेरे विश्लेषण पर वापस जाएँ",
+    "titreRepli": "विश्लेषण"
+  },
+  "partagesRecus": {
+    "titre": "मेरे साथ साझा",
+    "chargement": "साझा की गई सामग्री लोड हो रही है…",
+    "chargerPlus": "और लोड करें",
+    "vide": {
+      "titre": "आपके साथ कुछ भी साझा नहीं किया गया",
+      "texte": "जब कोई सहकर्मी आपके साथ कोई बातचीत या विश्लेषण साझा करेगा, तो वह यहाँ दिखेगा।"
+    },
+    "de": "{nom} की ओर से",
+    "cible": {
+      "conversation": "बातचीत",
+      "artefact": "विश्लेषण"
+    },
+    "partageLe": "{date} को साझा किया गया",
+    "ouvrirConversation": "बातचीत खोलें",
+    "ouvrirArtefact": "विश्लेषण खोलें",
+    "ouvrirAria": "«{titre}» खोलें",
+    "compteDisparu": "खाता उपलब्ध नहीं",
+    "erreur": {
+      "titre": "साझा सामग्री लोड नहीं हो सकी",
+      "texte": "कोई त्रुटि हुई। कुछ क्षण बाद पुनः प्रयास करें।",
+      "reessayer": "पुनः प्रयास करें"
+    },
+    "envoyes": {
+      "titre": "जो मैंने साझा किया",
+      "chargement": "आपका साझा किया हुआ लोड हो रहा है…",
+      "vide": "आपने अभी तक कुछ भी साझा नहीं किया है।",
+      "a": "{nom} को"
+    },
+    "retirer": {
+      "annuler": "रद्द करें",
+      "envoye": {
+        "bouton": "साझाकरण हटाएँ",
+        "aria": "“{titre}” का साझाकरण हटाएँ",
+        "titre": "यह साझाकरण हटाएँ?",
+        "texte": "{nom} अब “{titre}” नहीं खोल पाएगा/पाएगी, और इस सामग्री पर डैशबोर्ड में उसके पिन हटा दिए जाएँगे।",
+        "confirmer": "साझाकरण हटाएँ",
+        "ok": "साझाकरण हटा दिया गया"
+      },
+      "recu": {
+        "bouton": "अब न देखें",
+        "aria": "“{titre}” को अब न देखें",
+        "titre": "यह सामग्री अब न देखें?",
+        "texte": "“{titre}” आपकी सूची से हट जाएगा और इस सामग्री पर डैशबोर्ड में आपके पिन हटा दिए जाएँगे। आप इसे फिर नहीं खोल पाएँगे।",
+        "confirmer": "अब न देखें",
+        "ok": "यह सामग्री अब आपकी सूची में नहीं दिखती"
+      }
+    }
+  },
+  "taches": {
+    "titre": "मेरे कार्य",
+    "filtres": {
+      "aria": "कार्य फ़िल्टर करें",
+      "a_faire": "करने हैं",
+      "en_retard": "विलंबित",
+      "terminee": "पूर्ण"
+    },
+    "priorite": {
+      "basse": "कम प्राथमिकता",
+      "normale": "सामान्य प्राथमिकता",
+      "haute": "उच्च प्राथमिकता"
+    },
+    "echeance": "अंतिम तिथि: {date}",
+    "sansEcheance": "कोई अंतिम तिथि नहीं",
+    "enRetard": "विलंबित",
+    "termineeLe": "{date} को पूर्ण",
+    "assigneA": "{nom} को सौंपा गया",
+    "assigneAMoi": "आपको सौंपा गया",
+    "creeePar": "{nom} द्वारा बनाया गया",
+    "marquerTerminee": "पूर्ण के रूप में चिह्नित करें",
+    "marquerAria": "कार्य «{titre}» को पूर्ण के रूप में चिह्नित करें",
+    "rouvrir": "फिर से खोलें",
+    "rouvrirAria": "कार्य «{titre}» को फिर से खोलें",
+    "voirConversation": "बातचीत देखें",
+    "chargement": "कार्य लोड हो रहे हैं…",
+    "vide": {
+      "a_faire": "करने के लिए कोई कार्य नहीं। सहायक द्वारा बनाए गए और आपको सौंपे गए कार्य यहाँ दिखते हैं।",
+      "en_retard": "कोई विलंबित कार्य नहीं।",
+      "terminee": "अभी कोई पूर्ण कार्य नहीं।"
+    },
+    "erreur": {
+      "titre": "कार्य लोड नहीं हो सके",
+      "texte": "कोई त्रुटि हुई। कुछ क्षण बाद पुनः प्रयास करें।",
+      "reessayer": "पुनः प्रयास करें"
+    }
+  },
+  "rapports": {
+    "titre": "निर्धारित रिपोर्ट",
+    "chargement": "रिपोर्ट लोड हो रही हैं…",
+    "vide": {
+      "titre": "कोई निर्धारित रिपोर्ट नहीं",
+      "texte": "रिपोर्ट बनाने के लिए कोई विश्लेषण खोलें और «शेड्यूल करें» चुनें: वह चुने हुए समय पर दोबारा गणना होकर ईमेल से भेजा जाएगा।"
+    },
+    "erreur": {
+      "titre": "रिपोर्ट लोड नहीं हो सकीं",
+      "texte": "कोई त्रुटि हुई। कुछ क्षण बाद पुनः प्रयास करें।",
+      "reessayer": "पुनः प्रयास करें"
+    },
+    "frequence": {
+      "quotidien": "हर दिन {heure} बजे (पेरिस समय)",
+      "hebdomadaire": "हर {jour} को {heure} बजे (पेरिस समय)",
+      "mensuel": "हर महीने की {jourMois} तारीख़ को {heure} बजे (पेरिस समय)"
+    },
+    "jours": {
+      "1": "सोमवार",
+      "2": "मंगलवार",
+      "3": "बुधवार",
+      "4": "गुरुवार",
+      "5": "शुक्रवार",
+      "6": "शनिवार",
+      "7": "रविवार"
+    },
+    "formats": "प्रारूप: {formats}",
+    "format": {
+      "xlsx": "Excel",
+      "pdf": "PDF",
+      "csv": "CSV"
+    },
+    "destinataires": "प्राप्तकर्ता: {noms}",
+    "compteDisparu": "खाता उपलब्ध नहीं",
+    "prochainEnvoi": "अगला प्रेषण: {date}",
+    "aucunProchainEnvoi": "कोई प्रेषण निर्धारित नहीं",
+    "dernierEnvoi": "पिछला प्रेषण: {date}",
+    "jamaisEnvoye": "अभी तक नहीं भेजा गया",
+    "statut": {
+      "ok": "भेजा गया",
+      "partiel": "आंशिक रूप से भेजा गया",
+      "echec": "विफल"
+    },
+    "raison": {
+      "proprietaire_sans_acces": "अब आपके पास Data Genius की पहुँच नहीं है: रिपोर्ट रोक दी गई है।",
+      "artefact_introuvable": "यह विश्लेषण अब मौजूद नहीं है।",
+      "planning_invalide": "इस रिपोर्ट का शेड्यूल अब मान्य नहीं है।",
+      "aucun_destinataire": "कोई मान्य प्राप्तकर्ता नहीं।",
+      "export_impossible": "फ़ाइलें नहीं बनाई जा सकीं।",
+      "envoi_impossible": "ईमेल नहीं भेजे जा सके।",
+      "erreur_interne": "आंतरिक त्रुटि हुई।",
+      "destinataires_ecartes": "कुछ प्राप्तकर्ताओं को हटा दिया गया क्योंकि उनके पास अब Data Genius की पहुँच नहीं है।",
+      "envoi_partiel": "कुछ ईमेल नहीं भेजे जा सके।",
+      "inconnue": "कारण अज्ञात।"
+    },
+    "actif": "सक्रिय",
+    "pause": "रुकी हुई",
+    "interrupteurAria": "रिपोर्ट «{titre}»: सक्रिय करें या रोकें",
+    "ouvrirAnalyse": "विश्लेषण खोलें",
+    "supprimer": "हटाएँ",
+    "supprimerAria": "निर्धारित रिपोर्ट «{titre}» हटाएँ",
+    "supprimerTitre": "यह निर्धारित रिपोर्ट हटाएँ?",
+    "supprimerTexte": "«{titre}» के लिए अब कोई ईमेल नहीं भेजा जाएगा। विश्लेषण नहीं हटाया जाता।",
+    "supprimerConfirmer": "हटाएँ",
+    "annuler": "रद्द करें",
+    "supprimeOk": "निर्धारित रिपोर्ट हटा दी गई।"
+  },
+  "epingles": {
+    "titre": "मेरे पिन किए गए",
+    "ouvrir": "खोलें",
+    "ouvrirAria": "विश्लेषण «{titre}» खोलें",
+    "desepingler": "पिन हटाएँ",
+    "desepinglerAria": "डैशबोर्ड से «{titre}» का पिन हटाएँ"
+  }
+}

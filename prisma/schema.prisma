@@ -1,0 +1,319 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  passwordHash String
+  firstName String
+  lastName String @default("")
+  locale String @default("fr")
+  roleName String @default("Member")
+  status String @default("active")
+  deletedAt DateTime?
+  notifications Notification[]
+  assistantConversations   AssistantConversation[]     @relation("AssistantConversationUser")
+  assistantJeux            AssistantJeuDeDonnees[]     @relation("AssistantJeuUser")
+  assistantArtefacts       AssistantArtefact[]         @relation("AssistantArtefactUser")
+  assistantPartagesEnvoyes AssistantPartage[]          @relation("AssistantPartageDe")
+  assistantPartagesRecus   AssistantPartage[]          @relation("AssistantPartageA")
+  assistantEpingles        AssistantEpingle[]          @relation("AssistantEpingleUser")
+  assistantRapports        AssistantRapportProgramme[] @relation("AssistantRapportUser")
+  assistantActions         AssistantAction[]           @relation("AssistantActionUser")
+  assistantAvis            AssistantAvis[]             @relation("AssistantAvisUser")
+  assistantUsages          AssistantUsage[]            @relation("AssistantUsageUser")
+  assistantPiecesJointes   AssistantPieceJointe[]      @relation("AssistantPieceJointeUser")
+  @@map("users")
+}
+model AssistantConversation {
+  id              String   @id @default(cuid())
+  userId          String
+  titre           String
+  epinglee        Boolean  @default(false)
+  archivee        Boolean  @default(false)
+  dernierMessageA DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user          User                    @relation("AssistantConversationUser", fields: [userId], references: [id], onDelete: Cascade)
+  messages      AssistantMessage[]
+  jeux          AssistantJeuDeDonnees[]
+  artefacts     AssistantArtefact[]
+  actions       AssistantAction[]
+  usages        AssistantUsage[]
+  piecesJointes AssistantPieceJointe[]
+
+  @@index([userId, updatedAt])
+  @@map("assistant_conversations")
+}
+model AssistantMessage {
+  id             String   @id @default(cuid())
+  conversationId String
+  // 'user' | 'assistant' | 'system'
+  role           String
+  parts          Json
+  metadonnees    Json?
+  createdAt      DateTime @default(now())
+
+  conversation AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  avis         AssistantAvis[]
+  actions      AssistantAction[]
+  usages       AssistantUsage[]
+
+  @@index([conversationId, createdAt])
+  @@map("assistant_messages")
+}
+model AssistantJeuDeDonnees {
+  id                 String   @id @default(cuid())
+  userId             String
+  conversationId     String?
+  // 'semantique' | 'sql' | 'piece_jointe'
+  source             String
+  requete            Json
+  colonnes           Json
+  lignes             Json
+  nbLignes           Int
+  tronque            Boolean  @default(false)
+  provenance         Json
+  // Empreinte du perimetre du lecteur au calcul : le cache n'est reutilise que si elle correspond.
+  empreintePerimetre String
+  empreinteSource String?
+  calculeA           DateTime
+  createdAt          DateTime @default(now())
+
+  user         User                   @relation("AssistantJeuUser", fields: [userId], references: [id], onDelete: Cascade)
+  conversation AssistantConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([conversationId])
+  @@map("assistant_jeux_de_donnees")
+}
+model AssistantArtefact {
+  id               String    @id @default(cuid())
+  userId           String
+  conversationId   String?
+  racineId         String
+  version          Int       @default(1)
+  // 'tableau' | 'graphique' | 'indicateurs' | 'document'
+  type             String
+  titre            String
+  // Note facultative affichee dans Mes analyses.
+  description      String?
+  spec             Json
+  jeuxDeDonneesIds Json
+  // Enregistre dans Mes analyses.
+  enregistre       Boolean   @default(false)
+  enregistreA      DateTime?
+  // 'assistant' | 'utilisateur' : qui a produit cette version (edition dans le panneau).
+  auteur           String    @default("assistant")
+  createdAt        DateTime  @default(now())
+
+  user         User                   @relation("AssistantArtefactUser", fields: [userId], references: [id], onDelete: Cascade)
+  conversation AssistantConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@unique([racineId, version])
+  @@index([userId, enregistre])
+  @@index([conversationId])
+  @@map("assistant_artefacts")
+}
+model AssistantPartage {
+  id            String    @id @default(cuid())
+  // 'conversation' | 'artefact'
+  ressourceType String
+  ressourceId   String
+  deUserId      String
+  aUserId       String
+  message       String?
+  vuA           DateTime?
+  createdAt     DateTime  @default(now())
+
+  de User @relation("AssistantPartageDe", fields: [deUserId], references: [id], onDelete: Cascade)
+  a  User @relation("AssistantPartageA", fields: [aUserId], references: [id], onDelete: Cascade)
+
+  @@unique([ressourceType, ressourceId, aUserId])
+  @@index([aUserId, createdAt])
+  @@index([deUserId])
+  @@map("assistant_partages")
+}
+model AssistantEpingle {
+  id               String   @id @default(cuid())
+  userId           String
+  artefactRacineId String
+  ordre            Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  user User @relation("AssistantEpingleUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, artefactRacineId])
+  @@map("assistant_epingles")
+}
+model AssistantRapportProgramme {
+  id               String    @id @default(cuid())
+  userId           String
+  titre            String
+  artefactRacineId String
+  // 'quotidien' | 'hebdomadaire' | 'mensuel'
+  frequence        String
+  jourSemaine      Int?
+  jourMois         Int?
+  // 'HH:mm'
+  heure            String
+  // Tableau d'ids utilisateur
+  destinataires    Json
+  // Sous-ensemble de ['xlsx','pdf','csv']
+  formats          Json
+  actif            Boolean   @default(true)
+  prochainEnvoiA   DateTime
+  dernierEnvoiA    DateTime?
+  // 'succes' | 'echec'
+  dernierStatut    String?
+  dernierErreur    String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  user User @relation("AssistantRapportUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([actif, prochainEnvoiA])
+  @@index([userId])
+  @@map("assistant_rapports_programmes")
+}
+model AssistantAction {
+  id             String    @id @default(cuid())
+  userId         String
+  conversationId String
+  messageId      String?
+  // 'creer_tache' | 'envoyer_email' | 'notifier' | 'programmer_rapport'
+  type           String
+  parametres     Json
+  // 'proposee' | 'executee' | 'annulee' | 'echec'
+  statut         String    @default("proposee")
+  resultat       Json?
+  createdAt      DateTime  @default(now())
+  executeeA      DateTime?
+
+  user         User                  @relation("AssistantActionUser", fields: [userId], references: [id], onDelete: Cascade)
+  conversation AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message      AssistantMessage?     @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  @@index([userId, statut])
+  @@index([conversationId])
+  @@index([messageId])
+  @@map("assistant_actions")
+}
+model AssistantAvis {
+  id          String   @id @default(cuid())
+  messageId   String
+  userId      String
+  note        Int
+  commentaire String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  message AssistantMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User             @relation("AssistantAvisUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([createdAt])
+  @@map("assistant_avis")
+}
+model AssistantUsage {
+  id                  String   @id @default(cuid())
+  userId              String
+  conversationId      String?
+  messageId           String?
+  fournisseur         String
+  modele              String
+  // 'standard' | 'profond' | 'rapide' | 'transcription'
+  mode                String
+  tokensEntree        Int      @default(0)
+  tokensSortie        Int      @default(0)
+  tokensCacheLecture  Int?
+  tokensCacheEcriture Int?
+  coutUsd             Decimal  @db.Decimal(12, 6)
+  dureeMs             Int
+  erreur              String?
+  createdAt           DateTime @default(now())
+
+  user         User                   @relation("AssistantUsageUser", fields: [userId], references: [id], onDelete: Cascade)
+  conversation AssistantConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  message      AssistantMessage?      @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([conversationId])
+  @@map("assistant_usages")
+}
+model AssistantPieceJointe {
+  id             String   @id @default(cuid())
+  userId         String
+  conversationId String?
+  nomFichier     String
+  typeMime       String
+  // Taille en octets
+  taille         Int
+  // Chemin relatif du fichier stocke
+  chemin         String
+  contenu        Json?
+  createdAt      DateTime @default(now())
+
+  user         User                   @relation("AssistantPieceJointeUser", fields: [userId], references: [id], onDelete: Cascade)
+  conversation AssistantConversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([conversationId])
+  @@map("assistant_pieces_jointes")
+}
+model Task {
+  id                String    @id @default(cuid())
+  title             String
+  description       String?
+  assignedToId      String
+  dueDate           DateTime?
+  priority          String    @default("normal")
+  relatedEntityType String?
+  relatedEntityId   String?
+  status            String    @default("pending")
+  completedAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([assignedToId])
+  @@index([status])
+  @@map("tasks")
+}
+model ParametreApplication {
+  id        String   @id @default(cuid())
+  cle       String   @unique
+  valeur    String
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+
+  @@map("parametres_application")
+}
+model Notification {
+  id                String    @id @default(cuid())
+  userId            String
+  type              String
+  title             String
+  message           String
+  relatedEntityType String?
+  relatedEntityId   String?
+  channel           String
+  status            String    @default("pending")
+  readAt            DateTime?
+  sentAt            DateTime?
+  createdAt         DateTime  @default(now())
+  user              User      @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([userId])
+  @@index([status])
+  @@index([userId, readAt])
+  @@map("notifications")
+}

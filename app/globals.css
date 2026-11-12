@@ -1,0 +1,640 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Charte « cour de conteneurs ».
+ *
+ * Beton froid en fond, panneaux blancs a trait fin, mur marine nervure pour le
+ * menu. Une couleur par etat, comme la peinture d'une pile de conteneurs :
+ *   cobalt = agir, vert MedicPro = acheve, ocre = en attente,
+ *   rouge oxyde = bloque ou expire, sarcelle = information.
+ * Les valeurs sont des triplets HSL pour que `bg-primary/10` etc. continuent
+ * de fonctionner.
+ */
+@layer base {
+  :root {
+    --font-sans: system-ui;
+    --font-code: ui-monospace;
+    --background: 210 22% 95%;
+    --foreground: 218 45% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 218 45% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 218 45% 12%;
+    --primary: 216 84% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 212 24% 92%;
+    --secondary-foreground: 218 45% 14%;
+    --muted: 212 24% 93%;
+    --muted-foreground: 215 16% 36%;
+    --accent: 212 40% 94%;
+    --accent-foreground: 218 45% 14%;
+    --destructive: 6 72% 42%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 213 20% 86%;
+    --input: 215 14% 57%;
+    --ring: 216 86% 46%;
+    --radius: 0.375rem;
+
+    --shell: 218 62% 13%;
+    --shell-foreground: 212 30% 92%;
+    --shell-muted: 214 24% 68%;
+    --shell-line: 218 40% 24%;
+
+    --success: 140 56% 28%;
+    --success-soft: 140 45% 93%;
+    --warning: 40 92% 46%;
+    --warning-soft: 42 100% 92%;
+    --danger-soft: 8 70% 94%;
+    --info: 188 72% 26%;
+    --info-soft: 188 50% 92%;
+  }
+
+  .dark {
+    --background: 218 40% 8%;
+    --foreground: 210 30% 94%;
+    --card: 218 38% 11%;
+    --card-foreground: 210 30% 94%;
+    --popover: 218 38% 11%;
+    --popover-foreground: 210 30% 94%;
+    --primary: 213 90% 62%;
+    --primary-foreground: 218 60% 8%;
+    --secondary: 218 28% 18%;
+    --secondary-foreground: 210 30% 94%;
+    --muted: 218 28% 18%;
+    --muted-foreground: 214 20% 70%;
+    --accent: 218 28% 18%;
+    --accent-foreground: 210 30% 94%;
+    --destructive: 6 78% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 218 28% 20%;
+    --input: 218 20% 34%;
+    --ring: 213 90% 62%;
+
+    --shell: 218 62% 9%;
+    --success: 140 50% 52%;
+    --success-soft: 140 30% 16%;
+    --warning: 42 90% 56%;
+    --warning-soft: 42 40% 16%;
+    --danger-soft: 6 40% 18%;
+    --info: 188 60% 52%;
+    --info-soft: 188 30% 16%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /*
+   * Chiffres : toute figure d'un tableau ou d'un indicateur est a chasse fixe,
+   * pour que les colonnes s'alignent a la virgule. Un seul reglage, au lieu d'une
+   * classe `tabular-nums` a penser sur chaque cellule.
+   */
+  td,
+  th,
+  [data-figure] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Surfaces du navigateur : selection, caret, focus, qui appartiennent aussi a la charte. */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.2);
+    color: hsl(var(--foreground));
+  }
+  input,
+  textarea {
+    caret-color: hsl(var(--primary));
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  /* Les composants shadcn dessinent leur propre anneau : on evite le double trait. */
+  [class*="focus-visible:ring"]:focus-visible {
+    outline: none;
+  }
+  hr {
+    border-color: hsl(var(--border));
+  }
+}
+
+/*
+ * Plaque d'identification : le code de reference d'un dossier, d'un lot, d'un
+ * pays, compose comme le marquage d'un conteneur (lettres espacees, chiffres
+ * a chasse fixe, filet fin). Signature de la charte.
+ */
+@layer components {
+  .plate {
+    @apply inline-flex items-center rounded-sm border border-border bg-card px-1.5 py-0.5 font-mono text-xs font-medium uppercase tracking-[0.08em] text-foreground;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Bloc de la cour : la meme cote verticale, plus marquee, sur un aplat de peinture. */
+  .yard-block {
+    /* Les piles se posent : un moment de mouvement, pose une fois, de gauche a droite. */
+    animation: yard-land 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--col, 0) * 70ms + var(--row, 0) * 22ms);
+    background-image: repeating-linear-gradient(
+      90deg,
+      hsl(0 0% 100% / 0.16) 0,
+      hsl(0 0% 100% / 0.16) 2px,
+      transparent 2px,
+      transparent 6px
+    );
+  }
+
+  @keyframes yard-land {
+    from {
+      transform: translateY(-18px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .yard-block {
+      animation: none;
+    }
+  }
+
+  /* Mur nervure : les cotes verticales d'un conteneur, tres discretes. */
+  .rib-wall {
+    background-color: hsl(var(--shell));
+    background-image: repeating-linear-gradient(
+      90deg,
+      hsl(0 0% 100% / 0.028) 0,
+      hsl(0 0% 100% / 0.028) 2px,
+      transparent 2px,
+      transparent 7px
+    );
+  }
+}
+
+@layer components {
+  /* Sales Statistics Specific Components */
+  
+  .sales-statistics-page {
+    @apply min-h-screen bg-gray-50;
+  }
+  
+  .sales-dashboard {
+    @apply max-w-7xl mx-auto p-6;
+  }
+  
+  .sales-header {
+    @apply mb-8;
+  }
+  
+  .sales-title {
+    @apply text-3xl font-bold text-gray-900 mb-2;
+  }
+  
+  .sales-subtitle {
+    @apply text-gray-600;
+  }
+  
+  .sales-grid {
+    @apply grid grid-cols-1 lg:grid-cols-4 gap-6;
+  }
+  
+  .sales-sidebar {
+    @apply lg:col-span-1;
+  }
+  
+  .sales-content {
+    @apply lg:col-span-3;
+  }
+  
+  /* Filter Panel Styles */
+  .filter-panel {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+  
+  .filter-title {
+    @apply text-lg font-semibold text-gray-900 mb-4;
+  }
+  
+  .filter-group {
+    @apply space-y-4;
+  }
+  
+  .filter-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+  
+  .filter-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+  
+  .filter-select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+  
+  .filter-button {
+    @apply w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium;
+  }
+  
+  /* Summary Cards */
+  .summary-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4;
+  }
+  
+  .summary-card {
+    @apply sales-card;
+  }
+  
+  .summary-card:hover {
+    @apply shadow-medium;
+  }
+  
+  .metric-label {
+    @apply text-sm font-medium text-gray-500 mb-2;
+  }
+  
+  .metric-value {
+    @apply text-2xl font-bold text-gray-900;
+  }
+  
+  .metric-positive {
+    @apply text-green-600;
+  }
+  
+  .metric-negative {
+    @apply text-red-600;
+  }
+  
+  .metric-neutral {
+    @apply text-blue-600;
+  }
+  
+  /* Charts and Tables */
+  .charts-grid {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-6;
+  }
+  
+  .chart-container {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+  
+  .chart-title {
+    @apply text-lg font-semibold text-gray-900 mb-4;
+  }
+  
+  .table-container {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+  
+  .table-title {
+    @apply text-lg font-semibold text-gray-900 mb-4;
+  }
+  
+  /* Loading States */
+  .loading-container {
+    @apply flex items-center justify-center py-12;
+  }
+  
+  .loading-spinner {
+    @apply animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600;
+  }
+  
+  .loading-text {
+    @apply ml-3 text-gray-600;
+  }
+  
+  /* Export Options */
+  .export-container {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+  
+  .export-title {
+    @apply text-lg font-semibold text-gray-900 mb-4;
+  }
+  
+  .export-buttons {
+    @apply flex space-x-4;
+  }
+  
+  .export-button {
+    @apply px-4 py-2 text-white rounded-md font-medium transition-colors duration-200;
+  }
+  
+  .export-button-pdf {
+    @apply bg-red-600 hover:bg-red-700;
+  }
+  
+  .export-button-excel {
+    @apply bg-green-600 hover:bg-green-700;
+  }
+  
+  .export-button-csv {
+    @apply bg-blue-600 hover:bg-blue-700;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .sales-grid {
+      @apply grid-cols-1;
+    }
+    
+    .summary-grid {
+      @apply grid-cols-1;
+    }
+    
+    .charts-grid {
+      @apply grid-cols-1;
+    }
+    
+    .export-buttons {
+      @apply flex-col space-x-0 space-y-2;
+    }
+  }
+  
+  /* Accessibility */
+  .sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  }
+  
+  .focus-visible {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  /* Animation Classes */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .animate-slide-in-left {
+    animation: slideInLeft 0.4s ease-out;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.4s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+}
+
+@layer utilities {
+  /* Custom utilities for sales statistics */
+  
+  .text-sales-primary {
+    @apply text-sales-primary;
+  }
+  
+  .text-sales-secondary {
+    @apply text-sales-secondary;
+  }
+  
+  .bg-sales-primary {
+    @apply bg-sales-primary;
+  }
+  
+  .bg-sales-secondary {
+    @apply bg-sales-secondary;
+  }
+  
+  .border-sales-primary {
+    @apply border-sales-primary;
+  }
+  
+  .border-sales-secondary {
+    @apply border-sales-secondary;
+  }
+  
+  /* Chart color utilities */
+  .text-chart-blue {
+    @apply text-chart-blue;
+  }
+  
+  .text-chart-green {
+    @apply text-chart-green;
+  }
+  
+  .text-chart-amber {
+    @apply text-chart-amber;
+  }
+  
+  .text-chart-red {
+    @apply text-chart-red;
+  }
+  
+  .text-chart-purple {
+    @apply text-chart-purple;
+  }
+  
+  /* Performance utilities */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
+  }
+  
+  .gpu-accelerated {
+    transform: translateZ(0);
+  }
+}
+
+/* Custom animations for sales statistics */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Print styles for exports */
+@media print {
+  .sales-statistics-page {
+    @apply bg-white;
+  }
+  
+  .filter-panel {
+    @apply hidden;
+  }
+  
+  .export-container {
+    @apply hidden;
+  }
+  
+  .chart-container,
+  .table-container {
+    @apply shadow-none border border-gray-300;
+  }
+}
+/* Chinois : Inter n'a pas de glyphes CJK, on enchaîne sur une police système adaptée. */
+html[lang="zh"] body {
+  font-family: var(--font-sans), "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+}
+
+/*
+ * Arabe : Inter n'a pas de glyphes arabes, on enchaîne sur les polices systeme
+ * courantes (Windows, macOS, Linux). La hauteur de ligne est legerement augmentee
+ * car les signes diacritiques arabes debordent au-dessus et au-dessous de la ligne.
+ */
+html[lang="ar"] body {
+  font-family: var(--font-sans), "Segoe UI", Tahoma, "Noto Sans Arabic",
+    "Geeza Pro", "Arabic Typesetting", system-ui, sans-serif;
+  line-height: 1.7;
+}
+
+/*
+ * Hindi : Inter n'a pas de glyphes devanagari. Nirmala UI (Windows), Kohinoor
+ * Devanagari (macOS) et Noto Sans Devanagari (Linux, Android) les fournissent ;
+ * les voyelles suscrites et souscrites demandent un peu plus d'interligne.
+ */
+html[lang="hi"] body {
+  font-family: var(--font-sans), "Nirmala UI", "Kohinoor Devanagari", "Devanagari Sangam MN",
+    "Noto Sans Devanagari", Mangal, system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/*
+ * De droite a gauche : les utilitaires `space-x-*` de Tailwind posent une marge
+ * physique a gauche de chaque enfant suivant. En RTL l'espace se retrouve du
+ * mauvais cote ; la variable prevue par Tailwind inverse la marge.
+ */
+[dir="rtl"] [class*="space-x-"] > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+
+/* ---------------------------------------------------------------------------
+ * Barres de defilement
+ *
+ * `scrollbar-thin` etait utilise dans le menu lateral sans jamais avoir ete
+ * defini : le navigateur affichait donc sa barre par defaut, large et claire,
+ * qui mordait sur le fond ardoise du menu et donnait l'impression que la page
+ * debordait dessus. On definit ici une barre fine, discrete et qui reprend les
+ * couleurs du conteneur.
+ * ------------------------------------------------------------------------- */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(148 163 184 / 0.45) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track,
+  .scrollbar-thin::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: rgb(148 163 184 / 0.45);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(100 116 139 / 0.7);
+  }
+
+  /* Variante pour les fonds sombres (menu lateral). */
+  .scrollbar-dark {
+    scrollbar-color: rgb(71 85 105 / 0.9) transparent;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    background-color: rgb(71 85 105 / 0.9);
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(100 116 139);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Mobile
+ *
+ * Trois reglages minimaux, partages par tous les ecrans :
+ *  - champs de saisie a 16 px sous 768 px : en dessous, iOS Safari zoome sur le
+ *    champ au focus et ne revient pas en arriere ;
+ *  - `.cible-tactile` : zone cliquable d'au moins 44 px (WCAG 2.5.5) sous 768 px,
+ *    sans effet sur bureau ;
+ *  - `.pb-safe` / `.pt-safe` : respecte l'encoche et la barre de gestes.
+ * Le selecteur des champs est volontairement plus specifique qu'une classe
+ * `text-sm` pour l'emporter sans `!important`.
+ * ------------------------------------------------------------------------- */
+@layer base {
+  @media (max-width: 767px) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]),
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+}
+
+@layer utilities {
+  @media (max-width: 767px) {
+    .cible-tactile {
+      min-height: 2.75rem;
+      min-width: 2.75rem;
+    }
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+

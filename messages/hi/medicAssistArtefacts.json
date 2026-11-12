@@ -1,0 +1,376 @@
+{
+  "titre": "Data Genius",
+  "graphique": {
+    "autres": "अन्य",
+    "total": "कुल",
+    "objectif": "लक्ष्य",
+    "aucuneDonnee": "दिखाने के लिए कोई डेटा नहीं",
+    "sansValeur": "दर्ज नहीं",
+    "titreAccessible": "{forme} चार्ट: {mesures}",
+    "descriptionAccessible": "{series, plural, one {# श्रृंखला} other {# श्रृंखलाएँ}}, {points, plural, one {# बिंदु} other {# बिंदु}}",
+    "forme": {
+      "barres": "बार",
+      "barres_empilees": "स्टैक्ड बार",
+      "barres_horizontales": "क्षैतिज बार",
+      "lignes": "रेखा",
+      "aires": "क्षेत्र",
+      "secteurs": "पाई",
+      "anneau": "रिंग",
+      "nuage": "स्कैटर",
+      "combine": "बार और रेखा",
+      "carte_chaleur": "हीटमैप",
+      "treemap": "ट्रीमैप",
+      "entonnoir": "फ़नल",
+      "jauge": "गेज"
+    }
+  },
+  "tableau": {
+    "regionLabel": "तालिका: {titre}",
+    "chargement": "तालिका लोड हो रही है",
+    "erreur": "यह तालिका दिखाई नहीं जा सकती।",
+    "total": "कुल",
+    "nbLignes": "{n, plural, one {# पंक्ति} other {# पंक्तियाँ}}",
+    "tronque": "केवल पहली {n, number} पंक्तियाँ दिखाई गई हैं; पूरा डेटा पाने के लिए पूरा एक्सपोर्ट डाउनलोड करें।",
+    "agregats": {
+      "somme": "योग",
+      "moyenne": "औसत",
+      "min": "न्यूनतम",
+      "max": "अधिकतम",
+      "nombre": "गिनती"
+    },
+    "vide": {
+      "titre": "इन फ़िल्टर के लिए कोई पंक्ति नहीं",
+      "description": "डेटासेट की कोई भी पंक्ति इस तालिका के फ़िल्टर से मेल नहीं खाती।",
+      "reinitialiser": "फ़िल्टर रीसेट करें",
+      "titreSansFiltre": "दिखाने के लिए कोई पंक्ति नहीं",
+      "descriptionSansFiltre": "इस अवधि और दायरे के लिए डेटासेट खाली है।"
+    },
+    "copie": {
+      "succes": "तालिका कॉपी हो गई: Excel में पेस्ट करें",
+      "echec": "कॉपी नहीं हो सकी। तालिका चुनकर हाथ से कॉपी करें।"
+    },
+    "modifierPivot": "क्रॉस तालिका बदलें",
+    "avertissements": {
+      "sommePourcentage": "प्रतिशतों को जोड़ने का कोई अर्थ नहीं है: इसके बजाय औसत, न्यूनतम या अधिकतम चुनें।"
+    },
+    "pivot": {
+      "titre": "क्रॉस तालिका",
+      "aide": "पंक्तियों को एक या अधिक फ़ील्ड से समूहित करें, अन्य फ़ील्ड को कॉलम में फैलाएँ और गणना किए जाने वाले मान चुनें।",
+      "vue": "दृश्य",
+      "vueTableau": "तालिका",
+      "vueCroise": "क्रॉस तालिका",
+      "lignes": "पंक्तियों में",
+      "colonnes": "कॉलम में",
+      "valeurs": "मान",
+      "champLigne": "पंक्ति फ़ील्ड {n}",
+      "champColonne": "कॉलम फ़ील्ड {n}",
+      "champValeur": "मान {n} का फ़ील्ड",
+      "agregatValeur": "मान {n} की गणना",
+      "choisir": "फ़ील्ड चुनें",
+      "ajouterLigne": "पंक्ति फ़ील्ड जोड़ें",
+      "ajouterColonne": "कॉलम फ़ील्ड जोड़ें",
+      "ajouterValeur": "मान जोड़ें",
+      "retirerChamp": "फ़ील्ड {n} हटाएँ",
+      "retirerValeur": "मान {n} हटाएँ",
+      "retirer": "क्रॉस तालिका हटाएँ",
+      "limiteLignes": "पंक्तियों में अधिकतम तीन फ़ील्ड।",
+      "limiteColonnes": "कॉलम में अधिकतम दो फ़ील्ड।",
+      "limiteValeurs": "अधिकतम छह मान।",
+      "minLignes": "पंक्तियों में कम से कम एक फ़ील्ड आवश्यक है।",
+      "minValeurs": "कम से कम एक मान आवश्यक है।",
+      "doublon": "एक फ़ील्ड केवल एक बार उपयोग हो सकता है, पंक्तियों में या कॉलम में।",
+      "doublonValeur": "यह मान पहले से तालिका में है।",
+      "aucunChampLigne": "पंक्तियों के लिए कोई फ़ील्ड उपलब्ध नहीं।",
+      "aucunChampValeur": "मानों के लिए कोई संख्यात्मक फ़ील्ड उपलब्ध नहीं।"
+    }
+  },
+  "graphiqueUi": {
+    "chargement": "चार्ट लोड हो रहा है",
+    "erreurChargement": "चार्ट लोड नहीं हो सका।",
+    "reessayer": "फिर से प्रयास करें",
+    "videTitre": "दिखाने के लिए कोई डेटा नहीं",
+    "videAide": "चुनी गई अवधि और दायरे के लिए कोई बिंदु नहीं मिला।",
+    "ariaLabel": "{titre}। {description}",
+    "pngIndisponible": "चार्ट अभी तैयार नहीं है: कुछ क्षण बाद फिर प्रयास करें।",
+    "selecteur": {
+      "libelle": "चार्ट का प्रकार",
+      "indisponible": "{forme} (उपलब्ध नहीं): {motif}"
+    },
+    "avertissements": {
+      "liste": "प्रदर्शन संबंधी टिप्पणियाँ",
+      "forme_changee": "{vers} के रूप में दिखाया गया: {max} से अधिक श्रेणियाँ",
+      "limite_appliquee": "{total} में से शीर्ष {n}: शेष समूहित या छिपे हैं",
+      "serie_ignoree": "{n, plural, one {# माप छोड़ा गया} other {# माप छोड़े गए}}: {forme} केवल एक दिखाता है"
+    },
+    "motifs": {
+      "trop_de_categories": "{max} से अधिक श्रेणियाँ: यह प्रकार पढ़ने योग्य नहीं रहेगा, क्षैतिज बार बेहतर हैं।",
+      "une_mesure_requise": "यह प्रकार केवल एक माप दिखाता है।",
+      "deux_mesures_requises": "इस प्रकार के लिए कम से कम दो माप चाहिए।",
+      "serie_requise": "श्रृंखला बनाने के लिए इस प्रकार को दूसरा आयाम चाहिए।",
+      "categories_insuffisantes": "इस प्रकार के लिए कम से कम दो श्रेणियाँ चाहिए।"
+    },
+    "changement": {
+      "refuse": "बदलाव संभव नहीं: {motif}",
+      "remplace": "प्रकार बदलकर \"{forme}\" किया गया: {motif}"
+    }
+  },
+  "indicateurs": {
+    "liste": "संकेतक",
+    "aucun": "दिखाने के लिए कोई संकेतक नहीं",
+    "donneeIndisponible": "डेटा उपलब्ध नहीं",
+    "tendance": {
+      "hausse": "बढ़ोतरी",
+      "baisse": "गिरावट",
+      "stable": "स्थिर"
+    },
+    "variationIndisponible": "परिवर्तन उपलब्ध नहीं",
+    "variation": "{variation} {sens}",
+    "reference": "{libelle}: {valeur}",
+    "objectif": "लक्ष्य: {valeur}",
+    "objectifNomme": "{libelle}: {valeur}",
+    "taux": "उपलब्धि दर: {taux}",
+    "tauxIndisponible": "उपलब्धि दर उपलब्ध नहीं",
+    "statut": {
+      "atteint": "प्राप्त",
+      "en_cours": "जारी",
+      "a_risque": "जोखिम में"
+    }
+  },
+  "document": {
+    "region": "दस्तावेज़: {titre}",
+    "indisponible": "दस्तावेज़ का यह अंश अब उपलब्ध नहीं है।",
+    "artefactIndisponible": "आर्टिफैक्ट उपलब्ध नहीं",
+    "artefactIndisponibleAide": "हो सकता है इसे हटा दिया गया हो, या अब आपकी इस तक पहुँच न हो।",
+    "graphiqueIndisponible": "इस चार्ट का डेटा उपलब्ध नहीं है।",
+    "tableauIndisponible": "इस तालिका का डेटा उपलब्ध नहीं है।",
+    "vide": "यह दस्तावेज़ खाली है।",
+    "tableDesMatieres": {
+      "titre": "इस दस्तावेज़ में",
+      "region": "विषय-सूची",
+      "ouvrir": "विषय-सूची दिखाएँ",
+      "replier": "विषय-सूची छिपाएँ",
+      "aller": "अनुभाग {titre} पर जाएँ"
+    }
+  },
+  "panneau": {
+    "titre": "आर्टिफैक्ट",
+    "region": "आर्टिफैक्ट पैनल",
+    "listeOnglets": "बातचीत के आर्टिफैक्ट",
+    "contenu": "आर्टिफैक्ट की सामग्री",
+    "fermer": "पैनल बंद करें",
+    "agrandir": "पैनल बड़ा करें",
+    "reduire": "पैनल छोटा करें",
+    "pleinEcran": "पूर्ण स्क्रीन में आर्टिफैक्ट पैनल",
+    "chargement": "आर्टिफैक्ट लोड हो रहा है",
+    "chargementListe": "आर्टिफैक्ट लोड हो रहे हैं",
+    "reessayer": "फिर से प्रयास करें",
+    "vide": {
+      "titre": "अभी कोई आर्टिफैक्ट नहीं",
+      "texte": "बातचीत में तालिका, चार्ट या रिपोर्ट माँगें: वह यहाँ दिखाई देगी।"
+    },
+    "lectureSeule": "केवल पढ़ने के लिए",
+    "version": {
+      "etiquette": "संस्करण",
+      "libelle": "v{n}",
+      "libelleDate": "v{n} · {date}",
+      "actuelle": "वर्तमान",
+      "bandeau": "आप संस्करण {n} देख रहे हैं, केवल पढ़ने के लिए।",
+      "revenir": "नवीनतम पर लौटें"
+    },
+    "vue": {
+      "groupe": "दृश्य",
+      "graphique": "चार्ट",
+      "tableau": "तालिका"
+    },
+    "copier": "कॉपी करें",
+    "copieReussie": "तालिका कॉपी हो गई, Excel में पेस्ट करने के लिए तैयार",
+    "copieEchec": "कॉपी नहीं हो सकी",
+    "comment": "मैंने गणना कैसे की",
+    "jeuNumero": "डेटासेट {n} / {total}",
+    "apercu": {
+      "vide": "इस आर्टिफैक्ट में दिखाने के लिए कुछ नहीं है।"
+    },
+    "enregistrement": {
+      "enCours": "सहेजा जा रहा है…",
+      "enregistre": "सहेजा गया",
+      "erreur": "सहेजना विफल रहा"
+    },
+    "types": {
+      "tableau": "तालिका",
+      "graphique": "चार्ट",
+      "indicateurs": "संकेतक",
+      "document": "दस्तावेज़"
+    }
+  },
+  "carte": {
+    "ouvrir": "खोलें",
+    "ouvrirAria": "आर्टिफैक्ट {titre} खोलें",
+    "types": {
+      "tableau": "तालिका",
+      "graphique": "चार्ट",
+      "indicateurs": "संकेतक",
+      "document": "दस्तावेज़"
+    },
+    "resume": {
+      "tableau": "तालिका · {n, plural, =0 {कोई पंक्ति नहीं} one {# पंक्ति} other {# पंक्तियाँ}}",
+      "graphique": "चार्ट · {forme}",
+      "indicateurs": "{n, plural, =0 {कोई संकेतक नहीं} one {# संकेतक} other {# संकेतक}}",
+      "document": "दस्तावेज़"
+    }
+  },
+  "provenance": {
+    "titre": "मैंने गणना कैसे की",
+    "source": "स्रोत",
+    "periode": "अवधि",
+    "perimetre": "दायरा",
+    "filtres": "फ़िल्टर",
+    "filtre": "{libelle}: {valeur}",
+    "aucunFiltre": "कोई फ़िल्टर नहीं",
+    "regles": "लागू नियम",
+    "lienEcran": "समकक्ष Data Genius स्क्रीन",
+    "sql": "SQL क्वेरी (केवल व्यवस्थापकों के लिए)",
+    "copierSql": "क्वेरी कॉपी करें",
+    "sqlCopiee": "क्वेरी कॉपी हो गई",
+    "copieEchec": "कॉपी नहीं हो सकी",
+    "calculeLe": "{date} को गणना की गई"
+  },
+  "telechargement": {
+    "bouton": "डाउनलोड करें",
+    "enCours": "डाउनलोड हो रहा है",
+    "menu": "डाउनलोड के प्रारूप",
+    "formats": {
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "pdf": "PDF (.pdf)",
+      "png": "PNG चित्र (.png)",
+      "pptx": "PowerPoint (.pptx)"
+    },
+    "reussi": "{format} डाउनलोड हो गया",
+    "echec": "डाउनलोड विफल रहा"
+  },
+  "exports": {
+    "exporteLe": "{date} को एक्सपोर्ट किया गया",
+    "page": "पृष्ठ {page} / {total}",
+    "total": "कुल",
+    "feuilleDonnees": "डेटा",
+    "feuilleProvenance": "स्रोत-विवरण",
+    "feuilleIndicateurs": "संकेतक",
+    "fichierSansTitre": "Data Genius एक्सपोर्ट",
+    "agregats": {
+      "somme": "योग",
+      "moyenne": "औसत",
+      "min": "न्यूनतम",
+      "max": "अधिकतम",
+      "nombre": "गिनती"
+    },
+    "provenance": {
+      "source": "स्रोत",
+      "periode": "अवधि",
+      "perimetre": "दायरा",
+      "filtres": "फ़िल्टर",
+      "regles": "गणना के नियम",
+      "calculeLe": "गणना की तारीख",
+      "lienEcran": "स्रोत स्क्रीन",
+      "exportePar": "{nom} द्वारा एक्सपोर्ट किया गया",
+      "aucun": "कोई नहीं"
+    },
+    "lignesContexte": {
+      "source": "स्रोत: {valeur}",
+      "periode": "अवधि: {valeur}",
+      "perimetre": "दायरा: {valeur}"
+    },
+    "indicateurs": {
+      "indicateur": "संकेतक",
+      "valeur": "मान",
+      "comparaison": "तुलना",
+      "valeurComparaison": "तुलना का मान",
+      "variation": "परिवर्तन (%)",
+      "objectif": "लक्ष्य",
+      "valeurObjectif": "लक्ष्य का मान",
+      "taux": "उपलब्धि दर (%)",
+      "statut": "स्थिति",
+      "statuts": {
+        "atteint": "प्राप्त",
+        "enCours": "जारी",
+        "aRisque": "जोखिम में"
+      }
+    },
+    "erreurs": {
+      "introuvable": "यह आर्टिफैक्ट नहीं मिला, या आपकी इस तक पहुँच नहीं है।",
+      "formatNonSupporte": "इस आर्टिफैक्ट के लिए यह एक्सपोर्ट प्रारूप उपलब्ध नहीं है।",
+      "formatInvalide": "अज्ञात एक्सपोर्ट प्रारूप। स्वीकृत प्रारूप: xlsx, csv, pdf, pptx।",
+      "tropDeLignes": "इस आर्टिफैक्ट में एक्सपोर्ट के लिए बहुत अधिक पंक्तियाँ हैं। फ़िल्टर सीमित करके फिर प्रयास करें।",
+      "limiteDebit": "डेटा की बहुत अधिक पुनर्गणनाएँ माँगी गईं। {minutes, plural, one {# मिनट} other {# मिनट}} बाद निर्यात फिर से आज़माएँ।",
+      "echec": "एक्सपोर्ट विफल रहा। कुछ क्षण बाद फिर प्रयास करें।"
+    }
+  },
+  "exportsPdf": {
+    "marque": "Data Genius",
+    "sommaire": "विषय-सूची",
+    "sourcesEtCalcul": "स्रोत और गणना",
+    "troncature": "{total, number} में से {n, plural, one {# पंक्ति दिखाई गई} other {# पंक्तियाँ दिखाई गईं}}: सभी पंक्तियाँ पाने के लिए Excel एक्सपोर्ट डाउनलोड करें।",
+    "partieColonnes": "{total} में से कॉलम {debut} से {fin}",
+    "graphiqueIndisponible": "चार्ट बनाया नहीं जा सका: उसका डेटा नीचे तालिका में दिया गया है।",
+    "limiteAppliquee": "चार्ट {total} में से पहले {n} तत्व दिखाता है; शेष समूहित हैं।",
+    "libelleValeur": "{libelle}: {valeur}",
+    "indicateurs": {
+      "nonDisponible": "उपलब्ध नहीं",
+      "variation": "परिवर्तन: {valeur}",
+      "variationSens": "परिवर्तन: {valeur} ({sens})",
+      "realisation": "उपलब्धि: {valeur}",
+      "sens": {
+        "hausse": "बढ़ोतरी",
+        "baisse": "गिरावट",
+        "stable": "स्थिर"
+      }
+    }
+  },
+  "exportsPptx": {
+    "marque": "Data Genius",
+    "sourcesEtCalcul": "स्रोत और गणना",
+    "suite": "{titre} (जारी)",
+    "donneesDuGraphique": "{titre}: डेटा",
+    "imageNonModifiable": "इस प्रकार का चार्ट PowerPoint में उपलब्ध नहीं है: इसे चित्र के रूप में जोड़ा गया है और इसे बदला नहीं जा सकता।",
+    "graphiqueIndisponible": "चार्ट बनाया नहीं जा सका: उसका डेटा अगली स्लाइड पर दिया गया है।",
+    "troncature": "{total, number} में से {n, plural, one {# पंक्ति दिखाई गई} other {# पंक्तियाँ दिखाई गईं}}: सभी पंक्तियाँ पाने के लिए Excel एक्सपोर्ट डाउनलोड करें।",
+    "partieColonnes": "{total} में से कॉलम {debut} से {fin}",
+    "limiteAppliquee": "चार्ट {total} में से पहले {n} तत्व दिखाता है; शेष समूहित हैं।",
+    "libelleValeur": "{libelle}: {valeur}",
+    "titresParDefaut": {
+      "texte": "पाठ",
+      "tableau": "तालिका",
+      "graphique": "चार्ट",
+      "indicateurs": "संकेतक"
+    },
+    "indicateurs": {
+      "nonDisponible": "उपलब्ध नहीं",
+      "variation": "परिवर्तन: {valeur}",
+      "variationSens": "परिवर्तन: {valeur} ({sens})",
+      "realisation": "उपलब्धि: {valeur}",
+      "sens": {
+        "hausse": "बढ़ोतरी",
+        "baisse": "गिरावट",
+        "stable": "स्थिर"
+      }
+    }
+  },
+  "formes": {},
+  "erreurs": {
+    "chargement": "यह आर्टिफैक्ट लोड नहीं हो सका। अपना कनेक्शन जाँचकर फिर प्रयास करें।",
+    "introuvable": "यह आर्टिफैक्ट नहीं मिला, या आपकी इस तक पहुँच नहीं है।",
+    "liste": "आर्टिफैक्ट की सूची लोड नहीं हो सकी।",
+    "jeuManquant": "इस आर्टिफैक्ट का डेटा उपलब्ध नहीं है।",
+    "limiteDebit": "फ़िलहाल पुनर्गणना की सीमा पूरी हो चुकी है। {minutes, plural, one {# मिनट} other {# मिनट}} बाद फिर से प्रयास करें।",
+    "enregistrement": "सहेजना विफल रहा: अंतिम सहेजा गया संस्करण बहाल कर दिया गया है।",
+    "conflit": "इस बीच यह आर्टिफैक्ट बदल दिया गया है: नवीनतम संस्करण दिखाया गया है और आपका बदलाव सहेजा नहीं गया।",
+    "telechargement": {
+      "reseau": "सर्वर तक पहुँच नहीं हो पा रही। अपना कनेक्शन जाँचकर फिर प्रयास करें।",
+      "refuse": "आपको इस डाउनलोड की अनुमति नहीं है। दोबारा लॉगिन करके फिर प्रयास करें।",
+      "introuvable": "यह आर्टिफैक्ट नहीं मिला, या आपकी इस तक पहुँच नहीं है।",
+      "format": "इस आर्टिफैक्ट के लिए यह प्रारूप उपलब्ध नहीं है।",
+      "tropDeLignes": "इस आर्टिफैक्ट में एक्सपोर्ट के लिए बहुत अधिक पंक्तियाँ हैं। फ़िल्टर सीमित करके फिर प्रयास करें।",
+      "echec": "डाउनलोड विफल रहा। कुछ क्षण बाद फिर प्रयास करें।",
+      "png": "चार्ट का चित्र नहीं बनाया जा सका।"
+    }
+  }
+}

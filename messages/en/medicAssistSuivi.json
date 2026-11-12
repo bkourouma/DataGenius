@@ -1,0 +1,432 @@
+{
+  "titre": "Data Genius",
+  "actionResume": {
+    "creerTache": "Create the task “{titre}” and assign it to {assigne}.",
+    "creerTacheEcheance": "Create the task “{titre}” and assign it to {assigne}, due {echeance}.",
+    "envoyerEmail": "Email the analysis “{titre}” to {destinataires}, with the {formats} files attached.",
+    "notifier": "Send a notification to {destinataires}: “{message}”.",
+    "notifierArtefact": "Send a notification to {destinataires} with the analysis “{titre}”: “{message}”.",
+    "programmerRapport": "Send the analysis “{titre}” as {formats} to {destinataires}, {frequence}.",
+    "partageNote": "This analysis will be shared read-only with these people, who will see it within their own scope.",
+    "frequence": {
+      "quotidien": "every day at {heure} (Paris time)",
+      "hebdomadaire": "every {jour} at {heure} (Paris time)",
+      "hebdomadaireSansJour": "every week at {heure} (Paris time)",
+      "mensuel": "on day {jourMois} of each month at {heure} (Paris time)",
+      "mensuelSansJour": "every month at {heure} (Paris time)"
+    },
+    "notifierSansAcces": "{nombre, plural, one {{destinataires} has no access to Data Genius and will receive the message only, without the analysis.} other {{destinataires} have no access to Data Genius and will receive the message only, without the analysis.}}"
+  },
+  "actionResultat": {
+    "creerTache": "Task created for {assigne}.",
+    "envoyerEmail": "{envoyes, plural, one {# email sent.} other {# emails sent.}}",
+    "envoyerEmailEchecs": "{echecs, plural, one {# send failed.} other {# sends failed.}}",
+    "notifier": "{nombre, plural, one {Notification sent to # person.} other {Notification sent to # people.}}",
+    "programmerRapport": "Report “{titre}” scheduled.",
+    "echec": {
+      "generique": "The action could not be carried out.",
+      "export_impossible": "The analysis export failed: nothing was sent.",
+      "mail_non_envoye": "No email could be sent.",
+      "destinataire_invalide": "A recipient no longer has access to Data Genius.",
+      "artefact_non_proprietaire": "Only the owner of the analysis can share, send or schedule it."
+    },
+    "lien": {
+      "taches": "View my tasks",
+      "rapports": "View my reports"
+    }
+  },
+  "emailArtefact": {
+    "sujet": "{expediteur} is sending you “{titre}”",
+    "salutation": "Hello {nom},",
+    "intro": "{expediteur} has sent you the analysis “{titre}” from Data Genius.",
+    "messageDe": "Message from {expediteur}:",
+    "formats": "Attached files: {formats}.",
+    "note": "The attached figures are the sender's, as of the time of sending. When you open the analysis in Data Genius, they are recalculated within your own scope.",
+    "bouton": "Open the analysis",
+    "lienTexte": "Open the analysis: {url}",
+    "pied": "Automatic message from Data Genius, please do not reply."
+  },
+  "notifMessage": {
+    "titre": "{expediteur} wrote to you"
+  },
+  "notifTache": {
+    "titre": "{expediteur} assigned you a task",
+    "message": "“{titre}”",
+    "messageEcheance": "“{titre}”, due {echeance}"
+  },
+  "erreurs": {
+    "titre": "Action not possible",
+    "introuvable": "This item cannot be found or is no longer accessible.",
+    "invalide": "The information entered is not valid.",
+    "interdit": "You are not allowed to perform this action.",
+    "conflit": "This item has already been processed or changed. Reload and try again.",
+    "destinataire_invalide": "One of the recipients does not have access to Data Genius.",
+    "export_impossible": "The file could not be generated. Try again in a moment.",
+    "artefact_non_proprietaire": "Only the owner of the analysis can do this.",
+    "interne": "Something went wrong. Try again in a moment.",
+    "reseau": "The server is not responding. Check your connection and try again.",
+    "mail_non_envoye": "No e-mail could be sent.",
+    "execution_impossible": "The action could not be completed."
+  },
+  "carteAction": {
+    "titre": {
+      "creer_tache": "Create a task",
+      "envoyer_email": "Send by e-mail",
+      "notifier": "Send a notification",
+      "programmer_rapport": "Schedule a report"
+    },
+    "statut": {
+      "proposee": "To confirm",
+      "executee": "Done",
+      "annulee": "Cancelled",
+      "echec": "Failed"
+    },
+    "chargement": "Loading the action…",
+    "erreurLecture": "This action could not be reloaded.",
+    "reessayer": "Try again",
+    "confirmer": "Confirm",
+    "annuler": "Cancel",
+    "enCours": "Processing…",
+    "nonExecute": "Nothing is carried out until you confirm.",
+    "destinataires": "Recipients",
+    "assigne": "Assigned to",
+    "echeance": "Due date",
+    "destinatairesRequis": "Choose at least one recipient to confirm.",
+    "assigneRequis": "Choose who the task is assigned to.",
+    "nomsIndisponibles": "The names could not be loaded. You can confirm without changing them.",
+    "executee": {
+      "creer_tache": "Task created for {noms}.",
+      "envoyer_email": "E-mail sent to {noms}.",
+      "notifier": "Notification sent to {noms}.",
+      "programmer_rapport": "Report scheduled for {noms}."
+    },
+    "executeeSimple": {
+      "creer_tache": "Task created.",
+      "envoyer_email": "E-mail sent.",
+      "notifier": "Notification sent.",
+      "programmer_rapport": "Report scheduled."
+    },
+    "annulee": "Action cancelled. Nothing was carried out.",
+    "annuleeLe": "Cancelled on {date}.",
+    "confirmeeLe": "Action confirmed on {date}.",
+    "confirmee": "Action confirmed.",
+    "echec": "The action could not be carried out.",
+    "echecRaison": "Reason: {raison}",
+    "voirResultat": "Open"
+  },
+  "selecteurUtilisateurs": {
+    "placeholder": "Search for a person…",
+    "aide": "Type a name, then use the arrow keys and Enter to choose.",
+    "listeLabel": "Search results",
+    "chargement": "Searching…",
+    "aucunResultat": "No one found.",
+    "erreur": "The search failed.",
+    "reessayer": "Try again",
+    "retirer": "Remove {nom}",
+    "selectionLabel": "Chosen people",
+    "aucuneSelection": "No one chosen.",
+    "resultats": "{nombre, plural, =0 {No results} one {# result} other {# results}}",
+    "selection": "{nombre, plural, =0 {No one chosen} one {# person chosen} other {# people chosen}}",
+    "plafond": "Maximum reached: {max} people.",
+    "moi": "Me",
+    "moiAide": "Add or remove your own account from the list."
+  },
+  "dialoguePartage": {
+    "titre": "Share “{titre}”",
+    "explication": "The person you choose sees the figures recalculated within their own scope, so they may differ from yours.",
+    "destinataires": "People",
+    "message": "Message (optional)",
+    "messagePlaceholder": "Add a note to explain this share",
+    "partager": "Share",
+    "annuler": "Cancel",
+    "enCours": "Sharing…",
+    "aucunDestinataire": "Choose at least one person.",
+    "succes": "{nombre, plural, one {Shared with # person.} other {Shared with # people.}}"
+  },
+  "dialogueProgrammer": {
+    "titre": "Schedule delivery of “{titre}”",
+    "explication": "The analysis is recalculated for every delivery, then sent by e-mail to the people you choose.",
+    "frequence": "Frequency",
+    "frequences": {
+      "quotidien": "Every day",
+      "hebdomadaire": "Every week",
+      "mensuel": "Every month"
+    },
+    "jourSemaine": "Day of the week",
+    "jourMois": "Day of the month",
+    "jourMoisAide": "From 1 to 28, so that delivery happens every month.",
+    "heure": "Delivery time",
+    "heureHeures": "Hours",
+    "heureMinutes": "Minutes",
+    "heureAide": "Paris time, whatever your time zone. The delivery goes out at the quarter hour following the chosen time.",
+    "destinataires": "Recipients",
+    "formats": "Attached formats",
+    "format": {
+      "xlsx": "Excel (.xlsx)",
+      "pdf": "PDF (.pdf)",
+      "csv": "CSV (.csv)"
+    },
+    "erreurDestinataires": "Choose at least one recipient.",
+    "erreurFormats": "Tick at least one format.",
+    "programmer": "Schedule",
+    "annuler": "Cancel",
+    "enCours": "Scheduling…",
+    "succes": "Delivery scheduled."
+  },
+  "actionsArtefact": {
+    "groupe": "Actions on the analysis",
+    "enregistrer": "Save to My analyses",
+    "enregistrerCourt": "Save",
+    "epingler": "Pin to the dashboard",
+    "epinglerCourt": "Pin",
+    "partager": "Share",
+    "programmer": "Schedule",
+    "chargementEtat": "Loading status…",
+    "proprietaireSeulement": "Only the owner of the analysis can save it, share it or schedule its delivery.",
+    "enregistreOk": "Analysis saved to My analyses.",
+    "retireOk": "Analysis removed from My analyses.",
+    "epingleOk": "Analysis pinned to the dashboard.",
+    "desepingleOk": "Analysis removed from the dashboard.",
+    "enregistrerProprietaire": "Only the owner of the analysis can save it. You can still pin it."
+  },
+  "notifPartage": {
+    "titreConversation": "{expediteur} shared a conversation with you",
+    "titreArtefact": "{expediteur} shared an analysis with you",
+    "message": "“{titre}”"
+  },
+  "emailRapport": {
+    "sujet": "Scheduled report: “{titre}”",
+    "salutation": "Hello {nom},",
+    "intro": "{proprietaire} is sending you the Data Genius analysis “{titre}”.",
+    "automatique": "This report is sent automatically, {frequence}, until {proprietaire} stops it.",
+    "formats": "Attached files: {formats}.",
+    "note": "The attached figures are the report owner's, as of the sending date. When you open the analysis in Data Genius, they are recalculated within your own scope.",
+    "bouton": "Open the analysis",
+    "lienTexte": "Open the analysis: {url}",
+    "pied": "Automatic message from Data Genius, please do not reply.",
+    "frequence": {
+      "quotidien": "every day",
+      "hebdomadaire": "every week",
+      "mensuel": "every month"
+    }
+  },
+  "notifRapport": {
+    "titre": "Report: “{titre}”",
+    "message": "Sent by {proprietaire}, {frequence}. Open the analysis to see the figures within your scope.",
+    "frequence": {
+      "quotidien": "every day",
+      "hebdomadaire": "every week",
+      "mensuel": "every month"
+    }
+  },
+  "analyses": {
+    "page": {
+      "titre": "My analyses",
+      "description": "Find the analyses you saved, those shared with you, your tasks and your scheduled reports."
+    },
+    "onglets": {
+      "aria": "My analyses sections",
+      "analyses": "Saved analyses",
+      "partages": "Shared with me",
+      "taches": "My tasks",
+      "rapports": "Scheduled reports"
+    },
+    "recherche": {
+      "label": "Search my analyses",
+      "placeholder": "Search an analysis…"
+    },
+    "total": "{count, plural, one {# analysis} other {# analyses}}",
+    "type": {
+      "tableau": "Table",
+      "graphique": "Chart",
+      "indicateurs": "Indicators",
+      "document": "Document"
+    },
+    "enregistreeLe": "Saved on {date}",
+    "partagee": "Shared",
+    "ouvrir": "Open",
+    "ouvrirAria": "Open the analysis \"{titre}\"",
+    "retirer": "Remove",
+    "retirerAria": "Remove the analysis \"{titre}\" from My analyses",
+    "retirerTitre": "Remove this analysis from My analyses?",
+    "retirerTexte": "\"{titre}\" will no longer appear in this list. The analysis itself is not deleted: you can save it again from the assistant.",
+    "retirerConfirmer": "Remove",
+    "annuler": "Cancel",
+    "retireOk": "Analysis removed from My analyses.",
+    "chargerPlus": "Load more",
+    "chargement": "Loading analyses…",
+    "vide": {
+      "titre": "No saved analysis",
+      "texte": "To add one, ask the Data Genius assistant a question, then choose \"Save to My analyses\" under the result.",
+      "rechercheTitre": "No results",
+      "rechercheTexte": "No analysis matches this search."
+    },
+    "erreur": {
+      "titre": "Unable to load this list",
+      "texte": "An error occurred. Your data is safe.",
+      "reessayer": "Try again"
+    },
+    "retour": "Back to My analyses",
+    "titreRepli": "Analysis"
+  },
+  "partagesRecus": {
+    "titre": "Shared with me",
+    "chargement": "Loading shares…",
+    "chargerPlus": "Load more",
+    "vide": {
+      "titre": "Nothing has been shared with you",
+      "texte": "When a colleague shares a conversation or an analysis with you, it appears here."
+    },
+    "de": "From {nom}",
+    "cible": {
+      "conversation": "Conversation",
+      "artefact": "Analysis"
+    },
+    "partageLe": "Shared on {date}",
+    "ouvrirConversation": "Open the conversation",
+    "ouvrirArtefact": "Open the analysis",
+    "ouvrirAria": "Open \"{titre}\"",
+    "compteDisparu": "Account unavailable",
+    "erreur": {
+      "titre": "Unable to load shares",
+      "texte": "An error occurred. Try again in a moment.",
+      "reessayer": "Try again"
+    },
+    "envoyes": {
+      "titre": "Shared by me",
+      "chargement": "Loading your shares…",
+      "vide": "You have not shared anything yet.",
+      "a": "To {nom}"
+    },
+    "retirer": {
+      "annuler": "Cancel",
+      "envoye": {
+        "bouton": "Remove share",
+        "aria": "Remove the share of \"{titre}\"",
+        "titre": "Remove this share?",
+        "texte": "{nom} will no longer be able to open \"{titre}\", and their dashboard pins on this content will be deleted.",
+        "confirmer": "Remove share",
+        "ok": "Share removed"
+      },
+      "recu": {
+        "bouton": "Stop seeing",
+        "aria": "Stop seeing \"{titre}\"",
+        "titre": "Stop seeing this content?",
+        "texte": "\"{titre}\" will disappear from your list and your dashboard pins on this content will be deleted. You will no longer be able to open it.",
+        "confirmer": "Stop seeing",
+        "ok": "The content no longer appears in your list"
+      }
+    }
+  },
+  "taches": {
+    "titre": "My tasks",
+    "filtres": {
+      "aria": "Filter tasks",
+      "a_faire": "To do",
+      "en_retard": "Overdue",
+      "terminee": "Done"
+    },
+    "priorite": {
+      "basse": "Low priority",
+      "normale": "Normal priority",
+      "haute": "High priority"
+    },
+    "echeance": "Due: {date}",
+    "sansEcheance": "No due date",
+    "enRetard": "Overdue",
+    "termineeLe": "Done on {date}",
+    "assigneA": "Assigned to {nom}",
+    "assigneAMoi": "Assigned to you",
+    "creeePar": "Created by {nom}",
+    "marquerTerminee": "Mark as done",
+    "marquerAria": "Mark the task \"{titre}\" as done",
+    "rouvrir": "Reopen",
+    "rouvrirAria": "Reopen the task \"{titre}\"",
+    "voirConversation": "View the conversation",
+    "chargement": "Loading tasks…",
+    "vide": {
+      "a_faire": "No task to do. Tasks created by the assistant and assigned to you appear here.",
+      "en_retard": "No overdue task.",
+      "terminee": "No completed task yet."
+    },
+    "erreur": {
+      "titre": "Unable to load tasks",
+      "texte": "An error occurred. Try again in a moment.",
+      "reessayer": "Try again"
+    }
+  },
+  "rapports": {
+    "titre": "Scheduled reports",
+    "chargement": "Loading reports…",
+    "vide": {
+      "titre": "No scheduled report",
+      "texte": "To create one, open an analysis and choose \"Schedule\": it will be recalculated and emailed at the time you pick."
+    },
+    "erreur": {
+      "titre": "Unable to load reports",
+      "texte": "An error occurred. Try again in a moment.",
+      "reessayer": "Try again"
+    },
+    "frequence": {
+      "quotidien": "Every day at {heure} (Paris time)",
+      "hebdomadaire": "Every {jour} at {heure} (Paris time)",
+      "mensuel": "On the {jourMois, selectordinal, one {#st} two {#nd} few {#rd} other {#th}} of every month at {heure} (Paris time)"
+    },
+    "jours": {
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday",
+      "7": "Sunday"
+    },
+    "formats": "Formats: {formats}",
+    "format": {
+      "xlsx": "Excel",
+      "pdf": "PDF",
+      "csv": "CSV"
+    },
+    "destinataires": "Recipients: {noms}",
+    "compteDisparu": "account unavailable",
+    "prochainEnvoi": "Next send: {date}",
+    "aucunProchainEnvoi": "No send scheduled",
+    "dernierEnvoi": "Last send: {date}",
+    "jamaisEnvoye": "Not sent yet",
+    "statut": {
+      "ok": "Sent",
+      "partiel": "Partly sent",
+      "echec": "Failed"
+    },
+    "raison": {
+      "proprietaire_sans_acces": "You no longer have access to Data Genius: the report was paused.",
+      "artefact_introuvable": "The analysis no longer exists.",
+      "planning_invalide": "The schedule of this report is no longer valid.",
+      "aucun_destinataire": "No valid recipient.",
+      "export_impossible": "The files could not be generated.",
+      "envoi_impossible": "The emails could not be sent.",
+      "erreur_interne": "An internal error occurred.",
+      "destinataires_ecartes": "Some recipients were left out because they no longer have access to Data Genius.",
+      "envoi_partiel": "Some emails could not be sent.",
+      "inconnue": "Unknown cause."
+    },
+    "actif": "Active",
+    "pause": "Paused",
+    "interrupteurAria": "Report \"{titre}\": activate or pause",
+    "ouvrirAnalyse": "Open the analysis",
+    "supprimer": "Delete",
+    "supprimerAria": "Delete the scheduled report \"{titre}\"",
+    "supprimerTitre": "Delete this scheduled report?",
+    "supprimerTexte": "No more emails will be sent for \"{titre}\". The analysis is not deleted.",
+    "supprimerConfirmer": "Delete",
+    "annuler": "Cancel",
+    "supprimeOk": "Scheduled report deleted."
+  },
+  "epingles": {
+    "titre": "My pinned items",
+    "ouvrir": "Open",
+    "ouvrirAria": "Open the analysis \"{titre}\"",
+    "desepingler": "Unpin",
+    "desepinglerAria": "Unpin \"{titre}\" from the dashboard"
+  }
+}

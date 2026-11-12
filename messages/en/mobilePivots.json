@@ -1,0 +1,42 @@
+{
+  "bandeau": {
+    "lignes": "{count, plural, one {# row hidden} other {# rows hidden}}",
+    "colonnes": "{count, plural, one {# column hidden} other {# columns hidden}}",
+    "separateur": ", ",
+    "totaux": "{details} — totals cover all the data"
+  },
+  "menus": {
+    "pays": "Countries",
+    "produits": "Products",
+    "grossistes": "Wholesalers",
+    "mesures": "Measures"
+  },
+  "cumul": {
+    "libelle": "Total",
+    "produits": "Product detail removed: a single total row.",
+    "grossistes": "Wholesaler detail removed: totals by country.",
+    "lesDeux": "Products and wholesalers removed: totals by country.",
+    "pays": "Country detail removed: total across all countries.",
+    "paysProduits": "Countries and products removed: total by wholesaler.",
+    "paysGrossistes": "Countries and wholesalers removed: total by product.",
+    "champs": "Fields removed ({champs}): figures are totalled."
+  },
+  "champs": {
+    "bouton": "Displayed fields",
+    "titre": "Displayed fields",
+    "aide": "Untick a field to keep only its total; tick it again to see the detail. Totals do not change.",
+    "afficherTout": "Show all",
+    "detail": "{affiches} of {total} shown",
+    "retires": "{count, plural, one {# field removed} other {# fields removed}}",
+    "minimum": "At least {count, plural, one {# field must stay displayed} other {# fields must stay displayed}}.",
+    "pays": "Country",
+    "produit": "Product",
+    "grossiste": "Wholesaler",
+    "agence": "Agency",
+    "mois": "Month",
+    "periode": "Period"
+  },
+  "mesures": {
+    "caSeul": "Products removed: only revenue (EUR) is shown."
+  }
+}

@@ -1,0 +1,432 @@
+{
+  "titre": "Data Genius",
+  "actionResume": {
+    "creerTache": "Crear la tarea «{titre}» y asignarla a {assigne}.",
+    "creerTacheEcheance": "Crear la tarea «{titre}» y asignarla a {assigne}, con vencimiento el {echeance}.",
+    "envoyerEmail": "Enviar por correo el análisis «{titre}» a {destinataires}, con los archivos {formats} adjuntos.",
+    "notifier": "Enviar una notificación a {destinataires}: «{message}».",
+    "notifierArtefact": "Enviar una notificación a {destinataires} con el análisis «{titre}»: «{message}».",
+    "programmerRapport": "Enviar el análisis «{titre}» en {formats} a {destinataires}, {frequence}.",
+    "partageNote": "Este análisis se compartirá en solo lectura con estas personas, que lo verán dentro de su propio perímetro.",
+    "frequence": {
+      "quotidien": "todos los días a las {heure} (hora de París)",
+      "hebdomadaire": "cada {jour} a las {heure} (hora de París)",
+      "hebdomadaireSansJour": "cada semana a las {heure} (hora de París)",
+      "mensuel": "el día {jourMois} de cada mes a las {heure} (hora de París)",
+      "mensuelSansJour": "cada mes a las {heure} (hora de París)"
+    },
+    "notifierSansAcces": "{nombre, plural, one {{destinataires} no tiene acceso a Data Genius y recibirá solo el mensaje, sin el análisis.} many {{destinataires} no tienen acceso a Data Genius y recibirán solo el mensaje, sin el análisis.} other {{destinataires} no tienen acceso a Data Genius y recibirán solo el mensaje, sin el análisis.}}"
+  },
+  "actionResultat": {
+    "creerTache": "Tarea creada para {assigne}.",
+    "envoyerEmail": "{envoyes, plural, one {# correo enviado.} many {# de correos enviados.} other {# correos enviados.}}",
+    "envoyerEmailEchecs": "{echecs, plural, one {# envío falló.} many {# de envíos fallaron.} other {# envíos fallaron.}}",
+    "notifier": "{nombre, plural, one {Notificación enviada a # persona.} many {Notificación enviada a # de personas.} other {Notificación enviada a # personas.}}",
+    "programmerRapport": "Informe «{titre}» programado.",
+    "echec": {
+      "generique": "No se pudo ejecutar la acción.",
+      "export_impossible": "Falló la exportación del análisis: no se envió nada.",
+      "mail_non_envoye": "No se pudo enviar ningún correo.",
+      "destinataire_invalide": "Un destinatario ya no tiene acceso a Data Genius.",
+      "artefact_non_proprietaire": "Solo el propietario del análisis puede compartirlo, enviarlo o programarlo."
+    },
+    "lien": {
+      "taches": "Ver mis tareas",
+      "rapports": "Ver mis informes"
+    }
+  },
+  "emailArtefact": {
+    "sujet": "{expediteur} le envía «{titre}»",
+    "salutation": "Hola {nom}:",
+    "intro": "{expediteur} le ha enviado el análisis «{titre}» desde Data Genius.",
+    "messageDe": "Mensaje de {expediteur}:",
+    "formats": "Archivos adjuntos: {formats}.",
+    "note": "Las cifras adjuntas son las del remitente en el momento del envío. Al abrir el análisis en Data Genius, se recalculan dentro de su propio perímetro.",
+    "bouton": "Abrir el análisis",
+    "lienTexte": "Abrir el análisis: {url}",
+    "pied": "Mensaje automático de Data Genius, por favor no responda."
+  },
+  "notifMessage": {
+    "titre": "{expediteur} le ha escrito"
+  },
+  "notifTache": {
+    "titre": "{expediteur} le ha asignado una tarea",
+    "message": "«{titre}»",
+    "messageEcheance": "«{titre}», para el {echeance}"
+  },
+  "erreurs": {
+    "titre": "Acción no posible",
+    "introuvable": "No se encuentra este elemento o ya no está accesible.",
+    "invalide": "La información introducida no es válida.",
+    "interdit": "No tiene permiso para realizar esta acción.",
+    "conflit": "Este elemento ya se procesó o se modificó. Recargue e inténtelo de nuevo.",
+    "destinataire_invalide": "Uno de los destinatarios no tiene acceso a Data Genius.",
+    "export_impossible": "No se pudo generar el archivo. Inténtelo de nuevo en un momento.",
+    "artefact_non_proprietaire": "Solo el propietario del análisis puede realizar esta acción.",
+    "interne": "Se produjo un error. Inténtelo de nuevo en un momento.",
+    "reseau": "El servidor no responde. Compruebe su conexión e inténtelo de nuevo.",
+    "mail_non_envoye": "No se pudo enviar ningún correo.",
+    "execution_impossible": "La acción no pudo completarse."
+  },
+  "carteAction": {
+    "titre": {
+      "creer_tache": "Crear una tarea",
+      "envoyer_email": "Enviar por correo",
+      "notifier": "Enviar una notificación",
+      "programmer_rapport": "Programar un informe"
+    },
+    "statut": {
+      "proposee": "Por confirmar",
+      "executee": "Hecho",
+      "annulee": "Cancelada",
+      "echec": "Error"
+    },
+    "chargement": "Cargando la acción…",
+    "erreurLecture": "No se pudo volver a leer esta acción.",
+    "reessayer": "Reintentar",
+    "confirmer": "Confirmar",
+    "annuler": "Cancelar",
+    "enCours": "Procesando…",
+    "nonExecute": "No se ejecuta nada hasta que confirme.",
+    "destinataires": "Destinatarios",
+    "assigne": "Asignada a",
+    "echeance": "Fecha límite",
+    "destinatairesRequis": "Elija al menos un destinatario para confirmar.",
+    "assigneRequis": "Elija a quién se asigna la tarea.",
+    "nomsIndisponibles": "No se pudieron cargar los nombres. Puede confirmar sin modificarlos.",
+    "executee": {
+      "creer_tache": "Tarea creada para {noms}.",
+      "envoyer_email": "Correo enviado a {noms}.",
+      "notifier": "Notificación enviada a {noms}.",
+      "programmer_rapport": "Informe programado para {noms}."
+    },
+    "executeeSimple": {
+      "creer_tache": "Tarea creada.",
+      "envoyer_email": "Correo enviado.",
+      "notifier": "Notificación enviada.",
+      "programmer_rapport": "Informe programado."
+    },
+    "annulee": "Acción cancelada. No se ejecutó nada.",
+    "annuleeLe": "Cancelada el {date}.",
+    "confirmeeLe": "Acción confirmada el {date}.",
+    "confirmee": "Acción confirmada.",
+    "echec": "No se pudo ejecutar la acción.",
+    "echecRaison": "Motivo: {raison}",
+    "voirResultat": "Abrir"
+  },
+  "selecteurUtilisateurs": {
+    "placeholder": "Buscar a una persona…",
+    "aide": "Escriba un nombre y use las flechas y Intro para elegir.",
+    "listeLabel": "Resultados de la búsqueda",
+    "chargement": "Buscando…",
+    "aucunResultat": "No se encontró a nadie.",
+    "erreur": "La búsqueda falló.",
+    "reessayer": "Reintentar",
+    "retirer": "Quitar a {nom}",
+    "selectionLabel": "Personas elegidas",
+    "aucuneSelection": "Nadie elegido.",
+    "resultats": "{nombre, plural, =0 {Sin resultados} one {# resultado} other {# resultados}}",
+    "selection": "{nombre, plural, =0 {Nadie elegido} one {# persona elegida} other {# personas elegidas}}",
+    "plafond": "Máximo alcanzado: {max} personas.",
+    "moi": "Yo",
+    "moiAide": "Añadir o quitar su propia cuenta de la lista."
+  },
+  "dialoguePartage": {
+    "titre": "Compartir «{titre}»",
+    "explication": "La persona elegida ve las cifras recalculadas en su propio ámbito, por lo que pueden diferir de las suyas.",
+    "destinataires": "Personas",
+    "message": "Mensaje (opcional)",
+    "messagePlaceholder": "Añada una nota para explicar este envío",
+    "partager": "Compartir",
+    "annuler": "Cancelar",
+    "enCours": "Compartiendo…",
+    "aucunDestinataire": "Elija al menos una persona.",
+    "succes": "{nombre, plural, one {Compartido con # persona.} other {Compartido con # personas.}}"
+  },
+  "dialogueProgrammer": {
+    "titre": "Programar el envío de «{titre}»",
+    "explication": "El análisis se recalcula en cada envío y se manda por correo a las personas elegidas.",
+    "frequence": "Frecuencia",
+    "frequences": {
+      "quotidien": "Todos los días",
+      "hebdomadaire": "Cada semana",
+      "mensuel": "Cada mes"
+    },
+    "jourSemaine": "Día de la semana",
+    "jourMois": "Día del mes",
+    "jourMoisAide": "De 1 a 28, para que el envío se haga todos los meses.",
+    "heure": "Hora de envío",
+    "heureHeures": "Horas",
+    "heureMinutes": "Minutos",
+    "heureAide": "Hora de París, sea cual sea su zona horaria. El envío sale en el cuarto de hora siguiente a la hora elegida.",
+    "destinataires": "Destinatarios",
+    "formats": "Formatos adjuntos",
+    "format": {
+      "xlsx": "Excel (.xlsx)",
+      "pdf": "PDF (.pdf)",
+      "csv": "CSV (.csv)"
+    },
+    "erreurDestinataires": "Elija al menos un destinatario.",
+    "erreurFormats": "Marque al menos un formato.",
+    "programmer": "Programar",
+    "annuler": "Cancelar",
+    "enCours": "Programando…",
+    "succes": "Envío programado."
+  },
+  "actionsArtefact": {
+    "groupe": "Acciones sobre el análisis",
+    "enregistrer": "Guardar en Mis análisis",
+    "enregistrerCourt": "Guardar",
+    "epingler": "Fijar en el panel",
+    "epinglerCourt": "Fijar",
+    "partager": "Compartir",
+    "programmer": "Programar",
+    "chargementEtat": "Cargando el estado…",
+    "proprietaireSeulement": "Solo el propietario del análisis puede guardarlo, compartirlo o programar su envío.",
+    "enregistreOk": "Análisis guardado en Mis análisis.",
+    "retireOk": "Análisis quitado de Mis análisis.",
+    "epingleOk": "Análisis fijado en el panel.",
+    "desepingleOk": "Análisis quitado del panel.",
+    "enregistrerProprietaire": "Solo el propietario del análisis puede guardarlo. Aun así puede anclarlo."
+  },
+  "notifPartage": {
+    "titreConversation": "{expediteur} ha compartido una conversación con usted",
+    "titreArtefact": "{expediteur} ha compartido un análisis con usted",
+    "message": "«{titre}»"
+  },
+  "emailRapport": {
+    "sujet": "Informe programado: «{titre}»",
+    "salutation": "Hola {nom}:",
+    "intro": "{proprietaire} le envía el análisis «{titre}» de Data Genius.",
+    "automatique": "Este informe se envía automáticamente, {frequence}, hasta que {proprietaire} lo detenga.",
+    "formats": "Archivos adjuntos: {formats}.",
+    "note": "Las cifras adjuntas son las del propietario del informe en la fecha de envío. Al abrir el análisis en Data Genius, se recalculan en su propio ámbito.",
+    "bouton": "Abrir el análisis",
+    "lienTexte": "Abrir el análisis: {url}",
+    "pied": "Mensaje automático de Data Genius, por favor no responda.",
+    "frequence": {
+      "quotidien": "cada día",
+      "hebdomadaire": "cada semana",
+      "mensuel": "cada mes"
+    }
+  },
+  "notifRapport": {
+    "titre": "Informe: «{titre}»",
+    "message": "Enviado por {proprietaire}, {frequence}. Abra el análisis para ver las cifras en su ámbito.",
+    "frequence": {
+      "quotidien": "cada día",
+      "hebdomadaire": "cada semana",
+      "mensuel": "cada mes"
+    }
+  },
+  "analyses": {
+    "page": {
+      "titre": "Mis análisis",
+      "description": "Encuentre los análisis que guardó, los que se compartieron con usted, sus tareas y sus informes programados."
+    },
+    "onglets": {
+      "aria": "Secciones de Mis análisis",
+      "analyses": "Análisis guardados",
+      "partages": "Compartidos conmigo",
+      "taches": "Mis tareas",
+      "rapports": "Informes programados"
+    },
+    "recherche": {
+      "label": "Buscar en mis análisis",
+      "placeholder": "Buscar un análisis…"
+    },
+    "total": "{count, plural, one {# análisis} other {# análisis}}",
+    "type": {
+      "tableau": "Tabla",
+      "graphique": "Gráfico",
+      "indicateurs": "Indicadores",
+      "document": "Documento"
+    },
+    "enregistreeLe": "Guardado el {date}",
+    "partagee": "Compartido",
+    "ouvrir": "Abrir",
+    "ouvrirAria": "Abrir el análisis «{titre}»",
+    "retirer": "Quitar",
+    "retirerAria": "Quitar el análisis «{titre}» de Mis análisis",
+    "retirerTitre": "¿Quitar este análisis de Mis análisis?",
+    "retirerTexte": "«{titre}» ya no aparecerá en esta lista. El análisis no se elimina: podrá guardarlo de nuevo desde el asistente.",
+    "retirerConfirmer": "Quitar",
+    "annuler": "Cancelar",
+    "retireOk": "Análisis quitado de Mis análisis.",
+    "chargerPlus": "Cargar más",
+    "chargement": "Cargando los análisis…",
+    "vide": {
+      "titre": "Ningún análisis guardado",
+      "texte": "Para añadir uno, haga una pregunta al asistente Data Genius y elija «Guardar en Mis análisis» bajo el resultado.",
+      "rechercheTitre": "Sin resultados",
+      "rechercheTexte": "Ningún análisis coincide con esta búsqueda."
+    },
+    "erreur": {
+      "titre": "No se puede cargar esta lista",
+      "texte": "Se produjo un error. Sus datos no se han perdido.",
+      "reessayer": "Reintentar"
+    },
+    "retour": "Volver a Mis análisis",
+    "titreRepli": "Análisis"
+  },
+  "partagesRecus": {
+    "titre": "Compartidos conmigo",
+    "chargement": "Cargando lo compartido…",
+    "chargerPlus": "Cargar más",
+    "vide": {
+      "titre": "No se ha compartido nada con usted",
+      "texte": "Cuando un compañero comparta una conversación o un análisis con usted, aparecerá aquí."
+    },
+    "de": "De {nom}",
+    "cible": {
+      "conversation": "Conversación",
+      "artefact": "Análisis"
+    },
+    "partageLe": "Compartido el {date}",
+    "ouvrirConversation": "Abrir la conversación",
+    "ouvrirArtefact": "Abrir el análisis",
+    "ouvrirAria": "Abrir «{titre}»",
+    "compteDisparu": "Cuenta no disponible",
+    "erreur": {
+      "titre": "No se puede cargar lo compartido",
+      "texte": "Se produjo un error. Inténtelo de nuevo en un momento.",
+      "reessayer": "Reintentar"
+    },
+    "envoyes": {
+      "titre": "Lo que he compartido",
+      "chargement": "Cargando lo que ha compartido…",
+      "vide": "Todavía no ha compartido nada.",
+      "a": "Para {nom}"
+    },
+    "retirer": {
+      "annuler": "Cancelar",
+      "envoye": {
+        "bouton": "Retirar el uso compartido",
+        "aria": "Retirar el uso compartido de «{titre}»",
+        "titre": "¿Retirar este uso compartido?",
+        "texte": "{nom} ya no podrá abrir «{titre}» y se eliminarán sus fijados del panel sobre este contenido.",
+        "confirmer": "Retirar el uso compartido",
+        "ok": "Uso compartido retirado"
+      },
+      "recu": {
+        "bouton": "Dejar de ver",
+        "aria": "Dejar de ver «{titre}»",
+        "titre": "¿Dejar de ver este contenido?",
+        "texte": "«{titre}» desaparecerá de su lista y se eliminarán sus fijados del panel sobre este contenido. Ya no podrá abrirlo.",
+        "confirmer": "Dejar de ver",
+        "ok": "El contenido ya no aparece en su lista"
+      }
+    }
+  },
+  "taches": {
+    "titre": "Mis tareas",
+    "filtres": {
+      "aria": "Filtrar las tareas",
+      "a_faire": "Por hacer",
+      "en_retard": "Atrasadas",
+      "terminee": "Terminadas"
+    },
+    "priorite": {
+      "basse": "Prioridad baja",
+      "normale": "Prioridad normal",
+      "haute": "Prioridad alta"
+    },
+    "echeance": "Vencimiento: {date}",
+    "sansEcheance": "Sin vencimiento",
+    "enRetard": "Atrasada",
+    "termineeLe": "Terminada el {date}",
+    "assigneA": "Asignada a {nom}",
+    "assigneAMoi": "Asignada a usted",
+    "creeePar": "Creada por {nom}",
+    "marquerTerminee": "Marcar como terminada",
+    "marquerAria": "Marcar la tarea «{titre}» como terminada",
+    "rouvrir": "Reabrir",
+    "rouvrirAria": "Reabrir la tarea «{titre}»",
+    "voirConversation": "Ver la conversación",
+    "chargement": "Cargando las tareas…",
+    "vide": {
+      "a_faire": "Ninguna tarea por hacer. Las tareas creadas por el asistente y asignadas a usted aparecen aquí.",
+      "en_retard": "Ninguna tarea atrasada.",
+      "terminee": "Ninguna tarea terminada por ahora."
+    },
+    "erreur": {
+      "titre": "No se pueden cargar las tareas",
+      "texte": "Se produjo un error. Inténtelo de nuevo en un momento.",
+      "reessayer": "Reintentar"
+    }
+  },
+  "rapports": {
+    "titre": "Informes programados",
+    "chargement": "Cargando los informes…",
+    "vide": {
+      "titre": "Ningún informe programado",
+      "texte": "Para crear uno, abra un análisis y elija «Programar»: se recalculará y se enviará por correo a la hora elegida."
+    },
+    "erreur": {
+      "titre": "No se pueden cargar los informes",
+      "texte": "Se produjo un error. Inténtelo de nuevo en un momento.",
+      "reessayer": "Reintentar"
+    },
+    "frequence": {
+      "quotidien": "Todos los días a las {heure} (hora de París)",
+      "hebdomadaire": "Cada {jour} a las {heure} (hora de París)",
+      "mensuel": "El día {jourMois} de cada mes a las {heure} (hora de París)"
+    },
+    "jours": {
+      "1": "lunes",
+      "2": "martes",
+      "3": "miércoles",
+      "4": "jueves",
+      "5": "viernes",
+      "6": "sábado",
+      "7": "domingo"
+    },
+    "formats": "Formatos: {formats}",
+    "format": {
+      "xlsx": "Excel",
+      "pdf": "PDF",
+      "csv": "CSV"
+    },
+    "destinataires": "Destinatarios: {noms}",
+    "compteDisparu": "cuenta no disponible",
+    "prochainEnvoi": "Próximo envío: {date}",
+    "aucunProchainEnvoi": "Ningún envío previsto",
+    "dernierEnvoi": "Último envío: {date}",
+    "jamaisEnvoye": "Aún no enviado",
+    "statut": {
+      "ok": "Enviado",
+      "partiel": "Envío parcial",
+      "echec": "Fallido"
+    },
+    "raison": {
+      "proprietaire_sans_acces": "Ya no tiene acceso a Data Genius: el informe se ha pausado.",
+      "artefact_introuvable": "El análisis ya no existe.",
+      "planning_invalide": "La programación de este informe ya no es válida.",
+      "aucun_destinataire": "Ningún destinatario válido.",
+      "export_impossible": "No se pudieron generar los archivos.",
+      "envoi_impossible": "No se pudieron enviar los correos.",
+      "erreur_interne": "Se produjo un error interno.",
+      "destinataires_ecartes": "Se descartaron algunos destinatarios porque ya no tienen acceso a Data Genius.",
+      "envoi_partiel": "No se pudieron enviar algunos correos.",
+      "inconnue": "Causa desconocida."
+    },
+    "actif": "Activo",
+    "pause": "En pausa",
+    "interrupteurAria": "Informe «{titre}»: activar o pausar",
+    "ouvrirAnalyse": "Abrir el análisis",
+    "supprimer": "Eliminar",
+    "supprimerAria": "Eliminar el informe programado «{titre}»",
+    "supprimerTitre": "¿Eliminar este informe programado?",
+    "supprimerTexte": "Ya no se enviará ningún correo para «{titre}». El análisis no se elimina.",
+    "supprimerConfirmer": "Eliminar",
+    "annuler": "Cancelar",
+    "supprimeOk": "Informe programado eliminado."
+  },
+  "epingles": {
+    "titre": "Mis fijados",
+    "ouvrir": "Abrir",
+    "ouvrirAria": "Abrir el análisis «{titre}»",
+    "desepingler": "Desfijar",
+    "desepinglerAria": "Desfijar «{titre}» del panel de control"
+  }
+}

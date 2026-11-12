@@ -1,0 +1,432 @@
+{
+  "titre": "Data Genius",
+  "actionResume": {
+    "creerTache": "Créer la tâche « {titre} » et l'assigner à {assigne}.",
+    "creerTacheEcheance": "Créer la tâche « {titre} » et l'assigner à {assigne}, pour le {echeance}.",
+    "envoyerEmail": "Envoyer l'analyse « {titre} » à {destinataires} par e-mail, avec les fichiers {formats} en pièces jointes.",
+    "notifier": "Envoyer une notification à {destinataires} : « {message} ».",
+    "notifierArtefact": "Envoyer une notification à {destinataires} avec l'analyse « {titre} » : « {message} ».",
+    "programmerRapport": "Envoyer l'analyse « {titre} » en {formats} à {destinataires}, {frequence}.",
+    "partageNote": "Cette analyse sera partagée en lecture seule avec ces personnes, qui la verront dans leur propre périmètre.",
+    "frequence": {
+      "quotidien": "chaque jour à {heure} (heure de Paris)",
+      "hebdomadaire": "chaque {jour} à {heure} (heure de Paris)",
+      "hebdomadaireSansJour": "chaque semaine à {heure} (heure de Paris)",
+      "mensuel": "le {jourMois} de chaque mois à {heure} (heure de Paris)",
+      "mensuelSansJour": "chaque mois à {heure} (heure de Paris)"
+    },
+    "notifierSansAcces": "{nombre, plural, one {{destinataires} n'a pas accès à Data Genius et recevra le message seul, sans l'analyse.} many {{destinataires} n'ont pas accès à Data Genius et recevront le message seul, sans l'analyse.} other {{destinataires} n'ont pas accès à Data Genius et recevront le message seul, sans l'analyse.}}"
+  },
+  "actionResultat": {
+    "creerTache": "Tâche créée pour {assigne}.",
+    "envoyerEmail": "{envoyes, plural, one {# e-mail envoyé.} many {# d'e-mails envoyés.} other {# e-mails envoyés.}}",
+    "envoyerEmailEchecs": "{echecs, plural, one {# envoi a échoué.} many {# d'envois ont échoué.} other {# envois ont échoué.}}",
+    "notifier": "{nombre, plural, one {Notification envoyée à # personne.} many {Notification envoyée à # de personnes.} other {Notification envoyée à # personnes.}}",
+    "programmerRapport": "Rapport « {titre} » programmé.",
+    "echec": {
+      "generique": "L'action n'a pas pu être exécutée.",
+      "export_impossible": "L'export de l'analyse a échoué : rien n'a été envoyé.",
+      "mail_non_envoye": "Aucun e-mail n'a pu être envoyé.",
+      "destinataire_invalide": "Un destinataire n'a plus accès à Data Genius.",
+      "artefact_non_proprietaire": "Seul le propriétaire de l'analyse peut la partager, l'envoyer ou la programmer."
+    },
+    "lien": {
+      "taches": "Voir mes tâches",
+      "rapports": "Voir mes rapports"
+    }
+  },
+  "emailArtefact": {
+    "sujet": "{expediteur} vous envoie « {titre} »",
+    "salutation": "Bonjour {nom},",
+    "intro": "{expediteur} vous a envoyé l'analyse « {titre} » depuis Data Genius.",
+    "messageDe": "Message de {expediteur} :",
+    "formats": "Fichiers joints : {formats}.",
+    "note": "Les chiffres joints sont ceux de l'expéditeur au moment de l'envoi. En ouvrant l'analyse dans Data Genius, ils sont recalculés dans votre propre périmètre.",
+    "bouton": "Ouvrir l'analyse",
+    "lienTexte": "Ouvrir l'analyse : {url}",
+    "pied": "Message automatique de Data Genius, merci de ne pas y répondre."
+  },
+  "notifMessage": {
+    "titre": "{expediteur} vous a écrit"
+  },
+  "notifTache": {
+    "titre": "{expediteur} vous a confié une tâche",
+    "message": "« {titre} »",
+    "messageEcheance": "« {titre} », à terminer pour le {echeance}"
+  },
+  "erreurs": {
+    "titre": "Action impossible",
+    "introuvable": "Cet élément est introuvable ou n'est plus accessible.",
+    "invalide": "Les informations saisies ne sont pas valides.",
+    "interdit": "Vous n'avez pas le droit d'effectuer cette action.",
+    "conflit": "Cet élément a déjà été traité ou modifié. Rechargez puis réessayez.",
+    "destinataire_invalide": "Un des destinataires n'a pas accès à Data Genius.",
+    "export_impossible": "Le fichier n'a pas pu être généré. Réessayez dans un instant.",
+    "artefact_non_proprietaire": "Seul le propriétaire de l'analyse peut effectuer cette action.",
+    "interne": "Une erreur est survenue. Réessayez dans un instant.",
+    "reseau": "Le serveur ne répond pas. Vérifiez votre connexion et réessayez.",
+    "mail_non_envoye": "Aucun e-mail n'a pu être envoyé.",
+    "execution_impossible": "L'action n'a pas pu aboutir."
+  },
+  "carteAction": {
+    "titre": {
+      "creer_tache": "Créer une tâche",
+      "envoyer_email": "Envoyer par e-mail",
+      "notifier": "Envoyer une notification",
+      "programmer_rapport": "Programmer un rapport"
+    },
+    "statut": {
+      "proposee": "À confirmer",
+      "executee": "Fait",
+      "annulee": "Annulée",
+      "echec": "Échec"
+    },
+    "chargement": "Chargement de l'action…",
+    "erreurLecture": "Impossible de relire cette action.",
+    "reessayer": "Réessayer",
+    "confirmer": "Confirmer",
+    "annuler": "Annuler",
+    "enCours": "Traitement en cours…",
+    "nonExecute": "Rien n'est exécuté tant que vous n'avez pas confirmé.",
+    "destinataires": "Destinataires",
+    "assigne": "Assignée à",
+    "echeance": "Échéance",
+    "destinatairesRequis": "Choisissez au moins un destinataire pour confirmer.",
+    "assigneRequis": "Choisissez la personne à qui confier la tâche.",
+    "nomsIndisponibles": "Les noms n'ont pas pu être chargés. Vous pouvez confirmer sans les modifier.",
+    "executee": {
+      "creer_tache": "Tâche créée pour {noms}.",
+      "envoyer_email": "E-mail envoyé à {noms}.",
+      "notifier": "Notification envoyée à {noms}.",
+      "programmer_rapport": "Rapport programmé pour {noms}."
+    },
+    "executeeSimple": {
+      "creer_tache": "Tâche créée.",
+      "envoyer_email": "E-mail envoyé.",
+      "notifier": "Notification envoyée.",
+      "programmer_rapport": "Rapport programmé."
+    },
+    "annulee": "Action annulée. Rien n'a été exécuté.",
+    "annuleeLe": "Annulée le {date}.",
+    "confirmeeLe": "Action confirmée le {date}.",
+    "confirmee": "Action confirmée.",
+    "echec": "L'action n'a pas pu être exécutée.",
+    "echecRaison": "Raison : {raison}",
+    "voirResultat": "Ouvrir"
+  },
+  "selecteurUtilisateurs": {
+    "placeholder": "Rechercher une personne…",
+    "aide": "Tapez un nom, puis utilisez les flèches et Entrée pour choisir.",
+    "listeLabel": "Résultats de la recherche",
+    "chargement": "Recherche en cours…",
+    "aucunResultat": "Aucune personne trouvée.",
+    "erreur": "La recherche a échoué.",
+    "reessayer": "Réessayer",
+    "retirer": "Retirer {nom}",
+    "selectionLabel": "Personnes choisies",
+    "aucuneSelection": "Aucune personne choisie.",
+    "resultats": "{nombre, plural, =0 {Aucun résultat} one {# résultat} other {# résultats}}",
+    "selection": "{nombre, plural, =0 {Aucune personne choisie} one {# personne choisie} other {# personnes choisies}}",
+    "plafond": "Maximum atteint : {max} personnes.",
+    "moi": "Moi",
+    "moiAide": "Ajouter ou retirer votre propre compte de la liste."
+  },
+  "dialoguePartage": {
+    "titre": "Partager « {titre} »",
+    "explication": "La personne choisie voit les chiffres recalculés dans son propre périmètre : ils peuvent différer des vôtres.",
+    "destinataires": "Personnes",
+    "message": "Message (facultatif)",
+    "messagePlaceholder": "Ajoutez un mot pour expliquer ce partage",
+    "partager": "Partager",
+    "annuler": "Annuler",
+    "enCours": "Partage en cours…",
+    "aucunDestinataire": "Choisissez au moins une personne.",
+    "succes": "{nombre, plural, one {Partagé avec # personne.} other {Partagé avec # personnes.}}"
+  },
+  "dialogueProgrammer": {
+    "titre": "Programmer l'envoi de « {titre} »",
+    "explication": "L'analyse est recalculée à chaque envoi, puis envoyée par e-mail aux personnes choisies.",
+    "frequence": "Fréquence",
+    "frequences": {
+      "quotidien": "Tous les jours",
+      "hebdomadaire": "Chaque semaine",
+      "mensuel": "Chaque mois"
+    },
+    "jourSemaine": "Jour de la semaine",
+    "jourMois": "Jour du mois",
+    "jourMoisAide": "De 1 à 28, pour que l'envoi ait lieu chaque mois.",
+    "heure": "Heure d'envoi",
+    "heureHeures": "Heures",
+    "heureMinutes": "Minutes",
+    "heureAide": "Heure de Paris, quel que soit votre fuseau horaire. L'envoi part au quart d'heure suivant l'heure choisie.",
+    "destinataires": "Destinataires",
+    "formats": "Formats joints",
+    "format": {
+      "xlsx": "Excel (.xlsx)",
+      "pdf": "PDF (.pdf)",
+      "csv": "CSV (.csv)"
+    },
+    "erreurDestinataires": "Choisissez au moins un destinataire.",
+    "erreurFormats": "Cochez au moins un format.",
+    "programmer": "Programmer",
+    "annuler": "Annuler",
+    "enCours": "Programmation en cours…",
+    "succes": "Envoi programmé."
+  },
+  "actionsArtefact": {
+    "groupe": "Actions sur l'analyse",
+    "enregistrer": "Enregistrer dans Mes analyses",
+    "enregistrerCourt": "Enregistrer",
+    "epingler": "Épingler au tableau de bord",
+    "epinglerCourt": "Épingler",
+    "partager": "Partager",
+    "programmer": "Programmer",
+    "chargementEtat": "Chargement de l'état…",
+    "proprietaireSeulement": "Seul le propriétaire de l'analyse peut l'enregistrer, la partager ou programmer son envoi.",
+    "enregistreOk": "Analyse enregistrée dans Mes analyses.",
+    "retireOk": "Analyse retirée de Mes analyses.",
+    "epingleOk": "Analyse épinglée au tableau de bord.",
+    "desepingleOk": "Analyse retirée du tableau de bord.",
+    "enregistrerProprietaire": "Seul le propriétaire de l'analyse peut l'enregistrer. Vous pouvez tout de même l'épingler."
+  },
+  "notifPartage": {
+    "titreConversation": "{expediteur} a partagé une conversation avec vous",
+    "titreArtefact": "{expediteur} a partagé une analyse avec vous",
+    "message": "« {titre} »"
+  },
+  "emailRapport": {
+    "sujet": "Rapport programmé : « {titre} »",
+    "salutation": "Bonjour {nom},",
+    "intro": "{proprietaire} vous fait parvenir l'analyse « {titre} » de Data Genius.",
+    "automatique": "Ce rapport est envoyé automatiquement, {frequence}, jusqu'à ce que {proprietaire} l'arrête.",
+    "formats": "Fichiers joints : {formats}.",
+    "note": "Les chiffres joints sont ceux du propriétaire du rapport à la date d'envoi. En ouvrant l'analyse dans Data Genius, ils sont recalculés dans votre propre périmètre.",
+    "bouton": "Ouvrir l'analyse",
+    "lienTexte": "Ouvrir l'analyse : {url}",
+    "pied": "Message automatique de Data Genius, merci de ne pas y répondre.",
+    "frequence": {
+      "quotidien": "chaque jour",
+      "hebdomadaire": "chaque semaine",
+      "mensuel": "chaque mois"
+    }
+  },
+  "notifRapport": {
+    "titre": "Rapport : « {titre} »",
+    "message": "Envoyé par {proprietaire}, {frequence}. Ouvrez l'analyse pour voir les chiffres dans votre périmètre.",
+    "frequence": {
+      "quotidien": "chaque jour",
+      "hebdomadaire": "chaque semaine",
+      "mensuel": "chaque mois"
+    }
+  },
+  "analyses": {
+    "page": {
+      "titre": "Mes analyses",
+      "description": "Retrouvez les analyses que vous avez enregistrées, celles que l'on a partagées avec vous, vos tâches et vos rapports programmés."
+    },
+    "onglets": {
+      "aria": "Sections de Mes analyses",
+      "analyses": "Analyses enregistrées",
+      "partages": "Partagés avec moi",
+      "taches": "Mes tâches",
+      "rapports": "Rapports programmés"
+    },
+    "recherche": {
+      "label": "Rechercher dans mes analyses",
+      "placeholder": "Rechercher une analyse…"
+    },
+    "total": "{count, plural, one {# analyse} other {# analyses}}",
+    "type": {
+      "tableau": "Tableau",
+      "graphique": "Graphique",
+      "indicateurs": "Indicateurs",
+      "document": "Document"
+    },
+    "enregistreeLe": "Enregistrée le {date}",
+    "partagee": "Partagée",
+    "ouvrir": "Ouvrir",
+    "ouvrirAria": "Ouvrir l'analyse « {titre} »",
+    "retirer": "Retirer",
+    "retirerAria": "Retirer l'analyse « {titre} » de Mes analyses",
+    "retirerTitre": "Retirer cette analyse de Mes analyses ?",
+    "retirerTexte": "« {titre} » ne figurera plus dans cette liste. L'analyse elle-même n'est pas supprimée : vous pourrez l'enregistrer de nouveau depuis l'assistant.",
+    "retirerConfirmer": "Retirer",
+    "annuler": "Annuler",
+    "retireOk": "Analyse retirée de Mes analyses.",
+    "chargerPlus": "Charger plus",
+    "chargement": "Chargement des analyses…",
+    "vide": {
+      "titre": "Aucune analyse enregistrée",
+      "texte": "Pour en ajouter une, posez une question à l'assistant Data Genius, puis choisissez « Enregistrer dans Mes analyses » sous le résultat.",
+      "rechercheTitre": "Aucun résultat",
+      "rechercheTexte": "Aucune analyse ne correspond à cette recherche."
+    },
+    "erreur": {
+      "titre": "Impossible de charger cette liste",
+      "texte": "Une erreur est survenue. Vos données ne sont pas perdues.",
+      "reessayer": "Réessayer"
+    },
+    "retour": "Retour à Mes analyses",
+    "titreRepli": "Analyse"
+  },
+  "partagesRecus": {
+    "titre": "Partagés avec moi",
+    "chargement": "Chargement des partages…",
+    "chargerPlus": "Charger plus",
+    "vide": {
+      "titre": "Rien n'a été partagé avec vous",
+      "texte": "Quand un collègue partage une conversation ou une analyse avec vous, elle apparaît ici."
+    },
+    "de": "De {nom}",
+    "cible": {
+      "conversation": "Conversation",
+      "artefact": "Analyse"
+    },
+    "partageLe": "Partagé le {date}",
+    "ouvrirConversation": "Ouvrir la conversation",
+    "ouvrirArtefact": "Ouvrir l'analyse",
+    "ouvrirAria": "Ouvrir « {titre} »",
+    "compteDisparu": "Compte indisponible",
+    "erreur": {
+      "titre": "Impossible de charger les partages",
+      "texte": "Une erreur est survenue. Réessayez dans un instant.",
+      "reessayer": "Réessayer"
+    },
+    "envoyes": {
+      "titre": "Que j'ai partagé",
+      "chargement": "Chargement de vos partages…",
+      "vide": "Vous n'avez encore rien partagé.",
+      "a": "À {nom}"
+    },
+    "retirer": {
+      "annuler": "Annuler",
+      "envoye": {
+        "bouton": "Retirer le partage",
+        "aria": "Retirer le partage de « {titre} »",
+        "titre": "Retirer ce partage ?",
+        "texte": "{nom} ne pourra plus ouvrir « {titre} » et ses épingles du tableau de bord sur ce contenu seront supprimées.",
+        "confirmer": "Retirer le partage",
+        "ok": "Partage retiré"
+      },
+      "recu": {
+        "bouton": "Ne plus voir",
+        "aria": "Ne plus voir « {titre} »",
+        "titre": "Ne plus voir ce contenu ?",
+        "texte": "« {titre} » disparaîtra de votre liste et vos épingles du tableau de bord sur ce contenu seront supprimées. Vous ne pourrez plus l'ouvrir.",
+        "confirmer": "Ne plus voir",
+        "ok": "Le contenu n'apparaît plus dans votre liste"
+      }
+    }
+  },
+  "taches": {
+    "titre": "Mes tâches",
+    "filtres": {
+      "aria": "Filtrer les tâches",
+      "a_faire": "À faire",
+      "en_retard": "En retard",
+      "terminee": "Terminées"
+    },
+    "priorite": {
+      "basse": "Priorité basse",
+      "normale": "Priorité normale",
+      "haute": "Priorité haute"
+    },
+    "echeance": "Échéance : {date}",
+    "sansEcheance": "Sans échéance",
+    "enRetard": "En retard",
+    "termineeLe": "Terminée le {date}",
+    "assigneA": "Assignée à {nom}",
+    "assigneAMoi": "Assignée à vous",
+    "creeePar": "Créée par {nom}",
+    "marquerTerminee": "Marquer comme terminée",
+    "marquerAria": "Marquer la tâche « {titre} » comme terminée",
+    "rouvrir": "Rouvrir",
+    "rouvrirAria": "Rouvrir la tâche « {titre} »",
+    "voirConversation": "Voir la conversation",
+    "chargement": "Chargement des tâches…",
+    "vide": {
+      "a_faire": "Aucune tâche à faire. Les tâches créées par l'assistant et assignées à vous apparaissent ici.",
+      "en_retard": "Aucune tâche en retard.",
+      "terminee": "Aucune tâche terminée pour le moment."
+    },
+    "erreur": {
+      "titre": "Impossible de charger les tâches",
+      "texte": "Une erreur est survenue. Réessayez dans un instant.",
+      "reessayer": "Réessayer"
+    }
+  },
+  "rapports": {
+    "titre": "Rapports programmés",
+    "chargement": "Chargement des rapports…",
+    "vide": {
+      "titre": "Aucun rapport programmé",
+      "texte": "Pour en créer un, ouvrez une analyse et choisissez « Programmer » : elle sera recalculée et envoyée par e-mail à l'heure choisie."
+    },
+    "erreur": {
+      "titre": "Impossible de charger les rapports",
+      "texte": "Une erreur est survenue. Réessayez dans un instant.",
+      "reessayer": "Réessayer"
+    },
+    "frequence": {
+      "quotidien": "Tous les jours à {heure} (heure de Paris)",
+      "hebdomadaire": "Chaque {jour} à {heure} (heure de Paris)",
+      "mensuel": "{jourMois, selectordinal, one {Le #er} other {Le #}} de chaque mois à {heure} (heure de Paris)"
+    },
+    "jours": {
+      "1": "lundi",
+      "2": "mardi",
+      "3": "mercredi",
+      "4": "jeudi",
+      "5": "vendredi",
+      "6": "samedi",
+      "7": "dimanche"
+    },
+    "formats": "Formats : {formats}",
+    "format": {
+      "xlsx": "Excel",
+      "pdf": "PDF",
+      "csv": "CSV"
+    },
+    "destinataires": "Destinataires : {noms}",
+    "compteDisparu": "compte indisponible",
+    "prochainEnvoi": "Prochain envoi : {date}",
+    "aucunProchainEnvoi": "Aucun envoi prévu",
+    "dernierEnvoi": "Dernier envoi : {date}",
+    "jamaisEnvoye": "Pas encore envoyé",
+    "statut": {
+      "ok": "Envoyé",
+      "partiel": "Envoi partiel",
+      "echec": "Échec"
+    },
+    "raison": {
+      "proprietaire_sans_acces": "Vous n'avez plus accès à Data Genius : le rapport a été mis en pause.",
+      "artefact_introuvable": "L'analyse n'existe plus.",
+      "planning_invalide": "Le planning de ce rapport n'est plus valide.",
+      "aucun_destinataire": "Aucun destinataire valide.",
+      "export_impossible": "Les fichiers n'ont pas pu être générés.",
+      "envoi_impossible": "Les e-mails n'ont pas pu être envoyés.",
+      "erreur_interne": "Une erreur interne est survenue.",
+      "destinataires_ecartes": "Certains destinataires ont été écartés car ils n'ont plus accès à Data Genius.",
+      "envoi_partiel": "Certains e-mails n'ont pas pu être envoyés.",
+      "inconnue": "Cause inconnue."
+    },
+    "actif": "Actif",
+    "pause": "En pause",
+    "interrupteurAria": "Rapport « {titre} » : activer ou mettre en pause",
+    "ouvrirAnalyse": "Ouvrir l'analyse",
+    "supprimer": "Supprimer",
+    "supprimerAria": "Supprimer le rapport programmé « {titre} »",
+    "supprimerTitre": "Supprimer ce rapport programmé ?",
+    "supprimerTexte": "Plus aucun e-mail ne sera envoyé pour « {titre} ». L'analyse n'est pas supprimée.",
+    "supprimerConfirmer": "Supprimer",
+    "annuler": "Annuler",
+    "supprimeOk": "Rapport programmé supprimé."
+  },
+  "epingles": {
+    "titre": "Mes épingles",
+    "ouvrir": "Ouvrir",
+    "ouvrirAria": "Ouvrir l'analyse « {titre} »",
+    "desepingler": "Désépingler",
+    "desepinglerAria": "Désépingler « {titre} » du tableau de bord"
+  }
+}

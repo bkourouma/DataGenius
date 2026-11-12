@@ -1,0 +1,376 @@
+{
+  "titre": "Data Genius",
+  "graphique": {
+    "autres": "أخرى",
+    "total": "المجموع",
+    "objectif": "الهدف",
+    "aucuneDonnee": "لا توجد بيانات للعرض",
+    "sansValeur": "غير مُدخل",
+    "titreAccessible": "رسم بياني {forme}: {mesures}",
+    "descriptionAccessible": "{series, plural, zero {لا سلاسل} one {سلسلة واحدة} two {سلسلتان} few {# سلاسل} many {# سلسلة} other {# سلسلة}}، {points, plural, zero {لا نقاط} one {نقطة واحدة} two {نقطتان} few {# نقاط} many {# نقطة} other {# نقطة}}",
+    "forme": {
+      "barres": "أعمدة",
+      "barres_empilees": "أعمدة مكدّسة",
+      "barres_horizontales": "أعمدة أفقية",
+      "lignes": "خطوط",
+      "aires": "مساحات",
+      "secteurs": "دائري",
+      "anneau": "حلقي",
+      "nuage": "مبعثر النقاط",
+      "combine": "أعمدة وخطوط",
+      "carte_chaleur": "خريطة حرارية",
+      "treemap": "خريطة شجرية",
+      "entonnoir": "قمعي",
+      "jauge": "مقياس"
+    }
+  },
+  "tableau": {
+    "regionLabel": "جدول: {titre}",
+    "chargement": "جارٍ تحميل الجدول",
+    "erreur": "تعذّر عرض هذا الجدول.",
+    "total": "المجموع",
+    "nbLignes": "{n, plural, zero {لا أسطر} one {سطر واحد} two {سطران} few {# أسطر} many {# سطرًا} other {# سطر}}",
+    "tronque": "تُعرض أول {n, number} سطرًا فقط؛ نزّل الملف الكامل للحصول على كل البيانات.",
+    "agregats": {
+      "somme": "المجموع",
+      "moyenne": "المتوسط",
+      "min": "الحد الأدنى",
+      "max": "الحد الأقصى",
+      "nombre": "العدد"
+    },
+    "vide": {
+      "titre": "لا أسطر وفق عوامل التصفية هذه",
+      "description": "لا يوجد أي سطر في مجموعة البيانات يطابق عوامل تصفية هذا الجدول.",
+      "reinitialiser": "إعادة تعيين عوامل التصفية",
+      "titreSansFiltre": "لا أسطر للعرض",
+      "descriptionSansFiltre": "مجموعة البيانات فارغة لهذه الفترة وهذا النطاق."
+    },
+    "copie": {
+      "succes": "تم نسخ الجدول: الصقه في Excel",
+      "echec": "فشل النسخ. حدّد الجدول وانسخه يدويًا."
+    },
+    "modifierPivot": "تعديل الجدول المحوري",
+    "avertissements": {
+      "sommePourcentage": "جمع النسب المئوية لا معنى له: اختر المتوسط أو الحد الأدنى أو الحد الأقصى بدلًا من ذلك."
+    },
+    "pivot": {
+      "titre": "جدول محوري",
+      "aide": "جمّع الأسطر حسب حقل واحد أو أكثر، وانشر حقولًا أخرى في أعمدة، واختر القيم المراد حسابها.",
+      "vue": "العرض",
+      "vueTableau": "جدول",
+      "vueCroise": "جدول محوري",
+      "lignes": "في الأسطر",
+      "colonnes": "في الأعمدة",
+      "valeurs": "القيم",
+      "champLigne": "حقل الأسطر {n}",
+      "champColonne": "حقل الأعمدة {n}",
+      "champValeur": "حقل القيمة {n}",
+      "agregatValeur": "حساب القيمة {n}",
+      "choisir": "اختر حقلًا",
+      "ajouterLigne": "إضافة حقل إلى الأسطر",
+      "ajouterColonne": "إضافة حقل إلى الأعمدة",
+      "ajouterValeur": "إضافة قيمة",
+      "retirerChamp": "إزالة الحقل {n}",
+      "retirerValeur": "إزالة القيمة {n}",
+      "retirer": "إزالة الجدول المحوري",
+      "limiteLignes": "ثلاثة حقول كحد أقصى في الأسطر.",
+      "limiteColonnes": "حقلان كحد أقصى في الأعمدة.",
+      "limiteValeurs": "ست قيم كحد أقصى.",
+      "minLignes": "يلزم حقل واحد على الأقل في الأسطر.",
+      "minValeurs": "يلزم قيمة واحدة على الأقل.",
+      "doublon": "لا يمكن استخدام الحقل إلا مرة واحدة، في الأسطر أو في الأعمدة.",
+      "doublonValeur": "هذه القيمة موجودة في الجدول بالفعل.",
+      "aucunChampLigne": "لا يوجد حقل متاح للأسطر.",
+      "aucunChampValeur": "لا يوجد حقل رقمي متاح للقيم."
+    }
+  },
+  "graphiqueUi": {
+    "chargement": "جارٍ تحميل الرسم البياني",
+    "erreurChargement": "تعذّر تحميل الرسم البياني.",
+    "reessayer": "إعادة المحاولة",
+    "videTitre": "لا توجد بيانات للعرض",
+    "videAide": "لا توجد نقاط للرسم في الفترة والنطاق المحددين.",
+    "ariaLabel": "{titre}. {description}",
+    "pngIndisponible": "الرسم البياني غير جاهز بعد: أعد المحاولة بعد لحظة.",
+    "selecteur": {
+      "libelle": "شكل الرسم البياني",
+      "indisponible": "{forme} (غير متاح): {motif}"
+    },
+    "avertissements": {
+      "liste": "ملاحظات حول العرض",
+      "forme_changee": "العرض بشكل {vers}: أكثر من {max} فئة",
+      "limite_appliquee": "أعلى {n} من أصل {total}: يُجمَّع الباقي أو يُخفى",
+      "serie_ignoree": "{n, plural, zero {لا مقاييس مُهملة} one {تم إهمال مقياس واحد} two {تم إهمال مقياسين} few {تم إهمال # مقاييس} many {تم إهمال # مقياسًا} other {تم إهمال # مقياس}}: الشكل {forme} لا يعرض سوى مقياس واحد"
+    },
+    "motifs": {
+      "trop_de_categories": "أكثر من {max} فئة: سيصبح هذا الشكل غير مقروء، والأعمدة الأفقية أنسب.",
+      "une_mesure_requise": "هذا الشكل لا يعرض سوى مقياس واحد.",
+      "deux_mesures_requises": "هذا الشكل يتطلب مقياسين على الأقل.",
+      "serie_requise": "هذا الشكل يتطلب بُعدًا ثانيًا لتكوين السلاسل.",
+      "categories_insuffisantes": "هذا الشكل يتطلب فئتين على الأقل."
+    },
+    "changement": {
+      "refuse": "التغيير غير ممكن: {motif}",
+      "remplace": "تم استبدال الشكل بـ «{forme}»: {motif}"
+    }
+  },
+  "indicateurs": {
+    "liste": "المؤشرات",
+    "aucun": "لا توجد مؤشرات للعرض",
+    "donneeIndisponible": "البيانات غير متاحة",
+    "tendance": {
+      "hausse": "في ارتفاع",
+      "baisse": "في انخفاض",
+      "stable": "مستقر"
+    },
+    "variationIndisponible": "التغير غير متاح",
+    "variation": "{variation} {sens}",
+    "reference": "{libelle}: {valeur}",
+    "objectif": "الهدف: {valeur}",
+    "objectifNomme": "{libelle}: {valeur}",
+    "taux": "نسبة التحقيق: {taux}",
+    "tauxIndisponible": "نسبة التحقيق غير متاحة",
+    "statut": {
+      "atteint": "المُحقَّق",
+      "en_cours": "قيد التنفيذ",
+      "a_risque": "معرّض للخطر"
+    }
+  },
+  "document": {
+    "region": "مستند: {titre}",
+    "indisponible": "عنصر المستند هذا لم يعد متاحًا.",
+    "artefactIndisponible": "العنصر غير متاح",
+    "artefactIndisponibleAide": "ربما تم حذفه، أو لم يعد لديك حق الوصول إليه.",
+    "graphiqueIndisponible": "بيانات هذا الرسم البياني غير متاحة.",
+    "tableauIndisponible": "بيانات هذا الجدول غير متاحة.",
+    "vide": "هذا المستند فارغ.",
+    "tableDesMatieres": {
+      "titre": "في هذا المستند",
+      "region": "جدول المحتويات",
+      "ouvrir": "عرض جدول المحتويات",
+      "replier": "إخفاء جدول المحتويات",
+      "aller": "الانتقال إلى القسم {titre}"
+    }
+  },
+  "panneau": {
+    "titre": "العناصر",
+    "region": "لوحة العناصر",
+    "listeOnglets": "عناصر المحادثة",
+    "contenu": "محتوى العنصر",
+    "fermer": "إغلاق اللوحة",
+    "agrandir": "تكبير اللوحة",
+    "reduire": "تصغير اللوحة",
+    "pleinEcran": "لوحة العناصر بملء الشاشة",
+    "chargement": "جارٍ تحميل العنصر",
+    "chargementListe": "جارٍ تحميل العناصر",
+    "reessayer": "إعادة المحاولة",
+    "vide": {
+      "titre": "لا توجد عناصر حتى الآن",
+      "texte": "اطلب جدولًا أو رسمًا بيانيًا أو تقريرًا في المحادثة: سيظهر هنا."
+    },
+    "lectureSeule": "للقراءة فقط",
+    "version": {
+      "etiquette": "الإصدار",
+      "libelle": "v{n}",
+      "libelleDate": "v{n} · {date}",
+      "actuelle": "الحالي",
+      "bandeau": "أنت تطّلع على الإصدار {n}، للقراءة فقط.",
+      "revenir": "العودة إلى الأحدث"
+    },
+    "vue": {
+      "groupe": "العرض",
+      "graphique": "رسم بياني",
+      "tableau": "جدول"
+    },
+    "copier": "نسخ",
+    "copieReussie": "تم نسخ الجدول، جاهز للصقه في Excel",
+    "copieEchec": "فشل النسخ",
+    "comment": "كيف تم الحساب",
+    "jeuNumero": "مجموعة البيانات {n} من {total}",
+    "apercu": {
+      "vide": "هذا العنصر لا يحتوي على شيء للعرض."
+    },
+    "enregistrement": {
+      "enCours": "جارٍ الحفظ…",
+      "enregistre": "تم الحفظ",
+      "erreur": "فشل الحفظ"
+    },
+    "types": {
+      "tableau": "جدول",
+      "graphique": "رسم بياني",
+      "indicateurs": "المؤشرات",
+      "document": "مستند"
+    }
+  },
+  "carte": {
+    "ouvrir": "فتح",
+    "ouvrirAria": "فتح العنصر {titre}",
+    "types": {
+      "tableau": "جدول",
+      "graphique": "رسم بياني",
+      "indicateurs": "المؤشرات",
+      "document": "مستند"
+    },
+    "resume": {
+      "tableau": "جدول · {n, plural, zero {لا أسطر} one {سطر واحد} two {سطران} few {# أسطر} many {# سطرًا} other {# سطر}}",
+      "graphique": "رسم بياني · {forme}",
+      "indicateurs": "{n, plural, zero {لا مؤشرات} one {مؤشر واحد} two {مؤشران} few {# مؤشرات} many {# مؤشرًا} other {# مؤشر}}",
+      "document": "مستند"
+    }
+  },
+  "provenance": {
+    "titre": "كيف تم الحساب",
+    "source": "المصدر",
+    "periode": "الفترة",
+    "perimetre": "النطاق",
+    "filtres": "عوامل التصفية",
+    "filtre": "{libelle}: {valeur}",
+    "aucunFiltre": "بدون عوامل تصفية",
+    "regles": "القواعد المطبَّقة",
+    "lienEcran": "شاشة Data Genius المقابلة",
+    "sql": "استعلام SQL (مخصص للمسؤولين)",
+    "copierSql": "نسخ الاستعلام",
+    "sqlCopiee": "تم نسخ الاستعلام",
+    "copieEchec": "فشل النسخ",
+    "calculeLe": "تم الحساب في {date}"
+  },
+  "telechargement": {
+    "bouton": "تنزيل",
+    "enCours": "جارٍ التنزيل",
+    "menu": "صيغ التنزيل",
+    "formats": {
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "pdf": "PDF (.pdf)",
+      "png": "صورة PNG (.png)",
+      "pptx": "PowerPoint (.pptx)"
+    },
+    "reussi": "تم تنزيل {format}",
+    "echec": "فشل التنزيل"
+  },
+  "exports": {
+    "exporteLe": "تم التصدير في {date}",
+    "page": "الصفحة {page} من {total}",
+    "total": "المجموع",
+    "feuilleDonnees": "البيانات",
+    "feuilleProvenance": "المصدر والحساب",
+    "feuilleIndicateurs": "المؤشرات",
+    "fichierSansTitre": "تصدير Data Genius",
+    "agregats": {
+      "somme": "المجموع",
+      "moyenne": "المتوسط",
+      "min": "الحد الأدنى",
+      "max": "الحد الأقصى",
+      "nombre": "العدد"
+    },
+    "provenance": {
+      "source": "المصدر",
+      "periode": "الفترة",
+      "perimetre": "النطاق",
+      "filtres": "عوامل التصفية",
+      "regles": "قواعد الحساب",
+      "calculeLe": "تاريخ الحساب",
+      "lienEcran": "الشاشة المصدر",
+      "exportePar": "صدّره {nom}",
+      "aucun": "لا شيء"
+    },
+    "lignesContexte": {
+      "source": "المصدر: {valeur}",
+      "periode": "الفترة: {valeur}",
+      "perimetre": "النطاق: {valeur}"
+    },
+    "indicateurs": {
+      "indicateur": "المؤشر",
+      "valeur": "القيمة",
+      "comparaison": "المقارنة",
+      "valeurComparaison": "قيمة المقارنة",
+      "variation": "التغير (%)",
+      "objectif": "الهدف",
+      "valeurObjectif": "قيمة الهدف",
+      "taux": "نسبة التحقيق (%)",
+      "statut": "الحالة",
+      "statuts": {
+        "atteint": "المُحقَّق",
+        "enCours": "قيد التنفيذ",
+        "aRisque": "معرّض للخطر"
+      }
+    },
+    "erreurs": {
+      "introuvable": "هذا العنصر غير موجود أو ليس لديك حق الوصول إليه.",
+      "formatNonSupporte": "صيغة التصدير هذه غير متاحة لهذا العنصر.",
+      "formatInvalide": "صيغة التصدير غير معروفة. الصيغ المقبولة: xlsx وcsv وpdf وpptx.",
+      "tropDeLignes": "يحتوي هذا العنصر على عدد كبير جدًا من الأسطر للتصدير. ضيّق عوامل التصفية ثم أعد المحاولة.",
+      "limiteDebit": "تم طلب عدد كبير جدًا من عمليات إعادة حساب البيانات. أعد محاولة التصدير بعد {minutes, plural, zero {# دقيقة} one {دقيقة واحدة} two {دقيقتين} few {# دقائق} many {# دقيقة} other {# دقيقة}}.",
+      "echec": "فشل التصدير. أعد المحاولة بعد لحظة."
+    }
+  },
+  "exportsPdf": {
+    "marque": "Data Genius",
+    "sommaire": "الفهرس",
+    "sourcesEtCalcul": "المصادر والحساب",
+    "troncature": "{n, plural, zero {لا أسطر معروضة} one {سطر واحد معروض} two {سطران معروضان} few {# أسطر معروضة} many {# سطرًا معروضًا} other {# سطر معروض}} من أصل {total, number}: نزّل تصدير Excel للحصول على كل الأسطر.",
+    "partieColonnes": "الأعمدة {debut} إلى {fin} من {total}",
+    "graphiqueIndisponible": "تعذّر رسم الرسم البياني: بياناته معروضة في الجدول أدناه.",
+    "limiteAppliquee": "يعرض الرسم البياني أول {n} عنصرًا من أصل {total}؛ وتُجمَّع بقية العناصر.",
+    "libelleValeur": "{libelle}: {valeur}",
+    "indicateurs": {
+      "nonDisponible": "غير متاح",
+      "variation": "التغير: {valeur}",
+      "variationSens": "التغير: {valeur} ({sens})",
+      "realisation": "التحقيق: {valeur}",
+      "sens": {
+        "hausse": "في ارتفاع",
+        "baisse": "في انخفاض",
+        "stable": "مستقر"
+      }
+    }
+  },
+  "exportsPptx": {
+    "marque": "Data Genius",
+    "sourcesEtCalcul": "المصادر والحساب",
+    "suite": "{titre} (تابع)",
+    "donneesDuGraphique": "{titre}: البيانات",
+    "imageNonModifiable": "هذا النوع من الرسوم البيانية غير موجود في PowerPoint: يُدرج كصورة ولا يمكن تعديله.",
+    "graphiqueIndisponible": "تعذّر إنشاء الرسم البياني: بياناته معروضة في الشريحة التالية.",
+    "troncature": "{n, plural, zero {لا أسطر معروضة} one {سطر واحد معروض} two {سطران معروضان} few {# أسطر معروضة} many {# سطرًا معروضًا} other {# سطر معروض}} من أصل {total, number}: نزّل تصدير Excel للحصول على كل الأسطر.",
+    "partieColonnes": "الأعمدة {debut} إلى {fin} من {total}",
+    "limiteAppliquee": "يعرض الرسم البياني أول {n} عنصرًا من أصل {total}؛ وتُجمَّع بقية العناصر.",
+    "libelleValeur": "{libelle}: {valeur}",
+    "titresParDefaut": {
+      "texte": "نص",
+      "tableau": "جدول",
+      "graphique": "رسم بياني",
+      "indicateurs": "المؤشرات"
+    },
+    "indicateurs": {
+      "nonDisponible": "غير متاح",
+      "variation": "التغير: {valeur}",
+      "variationSens": "التغير: {valeur} ({sens})",
+      "realisation": "التحقيق: {valeur}",
+      "sens": {
+        "hausse": "في ارتفاع",
+        "baisse": "في انخفاض",
+        "stable": "مستقر"
+      }
+    }
+  },
+  "formes": {},
+  "erreurs": {
+    "chargement": "تعذّر تحميل هذا العنصر. تحقق من اتصالك ثم أعد المحاولة.",
+    "introuvable": "هذا العنصر غير موجود أو ليس لديك حق الوصول إليه.",
+    "liste": "تعذّر تحميل قائمة العناصر.",
+    "jeuManquant": "بيانات هذا العنصر غير متاحة.",
+    "limiteDebit": "تم بلوغ حد إعادة الحساب حاليًا. أعد المحاولة بعد {minutes, plural, zero {# دقيقة} one {دقيقة واحدة} two {دقيقتين} few {# دقائق} many {# دقيقة} other {# دقيقة}}.",
+    "enregistrement": "فشل الحفظ: تمت استعادة آخر إصدار محفوظ.",
+    "conflit": "تم تعديل هذا العنصر في هذه الأثناء: يُعرض الإصدار الأحدث ولم يُحفظ تعديلك.",
+    "telechargement": {
+      "reseau": "تعذّر الوصول إلى الخادم. تحقق من اتصالك ثم أعد المحاولة.",
+      "refuse": "ليس لديك حق الوصول إلى هذا التنزيل. أعد تسجيل الدخول ثم أعد المحاولة.",
+      "introuvable": "هذا العنصر غير موجود أو ليس لديك حق الوصول إليه.",
+      "format": "هذه الصيغة غير متاحة لهذا العنصر.",
+      "tropDeLignes": "يحتوي هذا العنصر على عدد كبير جدًا من الأسطر للتصدير. ضيّق عوامل التصفية ثم أعد المحاولة.",
+      "echec": "فشل التنزيل. أعد المحاولة بعد لحظة.",
+      "png": "تعذّر إنشاء صورة الرسم البياني."
+    }
+  }
+}

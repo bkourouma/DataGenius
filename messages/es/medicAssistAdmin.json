@@ -1,0 +1,287 @@
+{
+  "titre": "Data Genius",
+  "page": {
+    "titre": "Administración de Data Genius",
+    "sousTitre": "Elija el proveedor y los modelos, siga los usos y los costes, y revise las valoraciones de los usuarios."
+  },
+  "acces": {
+    "titre": "Acceso reservado a los administradores",
+    "description": "La administración de Data Genius está reservada a los administradores. Si necesita este acceso, diríjase a un administrador de Data Genius.",
+    "retour": "Volver al panel de control"
+  },
+  "onglets": {
+    "liste": "Secciones de la administración",
+    "configuration": "Configuración",
+    "usages": "Usos y costes",
+    "avis": "Valoraciones"
+  },
+  "fournisseurs": {
+    "anthropic": "Anthropic (Claude)",
+    "openai": "OpenAI",
+    "google": "Google (Gemini)",
+    "deepseek": "DeepSeek"
+  },
+  "modes": {
+    "standard": "Estándar",
+    "profond": "Profundo",
+    "rapide": "Rápido",
+    "transcription": "Transcripción"
+  },
+  "erreurs": {
+    "generique": "Se ha producido un error. Inténtelo de nuevo en un momento.",
+    "reseau": "El servidor no responde. Compruebe su conexión e inténtelo de nuevo.",
+    "nonAutorise": "Su sesión ha caducado. Vuelva a iniciar sesión e inténtelo de nuevo.",
+    "interdit": "No tiene los permisos necesarios para esta acción."
+  },
+  "erreursApi": {
+    "validationInvalide": "Se ha rechazado un valor enviado. Revise lo introducido.",
+    "jeuIntrouvable": "No se encuentra este conjunto de datos.",
+    "accesRefuse": "No tiene acceso a estos datos.",
+    "jeuNonRecalculable": "Este conjunto de datos ya no se puede recalcular.",
+    "limite_debit_donnees": "Demasiados cálculos pesados en poco tiempo. Espere unos minutos y vuelva a intentarlo.",
+    "roleLectureAbsent": "Los datos no están disponibles por el momento. Un administrador debe intervenir; inténtelo de nuevo más tarde.",
+    "briefingIndisponible": "El resumen no está disponible por el momento.",
+    "erreurServeur": "El servidor ha encontrado un error. Inténtelo de nuevo en un momento.",
+    "aucunChamp": "No hay cambios que guardar.",
+    "fournisseurIndisponible": "Este proveedor no tiene ninguna clave instalada en el servidor.",
+    "periodeInvalide": "El periodo no es válido: el inicio debe ser anterior al final, dentro del límite permitido.",
+    "fichierAbsent": "No se ha recibido ningún archivo.",
+    "fichierTropGros": "Este archivo supera los 10 MB.",
+    "fichierTropVolumineuxDecompresse": "Este libro es demasiado grande una vez descomprimido. Redúzcalo e inténtelo de nuevo.",
+    "extensionRefusee": "Este tipo de archivo no se acepta. Use un archivo xlsx, csv, pdf o txt.",
+    "formatXlsNonPrisEnCharge": "El formato xls no es compatible. Guarde el archivo como xlsx.",
+    "nomInvalide": "El nombre del archivo no es válido. Cámbielo e inténtelo de nuevo.",
+    "fichierVide": "Este archivo está vacío.",
+    "signatureIncoherente": "El contenido del archivo no corresponde a su extensión.",
+    "classeurIllisible": "Este libro es ilegible o está dañado.",
+    "classeurProtege": "Este libro está protegido con contraseña. Quite la protección e inténtelo de nuevo.",
+    "pdfSansTexte": "Este PDF no contiene texto legible (¿documento escaneado?).",
+    "pdfProtege": "Este PDF está protegido con contraseña.",
+    "pdfIllisible": "Este PDF es ilegible o está dañado.",
+    "pdfNonDisponible": "La lectura de PDF no está disponible en el servidor por el momento.",
+    "csvIllisible": "Este archivo CSV no se puede leer o está mal formado.",
+    "conversationIntrouvable": "No se encuentra esta conversación.",
+    "pieceJointeIntrouvable": "No se encuentra este archivo adjunto.",
+    "feuilleIntrouvable": "No se encuentra esta hoja en el libro.",
+    "plageInvalide": "El rango de celdas solicitado no es válido.",
+    "fichierStockeIntrouvable": "El archivo ya no está disponible. Adjúntelo de nuevo.",
+    "transcriptionIndisponible": "El dictado por el servidor no está activado. Use el dictado del navegador.",
+    "transcriptionEchec": "La transcripción ha fallado. Inténtelo de nuevo o escriba su mensaje.",
+    "audioAbsent": "No se ha recibido ninguna grabación de audio.",
+    "audioTropGros": "Esta grabación supera los 10 MB.",
+    "audioFormatRefuse": "Este formato de audio no se acepta.",
+    "audioVide": "La grabación está vacía. Hable más cerca del micrófono e inténtelo de nuevo."
+  },
+  "commun": {
+    "reessayer": "Reintentar",
+    "chargement": "Cargando"
+  },
+  "configuration": {
+    "chargement": "Cargando la configuración",
+    "erreurChargement": "No se ha podido cargar la configuración.",
+    "maj": {
+      "par": "Modificada por {nom} el {date}.",
+      "le": "Modificada el {date}.",
+      "jamais": "Nunca modificada: se aplican los valores por defecto."
+    },
+    "fournisseur": {
+      "titre": "Proveedor de IA",
+      "aide": "El proveedor responde a todas las preguntas hechas a Data Genius. Solo se pueden elegir los proveedores cuya clave está instalada en el servidor.",
+      "disponible": "Clave instalada",
+      "indisponible": "No disponible: añada la variable {variable} en el servidor.",
+      "courantIndisponible": "El proveedor guardado ya no tiene clave en el servidor. Añada la variable {variable} o elija otro proveedor."
+    },
+    "modeles": {
+      "titre": "Modelos",
+      "aide": "Un modelo por modo. Introduzca el identificador exacto del modelo en el proveedor elegido.",
+      "libelle": "Modelo del modo {mode}",
+      "defaut": "Por defecto en este proveedor: {modele}",
+      "defautAChoisir": "Este proveedor no tiene modelo por defecto: elija uno.",
+      "utiliserDefaut": "Valor por defecto",
+      "utiliserDefautPour": "Restablecer el valor por defecto del modo {mode}",
+      "vide": "Introduzca un modelo.",
+      "invalide": "Identificador rechazado: letras, cifras, punto, guion, dos puntos o barra, 100 caracteres como máximo.",
+      "aideMode": {
+        "standard": "Respuestas habituales a las preguntas.",
+        "profond": "Análisis en profundidad, más lento y más costoso.",
+        "rapide": "Respuestas cortas y preguntas de seguimiento sugeridas."
+      },
+      "tarif": "Tarifa: {entree} de entrada y {sortie} de salida, por millón de tokens.",
+      "tarifInconnu": "Tarifa desconocida: el coste no se estima."
+    },
+    "test": {
+      "bouton": "Probar",
+      "boutonPour": "Probar el modelo del modo {mode}",
+      "enCours": "Prueba en curso",
+      "succes": "El modelo {modele} responde en {latence, number} ms.",
+      "echec": "La prueba ha fallado: {erreur}",
+      "echecGenerique": "La prueba no ha terminado.",
+      "erreurs": {
+        "delai": "El modelo no ha respondido a tiempo.",
+        "clefRefusee": "El proveedor ha rechazado la clave instalada en el servidor.",
+        "modeleIntrouvable": "Este modelo no existe en el proveedor.",
+        "limite": "El proveedor limita las llamadas por ahora. Inténtelo más tarde.",
+        "indisponible": "El proveedor no está disponible por ahora.",
+        "reseau": "El proveedor no ha respondido (red).",
+        "certificat": "Conexión con el proveedor rechazada: certificado no reconocido (cortafuegos o proxy que inspecciona el tráfico).",
+        "inconnue": "El proveedor ha respondido con un error inesperado."
+      }
+    },
+    "transcription": {
+      "titre": "Dictado por voz",
+      "aide": "Elija quién transcribe la voz. Sin motor en el servidor, solo se ofrece el dictado del navegador.",
+      "libelle": "Motor de transcripción",
+      "navigateur": "Solo dictado del navegador",
+      "navigateurDescription": "No se envía ninguna grabación al servidor de Data Genius.",
+      "modele": "Modelo de transcripción",
+      "suggestion": "Sugerencia: {modele}",
+      "utiliserSuggestion": "Usar la sugerencia"
+    },
+    "taux": {
+      "titre": "Tipo de cambio EUR/USD",
+      "libelle": "Euros por 1 dólar",
+      "aide": "Tipo fijo por defecto: {defaut}, modificable. Convierte a euros los costes calculados en dólares en la pestaña Usos y costes.",
+      "sourceConfig": "Tipo introducido por un administrador.",
+      "sourceDefaut": "Ningún tipo introducido: se aplica el tipo por defecto.",
+      "invalide": "Introduzca un número mayor que cero."
+    },
+    "actions": {
+      "enregistrer": "Guardar",
+      "enregistrement": "Guardando",
+      "annuler": "Descartar los cambios",
+      "nonEnregistre": "Cambios sin guardar",
+      "aJour": "Ningún cambio pendiente",
+      "succes": "Configuración guardada.",
+      "erreur": "No se ha guardado la configuración."
+    }
+  },
+  "usages": {
+    "chargement": "Cargando los usos",
+    "erreurChargement": "No se han podido cargar los usos.",
+    "periode": {
+      "debut": "Desde",
+      "fin": "Hasta",
+      "raccourcis": "Atajos de periodo",
+      "jours7": "7 días",
+      "jours30": "30 días",
+      "jours90": "90 días",
+      "moisCourant": "Mes en curso",
+      "ordreInvalide": "La fecha de inicio debe ser anterior a la fecha de fin.",
+      "tropLongue": "El periodo no puede superar {jours, number} días."
+    },
+    "filtres": {
+      "fournisseur": "Proveedor",
+      "mode": "Modo",
+      "tous": "Todos"
+    },
+    "groupement": {
+      "libelle": "Agrupar por",
+      "jour": "Día",
+      "mois": "Mes"
+    },
+    "totaux": {
+      "titre": "Totales del periodo",
+      "coutEur": "Coste (EUR)",
+      "coutUsd": "Coste (USD)",
+      "requetes": "Solicitudes",
+      "tokensEntree": "Tokens de entrada",
+      "tokensSortie": "Tokens de salida",
+      "tokensCacheLecture": "Tokens leídos de la caché",
+      "tokensCacheEcriture": "Tokens escritos en la caché",
+      "tauxConfig": "Conversión al tipo de {taux} euros por dólar, introducido por un administrador.",
+      "tauxDefaut": "Conversión al tipo de {taux} euros por dólar, tipo por defecto."
+    },
+    "evolution": {
+      "titre": {
+        "jour": "Evolución por día",
+        "mois": "Evolución por mes"
+      },
+      "metrique": "Mostrar",
+      "coutEur": "Coste (EUR)",
+      "requetes": "Solicitudes",
+      "jetons": "Tokens",
+      "graphique": {
+        "jour": "Gráfico: {metrique} por día, del {debut} al {fin}.",
+        "mois": "Gráfico: {metrique} por mes, del {debut} al {fin}."
+      },
+      "voirTableau": "Mostrar los datos del gráfico en forma de tabla"
+    },
+    "tableaux": {
+      "parUtilisateur": "Por usuario",
+      "parModele": "Por modelo",
+      "parMode": "Por modo",
+      "triPar": "Ordenar por {colonne}",
+      "colonnes": {
+        "periode": "Periodo",
+        "utilisateur": "Usuario",
+        "fournisseur": "Proveedor",
+        "modele": "Modelo",
+        "mode": "Modo",
+        "requetes": "Solicitudes",
+        "tokensEntree": "Tokens entrada",
+        "tokensSortie": "Tokens salida",
+        "tokensCacheLecture": "Caché leída",
+        "tokensCacheEcriture": "Caché escrita",
+        "coutEur": "Coste EUR",
+        "coutUsd": "Coste USD"
+      }
+    },
+    "vide": {
+      "titre": "Ningún uso en el periodo",
+      "description": "No hay ninguna llamada a la IA registrada entre estas dos fechas. Elija un periodo más amplio."
+    },
+    "export": {
+      "bouton": "Exportar a Excel",
+      "enCours": "Exportando",
+      "erreur": "Ha fallado la exportación a Excel."
+    }
+  },
+  "avis": {
+    "chargement": "Cargando las valoraciones",
+    "erreurChargement": "No se han podido cargar las valoraciones.",
+    "erreurSuite": "No se han podido cargar más valoraciones.",
+    "filtre": {
+      "libelle": "Valoraciones que mostrar",
+      "negatif": "Pulgares abajo",
+      "positif": "Pulgares arriba",
+      "tous": "Todas las valoraciones"
+    },
+    "liste": "Valoraciones de los usuarios",
+    "totaux": {
+      "positifs": "Pulgares arriba: {count, number}",
+      "negatifs": "Pulgares abajo: {count, number}"
+    },
+    "compteur": "Valoraciones mostradas: {count, number}",
+    "valeur": {
+      "negatif": "Pulgar abajo",
+      "positif": "Pulgar arriba"
+    },
+    "champs": {
+      "commentaire": "Comentario",
+      "question": "Pregunta",
+      "reponse": "Extracto de la respuesta",
+      "modele": "Modelo"
+    },
+    "sansCommentaire": "Sin comentario",
+    "ouvrirConversation": "Abrir la conversación",
+    "chargerPlus": "Cargar más",
+    "chargementSuite": "Cargando más",
+    "vide": {
+      "titre": "Ninguna valoración que mostrar",
+      "negatif": "Todavía no hay pulgares abajo.",
+      "positif": "Todavía no hay pulgares arriba.",
+      "tous": "Todavía no se ha dejado ninguna valoración."
+    }
+  },
+  "piecesJointes": {
+    "provenance": {
+      "perimetre": "Archivo proporcionado (no son datos de Data Genius)",
+      "filtreFeuille": "Hoja",
+      "filtrePlage": "Rango",
+      "regleNonVerifie": "Contenido del archivo usado tal cual, sin verificar por Data Genius.",
+      "regleTypesInferes": "Tipos de columna (texto, número, fecha, porcentaje) deducidos del contenido del archivo.",
+      "reglePourcentage": "Porcentajes expresados en puntos (85 = 85 %).",
+      "regleTronque": "Hoja truncada: se leyeron las primeras {max, number} filas de {total, number}."
+    }
+  }
+}

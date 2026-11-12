@@ -1,0 +1,432 @@
+{
+  "titre": "Data Genius",
+  "actionResume": {
+    "creerTache": "إنشاء المهمة «{titre}» وإسنادها إلى {assigne}.",
+    "creerTacheEcheance": "إنشاء المهمة «{titre}» وإسنادها إلى {assigne}، بموعد نهائي في {echeance}.",
+    "envoyerEmail": "إرسال التحليل «{titre}» عبر البريد الإلكتروني إلى {destinataires}، مع إرفاق ملفات {formats}.",
+    "notifier": "إرسال إشعار إلى {destinataires}: «{message}».",
+    "notifierArtefact": "إرسال إشعار إلى {destinataires} مع التحليل «{titre}»: «{message}».",
+    "programmerRapport": "إرسال التحليل «{titre}» بصيغة {formats} إلى {destinataires}، {frequence}.",
+    "partageNote": "ستتم مشاركة هذا التحليل للقراءة فقط مع هؤلاء الأشخاص، وسيرونه ضمن نطاقهم الخاص.",
+    "frequence": {
+      "quotidien": "كل يوم في الساعة {heure} (بتوقيت باريس)",
+      "hebdomadaire": "كل {jour} في الساعة {heure} (بتوقيت باريس)",
+      "hebdomadaireSansJour": "كل أسبوع في الساعة {heure} (بتوقيت باريس)",
+      "mensuel": "في اليوم {jourMois} من كل شهر في الساعة {heure} (بتوقيت باريس)",
+      "mensuelSansJour": "كل شهر في الساعة {heure} (بتوقيت باريس)"
+    },
+    "notifierSansAcces": "{nombre, plural, zero {{destinataires} ليس لديهم حق الوصول إلى Data Genius وسيتلقون الرسالة فقط، دون التحليل.} one {{destinataires} ليس لديه حق الوصول إلى Data Genius وسيتلقى الرسالة فقط، دون التحليل.} two {{destinataires} ليس لديهما حق الوصول إلى Data Genius وسيتلقيان الرسالة فقط، دون التحليل.} few {{destinataires} ليس لديهم حق الوصول إلى Data Genius وسيتلقون الرسالة فقط، دون التحليل.} many {{destinataires} ليس لديهم حق الوصول إلى Data Genius وسيتلقون الرسالة فقط، دون التحليل.} other {{destinataires} ليس لديهم حق الوصول إلى Data Genius وسيتلقون الرسالة فقط، دون التحليل.}}"
+  },
+  "actionResultat": {
+    "creerTache": "أُنشئت المهمة لـ {assigne}.",
+    "envoyerEmail": "{envoyes, plural, zero {لم يُرسَل أي بريد إلكتروني.} one {أُرسل بريد إلكتروني واحد.} two {أُرسل بريدان إلكترونيان.} few {أُرسلت # رسائل بريد إلكتروني.} many {أُرسلت # رسالة بريد إلكتروني.} other {أُرسلت # رسالة بريد إلكتروني.}}",
+    "envoyerEmailEchecs": "{echecs, plural, zero {لا إخفاقات.} one {أخفق إرسال واحد.} two {أخفق إرسالان.} few {أخفقت # عمليات إرسال.} many {أخفقت # عملية إرسال.} other {أخفقت # عملية إرسال.}}",
+    "notifier": "{nombre, plural, zero {لم يُرسَل أي إشعار.} one {أُرسل إشعار إلى شخص واحد.} two {أُرسل إشعار إلى شخصين.} few {أُرسل إشعار إلى # أشخاص.} many {أُرسل إشعار إلى # شخصًا.} other {أُرسل إشعار إلى # شخص.}}",
+    "programmerRapport": "جُدوِل التقرير «{titre}».",
+    "echec": {
+      "generique": "تعذّر تنفيذ الإجراء.",
+      "export_impossible": "فشل تصدير التحليل: لم يُرسَل شيء.",
+      "mail_non_envoye": "تعذّر إرسال أي بريد إلكتروني.",
+      "destinataire_invalide": "لم يعد لأحد المستلمين حق الوصول إلى Data Genius.",
+      "artefact_non_proprietaire": "يمكن لمالك التحليل وحده مشاركته أو إرساله أو جدولته."
+    },
+    "lien": {
+      "taches": "عرض مهامي",
+      "rapports": "عرض تقاريري"
+    }
+  },
+  "emailArtefact": {
+    "sujet": "أرسل إليك {expediteur} «{titre}»",
+    "salutation": "مرحباً {nom}،",
+    "intro": "أرسل إليك {expediteur} التحليل «{titre}» من Data Genius.",
+    "messageDe": "رسالة من {expediteur}:",
+    "formats": "الملفات المرفقة: {formats}.",
+    "note": "الأرقام المرفقة هي أرقام المرسل وقت الإرسال. عند فتح التحليل في Data Genius، يُعاد احتسابها ضمن نطاقك الخاص.",
+    "bouton": "فتح التحليل",
+    "lienTexte": "فتح التحليل: {url}",
+    "pied": "رسالة تلقائية من Data Genius، يرجى عدم الرد عليها."
+  },
+  "notifMessage": {
+    "titre": "كتب إليك {expediteur}"
+  },
+  "notifTache": {
+    "titre": "أسند إليك {expediteur} مهمة",
+    "message": "«{titre}»",
+    "messageEcheance": "«{titre}»، الموعد النهائي {echeance}"
+  },
+  "erreurs": {
+    "titre": "تعذّر تنفيذ الإجراء",
+    "introuvable": "تعذّر العثور على هذا العنصر أو لم يعد متاحًا.",
+    "invalide": "المعلومات المُدخلة غير صالحة.",
+    "interdit": "لا يحق لك تنفيذ هذا الإجراء.",
+    "conflit": "سبقت معالجة هذا العنصر أو تعديله. أعد التحميل وحاول مجددًا.",
+    "destinataire_invalide": "أحد المستلمين لا يملك صلاحية الوصول إلى Data Genius.",
+    "export_impossible": "تعذّر إنشاء الملف. حاول مجددًا بعد قليل.",
+    "artefact_non_proprietaire": "لا يمكن لغير مالك التحليل تنفيذ هذا الإجراء.",
+    "interne": "حدث خطأ. حاول مجددًا بعد قليل.",
+    "reseau": "الخادم لا يستجيب. تحقق من اتصالك وحاول مجددًا.",
+    "mail_non_envoye": "تعذّر إرسال أي بريد إلكتروني.",
+    "execution_impossible": "تعذّر إتمام الإجراء."
+  },
+  "carteAction": {
+    "titre": {
+      "creer_tache": "إنشاء مهمة",
+      "envoyer_email": "الإرسال بالبريد الإلكتروني",
+      "notifier": "إرسال إشعار",
+      "programmer_rapport": "جدولة تقرير"
+    },
+    "statut": {
+      "proposee": "بانتظار التأكيد",
+      "executee": "تم",
+      "annulee": "أُلغي",
+      "echec": "فشل"
+    },
+    "chargement": "جارٍ تحميل الإجراء…",
+    "erreurLecture": "تعذّرت إعادة قراءة هذا الإجراء.",
+    "reessayer": "إعادة المحاولة",
+    "confirmer": "تأكيد",
+    "annuler": "إلغاء",
+    "enCours": "جارٍ التنفيذ…",
+    "nonExecute": "لن يُنفَّذ أي شيء قبل أن تؤكد.",
+    "destinataires": "المستلمون",
+    "assigne": "مُسندة إلى",
+    "echeance": "تاريخ الاستحقاق",
+    "destinatairesRequis": "اختر مستلمًا واحدًا على الأقل للتأكيد.",
+    "assigneRequis": "اختر الشخص الذي تُسند إليه المهمة.",
+    "nomsIndisponibles": "تعذّر تحميل الأسماء. يمكنك التأكيد دون تعديلها.",
+    "executee": {
+      "creer_tache": "أُنشئت المهمة لـ {noms}.",
+      "envoyer_email": "أُرسل البريد الإلكتروني إلى {noms}.",
+      "notifier": "أُرسل الإشعار إلى {noms}.",
+      "programmer_rapport": "جُدول التقرير لـ {noms}."
+    },
+    "executeeSimple": {
+      "creer_tache": "أُنشئت المهمة.",
+      "envoyer_email": "أُرسل البريد الإلكتروني.",
+      "notifier": "أُرسل الإشعار.",
+      "programmer_rapport": "جُدول التقرير."
+    },
+    "annulee": "أُلغي الإجراء. لم يُنفَّذ أي شيء.",
+    "annuleeLe": "تم الإلغاء في {date}.",
+    "confirmeeLe": "تم تأكيد الإجراء في {date}.",
+    "confirmee": "تم تأكيد الإجراء.",
+    "echec": "تعذّر تنفيذ الإجراء.",
+    "echecRaison": "السبب: {raison}",
+    "voirResultat": "فتح"
+  },
+  "selecteurUtilisateurs": {
+    "placeholder": "ابحث عن شخص…",
+    "aide": "اكتب اسمًا ثم استخدم الأسهم ومفتاح الإدخال للاختيار.",
+    "listeLabel": "نتائج البحث",
+    "chargement": "جارٍ البحث…",
+    "aucunResultat": "لم يُعثر على أي شخص.",
+    "erreur": "فشل البحث.",
+    "reessayer": "إعادة المحاولة",
+    "retirer": "إزالة {nom}",
+    "selectionLabel": "الأشخاص المختارون",
+    "aucuneSelection": "لم يُختر أي شخص.",
+    "resultats": "{nombre, plural, =0 {لا توجد نتائج} zero {لا توجد نتائج} one {نتيجة واحدة} two {نتيجتان} few {# نتائج} many {# نتيجة} other {# نتيجة}}",
+    "selection": "{nombre, plural, =0 {لم يُختر أي شخص} zero {لم يُختر أي شخص} one {شخص واحد مختار} two {شخصان مختاران} few {# أشخاص مختارون} many {# شخصًا مختارًا} other {# شخص مختار}}",
+    "plafond": "بلغتَ الحد الأقصى: {max} شخصًا.",
+    "moi": "أنا",
+    "moiAide": "إضافة حسابك الشخصي إلى القائمة أو إزالته منها."
+  },
+  "dialoguePartage": {
+    "titre": "مشاركة «{titre}»",
+    "explication": "يرى الشخص المختار الأرقام معاد حسابها ضمن نطاقه الخاص، لذا قد تختلف عن أرقامك.",
+    "destinataires": "الأشخاص",
+    "message": "رسالة (اختيارية)",
+    "messagePlaceholder": "أضف كلمة لتوضيح سبب هذه المشاركة",
+    "partager": "مشاركة",
+    "annuler": "إلغاء",
+    "enCours": "جارٍ المشاركة…",
+    "aucunDestinataire": "اختر شخصًا واحدًا على الأقل.",
+    "succes": "{nombre, plural, zero {لم تتم المشاركة مع أحد.} one {تمت المشاركة مع شخص واحد.} two {تمت المشاركة مع شخصين.} few {تمت المشاركة مع # أشخاص.} many {تمت المشاركة مع # شخصًا.} other {تمت المشاركة مع # شخص.}}"
+  },
+  "dialogueProgrammer": {
+    "titre": "جدولة إرسال «{titre}»",
+    "explication": "يُعاد حساب التحليل عند كل إرسال ثم يُرسل بالبريد الإلكتروني إلى الأشخاص المختارين.",
+    "frequence": "التكرار",
+    "frequences": {
+      "quotidien": "كل يوم",
+      "hebdomadaire": "كل أسبوع",
+      "mensuel": "كل شهر"
+    },
+    "jourSemaine": "يوم الأسبوع",
+    "jourMois": "يوم الشهر",
+    "jourMoisAide": "من 1 إلى 28، حتى يتم الإرسال كل شهر.",
+    "heure": "وقت الإرسال",
+    "heureHeures": "الساعات",
+    "heureMinutes": "الدقائق",
+    "heureAide": "بتوقيت باريس مهما كان توقيتك المحلي. يتم الإرسال عند ربع الساعة التالي للوقت المختار.",
+    "destinataires": "المستلمون",
+    "formats": "الصيغ المرفقة",
+    "format": {
+      "xlsx": "Excel (.xlsx)",
+      "pdf": "PDF (.pdf)",
+      "csv": "CSV (.csv)"
+    },
+    "erreurDestinataires": "اختر مستلمًا واحدًا على الأقل.",
+    "erreurFormats": "حدّد صيغة واحدة على الأقل.",
+    "programmer": "جدولة",
+    "annuler": "إلغاء",
+    "enCours": "جارٍ الجدولة…",
+    "succes": "تمت جدولة الإرسال."
+  },
+  "actionsArtefact": {
+    "groupe": "إجراءات على التحليل",
+    "enregistrer": "حفظ في تحليلاتي",
+    "enregistrerCourt": "حفظ",
+    "epingler": "تثبيت في لوحة المعلومات",
+    "epinglerCourt": "تثبيت",
+    "partager": "مشاركة",
+    "programmer": "جدولة",
+    "chargementEtat": "جارٍ تحميل الحالة…",
+    "proprietaireSeulement": "لا يمكن لغير مالك التحليل حفظه أو مشاركته أو جدولة إرساله.",
+    "enregistreOk": "تم حفظ التحليل في تحليلاتي.",
+    "retireOk": "أُزيل التحليل من تحليلاتي.",
+    "epingleOk": "تم تثبيت التحليل في لوحة المعلومات.",
+    "desepingleOk": "أُزيل التحليل من لوحة المعلومات.",
+    "enregistrerProprietaire": "يمكن لمالك التحليل فقط حفظه. ما زال بإمكانك تثبيته."
+  },
+  "notifPartage": {
+    "titreConversation": "شارك {expediteur} محادثة معك",
+    "titreArtefact": "شارك {expediteur} تحليلاً معك",
+    "message": "«{titre}»"
+  },
+  "emailRapport": {
+    "sujet": "تقرير مجدول: «{titre}»",
+    "salutation": "مرحباً {nom}،",
+    "intro": "يرسل لك {proprietaire} التحليل «{titre}» من Data Genius.",
+    "automatique": "يُرسل هذا التقرير تلقائياً {frequence} إلى أن يوقفه {proprietaire}.",
+    "formats": "الملفات المرفقة: {formats}.",
+    "note": "الأرقام المرفقة هي أرقام مالك التقرير بتاريخ الإرسال. عند فتح التحليل في Data Genius، يُعاد حسابها ضمن نطاقك الخاص.",
+    "bouton": "فتح التحليل",
+    "lienTexte": "فتح التحليل: {url}",
+    "pied": "رسالة تلقائية من Data Genius، يرجى عدم الرد.",
+    "frequence": {
+      "quotidien": "كل يوم",
+      "hebdomadaire": "كل أسبوع",
+      "mensuel": "كل شهر"
+    }
+  },
+  "notifRapport": {
+    "titre": "تقرير: «{titre}»",
+    "message": "أرسله {proprietaire}، {frequence}. افتح التحليل لعرض الأرقام ضمن نطاقك.",
+    "frequence": {
+      "quotidien": "كل يوم",
+      "hebdomadaire": "كل أسبوع",
+      "mensuel": "كل شهر"
+    }
+  },
+  "analyses": {
+    "page": {
+      "titre": "تحليلاتي",
+      "description": "اعثر على التحليلات التي حفظتها، وتلك التي شُورِكت معك، ومهامك وتقاريرك المجدولة."
+    },
+    "onglets": {
+      "aria": "أقسام تحليلاتي",
+      "analyses": "التحليلات المحفوظة",
+      "partages": "المشاركة معي",
+      "taches": "مهامي",
+      "rapports": "التقارير المجدولة"
+    },
+    "recherche": {
+      "label": "البحث في تحليلاتي",
+      "placeholder": "ابحث عن تحليل…"
+    },
+    "total": "{count, plural, zero {لا تحليلات} one {تحليل واحد} two {تحليلان} few {# تحليلات} many {# تحليلًا} other {# تحليل}}",
+    "type": {
+      "tableau": "جدول",
+      "graphique": "رسم بياني",
+      "indicateurs": "مؤشرات",
+      "document": "مستند"
+    },
+    "enregistreeLe": "حُفظ في {date}",
+    "partagee": "مشترك",
+    "ouvrir": "فتح",
+    "ouvrirAria": "فتح التحليل «{titre}»",
+    "retirer": "إزالة",
+    "retirerAria": "إزالة التحليل «{titre}» من تحليلاتي",
+    "retirerTitre": "إزالة هذا التحليل من تحليلاتي؟",
+    "retirerTexte": "لن يظهر «{titre}» في هذه القائمة بعد الآن. التحليل نفسه لا يُحذف، ويمكنك حفظه مجددًا من المساعد.",
+    "retirerConfirmer": "إزالة",
+    "annuler": "إلغاء",
+    "retireOk": "تمت إزالة التحليل من تحليلاتي.",
+    "chargerPlus": "تحميل المزيد",
+    "chargement": "جارٍ تحميل التحليلات…",
+    "vide": {
+      "titre": "لا توجد تحليلات محفوظة",
+      "texte": "لإضافة تحليل، اطرح سؤالًا على مساعد Data Genius ثم اختر «حفظ في تحليلاتي» أسفل النتيجة.",
+      "rechercheTitre": "لا نتائج",
+      "rechercheTexte": "لا يوجد تحليل يطابق هذا البحث."
+    },
+    "erreur": {
+      "titre": "تعذّر تحميل هذه القائمة",
+      "texte": "حدث خطأ. بياناتك لم تضِع.",
+      "reessayer": "إعادة المحاولة"
+    },
+    "retour": "العودة إلى تحليلاتي",
+    "titreRepli": "تحليل"
+  },
+  "partagesRecus": {
+    "titre": "المشاركة معي",
+    "chargement": "جارٍ تحميل المشاركات…",
+    "chargerPlus": "تحميل المزيد",
+    "vide": {
+      "titre": "لم تتم مشاركة أي شيء معك",
+      "texte": "عندما يشارك زميل محادثة أو تحليلًا معك، سيظهر هنا."
+    },
+    "de": "من {nom}",
+    "cible": {
+      "conversation": "محادثة",
+      "artefact": "تحليل"
+    },
+    "partageLe": "شُورك في {date}",
+    "ouvrirConversation": "فتح المحادثة",
+    "ouvrirArtefact": "فتح التحليل",
+    "ouvrirAria": "فتح «{titre}»",
+    "compteDisparu": "الحساب غير متاح",
+    "erreur": {
+      "titre": "تعذّر تحميل المشاركات",
+      "texte": "حدث خطأ. أعد المحاولة بعد قليل.",
+      "reessayer": "إعادة المحاولة"
+    },
+    "envoyes": {
+      "titre": "ما شاركته",
+      "chargement": "جارٍ تحميل مشاركاتك…",
+      "vide": "لم تشارك أي شيء بعد.",
+      "a": "إلى {nom}"
+    },
+    "retirer": {
+      "annuler": "إلغاء",
+      "envoye": {
+        "bouton": "إلغاء المشاركة",
+        "aria": "إلغاء مشاركة «{titre}»",
+        "titre": "إلغاء هذه المشاركة؟",
+        "texte": "لن يتمكن {nom} من فتح «{titre}» بعد الآن، وسيتم حذف تثبيتاته على لوحة المعلومات الخاصة بهذا المحتوى.",
+        "confirmer": "إلغاء المشاركة",
+        "ok": "تم إلغاء المشاركة"
+      },
+      "recu": {
+        "bouton": "عدم المشاهدة بعد الآن",
+        "aria": "عدم مشاهدة «{titre}» بعد الآن",
+        "titre": "عدم مشاهدة هذا المحتوى بعد الآن؟",
+        "texte": "سيختفي «{titre}» من قائمتك وسيتم حذف تثبيتاتك على لوحة المعلومات الخاصة بهذا المحتوى. لن تتمكن من فتحه بعد الآن.",
+        "confirmer": "عدم المشاهدة بعد الآن",
+        "ok": "لم يعد المحتوى ظاهرًا في قائمتك"
+      }
+    }
+  },
+  "taches": {
+    "titre": "مهامي",
+    "filtres": {
+      "aria": "تصفية المهام",
+      "a_faire": "قيد الإنجاز",
+      "en_retard": "متأخرة",
+      "terminee": "منجزة"
+    },
+    "priorite": {
+      "basse": "أولوية منخفضة",
+      "normale": "أولوية عادية",
+      "haute": "أولوية عالية"
+    },
+    "echeance": "الموعد النهائي: {date}",
+    "sansEcheance": "بلا موعد نهائي",
+    "enRetard": "متأخرة",
+    "termineeLe": "أُنجزت في {date}",
+    "assigneA": "مسندة إلى {nom}",
+    "assigneAMoi": "مسندة إليك",
+    "creeePar": "أنشأها {nom}",
+    "marquerTerminee": "تحديد كمنجزة",
+    "marquerAria": "تحديد المهمة «{titre}» كمنجزة",
+    "rouvrir": "إعادة الفتح",
+    "rouvrirAria": "إعادة فتح المهمة «{titre}»",
+    "voirConversation": "عرض المحادثة",
+    "chargement": "جارٍ تحميل المهام…",
+    "vide": {
+      "a_faire": "لا توجد مهام قيد الإنجاز. تظهر هنا المهام التي أنشأها المساعد وأُسندت إليك.",
+      "en_retard": "لا توجد مهام متأخرة.",
+      "terminee": "لا توجد مهام منجزة حاليًا."
+    },
+    "erreur": {
+      "titre": "تعذّر تحميل المهام",
+      "texte": "حدث خطأ. أعد المحاولة بعد قليل.",
+      "reessayer": "إعادة المحاولة"
+    }
+  },
+  "rapports": {
+    "titre": "التقارير المجدولة",
+    "chargement": "جارٍ تحميل التقارير…",
+    "vide": {
+      "titre": "لا توجد تقارير مجدولة",
+      "texte": "لإنشاء تقرير، افتح تحليلًا واختر «جدولة»: سيُعاد حسابه ويُرسل بالبريد الإلكتروني في الوقت الذي تحدده."
+    },
+    "erreur": {
+      "titre": "تعذّر تحميل التقارير",
+      "texte": "حدث خطأ. أعد المحاولة بعد قليل.",
+      "reessayer": "إعادة المحاولة"
+    },
+    "frequence": {
+      "quotidien": "كل يوم في {heure} (بتوقيت باريس)",
+      "hebdomadaire": "كل {jour} في {heure} (بتوقيت باريس)",
+      "mensuel": "في اليوم {jourMois} من كل شهر في {heure} (بتوقيت باريس)"
+    },
+    "jours": {
+      "1": "اثنين",
+      "2": "ثلاثاء",
+      "3": "أربعاء",
+      "4": "خميس",
+      "5": "جمعة",
+      "6": "سبت",
+      "7": "أحد"
+    },
+    "formats": "الصيغ: {formats}",
+    "format": {
+      "xlsx": "Excel",
+      "pdf": "PDF",
+      "csv": "CSV"
+    },
+    "destinataires": "المستلمون: {noms}",
+    "compteDisparu": "حساب غير متاح",
+    "prochainEnvoi": "الإرسال التالي: {date}",
+    "aucunProchainEnvoi": "لا يوجد إرسال مقرر",
+    "dernierEnvoi": "آخر إرسال: {date}",
+    "jamaisEnvoye": "لم يُرسل بعد",
+    "statut": {
+      "ok": "تم الإرسال",
+      "partiel": "إرسال جزئي",
+      "echec": "فشل"
+    },
+    "raison": {
+      "proprietaire_sans_acces": "لم يعد لديك حق الوصول إلى Data Genius: تم إيقاف التقرير مؤقتًا.",
+      "artefact_introuvable": "التحليل لم يعد موجودًا.",
+      "planning_invalide": "جدولة هذا التقرير لم تعد صالحة.",
+      "aucun_destinataire": "لا يوجد مستلم صالح.",
+      "export_impossible": "تعذّر إنشاء الملفات.",
+      "envoi_impossible": "تعذّر إرسال الرسائل الإلكترونية.",
+      "erreur_interne": "حدث خطأ داخلي.",
+      "destinataires_ecartes": "تم استبعاد بعض المستلمين لأنهم لم يعد لديهم حق الوصول إلى Data Genius.",
+      "envoi_partiel": "تعذّر إرسال بعض الرسائل الإلكترونية.",
+      "inconnue": "السبب غير معروف."
+    },
+    "actif": "نشط",
+    "pause": "متوقف مؤقتًا",
+    "interrupteurAria": "التقرير «{titre}»: تفعيل أو إيقاف مؤقت",
+    "ouvrirAnalyse": "فتح التحليل",
+    "supprimer": "حذف",
+    "supprimerAria": "حذف التقرير المجدول «{titre}»",
+    "supprimerTitre": "حذف هذا التقرير المجدول؟",
+    "supprimerTexte": "لن تُرسل أي رسائل إلكترونية أخرى بخصوص «{titre}». التحليل نفسه لا يُحذف.",
+    "supprimerConfirmer": "حذف",
+    "annuler": "إلغاء",
+    "supprimeOk": "تم حذف التقرير المجدول."
+  },
+  "epingles": {
+    "titre": "العناصر المثبّتة",
+    "ouvrir": "فتح",
+    "ouvrirAria": "فتح التحليل «{titre}»",
+    "desepingler": "إلغاء التثبيت",
+    "desepinglerAria": "إلغاء تثبيت «{titre}» من لوحة المعلومات"
+  }
+}

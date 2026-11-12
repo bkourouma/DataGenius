@@ -1,0 +1,376 @@
+{
+  "titre": "Data Genius",
+  "graphique": {
+    "autres": "Others",
+    "total": "Total",
+    "objectif": "Target",
+    "aucuneDonnee": "No data to display",
+    "sansValeur": "Not specified",
+    "titreAccessible": "{forme} chart: {mesures}",
+    "descriptionAccessible": "{series, plural, one {# series} other {# series}}, {points, plural, one {# point} other {# points}}",
+    "forme": {
+      "barres": "bar",
+      "barres_empilees": "stacked bar",
+      "barres_horizontales": "horizontal bar",
+      "lignes": "line",
+      "aires": "area",
+      "secteurs": "pie",
+      "anneau": "doughnut",
+      "nuage": "scatter",
+      "combine": "bar and line",
+      "carte_chaleur": "heat map",
+      "treemap": "treemap",
+      "entonnoir": "funnel",
+      "jauge": "gauge"
+    }
+  },
+  "tableau": {
+    "regionLabel": "Table: {titre}",
+    "chargement": "Loading table",
+    "erreur": "This table cannot be displayed.",
+    "total": "Total",
+    "nbLignes": "{n, plural, one {# row} other {# rows}}",
+    "tronque": "Only the first {n, number} rows are shown; download the full export to get everything.",
+    "agregats": {
+      "somme": "Sum",
+      "moyenne": "Average",
+      "min": "Minimum",
+      "max": "Maximum",
+      "nombre": "Count"
+    },
+    "vide": {
+      "titre": "No rows for these filters",
+      "description": "No row in the dataset matches the filters of this table.",
+      "reinitialiser": "Reset filters",
+      "titreSansFiltre": "No rows to display",
+      "descriptionSansFiltre": "The dataset is empty for this period and scope."
+    },
+    "copie": {
+      "succes": "Table copied: paste it into Excel",
+      "echec": "Copy failed. Select the table and copy it manually."
+    },
+    "modifierPivot": "Edit the pivot table",
+    "avertissements": {
+      "sommePourcentage": "Adding up percentages makes no sense: choose the average, minimum or maximum instead."
+    },
+    "pivot": {
+      "titre": "Pivot table",
+      "aide": "Group rows by one or more fields, spread others across columns and choose the values to calculate.",
+      "vue": "View",
+      "vueTableau": "Table",
+      "vueCroise": "Pivot table",
+      "lignes": "Rows",
+      "colonnes": "Columns",
+      "valeurs": "Values",
+      "champLigne": "Row field {n}",
+      "champColonne": "Column field {n}",
+      "champValeur": "Value field {n}",
+      "agregatValeur": "Calculation for value {n}",
+      "choisir": "Choose a field",
+      "ajouterLigne": "Add a row field",
+      "ajouterColonne": "Add a column field",
+      "ajouterValeur": "Add a value",
+      "retirerChamp": "Remove field {n}",
+      "retirerValeur": "Remove value {n}",
+      "retirer": "Remove the pivot table",
+      "limiteLignes": "Three row fields at most.",
+      "limiteColonnes": "Two column fields at most.",
+      "limiteValeurs": "Six values at most.",
+      "minLignes": "At least one row field is required.",
+      "minValeurs": "At least one value is required.",
+      "doublon": "A field can only be used once, in rows or in columns.",
+      "doublonValeur": "This value is already in the table.",
+      "aucunChampLigne": "No field available for rows.",
+      "aucunChampValeur": "No numeric field available for values."
+    }
+  },
+  "graphiqueUi": {
+    "chargement": "Loading chart",
+    "erreurChargement": "The chart could not be loaded.",
+    "reessayer": "Try again",
+    "videTitre": "No data to display",
+    "videAide": "No points to plot for the selected period and scope.",
+    "ariaLabel": "{titre}. {description}",
+    "pngIndisponible": "The chart is not ready yet: try again in a moment.",
+    "selecteur": {
+      "libelle": "Chart type",
+      "indisponible": "{forme} (unavailable): {motif}"
+    },
+    "avertissements": {
+      "liste": "Display notes",
+      "forme_changee": "Shown as {vers}: more than {max} categories",
+      "limite_appliquee": "Top {n} of {total}: the rest is grouped or hidden",
+      "serie_ignoree": "{n, plural, one {# measure ignored} other {# measures ignored}}: the {forme} type shows only one"
+    },
+    "motifs": {
+      "trop_de_categories": "More than {max} categories: this type would become unreadable, horizontal bars suit better.",
+      "une_mesure_requise": "This type shows only one measure.",
+      "deux_mesures_requises": "This type requires at least two measures.",
+      "serie_requise": "This type requires a second dimension to form the series.",
+      "categories_insuffisantes": "This type requires at least two categories."
+    },
+    "changement": {
+      "refuse": "Cannot change: {motif}",
+      "remplace": "Chart type replaced by “{forme}”: {motif}"
+    }
+  },
+  "indicateurs": {
+    "liste": "Indicators",
+    "aucun": "No indicators to display",
+    "donneeIndisponible": "Data unavailable",
+    "tendance": {
+      "hausse": "up",
+      "baisse": "down",
+      "stable": "stable"
+    },
+    "variationIndisponible": "Change unavailable",
+    "variation": "{variation} {sens}",
+    "reference": "{libelle}: {valeur}",
+    "objectif": "Target: {valeur}",
+    "objectifNomme": "{libelle}: {valeur}",
+    "taux": "Achievement rate: {taux}",
+    "tauxIndisponible": "Achievement rate unavailable",
+    "statut": {
+      "atteint": "Achieved",
+      "en_cours": "In progress",
+      "a_risque": "At risk"
+    }
+  },
+  "document": {
+    "region": "Document: {titre}",
+    "indisponible": "This part of the document is no longer available.",
+    "artefactIndisponible": "Artefact unavailable",
+    "artefactIndisponibleAide": "It may have been deleted, or you no longer have access to it.",
+    "graphiqueIndisponible": "The data for this chart is not available.",
+    "tableauIndisponible": "The data for this table is not available.",
+    "vide": "This document is empty.",
+    "tableDesMatieres": {
+      "titre": "In this document",
+      "region": "Table of contents",
+      "ouvrir": "Show the table of contents",
+      "replier": "Hide the table of contents",
+      "aller": "Go to section {titre}"
+    }
+  },
+  "panneau": {
+    "titre": "Artefacts",
+    "region": "Artefacts panel",
+    "listeOnglets": "Artefacts in the conversation",
+    "contenu": "Artefact content",
+    "fermer": "Close the panel",
+    "agrandir": "Expand the panel",
+    "reduire": "Collapse the panel",
+    "pleinEcran": "Artefacts panel in full screen",
+    "chargement": "Loading artefact",
+    "chargementListe": "Loading artefacts",
+    "reessayer": "Try again",
+    "vide": {
+      "titre": "No artefacts yet",
+      "texte": "Ask for a table, a chart or a report in the conversation: it will appear here."
+    },
+    "lectureSeule": "Read-only",
+    "version": {
+      "etiquette": "Version",
+      "libelle": "v{n}",
+      "libelleDate": "v{n} · {date}",
+      "actuelle": "current",
+      "bandeau": "You are viewing version {n}, read-only.",
+      "revenir": "Back to the latest"
+    },
+    "vue": {
+      "groupe": "View",
+      "graphique": "Chart",
+      "tableau": "Table"
+    },
+    "copier": "Copy",
+    "copieReussie": "Table copied, ready to paste into Excel",
+    "copieEchec": "Copy failed",
+    "comment": "How I calculated this",
+    "jeuNumero": "Dataset {n} of {total}",
+    "apercu": {
+      "vide": "This artefact has nothing to display."
+    },
+    "enregistrement": {
+      "enCours": "Saving…",
+      "enregistre": "Saved",
+      "erreur": "Saving failed"
+    },
+    "types": {
+      "tableau": "Table",
+      "graphique": "Chart",
+      "indicateurs": "Indicators",
+      "document": "Document"
+    }
+  },
+  "carte": {
+    "ouvrir": "Open",
+    "ouvrirAria": "Open the artefact {titre}",
+    "types": {
+      "tableau": "Table",
+      "graphique": "Chart",
+      "indicateurs": "Indicators",
+      "document": "Document"
+    },
+    "resume": {
+      "tableau": "Table · {n, plural, =0 {no rows} one {# row} other {# rows}}",
+      "graphique": "Chart · {forme}",
+      "indicateurs": "{n, plural, =0 {No indicators} one {# indicator} other {# indicators}}",
+      "document": "Document"
+    }
+  },
+  "provenance": {
+    "titre": "How I calculated this",
+    "source": "Source",
+    "periode": "Period",
+    "perimetre": "Scope",
+    "filtres": "Filters",
+    "filtre": "{libelle}: {valeur}",
+    "aucunFiltre": "No filters",
+    "regles": "Rules applied",
+    "lienEcran": "Equivalent Data Genius screen",
+    "sql": "SQL query (administrators only)",
+    "copierSql": "Copy the query",
+    "sqlCopiee": "Query copied",
+    "copieEchec": "Copy failed",
+    "calculeLe": "Calculated on {date}"
+  },
+  "telechargement": {
+    "bouton": "Download",
+    "enCours": "Download in progress",
+    "menu": "Download formats",
+    "formats": {
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "pdf": "PDF (.pdf)",
+      "png": "PNG image (.png)",
+      "pptx": "PowerPoint (.pptx)"
+    },
+    "reussi": "{format} downloaded",
+    "echec": "The download failed"
+  },
+  "exports": {
+    "exporteLe": "Exported on {date}",
+    "page": "Page {page} of {total}",
+    "total": "Total",
+    "feuilleDonnees": "Data",
+    "feuilleProvenance": "Provenance",
+    "feuilleIndicateurs": "Indicators",
+    "fichierSansTitre": "Data Genius export",
+    "agregats": {
+      "somme": "Sum",
+      "moyenne": "Average",
+      "min": "Minimum",
+      "max": "Maximum",
+      "nombre": "Count"
+    },
+    "provenance": {
+      "source": "Source",
+      "periode": "Period",
+      "perimetre": "Scope",
+      "filtres": "Filters",
+      "regles": "Calculation rules",
+      "calculeLe": "Calculated on",
+      "lienEcran": "Source screen",
+      "exportePar": "Exported by {nom}",
+      "aucun": "None"
+    },
+    "lignesContexte": {
+      "source": "Source: {valeur}",
+      "periode": "Period: {valeur}",
+      "perimetre": "Scope: {valeur}"
+    },
+    "indicateurs": {
+      "indicateur": "Indicator",
+      "valeur": "Value",
+      "comparaison": "Comparison",
+      "valeurComparaison": "Comparison value",
+      "variation": "Change (%)",
+      "objectif": "Target",
+      "valeurObjectif": "Target value",
+      "taux": "Achievement rate (%)",
+      "statut": "Status",
+      "statuts": {
+        "atteint": "Achieved",
+        "enCours": "In progress",
+        "aRisque": "At risk"
+      }
+    },
+    "erreurs": {
+      "introuvable": "This artefact cannot be found or you do not have access to it.",
+      "formatNonSupporte": "This export format is not available for this artefact.",
+      "formatInvalide": "Unknown export format. Accepted formats: xlsx, csv, pdf, pptx.",
+      "tropDeLignes": "This artefact has too many rows to be exported. Refine the filters and try again.",
+      "limiteDebit": "Too many data recalculations were requested. Try the export again in {minutes, plural, one {# minute} other {# minutes}}.",
+      "echec": "The export failed. Try again in a moment."
+    }
+  },
+  "exportsPdf": {
+    "marque": "Data Genius",
+    "sommaire": "Contents",
+    "sourcesEtCalcul": "Sources and calculation",
+    "troncature": "{n, plural, one {# row shown} other {# rows shown}} of {total, number}: download the Excel export to get all the rows.",
+    "partieColonnes": "Columns {debut} to {fin} of {total}",
+    "graphiqueIndisponible": "The chart could not be drawn: its data is shown in the table below.",
+    "limiteAppliquee": "The chart shows the first {n} items of {total}; the others are grouped.",
+    "libelleValeur": "{libelle}: {valeur}",
+    "indicateurs": {
+      "nonDisponible": "Not available",
+      "variation": "Change: {valeur}",
+      "variationSens": "Change: {valeur} ({sens})",
+      "realisation": "Achievement: {valeur}",
+      "sens": {
+        "hausse": "up",
+        "baisse": "down",
+        "stable": "stable"
+      }
+    }
+  },
+  "exportsPptx": {
+    "marque": "Data Genius",
+    "sourcesEtCalcul": "Sources and calculation",
+    "suite": "{titre} (continued)",
+    "donneesDuGraphique": "{titre}: data",
+    "imageNonModifiable": "This chart type does not exist in PowerPoint: it is inserted as an image and cannot be edited.",
+    "graphiqueIndisponible": "The chart could not be built: its data is shown on the next slide.",
+    "troncature": "{n, plural, one {# row shown} other {# rows shown}} of {total, number}: download the Excel export to get all the rows.",
+    "partieColonnes": "Columns {debut} to {fin} of {total}",
+    "limiteAppliquee": "The chart shows the first {n} items of {total}; the others are grouped.",
+    "libelleValeur": "{libelle}: {valeur}",
+    "titresParDefaut": {
+      "texte": "Text",
+      "tableau": "Table",
+      "graphique": "Chart",
+      "indicateurs": "Indicators"
+    },
+    "indicateurs": {
+      "nonDisponible": "Not available",
+      "variation": "Change: {valeur}",
+      "variationSens": "Change: {valeur} ({sens})",
+      "realisation": "Achievement: {valeur}",
+      "sens": {
+        "hausse": "up",
+        "baisse": "down",
+        "stable": "stable"
+      }
+    }
+  },
+  "formes": {},
+  "erreurs": {
+    "chargement": "Unable to load this artefact. Check your connection and try again.",
+    "introuvable": "This artefact cannot be found or you do not have access to it.",
+    "liste": "The list of artefacts could not be loaded.",
+    "jeuManquant": "The data for this artefact is unavailable.",
+    "limiteDebit": "The recalculation limit has been reached for now. Try again in {minutes, plural, one {# minute} other {# minutes}}.",
+    "enregistrement": "Saving failed: the last saved version has been restored.",
+    "conflit": "This artefact was modified in the meantime: the latest version is shown and your change was not saved.",
+    "telechargement": {
+      "reseau": "The server cannot be reached. Check your connection and try again.",
+      "refuse": "You do not have access to this download. Sign in again and try again.",
+      "introuvable": "This artefact cannot be found or you do not have access to it.",
+      "format": "This format is not available for this artefact.",
+      "tropDeLignes": "This artefact has too many rows to be exported. Refine the filters and try again.",
+      "echec": "The download failed. Try again in a moment.",
+      "png": "The chart image could not be created."
+    }
+  }
+}

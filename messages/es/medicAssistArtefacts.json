@@ -1,0 +1,376 @@
+{
+  "titre": "Data Genius",
+  "graphique": {
+    "autres": "Otros",
+    "total": "Total",
+    "objectif": "Objetivo",
+    "aucuneDonnee": "No hay datos que mostrar",
+    "sansValeur": "No informado",
+    "titreAccessible": "Gráfico de {forme}: {mesures}",
+    "descriptionAccessible": "{series, plural, one {# serie} many {# de series} other {# series}}, {points, plural, one {# punto} many {# de puntos} other {# puntos}}",
+    "forme": {
+      "barres": "barras",
+      "barres_empilees": "barras apiladas",
+      "barres_horizontales": "barras horizontales",
+      "lignes": "líneas",
+      "aires": "áreas",
+      "secteurs": "sectores",
+      "anneau": "anillo",
+      "nuage": "dispersión",
+      "combine": "barras y líneas",
+      "carte_chaleur": "mapa de calor",
+      "treemap": "treemap",
+      "entonnoir": "embudo",
+      "jauge": "indicador"
+    }
+  },
+  "tableau": {
+    "regionLabel": "Tabla: {titre}",
+    "chargement": "Cargando la tabla",
+    "erreur": "No se puede mostrar esta tabla.",
+    "total": "Total",
+    "nbLignes": "{n, plural, one {# fila} many {# de filas} other {# filas}}",
+    "tronque": "Solo se muestran las primeras {n, number} filas; descargue la exportación completa para obtenerlo todo.",
+    "agregats": {
+      "somme": "Suma",
+      "moyenne": "Promedio",
+      "min": "Mínimo",
+      "max": "Máximo",
+      "nombre": "Recuento"
+    },
+    "vide": {
+      "titre": "Ninguna fila para estos filtros",
+      "description": "Ninguna fila del conjunto de datos coincide con los filtros de esta tabla.",
+      "reinitialiser": "Restablecer los filtros",
+      "titreSansFiltre": "No hay filas que mostrar",
+      "descriptionSansFiltre": "El conjunto de datos está vacío para este período y este ámbito."
+    },
+    "copie": {
+      "succes": "Tabla copiada: péguela en Excel",
+      "echec": "No se pudo copiar. Seleccione la tabla y cópiela manualmente."
+    },
+    "modifierPivot": "Modificar la tabla dinámica",
+    "avertissements": {
+      "sommePourcentage": "Sumar porcentajes no tiene sentido: elija mejor el promedio, el mínimo o el máximo."
+    },
+    "pivot": {
+      "titre": "Tabla dinámica",
+      "aide": "Agrupe las filas por uno o varios campos, distribuya otros en columnas y elija los valores que calcular.",
+      "vue": "Vista",
+      "vueTableau": "Tabla",
+      "vueCroise": "Tabla dinámica",
+      "lignes": "En filas",
+      "colonnes": "En columnas",
+      "valeurs": "Valores",
+      "champLigne": "Campo en filas {n}",
+      "champColonne": "Campo en columnas {n}",
+      "champValeur": "Campo del valor {n}",
+      "agregatValeur": "Cálculo del valor {n}",
+      "choisir": "Elegir un campo",
+      "ajouterLigne": "Añadir un campo en filas",
+      "ajouterColonne": "Añadir un campo en columnas",
+      "ajouterValeur": "Añadir un valor",
+      "retirerChamp": "Quitar el campo {n}",
+      "retirerValeur": "Quitar el valor {n}",
+      "retirer": "Quitar la tabla dinámica",
+      "limiteLignes": "Como máximo tres campos en filas.",
+      "limiteColonnes": "Como máximo dos campos en columnas.",
+      "limiteValeurs": "Como máximo seis valores.",
+      "minLignes": "Se necesita al menos un campo en filas.",
+      "minValeurs": "Se necesita al menos un valor.",
+      "doublon": "Un campo solo puede usarse una vez, en filas o en columnas.",
+      "doublonValeur": "Este valor ya está en la tabla.",
+      "aucunChampLigne": "No hay ningún campo disponible para las filas.",
+      "aucunChampValeur": "No hay ningún campo numérico disponible para los valores."
+    }
+  },
+  "graphiqueUi": {
+    "chargement": "Cargando el gráfico",
+    "erreurChargement": "No se pudo cargar el gráfico.",
+    "reessayer": "Reintentar",
+    "videTitre": "No hay datos que mostrar",
+    "videAide": "No hay puntos que trazar para el período y el ámbito elegidos.",
+    "ariaLabel": "{titre}. {description}",
+    "pngIndisponible": "El gráfico aún no está listo: inténtelo de nuevo en un momento.",
+    "selecteur": {
+      "libelle": "Tipo de gráfico",
+      "indisponible": "{forme} (no disponible): {motif}"
+    },
+    "avertissements": {
+      "liste": "Observaciones sobre la visualización",
+      "forme_changee": "Se muestra como gráfico de {vers}: más de {max} categorías",
+      "limite_appliquee": "Top {n} de {total}: el resto se agrupa o se oculta",
+      "serie_ignoree": "{n, plural, one {# medida ignorada} many {# de medidas ignoradas} other {# medidas ignoradas}}: el gráfico de {forme} solo muestra una"
+    },
+    "motifs": {
+      "trop_de_categories": "Más de {max} categorías: este tipo sería ilegible, las barras horizontales son más adecuadas.",
+      "une_mesure_requise": "Este tipo solo muestra una medida.",
+      "deux_mesures_requises": "Este tipo requiere al menos dos medidas.",
+      "serie_requise": "Este tipo requiere una segunda dimensión para formar las series.",
+      "categories_insuffisantes": "Este tipo requiere al menos dos categorías."
+    },
+    "changement": {
+      "refuse": "No se puede cambiar: {motif}",
+      "remplace": "Tipo sustituido por «{forme}»: {motif}"
+    }
+  },
+  "indicateurs": {
+    "liste": "Indicadores",
+    "aucun": "No hay indicadores que mostrar",
+    "donneeIndisponible": "Dato no disponible",
+    "tendance": {
+      "hausse": "al alza",
+      "baisse": "a la baja",
+      "stable": "estable"
+    },
+    "variationIndisponible": "Variación no disponible",
+    "variation": "{variation} {sens}",
+    "reference": "{libelle}: {valeur}",
+    "objectif": "Objetivo: {valeur}",
+    "objectifNomme": "{libelle}: {valeur}",
+    "taux": "Tasa de realización: {taux}",
+    "tauxIndisponible": "Tasa de realización no disponible",
+    "statut": {
+      "atteint": "Alcanzado",
+      "en_cours": "En curso",
+      "a_risque": "En riesgo"
+    }
+  },
+  "document": {
+    "region": "Documento: {titre}",
+    "indisponible": "Este elemento del documento ya no está disponible.",
+    "artefactIndisponible": "Artefacto no disponible",
+    "artefactIndisponibleAide": "Puede que se haya eliminado o que ya no tenga acceso a él.",
+    "graphiqueIndisponible": "Los datos de este gráfico no están disponibles.",
+    "tableauIndisponible": "Los datos de esta tabla no están disponibles.",
+    "vide": "Este documento está vacío.",
+    "tableDesMatieres": {
+      "titre": "En este documento",
+      "region": "Índice",
+      "ouvrir": "Mostrar el índice",
+      "replier": "Ocultar el índice",
+      "aller": "Ir a la sección {titre}"
+    }
+  },
+  "panneau": {
+    "titre": "Artefactos",
+    "region": "Panel de artefactos",
+    "listeOnglets": "Artefactos de la conversación",
+    "contenu": "Contenido del artefacto",
+    "fermer": "Cerrar el panel",
+    "agrandir": "Ampliar el panel",
+    "reduire": "Reducir el panel",
+    "pleinEcran": "Panel de artefactos en pantalla completa",
+    "chargement": "Cargando el artefacto",
+    "chargementListe": "Cargando los artefactos",
+    "reessayer": "Reintentar",
+    "vide": {
+      "titre": "Aún no hay artefactos",
+      "texte": "Pida una tabla, un gráfico o un informe en la conversación: aparecerá aquí."
+    },
+    "lectureSeule": "Solo lectura",
+    "version": {
+      "etiquette": "Versión",
+      "libelle": "v{n}",
+      "libelleDate": "v{n} · {date}",
+      "actuelle": "actual",
+      "bandeau": "Está viendo la versión {n}, en solo lectura.",
+      "revenir": "Volver a la última"
+    },
+    "vue": {
+      "groupe": "Vista",
+      "graphique": "Gráfico",
+      "tableau": "Tabla"
+    },
+    "copier": "Copiar",
+    "copieReussie": "Tabla copiada, lista para pegar en Excel",
+    "copieEchec": "No se pudo copiar",
+    "comment": "Cómo lo he calculado",
+    "jeuNumero": "Conjunto de datos {n} de {total}",
+    "apercu": {
+      "vide": "Este artefacto no contiene nada que mostrar."
+    },
+    "enregistrement": {
+      "enCours": "Guardando…",
+      "enregistre": "Guardado",
+      "erreur": "Error al guardar"
+    },
+    "types": {
+      "tableau": "Tabla",
+      "graphique": "Gráfico",
+      "indicateurs": "Indicadores",
+      "document": "Documento"
+    }
+  },
+  "carte": {
+    "ouvrir": "Abrir",
+    "ouvrirAria": "Abrir el artefacto {titre}",
+    "types": {
+      "tableau": "Tabla",
+      "graphique": "Gráfico",
+      "indicateurs": "Indicadores",
+      "document": "Documento"
+    },
+    "resume": {
+      "tableau": "Tabla · {n, plural, =0 {ninguna fila} one {# fila} many {# de filas} other {# filas}}",
+      "graphique": "Gráfico · {forme}",
+      "indicateurs": "{n, plural, =0 {Ningún indicador} one {# indicador} many {# de indicadores} other {# indicadores}}",
+      "document": "Documento"
+    }
+  },
+  "provenance": {
+    "titre": "Cómo lo he calculado",
+    "source": "Fuente",
+    "periode": "Período",
+    "perimetre": "Ámbito",
+    "filtres": "Filtros",
+    "filtre": "{libelle}: {valeur}",
+    "aucunFiltre": "Ningún filtro",
+    "regles": "Reglas aplicadas",
+    "lienEcran": "Pantalla equivalente de Data Genius",
+    "sql": "Consulta SQL (reservada a los administradores)",
+    "copierSql": "Copiar la consulta",
+    "sqlCopiee": "Consulta copiada",
+    "copieEchec": "No se pudo copiar",
+    "calculeLe": "Calculado el {date}"
+  },
+  "telechargement": {
+    "bouton": "Descargar",
+    "enCours": "Descarga en curso",
+    "menu": "Formatos de descarga",
+    "formats": {
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "pdf": "PDF (.pdf)",
+      "png": "Imagen PNG (.png)",
+      "pptx": "PowerPoint (.pptx)"
+    },
+    "reussi": "{format} descargado",
+    "echec": "La descarga ha fallado"
+  },
+  "exports": {
+    "exporteLe": "Exportado el {date}",
+    "page": "Página {page} de {total}",
+    "total": "Total",
+    "feuilleDonnees": "Datos",
+    "feuilleProvenance": "Procedencia",
+    "feuilleIndicateurs": "Indicadores",
+    "fichierSansTitre": "Exportación de Data Genius",
+    "agregats": {
+      "somme": "Suma",
+      "moyenne": "Promedio",
+      "min": "Mínimo",
+      "max": "Máximo",
+      "nombre": "Recuento"
+    },
+    "provenance": {
+      "source": "Fuente",
+      "periode": "Período",
+      "perimetre": "Ámbito",
+      "filtres": "Filtros",
+      "regles": "Reglas de cálculo",
+      "calculeLe": "Calculado el",
+      "lienEcran": "Pantalla de origen",
+      "exportePar": "Exportado por {nom}",
+      "aucun": "Ninguno"
+    },
+    "lignesContexte": {
+      "source": "Fuente: {valeur}",
+      "periode": "Período: {valeur}",
+      "perimetre": "Ámbito: {valeur}"
+    },
+    "indicateurs": {
+      "indicateur": "Indicador",
+      "valeur": "Valor",
+      "comparaison": "Comparación",
+      "valeurComparaison": "Valor de comparación",
+      "variation": "Variación (%)",
+      "objectif": "Objetivo",
+      "valeurObjectif": "Valor del objetivo",
+      "taux": "Tasa de realización (%)",
+      "statut": "Estado",
+      "statuts": {
+        "atteint": "Alcanzado",
+        "enCours": "En curso",
+        "aRisque": "En riesgo"
+      }
+    },
+    "erreurs": {
+      "introuvable": "No se encuentra este artefacto o no tiene acceso a él.",
+      "formatNonSupporte": "Este formato de exportación no está disponible para este artefacto.",
+      "formatInvalide": "Formato de exportación desconocido. Formatos aceptados: xlsx, csv, pdf, pptx.",
+      "tropDeLignes": "Este artefacto contiene demasiadas filas para exportarse. Afine los filtros e inténtelo de nuevo.",
+      "limiteDebit": "Se solicitaron demasiados recálculos de datos. Vuelva a intentar la exportación en {minutes, plural, one {# minuto} other {# minutos}}.",
+      "echec": "La exportación ha fallado. Inténtelo de nuevo en un momento."
+    }
+  },
+  "exportsPdf": {
+    "marque": "Data Genius",
+    "sommaire": "Índice",
+    "sourcesEtCalcul": "Fuentes y cálculo",
+    "troncature": "{n, plural, one {# fila mostrada} many {# de filas mostradas} other {# filas mostradas}} de {total, number}: descargue la exportación de Excel para obtener todas las filas.",
+    "partieColonnes": "Columnas {debut} a {fin} de {total}",
+    "graphiqueIndisponible": "No se pudo dibujar el gráfico: sus datos se presentan en la tabla siguiente.",
+    "limiteAppliquee": "El gráfico muestra los {n} primeros elementos de {total}; los demás se agrupan.",
+    "libelleValeur": "{libelle}: {valeur}",
+    "indicateurs": {
+      "nonDisponible": "No disponible",
+      "variation": "Variación: {valeur}",
+      "variationSens": "Variación: {valeur} ({sens})",
+      "realisation": "Realización: {valeur}",
+      "sens": {
+        "hausse": "al alza",
+        "baisse": "a la baja",
+        "stable": "estable"
+      }
+    }
+  },
+  "exportsPptx": {
+    "marque": "Data Genius",
+    "sourcesEtCalcul": "Fuentes y cálculo",
+    "suite": "{titre} (continuación)",
+    "donneesDuGraphique": "{titre}: datos",
+    "imageNonModifiable": "Este tipo de gráfico no existe en PowerPoint: se inserta como imagen y no se puede modificar.",
+    "graphiqueIndisponible": "No se pudo crear el gráfico: sus datos se presentan en la diapositiva siguiente.",
+    "troncature": "{n, plural, one {# fila mostrada} many {# de filas mostradas} other {# filas mostradas}} de {total, number}: descargue la exportación de Excel para obtener todas las filas.",
+    "partieColonnes": "Columnas {debut} a {fin} de {total}",
+    "limiteAppliquee": "El gráfico muestra los {n} primeros elementos de {total}; los demás se agrupan.",
+    "libelleValeur": "{libelle}: {valeur}",
+    "titresParDefaut": {
+      "texte": "Texto",
+      "tableau": "Tabla",
+      "graphique": "Gráfico",
+      "indicateurs": "Indicadores"
+    },
+    "indicateurs": {
+      "nonDisponible": "No disponible",
+      "variation": "Variación: {valeur}",
+      "variationSens": "Variación: {valeur} ({sens})",
+      "realisation": "Realización: {valeur}",
+      "sens": {
+        "hausse": "al alza",
+        "baisse": "a la baja",
+        "stable": "estable"
+      }
+    }
+  },
+  "formes": {},
+  "erreurs": {
+    "chargement": "No se puede cargar este artefacto. Compruebe su conexión e inténtelo de nuevo.",
+    "introuvable": "No se encuentra este artefacto o no tiene acceso a él.",
+    "liste": "No se pudo cargar la lista de artefactos.",
+    "jeuManquant": "Los datos de este artefacto no están disponibles.",
+    "limiteDebit": "Se alcanzó el límite de recálculos por ahora. Inténtelo de nuevo en {minutes, plural, one {# minuto} other {# minutos}}.",
+    "enregistrement": "Error al guardar: se ha restablecido la última versión guardada.",
+    "conflit": "Este artefacto se ha modificado entretanto: se muestra la última versión y su cambio no se ha guardado.",
+    "telechargement": {
+      "reseau": "No se puede contactar con el servidor. Compruebe su conexión e inténtelo de nuevo.",
+      "refuse": "No tiene acceso a esta descarga. Vuelva a iniciar sesión e inténtelo de nuevo.",
+      "introuvable": "No se encuentra este artefacto o no tiene acceso a él.",
+      "format": "Este formato no está disponible para este artefacto.",
+      "tropDeLignes": "Este artefacto contiene demasiadas filas para exportarse. Afine los filtros e inténtelo de nuevo.",
+      "echec": "La descarga ha fallado. Inténtelo de nuevo en un momento.",
+      "png": "No se pudo crear la imagen del gráfico."
+    }
+  }
+}

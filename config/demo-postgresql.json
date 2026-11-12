@@ -1,0 +1,231 @@
+{
+  "sources": [
+    {
+      "id": "demo_distribution",
+      "titre": "Distribution · données fictives",
+      "connexion": "DATAGENIUS_SOURCE_DISTRIBUTION",
+      "jeux": [
+        {
+          "cle": "ventes",
+          "titre": "Ventes",
+          "description": "Ventes mensuelles de la société fictive, avec chiffre d’affaires net en euros.",
+          "grain": "Une ligne par agence, produit et mois",
+          "schema": "metier",
+          "colonnes": [
+            {
+              "nom": "agence",
+              "type": "texte",
+              "description": "Agence"
+            },
+            {
+              "nom": "produit",
+              "type": "texte",
+              "description": "Produit"
+            },
+            {
+              "nom": "mois",
+              "type": "periode",
+              "description": "Mois (AAAA-MM)"
+            },
+            {
+              "nom": "quantite",
+              "type": "entier",
+              "description": "Quantité vendue"
+            },
+            {
+              "nom": "ca",
+              "type": "montant",
+              "description": "Chiffre d’affaires net (EUR)"
+            }
+          ],
+          "dimensions": [
+            "agence",
+            "produit",
+            "mois"
+          ],
+          "mesures": [
+            {
+              "cle": "quantite_vendue",
+              "colonne": "quantite",
+              "agregat": "somme",
+              "definition": "Quantité vendue"
+            },
+            {
+              "cle": "ca_eur",
+              "colonne": "ca",
+              "agregat": "somme",
+              "definition": "Chiffre d’affaires net",
+              "unite": "EUR"
+            }
+          ],
+          "table": "activite",
+          "frequenceMinutes": 5
+        },
+        {
+          "cle": "stocks",
+          "titre": "Stocks",
+          "description": "Stock disponible en fin de mois. Comparer les niveaux par mois.",
+          "grain": "Une ligne par agence, produit et mois",
+          "schema": "metier",
+          "colonnes": [
+            {
+              "nom": "agence",
+              "type": "texte",
+              "description": "Agence"
+            },
+            {
+              "nom": "produit",
+              "type": "texte",
+              "description": "Produit"
+            },
+            {
+              "nom": "mois",
+              "type": "periode",
+              "description": "Mois (AAAA-MM)"
+            },
+            {
+              "nom": "stock",
+              "type": "entier",
+              "description": "Unités en stock"
+            }
+          ],
+          "dimensions": [
+            "agence",
+            "produit",
+            "mois"
+          ],
+          "mesures": [
+            {
+              "cle": "stock_unites",
+              "colonne": "stock",
+              "agregat": "somme",
+              "definition": "Unités en stock",
+              "instantane": true
+            }
+          ],
+          "instantanePar": "mois",
+          "table": "activite",
+          "frequenceMinutes": 5
+        },
+        {
+          "cle": "budget",
+          "titre": "Budget",
+          "description": "Objectifs de chiffre d’affaires mensuels en euros.",
+          "grain": "Une ligne par agence, produit et mois",
+          "schema": "metier",
+          "colonnes": [
+            {
+              "nom": "agence",
+              "type": "texte",
+              "description": "Agence"
+            },
+            {
+              "nom": "produit",
+              "type": "texte",
+              "description": "Produit"
+            },
+            {
+              "nom": "mois",
+              "type": "periode",
+              "description": "Mois (AAAA-MM)"
+            },
+            {
+              "nom": "objectif",
+              "type": "montant",
+              "description": "Objectif (EUR)"
+            }
+          ],
+          "dimensions": [
+            "agence",
+            "produit",
+            "mois"
+          ],
+          "mesures": [
+            {
+              "cle": "objectif_eur",
+              "colonne": "objectif",
+              "agregat": "somme",
+              "definition": "Objectif de chiffre d’affaires",
+              "unite": "EUR"
+            }
+          ],
+          "table": "activite",
+          "frequenceMinutes": 5
+        }
+      ]
+    },
+    {
+      "id": "demo_support",
+      "titre": "Support · données fictives",
+      "connexion": "DATAGENIUS_SOURCE_SUPPORT",
+      "jeux": [
+        {
+          "cle": "centres",
+          "titre": "Centres de support",
+          "description": "Segments des centres fictifs.",
+          "grain": "Une ligne par centre",
+          "schema": "support",
+          "table": "centres",
+          "frequenceMinutes": 10,
+          "colonnes": [
+            {
+              "nom": "centre",
+              "origine": "Nom du centre",
+              "type": "texte",
+              "description": "Centre"
+            },
+            {
+              "nom": "segment",
+              "type": "texte",
+              "description": "Segment"
+            }
+          ],
+          "dimensions": [
+            "centre",
+            "segment"
+          ],
+          "mesures": []
+        }
+      ]
+    }
+  ],
+  "combinaisons": [
+    {
+      "cle": "ventes_par_segment",
+      "titre": "Ventes et segments",
+      "description": "Ventes enrichies du segment du centre de support.",
+      "grain": "Une ligne par centre, produit et mois",
+      "sql": "SELECT v.mois, c.segment, v.ca FROM mv_ventes v JOIN mv_centres c ON v.agence = c.centre",
+      "colonnes": [
+        {
+          "nom": "mois",
+          "type": "periode",
+          "description": "Mois (AAAA-MM)"
+        },
+        {
+          "nom": "segment",
+          "type": "texte",
+          "description": "Segment"
+        },
+        {
+          "nom": "ca",
+          "type": "montant",
+          "description": "Chiffre d’affaires net (EUR)"
+        }
+      ],
+      "dimensions": [
+        "mois",
+        "segment"
+      ],
+      "mesures": [
+        {
+          "cle": "ca_eur",
+          "colonne": "ca",
+          "agregat": "somme",
+          "definition": "Chiffre d’affaires net",
+          "unite": "EUR"
+        }
+      ]
+    }
+  ]
+}

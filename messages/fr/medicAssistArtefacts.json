@@ -1,0 +1,376 @@
+{
+  "titre": "Data Genius",
+  "graphique": {
+    "autres": "Autres",
+    "total": "Total",
+    "objectif": "Objectif",
+    "aucuneDonnee": "Aucune donnée à afficher",
+    "sansValeur": "Non renseigné",
+    "titreAccessible": "Graphique en {forme} : {mesures}",
+    "descriptionAccessible": "{series, plural, one {# série} other {# séries}}, {points, plural, one {# point} other {# points}}",
+    "forme": {
+      "barres": "barres",
+      "barres_empilees": "barres empilées",
+      "barres_horizontales": "barres horizontales",
+      "lignes": "lignes",
+      "aires": "aires",
+      "secteurs": "secteurs",
+      "anneau": "anneau",
+      "nuage": "nuage de points",
+      "combine": "barres et lignes",
+      "carte_chaleur": "carte de chaleur",
+      "treemap": "treemap",
+      "entonnoir": "entonnoir",
+      "jauge": "jauge"
+    }
+  },
+  "tableau": {
+    "regionLabel": "Tableau : {titre}",
+    "chargement": "Chargement du tableau",
+    "erreur": "Ce tableau ne peut pas être affiché.",
+    "total": "Total",
+    "nbLignes": "{n, plural, one {# ligne} other {# lignes}}",
+    "tronque": "Seules les {n, number} premières lignes sont affichées ; téléchargez l'export complet pour tout obtenir.",
+    "agregats": {
+      "somme": "Somme",
+      "moyenne": "Moyenne",
+      "min": "Minimum",
+      "max": "Maximum",
+      "nombre": "Nombre"
+    },
+    "vide": {
+      "titre": "Aucune ligne pour ces filtres",
+      "description": "Aucune ligne du jeu de données ne correspond aux filtres de ce tableau.",
+      "reinitialiser": "Réinitialiser les filtres",
+      "titreSansFiltre": "Aucune ligne à afficher",
+      "descriptionSansFiltre": "Le jeu de données est vide pour cette période et ce périmètre."
+    },
+    "copie": {
+      "succes": "Tableau copié : collez-le dans Excel",
+      "echec": "La copie a échoué. Sélectionnez le tableau et copiez-le à la main."
+    },
+    "modifierPivot": "Modifier le tableau croisé",
+    "avertissements": {
+      "sommePourcentage": "Additionner des pourcentages n'a pas de sens : choisissez plutôt la moyenne, le minimum ou le maximum."
+    },
+    "pivot": {
+      "titre": "Tableau croisé",
+      "aide": "Regroupez les lignes par un ou plusieurs champs, étalez-en d'autres en colonnes et choisissez les valeurs à calculer.",
+      "vue": "Affichage",
+      "vueTableau": "Tableau",
+      "vueCroise": "Tableau croisé",
+      "lignes": "En lignes",
+      "colonnes": "En colonnes",
+      "valeurs": "Valeurs",
+      "champLigne": "Champ en lignes {n}",
+      "champColonne": "Champ en colonnes {n}",
+      "champValeur": "Champ de la valeur {n}",
+      "agregatValeur": "Calcul de la valeur {n}",
+      "choisir": "Choisir un champ",
+      "ajouterLigne": "Ajouter un champ en lignes",
+      "ajouterColonne": "Ajouter un champ en colonnes",
+      "ajouterValeur": "Ajouter une valeur",
+      "retirerChamp": "Retirer le champ {n}",
+      "retirerValeur": "Retirer la valeur {n}",
+      "retirer": "Retirer le tableau croisé",
+      "limiteLignes": "Trois champs en lignes au plus.",
+      "limiteColonnes": "Deux champs en colonnes au plus.",
+      "limiteValeurs": "Six valeurs au plus.",
+      "minLignes": "Il faut au moins un champ en lignes.",
+      "minValeurs": "Il faut au moins une valeur.",
+      "doublon": "Un champ ne peut servir qu'une fois, en lignes ou en colonnes.",
+      "doublonValeur": "Cette valeur est déjà dans le tableau.",
+      "aucunChampLigne": "Aucun champ disponible pour les lignes.",
+      "aucunChampValeur": "Aucun champ numérique disponible pour les valeurs."
+    }
+  },
+  "graphiqueUi": {
+    "chargement": "Chargement du graphique",
+    "erreurChargement": "Le graphique n'a pas pu être chargé.",
+    "reessayer": "Réessayer",
+    "videTitre": "Aucune donnée à afficher",
+    "videAide": "Aucun point à tracer pour la période et le périmètre choisis.",
+    "ariaLabel": "{titre}. {description}",
+    "pngIndisponible": "Le graphique n'est pas encore prêt : réessayez dans un instant.",
+    "selecteur": {
+      "libelle": "Forme du graphique",
+      "indisponible": "{forme} (indisponible) : {motif}"
+    },
+    "avertissements": {
+      "liste": "Remarques sur l'affichage",
+      "forme_changee": "Affichage en {vers} : plus de {max} catégories",
+      "limite_appliquee": "Top {n} sur {total} : le reste est regroupé ou masqué",
+      "serie_ignoree": "{n, plural, one {# mesure ignorée} other {# mesures ignorées}} : la forme {forme} n'en affiche qu'une"
+    },
+    "motifs": {
+      "trop_de_categories": "Plus de {max} catégories : cette forme deviendrait illisible, les barres horizontales conviennent mieux.",
+      "une_mesure_requise": "Cette forme n'affiche qu'une seule mesure.",
+      "deux_mesures_requises": "Cette forme demande au moins deux mesures.",
+      "serie_requise": "Cette forme demande une seconde dimension pour former les séries.",
+      "categories_insuffisantes": "Cette forme demande au moins deux catégories."
+    },
+    "changement": {
+      "refuse": "Changement impossible : {motif}",
+      "remplace": "Forme remplacée par « {forme} » : {motif}"
+    }
+  },
+  "indicateurs": {
+    "liste": "Indicateurs",
+    "aucun": "Aucun indicateur à afficher",
+    "donneeIndisponible": "Donnée indisponible",
+    "tendance": {
+      "hausse": "en hausse",
+      "baisse": "en baisse",
+      "stable": "stable"
+    },
+    "variationIndisponible": "Variation indisponible",
+    "variation": "{variation} {sens}",
+    "reference": "{libelle} : {valeur}",
+    "objectif": "Objectif : {valeur}",
+    "objectifNomme": "{libelle} : {valeur}",
+    "taux": "Taux de réalisation : {taux}",
+    "tauxIndisponible": "Taux de réalisation indisponible",
+    "statut": {
+      "atteint": "Atteint",
+      "en_cours": "En cours",
+      "a_risque": "À risque"
+    }
+  },
+  "document": {
+    "region": "Document : {titre}",
+    "indisponible": "Cet élément du document n'est plus disponible.",
+    "artefactIndisponible": "Artefact indisponible",
+    "artefactIndisponibleAide": "Il a peut-être été supprimé, ou vous n'y avez plus accès.",
+    "graphiqueIndisponible": "Les données de ce graphique ne sont pas disponibles.",
+    "tableauIndisponible": "Les données de ce tableau ne sont pas disponibles.",
+    "vide": "Ce document est vide.",
+    "tableDesMatieres": {
+      "titre": "Dans ce document",
+      "region": "Table des matières",
+      "ouvrir": "Afficher la table des matières",
+      "replier": "Masquer la table des matières",
+      "aller": "Aller à la section {titre}"
+    }
+  },
+  "panneau": {
+    "titre": "Artefacts",
+    "region": "Panneau des artefacts",
+    "listeOnglets": "Artefacts de la conversation",
+    "contenu": "Contenu de l'artefact",
+    "fermer": "Fermer le panneau",
+    "agrandir": "Agrandir le panneau",
+    "reduire": "Réduire le panneau",
+    "pleinEcran": "Panneau des artefacts en plein écran",
+    "chargement": "Chargement de l'artefact",
+    "chargementListe": "Chargement des artefacts",
+    "reessayer": "Réessayer",
+    "vide": {
+      "titre": "Aucun artefact pour l'instant",
+      "texte": "Demandez un tableau, un graphique ou un rapport dans la conversation : il apparaîtra ici."
+    },
+    "lectureSeule": "Lecture seule",
+    "version": {
+      "etiquette": "Version",
+      "libelle": "v{n}",
+      "libelleDate": "v{n} · {date}",
+      "actuelle": "actuelle",
+      "bandeau": "Vous consultez la version {n}, en lecture seule.",
+      "revenir": "Revenir à la dernière"
+    },
+    "vue": {
+      "groupe": "Affichage",
+      "graphique": "Graphique",
+      "tableau": "Tableau"
+    },
+    "copier": "Copier",
+    "copieReussie": "Tableau copié, prêt à coller dans Excel",
+    "copieEchec": "La copie a échoué",
+    "comment": "Comment j'ai calculé",
+    "jeuNumero": "Jeu de données {n} sur {total}",
+    "apercu": {
+      "vide": "Cet artefact ne contient rien à afficher."
+    },
+    "enregistrement": {
+      "enCours": "Enregistrement…",
+      "enregistre": "Enregistré",
+      "erreur": "Échec de l'enregistrement"
+    },
+    "types": {
+      "tableau": "Tableau",
+      "graphique": "Graphique",
+      "indicateurs": "Indicateurs",
+      "document": "Document"
+    }
+  },
+  "carte": {
+    "ouvrir": "Ouvrir",
+    "ouvrirAria": "Ouvrir l'artefact {titre}",
+    "types": {
+      "tableau": "Tableau",
+      "graphique": "Graphique",
+      "indicateurs": "Indicateurs",
+      "document": "Document"
+    },
+    "resume": {
+      "tableau": "Tableau · {n, plural, =0 {aucune ligne} one {# ligne} other {# lignes}}",
+      "graphique": "Graphique · {forme}",
+      "indicateurs": "{n, plural, =0 {Aucun indicateur} one {# indicateur} other {# indicateurs}}",
+      "document": "Document"
+    }
+  },
+  "provenance": {
+    "titre": "Comment j'ai calculé",
+    "source": "Source",
+    "periode": "Période",
+    "perimetre": "Périmètre",
+    "filtres": "Filtres",
+    "filtre": "{libelle} : {valeur}",
+    "aucunFiltre": "Aucun filtre",
+    "regles": "Règles appliquées",
+    "lienEcran": "Écran Data Genius équivalent",
+    "sql": "Requête SQL (réservée aux administrateurs)",
+    "copierSql": "Copier la requête",
+    "sqlCopiee": "Requête copiée",
+    "copieEchec": "La copie a échoué",
+    "calculeLe": "Calculé le {date}"
+  },
+  "telechargement": {
+    "bouton": "Télécharger",
+    "enCours": "Téléchargement en cours",
+    "menu": "Formats de téléchargement",
+    "formats": {
+      "xlsx": "Excel (.xlsx)",
+      "csv": "CSV (.csv)",
+      "pdf": "PDF (.pdf)",
+      "png": "Image PNG (.png)",
+      "pptx": "PowerPoint (.pptx)"
+    },
+    "reussi": "{format} téléchargé",
+    "echec": "Le téléchargement a échoué"
+  },
+  "exports": {
+    "exporteLe": "Exporté le {date}",
+    "page": "Page {page} sur {total}",
+    "total": "Total",
+    "feuilleDonnees": "Données",
+    "feuilleProvenance": "Provenance",
+    "feuilleIndicateurs": "Indicateurs",
+    "fichierSansTitre": "Export Data Genius",
+    "agregats": {
+      "somme": "Somme",
+      "moyenne": "Moyenne",
+      "min": "Minimum",
+      "max": "Maximum",
+      "nombre": "Nombre"
+    },
+    "provenance": {
+      "source": "Source",
+      "periode": "Période",
+      "perimetre": "Périmètre",
+      "filtres": "Filtres",
+      "regles": "Règles de calcul",
+      "calculeLe": "Calculé le",
+      "lienEcran": "Écran source",
+      "exportePar": "Exporté par {nom}",
+      "aucun": "Aucun"
+    },
+    "lignesContexte": {
+      "source": "Source : {valeur}",
+      "periode": "Période : {valeur}",
+      "perimetre": "Périmètre : {valeur}"
+    },
+    "indicateurs": {
+      "indicateur": "Indicateur",
+      "valeur": "Valeur",
+      "comparaison": "Comparaison",
+      "valeurComparaison": "Valeur de comparaison",
+      "variation": "Variation (%)",
+      "objectif": "Objectif",
+      "valeurObjectif": "Valeur de l'objectif",
+      "taux": "Taux de réalisation (%)",
+      "statut": "Statut",
+      "statuts": {
+        "atteint": "Atteint",
+        "enCours": "En cours",
+        "aRisque": "À risque"
+      }
+    },
+    "erreurs": {
+      "introuvable": "Cet artefact est introuvable ou vous n'y avez pas accès.",
+      "formatNonSupporte": "Ce format d'export n'est pas disponible pour cet artefact.",
+      "formatInvalide": "Format d'export inconnu. Formats acceptés : xlsx, csv, pdf, pptx.",
+      "tropDeLignes": "Cet artefact contient trop de lignes pour être exporté. Affinez les filtres puis réessayez.",
+      "limiteDebit": "Trop de recalculs de données ont été demandés. Réessayez l'export dans {minutes, plural, one {# minute} other {# minutes}}.",
+      "echec": "L'export a échoué. Réessayez dans un instant."
+    }
+  },
+  "exportsPdf": {
+    "marque": "Data Genius",
+    "sommaire": "Sommaire",
+    "sourcesEtCalcul": "Sources et calcul",
+    "troncature": "{n, plural, one {# ligne affichée} other {# lignes affichées}} sur {total, number} : téléchargez l'export Excel pour obtenir toutes les lignes.",
+    "partieColonnes": "Colonnes {debut} à {fin} sur {total}",
+    "graphiqueIndisponible": "Le graphique n'a pas pu être dessiné : ses données sont présentées dans le tableau ci-dessous.",
+    "limiteAppliquee": "Le graphique montre les {n} premiers éléments sur {total} ; les autres sont regroupés.",
+    "libelleValeur": "{libelle} : {valeur}",
+    "indicateurs": {
+      "nonDisponible": "Non disponible",
+      "variation": "Variation : {valeur}",
+      "variationSens": "Variation : {valeur} ({sens})",
+      "realisation": "Réalisation : {valeur}",
+      "sens": {
+        "hausse": "en hausse",
+        "baisse": "en baisse",
+        "stable": "stable"
+      }
+    }
+  },
+  "exportsPptx": {
+    "marque": "Data Genius",
+    "sourcesEtCalcul": "Sources et calcul",
+    "suite": "{titre} (suite)",
+    "donneesDuGraphique": "{titre} : données",
+    "imageNonModifiable": "Ce type de graphique n'existe pas dans PowerPoint : il est inséré en image et n'est pas modifiable.",
+    "graphiqueIndisponible": "Le graphique n'a pas pu être construit : ses données sont présentées sur la diapositive suivante.",
+    "troncature": "{n, plural, one {# ligne affichée} other {# lignes affichées}} sur {total, number} : téléchargez l'export Excel pour obtenir toutes les lignes.",
+    "partieColonnes": "Colonnes {debut} à {fin} sur {total}",
+    "limiteAppliquee": "Le graphique montre les {n} premiers éléments sur {total} ; les autres sont regroupés.",
+    "libelleValeur": "{libelle} : {valeur}",
+    "titresParDefaut": {
+      "texte": "Texte",
+      "tableau": "Tableau",
+      "graphique": "Graphique",
+      "indicateurs": "Indicateurs"
+    },
+    "indicateurs": {
+      "nonDisponible": "Non disponible",
+      "variation": "Variation : {valeur}",
+      "variationSens": "Variation : {valeur} ({sens})",
+      "realisation": "Réalisation : {valeur}",
+      "sens": {
+        "hausse": "en hausse",
+        "baisse": "en baisse",
+        "stable": "stable"
+      }
+    }
+  },
+  "formes": {},
+  "erreurs": {
+    "chargement": "Impossible de charger cet artefact. Vérifiez votre connexion puis réessayez.",
+    "introuvable": "Cet artefact est introuvable ou vous n'y avez pas accès.",
+    "liste": "La liste des artefacts n'a pas pu être chargée.",
+    "jeuManquant": "Les données de cet artefact sont indisponibles.",
+    "limiteDebit": "La limite de recalculs est atteinte pour le moment. Réessayez dans {minutes, plural, one {# minute} other {# minutes}}.",
+    "enregistrement": "L'enregistrement a échoué : la dernière version enregistrée est rétablie.",
+    "conflit": "Cet artefact a été modifié entre-temps : la dernière version est affichée et votre modification n'a pas été enregistrée.",
+    "telechargement": {
+      "reseau": "Le serveur est injoignable. Vérifiez votre connexion puis réessayez.",
+      "refuse": "Vous n'avez pas accès à ce téléchargement. Reconnectez-vous puis réessayez.",
+      "introuvable": "Cet artefact est introuvable ou vous n'y avez pas accès.",
+      "format": "Ce format n'est pas disponible pour cet artefact.",
+      "tropDeLignes": "Cet artefact contient trop de lignes pour être exporté. Affinez les filtres puis réessayez.",
+      "echec": "Le téléchargement a échoué. Réessayez dans un instant.",
+      "png": "L'image du graphique n'a pas pu être créée."
+    }
+  }
+}
