@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/client'
+import { chargerDroitsDonnees, type DroitsDonnees } from './data-access'
 
 export interface AccessScope {
   roleName: string
   voitTout: boolean
+  donnees?: DroitsDonnees
 }
 
 export const ACCESS_SCOPE_INCLUDE = { roleName: true } as const
@@ -18,7 +20,8 @@ export async function getAccessScope(id: string): Promise<AccessScope | null> {
     where: { id, status: 'active', deletedAt: null },
     select: ACCESS_SCOPE_INCLUDE,
   })
-  return user ? buildAccessScope(user) : null
+  if (!user) return null
+  return { ...buildAccessScope(user), donnees: await chargerDroitsDonnees(id, user.roleName) }
 }
 
 export function reponseSessionPerimee(body: { error: string }) {

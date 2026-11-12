@@ -22,6 +22,8 @@
 import { toIntlTag, type Locale } from '@/i18n/config'
 import { prisma } from '@/lib/db/client'
 import { envoyerMail } from '@/lib/mail/transport'
+import { destinataireCouvrePerimetre } from '@/lib/auth/data-access'
+import { ressourceDansPerimetre } from './perimetre-ressource'
 import {
   PRIORITE_TACHE_EN_BASE,
   SCHEMAS_PARAMETRES_ACTION,
@@ -128,6 +130,7 @@ async function verifierDroits(
   let artefact: ArtefactVisible | null = null
   const artefactId = artefactIdConcerne(type, parametres)
   if (artefactId) artefact = await exigerProprietaireArtefact(depot, artefactId, contexte.userId)
+  if (artefactId && !(await ressourceDansPerimetre(contexte, 'artefact', artefactId))) throw new ErreurSuivi('introuvable')
 
   const ids = idsConcernes(type, parametres)
   let comptes: CompteNotifiable[]
@@ -141,6 +144,8 @@ async function verifierDroits(
     comptes = lecture.comptes.map(c => ({ ...c, aAcces: true }))
   }
 
+  const autorisations = await Promise.all(comptes.map(c => destinataireCouvrePerimetre(contexte.scope.donnees, c.id)))
+  if (autorisations.some(ok => !ok)) throw new ErreurSuivi('destinataire_invalide')
   return { comptes, artefact }
 }
 

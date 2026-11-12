@@ -8,7 +8,7 @@
 
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 import type { RequeteSemantique } from '@/lib/medic-assist/donnees/requete-interne'
-import { empreinteEntrees, registrePostgres } from '../catalogue/registre'
+import { empreinteEntreesAutorisees, registreAutorise } from '../catalogue/autorisation'
 import type { Registre } from '../catalogue/types'
 import { validerRequete } from '../catalogue/validation'
 import { lireEntrepot, normaliserLigne, reglesPublication } from '../lecture-seule'
@@ -58,7 +58,7 @@ export async function calculerSemantique(
   options: OptionsCalcul = {},
   registre?: Registre
 ): Promise<ResultatCalcule> {
-  const { entree, normalisee } = validerRequete(requete, ctx, registre ?? await registrePostgres())
+  const { entree, normalisee } = validerRequete(requete, ctx, await registreAutorise(ctx, registre))
   const construit = construireSql(normalisee, entree, ctx, { limiteLignes: options.limiteLignes })
 
   let lecture: Awaited<ReturnType<typeof lireEntrepot>>
@@ -112,7 +112,7 @@ export async function calculerSemantique(
     : undefined
 
   return {
-    empreinteSource: empreinteEntrees([entree]),
+    empreinteSource: empreinteEntreesAutorisees([entree]),
     colonnes: construit.colonnes,
     lignes,
     tronque,

@@ -26,7 +26,7 @@ import {
 } from '@/lib/medic-assist/contrats'
 import { libelleDe, REGLES } from './catalogue/communs'
 import { catalogueDonnees as catalogueDuMoteur, type DetailJeuCatalogue } from './catalogue/index'
-import { registrePostgres } from './catalogue/registre'
+import { registreAutorise } from './catalogue/autorisation'
 import { calculerSemantique } from './moteur/calculer'
 import { ErreurDonnees } from './types'
 import { aplatirRequete } from './requete-interne'
@@ -130,7 +130,7 @@ export async function catalogueDonnees(
   contexte: ContexteExecution,
   entree: EntreeCatalogueDonnees
 ): Promise<DescriptionJeu> {
-  const resultat = catalogueDuMoteur({ jeu: entree.jeu }, contexte, await registrePostgres())
+  const resultat = catalogueDuMoteur({ jeu: entree.jeu }, contexte, await registreAutorise(contexte))
   if (!('jeu' in resultat)) throw new ErreurDonnees('Indiquez une clé du catalogue.', 'jeu_inconnu')
   const { jeu } = resultat
   return versDescriptionJeu(jeu, contexte)

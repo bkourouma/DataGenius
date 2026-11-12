@@ -101,7 +101,54 @@ export function compilerJointure(spec: SelectionJointure, registre: Registre) {
       ${jointure} (${entrees.droite.vue.cte(ctx)}) AS droite ON ${Prisma.join(condition, ' AND ')}
     `
   }
-  return { entrees, snapshots, colonnes: colonnes.map(c => c.sortie), requete }
+  const cotes = ['gauche', 'droite'] as const
+  const numeriques = colonnes.filter(c => c.sortie.type === 'entier' || c.sortie.type === 'decimal')
+  function diagnostic(ctx: ContexteExecution) {
+    const cles = spec.liens.map((_, index) => citer('k' + index))
+    const compte = { gauche: Prisma.sql`g.n`, droite: Prisma.sql`d.n` }
+    const valides = { gauche: Prisma.sql`g.valide`, droite: Prisma.sql`d.valide` }
+    const groupes = (cote: typeof cotes[number]) => {
+      const origines = spec.liens.map(lien => citer(lien[cote]))
+      const projection = origines.map((nom, index) => Prisma.sql`${nom} AS ${cles[index]}`)
+      const valide = Prisma.join(origines.map(nom => Prisma.sql`${nom} IS NOT NULL`), ' AND ')
+      const sommes = numeriques.flatMap((colonne, index) => colonne.cote === cote
+        ? [Prisma.sql`sum(${citer(colonne.origine)}::numeric) AS ${citer('s' + index)}`] : [])
+      return Prisma.sql`
+        SELECT ${Prisma.join([...projection, ...sommes])}, (${valide}) AS valide, count(*)::numeric AS n
+        FROM (${entrees[cote].vue.cte(ctx)}) AS source GROUP BY ${Prisma.join(origines)}
+      `
+    }
+    const lies = Prisma.sql`g.n IS NOT NULL AND d.n IS NOT NULL`
+    const poidsGauche = spec.type === 'gauche' ? Prisma.sql`coalesce(d.n, 1)` : compte.droite
+    const agregats = cotes.flatMap(cote => {
+      const n = compte[cote]
+      const autre = compte[cote === 'gauche' ? 'droite' : 'gauche']
+      return [
+        Prisma.sql`coalesce(sum(${n}), 0)::text AS ${citer(cote + '_lignes')}`,
+        Prisma.sql`coalesce(sum(${n}) FILTER (WHERE ${lies}), 0)::text AS ${citer(cote + '_correspondances')}`,
+        Prisma.sql`coalesce(sum(${n}) FILTER (WHERE ${autre} IS NULL), 0)::text AS ${citer(cote + '_sans_correspondance')}`,
+        Prisma.sql`coalesce(sum(${n}) FILTER (WHERE NOT ${valides[cote]}), 0)::text AS ${citer(cote + '_lignes_cle_nulle')}`,
+        Prisma.sql`count(*) FILTER (WHERE ${valides[cote]} AND ${n} > 1)::text AS ${citer(cote + '_cles_dupliquees')}`,
+        Prisma.sql`coalesce(sum(${n}) FILTER (WHERE ${autre} > 1), 0)::text AS ${citer(cote + '_lignes_multipliees')}`,
+      ]
+    })
+    const totaux = numeriques.flatMap((colonne, index) => {
+      const source = citer(colonne.cote === 'gauche' ? 'g' : 'd')
+      const somme = Prisma.sql`${source}.${citer('s' + index)}`
+      const poids = colonne.cote === 'gauche' ? poidsGauche : compte.gauche
+      return [
+        Prisma.sql`sum(${somme})::text AS ${citer('avant' + index)}`,
+        Prisma.sql`sum(${somme} * ${poids})::text AS ${citer('apres' + index)}`,
+      ]
+    })
+    return Prisma.sql`
+      SELECT coalesce(sum(g.n * ${poidsGauche}), 0)::text AS resultat,
+        ${Prisma.join([...agregats, ...totaux])}
+      FROM (${groupes('gauche')}) AS g FULL JOIN (${groupes('droite')}) AS d
+      ON ${Prisma.join(cles.map(cle => Prisma.sql`g.${cle} = d.${cle}`), ' AND ')}
+    `
+  }
+  return { entrees, snapshots, colonnes: colonnes.map(c => c.sortie), requete, diagnostic, numeriques }
 }
 
 export async function lireJointures(client: Pick<Prisma.TransactionClient, '$queryRaw'> = prisma): Promise<JointureEnregistree[]> {

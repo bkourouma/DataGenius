@@ -1,0 +1,32 @@
+name: Vérification Data Genius
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+      - run: npm run typecheck
+      - run: npm test -- --project unit
+      - name: Préparer PostgreSQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql
+          printf 'PG_BIN=%s\n' "$(pg_config --bindir)" >> "$GITHUB_ENV"
+      - run: npm run test:postgres
+      - run: npm run build

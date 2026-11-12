@@ -8,7 +8,7 @@ import type {
   TypeColonne,
 } from '@/lib/medic-assist/contrats'
 import { libelleDe } from '../catalogue/communs'
-import { empreinteEntrees, registrePostgres } from '../catalogue/registre'
+import { empreinteEntreesAutorisees, registreAutorise } from '../catalogue/autorisation'
 import type { EntreeCatalogue, Registre } from '../catalogue/types'
 import { lireEntrepot, normaliserLigne, normaliserValeur, reglesPublication } from '../lecture-seule'
 import { DELAI_SQL_MS, ErreurDonnees, MAX_LIGNES_EXPORT, MAX_LIGNES_JEU } from '../types'
@@ -94,7 +94,7 @@ export async function calculerSql(
   registre?: Registre
 ): Promise<ResultatCalcule> {
   const sql = typeof params?.sql === 'string' ? params.sql : ''
-  const parNom = new Map((registre ?? await registrePostgres()).map(e => [e.vue.nom.toLowerCase(), e] as const))
+  const parNom = new Map((await registreAutorise(ctx, registre)).map(e => [e.vue.nom.toLowerCase(), e] as const))
 
   const analyse = analyserSqlDetaille(sql, [...parNom.keys()])
   if (!analyse.ok) throw new ErreurDonnees(analyse.message, 'sql_interdit')
@@ -165,5 +165,5 @@ export async function calculerSql(
     if (jeu.temps?.instantane) for (const c of vue.colonnes) colonnesNonAdditives.add(c.nom)
     for (const m of jeu.mesures) if (m.instantane || ['moyenne', 'rapport', 'min', 'max'].includes(m.agregat)) colonnesNonAdditives.add(m.cle)
   }
-  return { colonnes, lignes, tronque, provenance, empreinteSource: empreinteEntrees(entrees), colonnesNonAdditives }
+  return { colonnes, lignes, tronque, provenance, empreinteSource: empreinteEntreesAutorisees(entrees), colonnesNonAdditives }
 }

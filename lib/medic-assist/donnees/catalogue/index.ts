@@ -39,6 +39,10 @@ export interface DetailJeuCatalogue {
   description: string
   granularite: string
   siegeSeulement?: boolean
+  cles?: string[]
+  calendrier?: string
+  responsable?: string
+  versionMetier?: number
   temps: (TempsJeu & { granularites: Granularite[] }) | null
   dimensions: {
     cle: string
@@ -53,6 +57,7 @@ export interface DetailJeuCatalogue {
     definition: string
     type: TypeColonne
     unite?: string
+    devise?: string
     agregat: AgregatMesure
     instantane?: boolean
   }[]
@@ -84,6 +89,7 @@ function detailJeu(entree: EntreeCatalogue, ctx: Ctx): DetailJeuCatalogue {
     libelle: t(jeu.libelle),
     description: jeu.description,
     granularite: jeu.granularite,
+    ...(jeu.versionMetier ? { cles: jeu.cles, calendrier: jeu.calendrier, responsable: jeu.responsable, versionMetier: jeu.versionMetier } : {}),
     ...(jeu.siegeSeulement ? { siegeSeulement: true } : {}),
     temps: jeu.temps ? { ...jeu.temps, granularites: [...GRANULARITES] } : null,
     dimensions: dimensionsDisponibles(jeu).map(d => ({
@@ -99,6 +105,7 @@ function detailJeu(entree: EntreeCatalogue, ctx: Ctx): DetailJeuCatalogue {
       definition: m.definition,
       type: m.type,
       ...(m.unite ? { unite: m.unite } : {}),
+      ...(m.devise ? { devise: m.devise } : {}),
       agregat: m.agregat,
       ...(m.instantane || jeu.temps?.instantane ? { instantane: true } : {}),
     })),

@@ -4,8 +4,11 @@ import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 import { lireEntrepot } from '@/lib/medic-assist/donnees/lecture-seule'
 import { citer, empreinte } from './configuration'
 import { prisma } from '@/lib/db/client'
+import { regleDonneesSchema } from '@/lib/auth/data-access'
 import { registrePostgres } from '@/lib/medic-assist/donnees/catalogue/registre'
+import { registreAutorise } from '@/lib/medic-assist/donnees/catalogue/autorisation'
 import { ErreurJointure, JointureSchema, lireJointures, preparerJointure, compilerJointure, SelectionJointureSchema, INDICATEUR_CORRESPONDANCE, type JointureEnregistree } from './jointures'
+import { colonnesUtiliseesParCatalogue, publicationsMetier } from './modele-metier'
 
 async function avecVerrouCombinaisons<T>(action: (tx: Prisma.TransactionClient) => Promise<T>) {
   return prisma.$transaction(async tx => {
@@ -57,18 +60,32 @@ export async function modifierCombinaison(cle: string, revision: string, entree:
     const apres = preparerJointure(spec, registreAvant)
     const dependantes = jointures.filter(j => (j.gauche === cle || j.droite === cle) &&
       registreAvant.some(e => e.jeu.cle === j.cle))
-    if (dependantes.length) {
+    const publication = (await publicationsMetier(tx)).get(cle)
+    const [politique] = await tx.$queryRaw<{ definition: unknown }[]>`
+      SELECT definition FROM warehouse.regles_acces WHERE jeu = ${cle}
+    `
+    const regle = politique && regleDonneesSchema.parse(politique.definition)
+    if (dependantes.length || publication || regle) {
       const avant = preparerJointure(actuelle, registreAvant)
       const identiteColonnes = (colonnes: typeof avant.colonnes) => new Map(colonnes.map(c => [
         c.sortie.nom, JSON.stringify([c.cote, c.origine, c.sortie.type]),
       ]))
       const identitesAvant = identiteColonnes(avant.colonnes)
       const identitesApres = identiteColonnes(apres.colonnes)
+      const change = (nom: string) => identitesAvant.get(nom) !== identitesApres.get(nom)
       for (const dependante of dependantes) {
-        const colonne = colonnesUtilisees(dependante, cle).find(nom => identitesAvant.get(nom) !== identitesApres.get(nom))
+        const colonne = colonnesUtilisees(dependante, cle).find(change)
         if (colonne) {
           throw new ErreurJointure('La colonne « ' + colonne + ' » est utilisée par « ' + dependante.titre + ' ». Conservez-la pour enregistrer.')
         }
+      }
+      const colonnePubliee = publication && colonnesUtiliseesParCatalogue(publication.definition).find(change)
+      if (colonnePubliee) {
+        throw new ErreurJointure('La colonne « ' + colonnePubliee + ' » est utilisée par le catalogue métier. Mettez le catalogue à jour avant de la remplacer.')
+      }
+      const colonnePolitique = regle && [...regle.masquer, ...(regle.filtre ? [regle.filtre.colonne] : [])].find(change)
+      if (colonnePolitique) {
+        throw new ErreurJointure('La colonne « ' + colonnePolitique + ' » est utilisée par les droits d’accès. Mettez ces droits à jour avant de la remplacer.')
       }
     }
     await tx.$executeRaw`
@@ -82,7 +99,7 @@ const MAX_CARACTERES_CELLULE = 300
 
 export async function previsualiserCombinaison(entree: unknown, contexte: ContexteExecution) {
   const spec = SelectionJointureSchema.parse(entree)
-  const { entrees, colonnes, requete } = compilerJointure(spec, await registrePostgres())
+  const { entrees, colonnes, requete, diagnostic, numeriques } = compilerJointure(spec, await registreAutorise(contexte))
   const indicateur = citer(INDICATEUR_CORRESPONDANCE)
   // Borne aussi la taille des cellules avant de transférer le résultat vers le navigateur.
   const champs = colonnes.map(({ nom }) => {
@@ -94,7 +111,18 @@ export async function previsualiserCombinaison(entree: unknown, contexte: Contex
     SELECT ${Prisma.join(champs)}, a.${indicateur}
     FROM (${requete(contexte, true)}) AS a LIMIT ${MAX_LIGNES_APERCU + 1}
   `
-  const { resultats: [lignes] } = await lireEntrepot([sql], [entrees.gauche.vue, entrees.droite.vue])
+  const { resultats: [lignes, [statistiques]] } = await lireEntrepot(
+    [sql, diagnostic(contexte)], [entrees.gauche.vue, entrees.droite.vue],
+  )
+  const valeur = (cle: string) => typeof statistiques[cle] === 'string' ? statistiques[cle] as string : null
+  const statsCote = (cote: 'gauche' | 'droite') => ({
+    lignes: valeur(cote + '_lignes') ?? '0',
+    correspondances: valeur(cote + '_correspondances') ?? '0',
+    sansCorrespondance: valeur(cote + '_sans_correspondance') ?? '0',
+    lignesCleNulle: valeur(cote + '_lignes_cle_nulle') ?? '0',
+    clesDupliquees: valeur(cote + '_cles_dupliquees') ?? '0',
+    lignesMultipliees: valeur(cote + '_lignes_multipliees') ?? '0',
+  })
   return {
     colonnes,
     lignes: lignes.slice(0, MAX_LIGNES_APERCU).map(ligne => ({
@@ -102,6 +130,14 @@ export async function previsualiserCombinaison(entree: unknown, contexte: Contex
       correspondance: ligne[INDICATEUR_CORRESPONDANCE] === true,
     })),
     tronque: lignes.length > MAX_LIGNES_APERCU,
+    diagnostic: {
+      resultat: valeur('resultat') ?? '0',
+      gauche: statsCote('gauche'),
+      droite: statsCote('droite'),
+      totaux: numeriques.map(({ cote, sortie }, index) => ({
+        cote, colonne: sortie, avant: valeur('avant' + index), apres: valeur('apres' + index),
+      })),
+    },
   }
 }
 

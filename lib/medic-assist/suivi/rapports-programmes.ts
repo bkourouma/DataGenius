@@ -27,6 +27,7 @@ import {
 
 import { chargerComptesAvecAcces, contexteDepuisCompte, validerDestinataires } from './comptes'
 import { construireExport as construireExportParDefaut, type ConstruireExport } from './dependances'
+import { destinataireCouvrePerimetre } from '@/lib/auth/data-access'
 import type { DepotSuivi } from './depot'
 import { obtenirDepot } from './depot-prisma'
 import { prochainEnvoiA, validerPlanning, type Planning } from './echeances'
@@ -332,7 +333,9 @@ async function traiterUnRapport(
     await depot.mettreAJourRapport(rapport.id, rapport.userId, { actif: false })
     return { statut: 'echec', erreur: 'artefact_introuvable' }
   }
-  const { comptes } = await validerDestinataires(rapport.destinataires)
+  const { comptes: actifs } = await validerDestinataires(rapport.destinataires)
+  const autorisations = await Promise.all(actifs.map(compte => destinataireCouvrePerimetre(proprietaire.scope.donnees, compte.id)))
+  const comptes = actifs.filter((_, index) => autorisations[index])
   if (comptes.length === 0) return { statut: 'echec', erreur: 'aucun_destinataire' }
   const ecartes = rapport.destinataires.length - comptes.length
 

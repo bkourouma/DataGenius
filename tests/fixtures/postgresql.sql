@@ -27,3 +27,19 @@ INSERT INTO metier.activite VALUES
 GRANT USAGE ON SCHEMA metier TO dg_reader;
 GRANT SELECT (agence, produit, mois, quantite, ca, stock, objectif) ON metier.activite TO dg_reader;
 ALTER ROLE dg_reader IN DATABASE dg_source SET default_transaction_read_only = on;
+
+CREATE SCHEMA finance;
+CREATE TABLE finance.factures (
+  facture_id text PRIMARY KEY,
+  equipe text NOT NULL,
+  emise_le date NOT NULL,
+  devise text NOT NULL,
+  montant numeric(20, 2) NOT NULL
+);
+INSERT INTO finance.factures VALUES
+  ('F-001', 'Nord', '2026-10-01', 'XOF', 100.00),
+  ('F-002', 'Nord', '2026-10-01', 'XOF', 200.00),
+  ('F-003', 'Sud', '2026-10-03', 'XOF', 80.00),
+  ('F-004', 'Sud', '2026-10-03', 'EUR', 70.01);
+GRANT USAGE ON SCHEMA finance TO dg_reader;
+GRANT SELECT ON finance.factures TO dg_reader;

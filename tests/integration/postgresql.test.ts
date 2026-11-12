@@ -239,7 +239,7 @@ describe.skipIf(!testActif)('Connecteur PostgreSQL · données fictives', () => 
       `
       expect(stockage.secret).toMatch(/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/)
       expect(stockage.secret).not.toContain('dg_support_reader')
-      expect((await listerTables(sourceId)).tables).toEqual([{ schema: 'support', table: 'centres' }])
+      expect((await listerTables(sourceId, 'centres')).tables).toEqual([{ schema: 'support', table: 'centres' }])
       const table = { schema: 'support', table: 'centres' }
       expect((await listerColonnes(sourceId, table)).map(c => c.nom)).toEqual(['Nom du centre', 'segment'])
       const importation = { sourceId, ...table, titre: 'Centres sélectionnés', description: '', frequenceMinutes: 15 }
@@ -296,6 +296,12 @@ describe.skipIf(!testActif)('Connecteur PostgreSQL · données fictives', () => 
       expect(apercu.lignes).toHaveLength(8)
       expect(apercu.lignes).toContainEqual({ cellules: ['Lagune', '500.00', 'Littoral'], correspondance: true })
       expect(apercu.tronque).toBe(false)
+      expect(apercu.diagnostic).toMatchObject({
+        resultat: '8',
+        gauche: { lignes: '8', correspondances: '8', clesDupliquees: '2', lignesMultipliees: '0' },
+        droite: { lignes: '2', correspondances: '2', clesDupliquees: '0', lignesMultipliees: '2' },
+        totaux: [{ cote: 'gauche', colonne: { nom: 'ca' }, avant: '3160.00', apres: '3160.00' }],
+      })
       await expect(previsualiserCombinaison({
         ...selection, liens: [...selection.liens, { gauche: 'mois', droite: 'segment' }],
       }, ctx)).resolves.toMatchObject({ lignes: [], tronque: false })
@@ -316,6 +322,9 @@ describe.skipIf(!testActif)('Connecteur PostgreSQL · données fictives', () => 
       }, ctx)
       expect(grandApercu.lignes).toHaveLength(20)
       expect(grandApercu.tronque).toBe(true)
+      expect(grandApercu.diagnostic).toMatchObject({
+        resultat: '32', gauche: { lignesMultipliees: '8' }, droite: { lignesMultipliees: '8' },
+      })
       const suivante = await creerCombinaison({
         ...spec, titre: 'Combinaison réutilisée', gauche: cle, type: 'gauche',
         colonnes: [{ cote: 'gauche', nom: 'segment' }, { cote: 'droite', nom: 'segment' }],
@@ -323,6 +332,15 @@ describe.skipIf(!testActif)('Connecteur PostgreSQL · données fictives', () => 
       combinaisons.push(suivante)
       const initiale = (await chargerCombinaison(cle))!
       expect(initiale.definition.liens).toEqual([{ gauche: 'agence', droite: 'nom_du_centre' }])
+      const definitionDroits = JSON.stringify({ groupes: [], masquer: ['ca'], filtre: null })
+      await prisma.$executeRaw`INSERT INTO warehouse.regles_acces (jeu, definition) VALUES (${cle}, ${definitionDroits}::jsonb)`
+      try {
+        await expect(modifierCombinaison(cle, initiale.revision, {
+          ...selection, colonnes: selection.colonnes.filter(c => c.nom !== 'ca'),
+        })).rejects.toThrow('droits d’accès')
+      } finally {
+        await prisma.$executeRaw`DELETE FROM warehouse.regles_acces WHERE jeu = ${cle}`
+      }
       await expect(modifierCombinaison(cle, initiale.revision, {
         ...selection, colonnes: selection.colonnes.filter(c => c.nom !== 'segment'),
       })).rejects.toThrow('Combinaison réutilisée')
@@ -360,6 +378,7 @@ describe.skipIf(!testActif)('Connecteur PostgreSQL · données fictives', () => 
         const apercuGauche = await previsualiserCombinaison(selectionGauche, ctx)
         expect(apercuGauche.lignes.filter(l => !l.correspondance)).toHaveLength(4)
         expect(apercuGauche.lignes).toContainEqual({ cellules: ['Plateau', '240.00', null], correspondance: false })
+        expect(apercuGauche.diagnostic).toMatchObject({ resultat: '8', gauche: { sansCorrespondance: '4' } })
         expect(await chargerCombinaison(cle)).toEqual(avantChangementType)
         await modifierCombinaison(cle, avantChangementType.revision, selectionGauche)
         const apresChangementType = (await chargerCombinaison(cle))!
@@ -379,6 +398,13 @@ describe.skipIf(!testActif)('Connecteur PostgreSQL · données fictives', () => 
         combinaisons.push(conserve)
         const resultat = await calculerSemantique({ jeu: conserve, dimensions: ['agence', 'segment'], mesures: [] }, ctx)
         expect(resultat.lignes).toContainEqual({ agence: 'Plateau', segment: null })
+        const apercuClesNulles = await previsualiserCombinaison({
+          gauche: conserve, droite, type: 'interne', liens: [{ gauche: 'segment', droite: 'segment' }],
+          colonnes: [{ cote: 'gauche', nom: 'segment' }],
+        }, ctx)
+        expect(apercuClesNulles.diagnostic).toMatchObject({
+          resultat: '4', gauche: { lignesCleNulle: '4', sansCorrespondance: '4', clesDupliquees: '1' },
+        })
       } finally {
         await support.$executeRaw`INSERT INTO support.centres VALUES ('Plateau', 'Intérieur', 'exclue') ON CONFLICT DO NOTHING`
       }

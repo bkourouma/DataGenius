@@ -376,8 +376,10 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
     }
 
     // 2. Conversation existante : propriétaire SEUL (un lecteur par partage n'écrit pas).
+    const droits = contexte.scope.donnees
     let conversation = corps.conversationId
-      ? await lireConversationProprietaire(userId, corps.conversationId)
+      ? await lireConversationProprietaire(userId, corps.conversationId,
+        droits?.regles.size && !droits.administrateur ? droits.depuis : undefined)
       : null
     if (corps.conversationId && !conversation) {
       return erreur(404, 'not_found', 'Conversation not found')

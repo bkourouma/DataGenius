@@ -21,7 +21,7 @@
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 
 import { resumeCatalogueCompact as resumeCatalogue } from './catalogue'
-import { registrePostgres } from './catalogue/registre'
+import { registreAutorise } from './catalogue/autorisation'
 
 export {
   catalogueDonnees,
@@ -39,5 +39,5 @@ export type { DonneesJeuAEnregistrer, JeuCompletPourExport, OptionsLireJeu } fro
  * 2 500 tokens. `contexte` (facultatif) fixe la langue des libellés.
  */
 export async function resumeCatalogueCompact(contexte?: ContexteExecution): Promise<string> {
-  return resumeCatalogue(contexte, await registrePostgres())
+  return resumeCatalogue(contexte, await registreAutorise(contexte))
 }

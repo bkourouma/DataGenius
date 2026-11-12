@@ -571,7 +571,7 @@ export function verifierRegistre(registre: Registre): string[] {
       colonnes.add(element.cle)
       if (!libelleComplet(element.libelle))
         anomalies.push(`${ou} : libelle de "${element.cle}" incomplet`)
-      if (/;|--|\/\*/.test(element.expression))
+      if (/;|--|\/\*/.test(typeof element.expression === 'string' ? element.expression : element.expression.text))
         anomalies.push(`${ou} : expression de "${element.cle}" suspecte`)
     }
     if (jeu.temps) {

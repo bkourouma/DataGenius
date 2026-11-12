@@ -1,6 +1,8 @@
 import { Prisma } from '@prisma/client'
 import { citer, configurationEntrepot, configurationFichier, empreinte, typeSql, type JeuConfigure, type JeuCompose, type JeuEntrepot } from '@/lib/warehouse/configuration'
 import { ErreurJointure, lireJointures, compilerJointure, type JointureEnregistree } from '@/lib/warehouse/jointures'
+import { prisma } from '@/lib/db/client'
+import { ErreurCatalogueMetier, appliquerPublicationMetier, publicationsMetier } from '@/lib/warehouse/modele-metier'
 import { analyserSqlDetaille } from '../sql/analyseur'
 import type { DefinitionMesure, DefinitionVue, EntreeCatalogue, Libelle, Registre } from './types'
 
@@ -12,7 +14,7 @@ function uniques(cles: string[]) {
   return new Set(cles).size === cles.length
 }
 
-function construireEntree(j: Pick<JeuConfigure | JeuCompose, 'cle' | 'titre' | 'description' | 'grain' | 'colonnes' | 'dimensions' | 'mesures' | 'instantanePar'>, definition: Pick<DefinitionVue, 'snapshots' | 'cte' | 'signature'>): EntreeCatalogue {
+function construireEntree(j: Pick<JeuConfigure | JeuCompose, 'cle' | 'titre' | 'description' | 'grain' | 'colonnes' | 'dimensions' | 'mesures' | 'instantanePar'>, definition: Pick<DefinitionVue, 'snapshots' | 'cte' | 'signature' | 'dependances'>): EntreeCatalogue {
   if (!uniques(j.colonnes.map(c => c.nom)) || !uniques([...j.dimensions, ...j.mesures.map(m => m.cle)])) {
     throw new Error('Clés de colonnes, dimensions ou mesures en double dans ' + j.cle)
   }
@@ -91,6 +93,7 @@ function construireCombinaison(jeu: JeuCompose, imports: EntreeCatalogue[]) {
   const colonnes = jeu.colonnes.map(c => Prisma.sql`r.${citer(c.nom)}::${typeSql(c.type)} AS ${citer(c.nom)}`)
   return construireEntree(jeu, {
     signature: empreinte(jeu),
+    dependances: vues.map(vue => vue.jeu),
     snapshots: vues.flatMap(vue => vue.snapshots ?? []),
     cte: ctx => Prisma.sql`
       WITH ${Prisma.join(vues.map(vue => Prisma.sql`${citer(vue.nom)} AS (${vue.cte(ctx)})`))}
@@ -108,6 +111,7 @@ function construireJointure(spec: JointureEnregistree, registre: Registre) {
     dimensions: colonnes.slice(0, 30).map(c => c.nom), mesures: [],
   }, {
     signature: empreinte([spec, empreinteEntrees([entrees.gauche, entrees.droite])]),
+    dependances: [spec.gauche, spec.droite],
     snapshots,
     cte: requete,
   })
@@ -117,8 +121,8 @@ export async function registrePostgres(
   jointures?: JointureEnregistree[],
   client?: Pick<Prisma.TransactionClient, '$queryRaw'>,
 ): Promise<Registre> {
-  const [{ jeux, combinaisons }, enregistrees] = await Promise.all([
-    configurationEntrepot(client), jointures ?? lireJointures(client),
+  const [{ jeux, combinaisons }, enregistrees, publications] = await Promise.all([
+    configurationEntrepot(client), jointures ?? lireJointures(client), publicationsMetier(client ?? prisma),
   ])
   const imports = jeux.map(construireImport)
   const registre = [...imports, ...combinaisons.map(j => construireCombinaison(j, imports))]
@@ -131,7 +135,17 @@ export async function registrePostgres(
       if (!(erreur instanceof ErreurJointure)) throw erreur
     }
   }
-  return registre
+  return registre.map(entree => {
+    const publication = publications.get(entree.jeu.cle)
+    if (!publication) return entree
+    try {
+      return appliquerPublicationMetier(entree, publication)
+    } catch (erreur) {
+      // Un changement de schéma peut rendre des colonnes de la publication indisponibles.
+      if (!(erreur instanceof ErreurCatalogueMetier)) throw erreur
+      return entree
+    }
+  })
 }
 
 /** Empreinte utilisée par les analyses créées avant les imports administrés. */

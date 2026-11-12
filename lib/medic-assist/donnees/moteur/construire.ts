@@ -151,8 +151,9 @@ export function construireSql(
   const colonnesDimensions = dimensions.map(
     d => Prisma.sql`${expression(d.expression)} AS ${alias(d.cle)}`
   )
-  const colonneMesure = (m: DefinitionMesure) =>
-    Prisma.sql`${expression(m.expression)}::float8 AS ${alias(m.cle)}`
+  const colonneMesure = (m: DefinitionMesure) => typeof m.expression === 'string'
+    ? Prisma.sql`${expression(m.expression)}::float8 AS ${alias(m.cle)}`
+    : Prisma.sql`(${m.expression}) AS ${alias(m.cle)}`
   const select = Prisma.join([...colonnesDimensions, ...mesures.map(colonneMesure)], ', ')
 
   const tri = triEffectif(normalisee.tri ?? [], dimensions, mesures)

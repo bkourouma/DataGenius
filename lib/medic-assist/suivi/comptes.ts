@@ -13,6 +13,7 @@
 
 import { defaultLocale, isLocale, type Locale } from '@/i18n/config'
 import { ACCESS_SCOPE_INCLUDE, buildAccessScope } from '@/lib/auth/access-scope'
+import { chargerDroitsDonnees } from '@/lib/auth/data-access'
 import { STATUT_ACTIF } from '@/lib/auth/inscription'
 import { prisma } from '@/lib/db/client'
 import { lireJourLimite } from '@/lib/services/sorties-locales-delai'
@@ -190,6 +191,7 @@ export async function contexteDepuisCompte(
   const scope = buildAccessScope(utilisateur)
   const habilitations = null
   if (!peutUtiliserMedicAssist(scope.roleName, scope, habilitations)) return null
+  scope.donnees = await chargerDroitsDonnees(utilisateur.id, scope.roleName)
   return {
     userId: utilisateur.id,
     roleName: scope.roleName,

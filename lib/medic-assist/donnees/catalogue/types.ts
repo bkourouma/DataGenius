@@ -60,6 +60,8 @@ export interface DefinitionMesure {
   type: Exclude<TypeColonne, 'texte' | 'date' | 'periode'>
   /** Unite affichee : 'EUR', 'unites', '%', 'jours'... */
   unite?: string
+  devise?: string
+  colonnesRequises?: string[]
   agregat: AgregatMesure
   /**
    * Expression d'AGREGAT SQL sur les colonnes de la vue (ex. 'SUM(ca_eur)'). Elle rend
@@ -67,7 +69,7 @@ export interface DefinitionMesure {
    * (jamais la moyenne de taux de lignes). Le moteur calcule la ligne de totaux en
    * relancant la meme expression sans GROUP BY : un rapport reste donc exact.
    */
-  expression: string
+  expression: string | Prisma.Sql
   /** Regles propres a la mesure, ajoutees a la provenance quand elle est demandee. */
   regles?: Libelle[]
   /** Vrai si les valeurs de mois differents ne s'additionnent pas (stock). */
@@ -128,6 +130,10 @@ export interface DefinitionJeu {
   description: string
   /** Grain en francais : « une ligne = un produit vendu par un grossiste, une agence et un mois ». */
   granularite: string
+  cles?: string[]
+  calendrier?: string
+  responsable?: string
+  versionMetier?: number
   /** Nom de la vue logique, ex. 'mv_ventes'. */
   vue: string
   dimensions: DefinitionDimension[]
@@ -153,6 +159,7 @@ export interface DefinitionJeu {
 export interface ColonneVue {
   nom: string
   type: TypeColonne
+  synonymes?: string[]
   /** Description en francais, montree au modele dans le catalogue SQL. */
   description: string
 }
@@ -173,6 +180,8 @@ export interface DefinitionVue {
    * Il rend EXACTEMENT les colonnes de `colonnes`, dans cet ordre.
    */
   signature?: string
+  /** Jeux directement lus par une combinaison, pour appliquer leurs droits avant publication. */
+  dependances?: string[]
   snapshots?: { jeu: string; empreinte: string; source: string }[]
   cte: (ctx: ContexteExecution) => Prisma.Sql
 }

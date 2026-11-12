@@ -10,6 +10,7 @@
 import { z } from 'zod'
 
 import { prisma } from '@/lib/db/client'
+import { auteurDansPerimetreLecteur, contenuAuPerimetreCourant } from '@/lib/auth/data-access'
 import { supprimerPieceJointe } from '@/lib/medic-assist/pieces-jointes/service'
 import type { ActionProposee } from '@/lib/medic-assist/contrats/actions'
 import {
@@ -31,7 +32,7 @@ import { LIMITES, TITRE_PAR_DEFAUT_CONVERSATION, type TypeArtefact } from '@/lib
 import type { ContexteExecution } from '@/lib/medic-assist/contrats/contexte'
 
 /** Ce que le service lit du contexte d'exécution : l'utilisateur courant. */
-export type ContexteConversations = Pick<ContexteExecution, 'userId'>
+export type ContexteConversations = Pick<ContexteExecution, 'userId'> & Partial<Pick<ContexteExecution, 'scope'>>
 
 /** Réexport : le titre de repli (valeur technique) est défini dans les contrats. */
 export { TITRE_PAR_DEFAUT_CONVERSATION }
@@ -177,6 +178,8 @@ export async function listerConversations(
   const taille = Math.min(query.taille ?? LIMITES.taillePageListeDefaut, LIMITES.taillePageListeMax)
   const recherche = query.recherche?.trim() ?? ''
   const curseur = decoderCurseur(query.curseur)
+  const droits = ctx.scope?.donnees
+  const dateMin = droits?.regles.size && !droits.administrateur ? droits.depuis : undefined
 
   const idsParTexte = recherche ? await conversationsParTexteDeMessage(userId, recherche) : []
   const filtreRecherche = recherche
@@ -189,7 +192,7 @@ export async function listerConversations(
     : {}
 
   const lignes = await prisma.assistantConversation.findMany({
-    where: { userId, archivee, ...filtreRecherche },
+    where: { userId, archivee, ...filtreRecherche, ...(dateMin && { createdAt: { gte: dateMin } }) },
     orderBy: [{ epinglee: 'desc' }, { dernierMessageA: 'desc' }, { id: 'asc' }],
     take: taille + 1,
     ...(curseur ? { cursor: { id: curseur }, skip: 1 } : {}),
@@ -212,16 +215,18 @@ export async function listerConversations(
   ])
 
   const conversations = page.map(c => versResume(c, nbMessages.get(c.id) ?? 0, partagees.has(c.id)))
-  const partageesAvecMoi = curseur ? [] : await listerPartageesAvecMoi(userId, archivee, recherche)
+  const partageesAvecMoi = curseur ? [] : await listerPartageesAvecMoi(ctx, archivee, recherche)
 
   return { conversations, partageesAvecMoi, suivant }
 }
 
 async function listerPartageesAvecMoi(
-  userId: string,
+  ctx: ContexteConversations,
   archivee: boolean,
   recherche: string
 ): Promise<ConversationPartageeDto[]> {
+  const { userId } = ctx
+  const droits = ctx.scope?.donnees
   const partages = await prisma.assistantPartage.findMany({
     where: { ressourceType: 'conversation', aUserId: userId },
     select: { id: true, ressourceId: true, createdAt: true },
@@ -246,10 +251,14 @@ async function listerPartageesAvecMoi(
       user: { select: { id: true, firstName: true, lastName: true } },
     },
   })
-  const nbMessages = await compterMessages(conversations.map(c => c.id))
+  const accesParConversation = await Promise.all(conversations.map(c =>
+    contenuAuPerimetreCourant(droits, c.createdAt) && auteurDansPerimetreLecteur(droits, userId, c.user.id),
+  ))
+  const visibles = conversations.filter((_, index) => accesParConversation[index])
+  const nbMessages = await compterMessages(visibles.map(c => c.id))
   const partageParConversation = new Map(partages.map(p => [p.ressourceId, p]))
 
-  return conversations
+  return visibles
     .flatMap(c => {
       const partage = partageParConversation.get(c.id)
       if (!partage) return []
@@ -324,6 +333,8 @@ export async function lireConversation(
     },
   })
   if (!conv) return null
+  if (!contenuAuPerimetreCourant(ctx.scope?.donnees, conv.createdAt) ||
+      !(await auteurDansPerimetreLecteur(ctx.scope?.donnees, userId, conv.userId))) return null
 
   const proprietaireId = conv.userId
   const estProprietaire = proprietaireId === userId

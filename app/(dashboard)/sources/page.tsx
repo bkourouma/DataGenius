@@ -22,6 +22,7 @@ export default async function Sources() {
   return (
     <section className="mx-auto max-w-3xl space-y-5 py-6">
       <h1 className="text-2xl font-bold">Sources et synchronisation</h1>
+      <Link href="/sources/droits" className="inline-flex text-sm font-medium text-primary hover:underline">Groupes et droits d’accès aux données</Link>
       <details className="rounded-lg border bg-card p-5">
         <summary className="cursor-pointer font-semibold">Ajouter une base PostgreSQL</summary>
         <div className="mt-4"><FormulaireConnexion /></div>
@@ -51,9 +52,12 @@ export default async function Sources() {
               <li key={jeu.cle} className="space-y-1 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h3 className="font-medium">{jeu.titre}</h3>
-                  <Link href={'/sources/combiner/' + jeu.cle} className="text-sm text-primary hover:underline" prefetch={false}>
-                    Modifier<span className="sr-only"> {jeu.titre}</span>
-                  </Link>
+                  <div className="flex flex-wrap gap-3">
+                    <Link href={'/sources/combiner/' + jeu.cle} className="text-sm text-primary hover:underline" prefetch={false}>
+                      Modifier<span className="sr-only"> {jeu.titre}</span>
+                    </Link>
+                    {jeu.disponible && <LienCatalogue cle={jeu.cle} titre={jeu.titre} />}
+                  </div>
                 </div>
                 <p className="text-sm text-muted-foreground">{jeu.gauche} + {jeu.droite}</p>
                 <p className="text-sm text-muted-foreground">
@@ -72,7 +76,15 @@ export default async function Sources() {
       <ul className="space-y-3">
         {jeux?.map(({ cle, titre, source, frequence, modifiable, etat }) => (
           <li key={cle} className="space-y-3 rounded-lg border bg-card p-5">
-            <h2 className="font-semibold">{titre}</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="font-semibold">{titre}</h2>
+              {modifiable && <div className="flex flex-wrap gap-3">
+                <LienCatalogue cle={cle} titre={titre} />
+                <Link href={'/sources/qualite/' + cle} className="text-sm text-primary hover:underline" prefetch={false}>
+                  Qualité et suivi<span className="sr-only"> de {titre}</span>
+                </Link>
+              </div>}
+            </div>
             <p className="text-sm text-muted-foreground">{source} · Toutes les {frequence} min</p>
             <dl className="grid gap-2 text-sm sm:grid-cols-2">
               <div><dt>Dernière publication</dt><dd>{etat?.publie_a ? date.format(etat.publie_a) + ' UTC' : 'En attente du premier import'}</dd></div>
@@ -91,4 +103,10 @@ export default async function Sources() {
       </ul>
     </section>
   )
+}
+
+function LienCatalogue({ cle, titre }: { cle: string; titre: string }) {
+  return <Link href={'/sources/catalogue/' + cle} className="text-sm text-primary hover:underline" prefetch={false}>
+    Catalogue métier<span className="sr-only"> de {titre}</span>
+  </Link>
 }

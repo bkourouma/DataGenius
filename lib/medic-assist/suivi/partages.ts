@@ -6,6 +6,8 @@
  */
 
 import { prisma } from '@/lib/db/client'
+import { destinataireCouvrePerimetre } from '@/lib/auth/data-access'
+import { ressourceDansPerimetre } from './perimetre-ressource'
 
 import { LIMITES, TYPES_NOTIFICATION, type ContexteExecution } from '@/lib/medic-assist/contrats'
 import { chargerComptesAvecAcces, validerDestinataires } from './comptes'
@@ -93,7 +95,7 @@ export async function partager(
     cible.type === 'conversation'
       ? (await depot.trouverConversationProprietaire(cible.id, contexte.userId))?.titre
       : (await depot.trouverArtefactProprietaire(cible.id, contexte.userId))?.titre
-  if (titre === undefined) throw new ErreurSuivi('introuvable')
+  if (titre === undefined || !(await ressourceDansPerimetre(contexte, cible.type, cible.id))) throw new ErreurSuivi('introuvable')
 
   const ids = [...new Set(demande.destinataires)]
   if (ids.length < 1 || ids.length > LIMITES.destinatairesMax) {
@@ -101,6 +103,8 @@ export async function partager(
   }
   const { comptes, refuses } = await validerDestinataires(ids, { exclureId: contexte.userId })
   if (refuses.length > 0 || comptes.length === 0) throw new ErreurSuivi('destinataire_invalide')
+  const autorisations = await Promise.all(comptes.map(c => destinataireCouvrePerimetre(contexte.scope.donnees, c.id)))
+  if (autorisations.some(ok => !ok)) throw new ErreurSuivi('destinataire_invalide')
 
   const message = demande.message?.trim() || null
   const crees = await depot.creerPartages(
@@ -145,7 +149,8 @@ export async function listerPartagesRecus(
 ): Promise<{ lignes: PartageRecuJson[]; total: number }> {
   const depot = deps.depot ?? obtenirDepot()
   const { lignes, total } = await depot.listerPartagesRecus(contexte.userId, pagination)
-  return { lignes: lignes.map(recuEnJson), total }
+  const autorisations = await Promise.all(lignes.map(l => ressourceDansPerimetre(contexte, l.cibleType, l.cibleId)))
+  return { lignes: lignes.filter((_, i) => autorisations[i]).map(recuEnJson), total }
 }
 
 export async function listerPartagesEnvoyes(
@@ -155,7 +160,8 @@ export async function listerPartagesEnvoyes(
 ): Promise<{ lignes: PartageEnvoyeJson[]; total: number }> {
   const depot = deps.depot ?? obtenirDepot()
   const { lignes, total } = await depot.listerPartagesEnvoyes(contexte.userId, pagination)
-  return { lignes: lignes.map(envoyeEnJson), total }
+  const autorisations = await Promise.all(lignes.map(l => ressourceDansPerimetre(contexte, l.cibleType, l.cibleId)))
+  return { lignes: lignes.filter((_, i) => autorisations[i]).map(envoyeEnJson), total }
 }
 
 /**

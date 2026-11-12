@@ -32,10 +32,11 @@ export interface ConversationChat {
 /** Conversation du PROPRIÉTAIRE seulement (un lecteur par partage n'écrit pas) ; null sinon. */
 export async function lireConversationProprietaire(
   userId: string,
-  conversationId: string
+  conversationId: string,
+  dateMin?: Date,
 ): Promise<ConversationChat | null> {
   return prisma.assistantConversation.findFirst({
-    where: { id: conversationId, userId },
+    where: { id: conversationId, userId, ...(dateMin && { createdAt: { gte: dateMin } }) },
     select: { id: true, titre: true },
   })
 }

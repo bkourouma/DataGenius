@@ -9,6 +9,7 @@ import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 import type { DepotSuivi } from './depot'
 import { obtenirDepot } from './depot-prisma'
 import { ErreurSuivi } from './erreurs'
+import { ressourceDansPerimetre } from './perimetre-ressource'
 import type { AnalyseResume } from './types'
 
 export interface DependancesAnalyses {
@@ -52,7 +53,8 @@ export async function listerAnalyses(
     page: options.page,
     taille: options.taille,
   })
-  return { lignes: lignes.map(analyseEnJson), total }
+  const autorisations = await Promise.all(lignes.map(l => ressourceDansPerimetre(contexte, 'artefact', l.artefactId)))
+  return { lignes: lignes.filter((_, i) => autorisations[i]).map(analyseEnJson), total }
 }
 
 /** L'artefact doit appartenir a l'utilisateur ; idempotent. */

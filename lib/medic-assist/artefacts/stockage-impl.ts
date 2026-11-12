@@ -20,6 +20,8 @@ import { randomUUID } from 'node:crypto'
 import type { Prisma } from '@prisma/client'
 
 import { prisma } from '@/lib/db/client'
+import { auteurDansPerimetreLecteur, contenuAuPerimetreCourant } from '@/lib/auth/data-access'
+import { ressourceDansPerimetre } from '@/lib/medic-assist/suivi/perimetre-ressource'
 import {
   ArtefactSpecSchema,
   artefactsReferences,
@@ -241,6 +243,7 @@ export async function modifierArtefact(
 ): Promise<ArtefactCree> {
   const spec = validerSpec(entree.spec)
   const racineId = await racineDuProprietaire(contexte.userId, entree.artefactId)
+  if (racineId && !(await ressourceDansPerimetre(contexte, 'artefact', racineId))) throw new ErreurArtefact('introuvable', MESSAGES.artefact)
   if (!racineId) throw new ErreurArtefact('introuvable', MESSAGES.artefact)
   await verifierReferences(contexte.userId, spec)
   return ecrireNouvelleVersion(contexte, racineId, spec, 'assistant')
@@ -257,6 +260,7 @@ export async function modifierArtefactParUtilisateur(
   corps: ModifierArtefactCorps
 ): Promise<ArtefactCree> {
   const racineId = await racineDuProprietaire(contexte.userId, artefactId)
+  if (racineId && !(await ressourceDansPerimetre(contexte, 'artefact', racineId))) throw new ErreurArtefact('introuvable', MESSAGES.artefact)
   if (!racineId) {
     const visible = await trouverLigneAccessible(contexte, artefactId)
     throw visible
@@ -364,6 +368,7 @@ async function trouverLigneAccessible(
     select: { id: true, userId: true, racineId: true, conversationId: true },
   })
   if (!ligne) return null
+  if (!(await auteurDansPerimetreLecteur(contexte.scope.donnees, contexte.userId, ligne.userId))) return null
   return {
     ...ligne,
     estProprietaire: ligne.userId === contexte.userId,
@@ -406,6 +411,9 @@ export async function lireArtefact(
       conversationId: true,
     },
   })
+  if (versions[0] && !contenuAuPerimetreCourant(contexte.scope.donnees, versions[0].createdAt)) {
+    throw new ErreurArtefact('introuvable', MESSAGES.version)
+  }
   const derniere = versions[versions.length - 1]
   const cible =
     options?.version === undefined ? derniere : versions.find(v => v.version === options.version)
@@ -517,6 +525,7 @@ export async function listerArtefactsConversation(
         titre: true,
         spec: true,
         createdAt: true,
+        userId: true,
       },
       take: LISTE_ARTEFACTS_MAX,
     }),
@@ -528,7 +537,11 @@ export async function listerArtefactsConversation(
     }),
   ])
   const creation = new Map(premieres.map(p => [p.racineId, p.createdAt.getTime()]))
-  return dernieres
+  const autorisations = await Promise.all(dernieres.map(a =>
+    contenuAuPerimetreCourant(contexte.scope.donnees, new Date(creation.get(a.racineId) ?? a.createdAt.getTime())) &&
+      auteurDansPerimetreLecteur(contexte.scope.donnees, contexte.userId, a.userId),
+  ))
+  return dernieres.filter((_, index) => autorisations[index])
     .map(a => {
       const sousTitre = (a.spec as { sousTitre?: unknown } | null)?.sousTitre
       const resume: ArtefactResumeReponse = {

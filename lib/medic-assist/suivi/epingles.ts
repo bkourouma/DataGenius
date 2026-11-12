@@ -9,6 +9,7 @@ import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 import type { DepotSuivi } from './depot'
 import { obtenirDepot } from './depot-prisma'
 import { ErreurSuivi } from './erreurs'
+import { ressourceDansPerimetre } from './perimetre-ressource'
 import type { EpingleResume } from './types'
 
 export interface DependancesEpingles {
@@ -46,7 +47,8 @@ export async function listerEpingles(
     contexte.userId,
     options.artefactId ? { artefactId: options.artefactId } : undefined
   )
-  return lignes.map(epingleEnJson)
+  const autorisations = await Promise.all(lignes.map(l => ressourceDansPerimetre(contexte, 'artefact', l.artefactId)))
+  return lignes.filter((_, i) => autorisations[i]).map(epingleEnJson)
 }
 
 /** L'artefact doit etre visible (proprietaire ou partage) ; idempotent. */
@@ -57,7 +59,7 @@ export async function epinglerArtefact(
 ): Promise<{ cree: boolean }> {
   const depot = deps.depot ?? obtenirDepot()
   const artefact = await depot.trouverArtefactVisible(artefactId, contexte.userId)
-  if (!artefact) throw new ErreurSuivi('introuvable')
+  if (!artefact || !(await ressourceDansPerimetre(contexte, 'artefact', artefactId))) throw new ErreurSuivi('introuvable')
   return { cree: await depot.epingler(contexte.userId, artefactId) }
 }
 

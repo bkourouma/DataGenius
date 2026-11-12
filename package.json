@@ -11,6 +11,7 @@
     "start": "next start -p 3120",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:postgres": "node scripts/recette-postgresql.mjs",
     "db:generate": "prisma generate",
     "db:deploy": "prisma migrate deploy",
     "user:create": "tsx --env-file-if-exists=.env scripts/create-user.ts",

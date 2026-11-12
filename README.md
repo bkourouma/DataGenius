@@ -20,7 +20,13 @@ npm run dev
 
 Pour générer `DATAGENIUS_SOURCE_KEY`, exécutez `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"` et conservez la valeur dans l’environnement du serveur web et du worker. La clé permet de lire les connexions déjà enregistrées, conservez-la avec les sauvegardes de configuration.
 
-Dans [Data Genius](http://localhost:3120), ouvrez **Source** pour ajouter des bases et suivre leurs imports. Configurez une clé IA dans `.env` et sélectionnez le fournisseur dans **Paramètres** pour activer le chat. Le rôle `Member` accède aux jeux publiés et à ses conversations. Le rôle `TenantAdmin` gère les paramètres et les synchronisations. Les jeux publiés sont communs aux membres de cette installation.
+Dans [Data Genius](http://localhost:3120), ouvrez **Source** pour ajouter des bases et suivre leurs imports. Configurez une clé IA dans `.env` et sélectionnez le fournisseur dans **Paramètres** pour activer le chat. Le rôle `Member` accède à ses conversations et aux jeux autorisés. Le rôle `TenantAdmin` gère les paramètres, les synchronisations et les droits d’accès aux jeux.
+
+### Gérer les droits des jeux
+
+Dans **Source → Groupes et droits d’accès aux données**, créez des groupes, attribuez-y les membres puis définissez les droits de chaque jeu. Une règle peut réserver le jeu aux groupes sélectionnés, masquer des colonnes et limiter les lignes par égalité sur une colonne. Un jeu sans règle est accessible à tous les membres de l’installation. Le rôle `TenantAdmin` dispose du périmètre complet. Les modifications de droits sont journalisées.
+
+Un jeu combiné hérite des restrictions d’accès de ses entrées. Si une entrée est filtrée ou comporte des colonnes masquées pour un lecteur, la combinaison est écartée de son catalogue. La révision des droits invalide le cache des jeux. Quand des règles sont en vigueur, les conversations et les artefacts antérieurs à la dernière révision sont retirés du périmètre des membres, car leur texte peut inclure des résultats du périmètre précédent. Les partages et les envois de rapports vérifient le périmètre des destinataires.
 
 ## Configurer les sources et l’entrepôt
 
@@ -36,9 +42,15 @@ Dans **Source → Combiner des jeux**, sélectionnez deux jeux, les paires de co
 
 Pour reprendre un jeu enregistré dans l’interface, ouvrez **Source → Jeux combinés → Modifier**. Ajustez les lignes à conserver, les paires de liaison ou les colonnes du résultat, puis lancez un aperçu avant d’enregistrer. Data Genius vous signale les colonnes à conserver lorsqu’un autre jeu combiné les utilise.
 
+Le diagnostic de l’aperçu couvre les jeux complets. Il indique les lignes rapprochées de chaque côté, les clés nulles et dupliquées, les lignes multipliées et l’effet sur les sommes des colonnes numériques du résultat.
+
 Une combinaison enregistre la définition du rapprochement dans Data Genius. Ses résultats sont calculés sur les dernières copies publiées des imports. Chaque correspondance produit une ligne, y compris lorsque plusieurs lignes partagent la même clé.
 
 Les nouveaux imports sont lus directement dans la base de Data Genius par l’application et le worker. `DATAGENIUS_CATALOGUE` reste facultatif pour les catalogues historiques, la démonstration et les combinaisons SQL historiques. Le [catalogue de démonstration](config/demo-postgresql.json) combine deux bases fictives.
+
+### Publier les définitions métier
+
+Depuis un import administré ou un jeu combiné, ouvrez **Catalogue métier**. Renseignez la granularité, les clés, les descriptions et les synonymes. Définissez les dimensions et les indicateurs avec leurs filtres, unités et devises. Chaque publication apparaît dans l’historique. Le moteur sémantique et le chat utilisent la dernière définition publiée.
 
 ## Exploiter la synchronisation
 
@@ -57,6 +69,14 @@ Cette version utilise des copies complètes, limitées à 50 000 lignes et envir
 Pour les rapports programmés, configurez le SMTP de Data Genius et l’appel de `POST /api/taches/medic-assist` avec le jeton `JETON_TACHES_PLANIFIEES` dans l’en-tête `Authorization: Bearer …`.
 
 ## Reproduire la recette PostgreSQL
+
+Avec Node.js et les binaires serveur PostgreSQL (`initdb`, `pg_ctl`, `psql`), la commande suivante crée une instance temporaire, charge les sources fictives, applique les migrations et supprime l’instance à la fin. Renseignez `PG_BIN` si les binaires ne sont pas dans le `PATH`.
+
+```powershell
+npm run test:postgres
+```
+
+### Préparer une instance de recette existante
 
 Sur une instance PostgreSQL de test, créez les rôles et les bases avec un compte d’administration. Attribuez des mots de passe selon la méthode d’authentification utilisée.
 
