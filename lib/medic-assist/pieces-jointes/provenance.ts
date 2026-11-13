@@ -6,7 +6,7 @@
 
 import { getTranslations } from 'next-intl/server'
 
-import type { ContexteExecution } from './imports-lot0'
+import type { ContexteExecution } from './dependances'
 
 export type CleProvenance =
   | 'perimetre'

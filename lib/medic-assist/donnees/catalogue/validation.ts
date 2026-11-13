@@ -8,13 +8,13 @@
  * catalogue, jamais le schema de la base.
  *
  * La periode est RESOLUE ici (bornes 'YYYY-MM' incluses) : explicite, exercice (avril ->
- * mars, `periodesExercice`), ou dernier mois clos (`moisParDefaut`, avec `maintenant` et
- * `jourLimite` du contexte, comme les ecrans de rapport).
+ * mars, `periodesExercice`), ou dernier mois complet (`dernierMoisComplet`, le mois qui
+ * precede le mois courant, calcule depuis `maintenant` du contexte).
  */
 
 import { z } from 'zod'
 
-import { moisParDefaut } from '@/lib/reports/plage-ventes-defaut'
+import { dernierMoisComplet } from '@/lib/donnees/periodes'
 import { MOIS_DEBUT_EXERCICE } from '@/lib/utils/exercice'
 
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
@@ -383,7 +383,7 @@ function resoudrePeriode(
 
   if (absente) {
     if (jeu.temps.defaut === 'dernier_mois_clos') {
-      const mois = moisParDefaut(ctx.maintenant, ctx.jourLimite)
+      const mois = dernierMoisComplet(ctx.maintenant)
       return { periode: { debut: mois, fin: mois, origine: 'dernier_mois_clos' }, parDefaut: true }
     }
     return { periode: null, parDefaut: false }
@@ -413,7 +413,7 @@ function resoudrePeriode(
   }
   if (memesCles(objet, ['dernierMoisClos'])) {
     if (objet.dernierMoisClos !== true) throw erreurPeriode('dernierMoisClos doit valoir true')
-    const mois = moisParDefaut(ctx.maintenant, ctx.jourLimite)
+    const mois = dernierMoisComplet(ctx.maintenant)
     return { periode: { debut: mois, fin: mois, origine: 'dernier_mois_clos' }, parDefaut: false }
   }
   throw erreurPeriode('clés non reconnues')

@@ -51,7 +51,6 @@ describe.skipIf(!testActif)('Connecteur PostgreSQL · données fictives', () => 
     habilitations: null,
     locale: 'fr',
     maintenant: new Date('2026-11-12T12:00:00Z'),
-    jourLimite: 1,
   }
 
   beforeAll(async () => {

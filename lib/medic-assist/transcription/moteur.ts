@@ -11,7 +11,7 @@ import {
   VARIABLES_CLES_FOURNISSEURS,
   type ConfigTranscription,
   type FournisseurTranscription,
-} from '../admin/imports-lot0-lot1'
+} from '../admin/dependances'
 
 type Environnement = Record<string, string | undefined>
 

@@ -79,7 +79,7 @@ type Ctx = Pick<ContexteExecution, 'locale'>
 
 const DEFINITION_PERIODE =
   "Periode du calcul, bornes incluses : {debut: 'YYYY-MM', fin: 'YYYY-MM'}, {exercice: 2026} " +
-  '(avril 2026 a mars 2027) ou {dernierMoisClos: true}. Absente : defaut du jeu (temps.defaut).'
+  '(exercice demarrant en 2026) ou {dernierMoisClos: true}. Absente : defaut du jeu (temps.defaut).'
 
 function detailJeu(entree: EntreeCatalogue, ctx: Ctx): DetailJeuCatalogue {
   const { jeu, vue } = entree

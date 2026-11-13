@@ -18,7 +18,7 @@ import {
   type Mode,
   type PersonneDto,
   type UsagesDto,
-} from './imports-lot0-lot1'
+} from './dependances'
 import { USAGES_FENETRE_MAX_JOURS } from './types'
 
 export const FUSEAU_USAGES = 'Europe/Paris'

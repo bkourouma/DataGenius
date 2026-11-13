@@ -26,7 +26,6 @@ const CONTEXTE = {
   habilitations: null,
   locale: 'fr',
   maintenant: new Date(2026, 10, 2),
-  jourLimite: 10,
 };
 
 function connecte() {

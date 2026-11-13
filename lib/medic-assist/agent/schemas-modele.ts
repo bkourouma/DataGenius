@@ -69,12 +69,12 @@ export const DESCRIPTIONS: Record<NomOutil, Record<string, string>> = {
     limite: 'Absent : 10.',
   },
   interroger_donnees: {
-    mesures: 'Clés de mesures du jeu, ex. ca_eur, quantite_vendue (voir catalogue_donnees).',
-    dimensions: 'Clés de regroupement, ex. pays, produit, periode. Absent : une ligne de totaux.',
+    mesures: 'Clés de mesures du jeu, ex. montant_total, nombre_lignes (voir catalogue_donnees).',
+    dimensions: 'Clés de regroupement, ex. categorie, region, periode. Absent : une ligne de totaux.',
     filtres:
       'Les *Ids viennent de rechercher_entites. Le périmètre de l’utilisateur s’ajoute toujours.',
     'filtres.periode':
-      'Absente : défaut du jeu (dernier mois clos ; budget : tout l’historique, à éviter).',
+      'Absente : défaut du jeu (dernier mois complet ; jeu sans calendrier : tout l’historique, à éviter).',
     debut: 'AAAA-MM inclus.',
     fin: 'AAAA-MM inclus.',
     exercice: 'Année de début : 2026 = avril 2026 à mars 2027.',
@@ -89,7 +89,7 @@ export const DESCRIPTIONS: Record<NomOutil, Record<string, string>> = {
     objectif: 'Ce que calcule la requête, en une phrase (montré à l’utilisateur).',
   },
   resume_mensuel: {
-    periode: 'Mois clos AAAA-MM ; absent : dernier mois clos. Un mois non clos est refusé.',
+    periode: 'Mois complet AAAA-MM ; absent : dernier mois complet. Le mois en cours est refusé.',
     paysId: 'Id de pays (rechercher_entites) ; absent : tout le périmètre.',
   },
   lire_piece_jointe: {

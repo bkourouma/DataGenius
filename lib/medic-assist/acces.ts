@@ -17,7 +17,6 @@ import {
   peutAdministrerMedicAssist,
   peutUtiliserMedicAssist,
 } from '@/lib/medic-assist/contrats/droits'
-import { lireJourLimite } from '@/lib/services/sorties-locales-delai'
 
 export { peutAdministrerMedicAssist, peutUtiliserMedicAssist }
 
@@ -50,7 +49,6 @@ async function acces(
     habilitations,
     locale: langueChoisie() ?? defaultLocale,
     maintenant: new Date(),
-    jourLimite: await lireJourLimite(),
   }
   return { ok: true, session, scope, contexte }
 }

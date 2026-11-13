@@ -37,7 +37,7 @@ export type ElementBriefing = z.infer<typeof ElementBriefingSchema>
 
 export const BriefingSchema = z.object({
   calculeA: HorodatageSchema,
-  /** Mois de référence : le dernier mois clos. */
+  /** Mois de référence : le dernier mois complet. */
   periodeReference: PeriodeMoisSchema,
   /** Éléments classés du plus grave au moins grave. */
   elements: z.array(ElementBriefingSchema),

@@ -1,6 +1,6 @@
 /**
- * Point UNIQUE des imports des contrats du lot 0 pour l'interface d'administration :
- * constantes, types et DTO viennent de `@/lib/medic-assist/contrats`.
+ * Point unique des dépendances de l'interface d'administration : constantes, types et DTO réexportés
+ * depuis `@/lib/medic-assist/contrats`.
  */
 
 export {

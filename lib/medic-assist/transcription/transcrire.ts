@@ -17,7 +17,7 @@
 
 import type { Locale } from '@/i18n/config'
 
-import { tarifModele } from '../admin/imports-lot0-lot1'
+import { tarifModele } from '../admin/dependances'
 import type { MoteurTranscription } from './moteur'
 import { chargerSdkIa, type SdkIa } from './sdk-ia'
 import { arrondirCout, coutTranscriptionUsd, dureeRetenueSecondes } from './tarifs'

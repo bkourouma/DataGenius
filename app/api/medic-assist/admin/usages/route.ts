@@ -17,7 +17,7 @@ import { genererClasseurUsages, nomFichierUsages } from '@/lib/medic-assist/admi
 import {
   UsagesQuerySchema,
   exigerAdminMedicAssist,
-} from '@/lib/medic-assist/admin/imports-lot0-lot1'
+} from '@/lib/medic-assist/admin/dependances'
 import { ENTETES_SANS_CACHE, erreurApi, erreurValidation } from '@/lib/medic-assist/admin/reponses'
 import {
   FORMATS_USAGES,

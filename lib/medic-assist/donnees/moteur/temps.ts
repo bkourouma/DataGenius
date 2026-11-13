@@ -7,7 +7,7 @@
  * de depart, avril -> mars). Les expressions ci-dessous n'utilisent que ces quatre colonnes.
  */
 
-import { libellePeriodeVentes } from '@/lib/reports/plage-ventes-defaut'
+import { libellePeriodeCourte } from '@/lib/donnees/periodes'
 import { MOIS_DEBUT_EXERCICE } from '@/lib/utils/exercice'
 import { citer } from '@/lib/warehouse/configuration'
 
@@ -147,12 +147,12 @@ export function estAuGrainDuMois(dimension: DefinitionDimension): boolean {
 }
 
 /**
- * Libelle court d'une periode, comme les ecrans de ventes (`libellePeriodeVentes`) :
+ * Libelle court d'une periode (`libellePeriodeCourte`) :
  * « 09/26 », « 04/26 – 09/26 ». Quand plusieurs mois tiennent dans un meme exercice, on
  * ajoute « ; exercice 2026/2027 » (mot traduit, millesime identique dans toutes les langues).
  */
 export function libellePeriode(debut: string, fin: string, locale: Locale, moisDebut = MOIS_DEBUT_EXERCICE): string {
-  const base = libellePeriodeVentes(`${debut}-01`, `${fin}-01`)
+  const base = libellePeriodeCourte(debut, fin)
   if (debut === fin) return base
   const exerciceDePeriode = (periode: string) => {
     const [annee, mois] = periode.split('-').map(Number)

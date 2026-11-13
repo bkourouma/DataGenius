@@ -9,7 +9,7 @@
  * resultat d'outil avec `versErreurOutil`.
  */
 
-import type { CodeErreurOutil, ErreurOutil } from './imports-lot0'
+import type { CodeErreurOutil, ErreurOutil } from './dependances'
 
 export type CodeErreurPieceJointe =
   | 'fichierAbsent'

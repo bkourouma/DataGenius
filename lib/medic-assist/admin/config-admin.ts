@@ -15,7 +15,7 @@ import {
   type ConfigAdminCorps,
   type ConfigMedicAssist,
   type PersonneDto,
-} from './imports-lot0-lot1'
+} from './dependances'
 import {
   TAUX_EUR_PAR_USD_DEFAUT,
   type ConfigAdminCorpsLot6,

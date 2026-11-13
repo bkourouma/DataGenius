@@ -119,7 +119,7 @@ export const EntreeRequeteSqlSchema = z
 export const EntreeResumeMensuelSchema = z
   .strictObject({
     periode: PeriodeMoisSchema.optional().describe(
-      'Mois clos à résumer, AAAA-MM ; absent : le dernier mois clos. Un mois non clos est refusé.'
+      'Mois complet à résumer, AAAA-MM ; absent : le dernier mois complet. Le mois en cours est refusé.'
     ),
     paysId: IdentifiantSchema.optional().describe(
       'Id d’un pays (rechercher_entites) pour résumer ce seul pays ; absent : tout le périmètre.'

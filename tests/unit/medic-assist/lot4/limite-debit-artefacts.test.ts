@@ -34,7 +34,6 @@ const CONTEXTE = {
   habilitations: null,
   locale: 'fr',
   maintenant: new Date(2026, 10, 2),
-  jourLimite: 10,
 } as unknown as ContexteExecution;
 
 function limite(ms: number | undefined = 125_000) {

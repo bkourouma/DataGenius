@@ -18,7 +18,7 @@ import {
   LIMITES,
   exigerMedicAssist,
   lireConfigMedicAssist,
-} from '@/lib/medic-assist/admin/imports-lot0-lot1'
+} from '@/lib/medic-assist/admin/dependances'
 import { erreurApi } from '@/lib/medic-assist/admin/reponses'
 import type { TranscriptionDto } from '@/lib/medic-assist/contrats'
 import { enregistrerUsageTranscription } from '@/lib/medic-assist/transcription/depot-prisma'

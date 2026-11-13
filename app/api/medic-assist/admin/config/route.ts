@@ -23,7 +23,7 @@ import {
   fournisseursDisponibles,
   fournisseursTranscriptionDisponibles,
   lireConfigMedicAssist,
-} from '@/lib/medic-assist/admin/imports-lot0-lot1'
+} from '@/lib/medic-assist/admin/dependances'
 import {
   ENTETES_SANS_CACHE,
   erreurApi,

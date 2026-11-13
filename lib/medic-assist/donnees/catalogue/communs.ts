@@ -2,8 +2,6 @@
  * Briques communes du catalogue : libelles a six langues, regles de calcul partagees,
  * fabriques de filtres standards et petits utilitaires SQL.
  *
- * Les regles ci-dessous disent en clair ce que les ecrans officiels appliquent (voir
- * lib/reports/dimensions-actives.ts, lib/utils/exercice.ts, lib/reports/budget-calculs.ts...).
  * Un jeu les reference dans `regles` : elles remontent telles quelles dans la provenance.
  */
 
@@ -58,12 +56,12 @@ export const REGLES = {
     'निष्क्रिय उत्पाद, थोक विक्रेता और देश शामिल नहीं हैं'
   ),
   dernierMoisClos: lib(
-    'Sans période précisée : dernier mois clos (un mois est clos après le jour limite de saisie)',
-    'No period given: last closed month (a month is closed after the entry deadline day)',
-    'Sin período indicado: último mes cerrado (un mes se cierra después del día límite de captura)',
-    '未指定期间时：取最近一个已结账的月份（过了录入截止日后该月即结账）',
-    'عند عدم تحديد الفترة: آخر شهر مغلق (يُغلق الشهر بعد اليوم الأخير للإدخال)',
-    'अवधि न दी जाने पर: अंतिम बंद महीना (प्रविष्टि की अंतिम तिथि के बाद महीना बंद होता है)'
+    'Sans période précisée : dernier mois complet (le mois qui précède le mois en cours)',
+    'No period given: last complete month (the month before the current month)',
+    'Sin período indicado: último mes completo (el mes anterior al mes en curso)',
+    '未指定期间时：取最近一个完整的月份（当前月份的上一个月）',
+    'عند عدم تحديد الفترة: آخر شهر كامل (الشهر السابق للشهر الحالي)',
+    'अवधि न दी जाने पर: अंतिम पूरा महीना (चालू महीने से पहले का महीना)'
   ),
   exercice: lib(
     'Exercice d’avril à mars ; le budget reste saisi en année civile',
