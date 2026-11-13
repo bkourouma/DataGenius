@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
+import { ActionsTableau } from './actions-tableau'
 import { listerTableaux } from '@/lib/warehouse/tableaux'
 import { listerAlertesTableaux } from '@/lib/warehouse/tableaux-alertes'
 
@@ -20,6 +21,7 @@ export default async function TableauxPage() {
         {tableaux.map(t => <li key={t.id} className="flex flex-wrap justify-between gap-2 rounded-lg border bg-card p-4">
           <Link className="font-medium hover:underline" href={`/tableaux/${t.id}`}>{t.titre}</Link>
           {!t.editable && <span className="text-sm text-muted-foreground">Partagé avec vous</span>}
+          {t.editable && <ActionsTableau id={t.id} titre={t.titre} />}
         </li>)}
       </ul>
       {alertes.length > 0 && <section className="space-y-3" aria-labelledby="alertes-titre">
