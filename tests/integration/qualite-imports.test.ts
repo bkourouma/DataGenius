@@ -54,7 +54,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Préparation et q
 
     await expect(enregistrerQualite(jeu, 0, definition)).rejects.toThrow('Rechargez')
     await enregistrerQualite(jeu, 1, { ...definition, controles: [{ type: 'unique', colonnes: ['equipe'] }] })
-    expect(await synchroniserEntrepot({ jeu })).toEqual([{ jeu, statut: 'echec' }])
+    expect(await synchroniserEntrepot({ jeu })).toEqual([{ jeu, statut: 'echec', code: 'unique' }])
     expect((await requeteCopie())[0]).toEqual(publication)
     const fiche = await chargerQualite(jeu)
     expect(fiche?.version).toBe(2)

@@ -120,7 +120,7 @@ describe.skipIf(!testActif)('Connecteur PostgreSQL · données fictives', () => 
       const centres = await calculerSemantique({ jeu: 'centres', dimensions: ['centre'] }, ctx)
       expect(centres.lignes).toEqual([{ centre: 'Lagune' }, { centre: 'Nouveau' }])
       await support.$executeRaw`REVOKE SELECT ("Nom du centre", segment) ON support.centres FROM dg_support_reader`
-      expect(await synchroniserEntrepot({ forcer: true, jeu: 'centres' })).toEqual([{ jeu: 'centres', statut: 'echec' }])
+      expect(await synchroniserEntrepot({ forcer: true, jeu: 'centres' })).toEqual([{ jeu: 'centres', statut: 'echec', code: 'source' }])
       expect((await calculer()).lignes).toEqual([{ segment: 'Nord', ca_eur: 1280 }])
     } finally {
       await support.$executeRaw`GRANT SELECT ("Nom du centre", segment) ON support.centres TO dg_support_reader`
