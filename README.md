@@ -72,6 +72,8 @@ Chaque vérification relit les colonnes sélectionnées. Data Genius compare le 
 
 Les imports complets sont limités à 50 000 lignes et environ 20 Mio par jeu.
 
+Chaque jeu est traité isolément : l’échec d’un jeu n’empêche pas les suivants. Après un échec, le jeu n’est retenté qu’après un délai croissant (2, 4, 8 minutes… plafonné à 60 minutes et à la fréquence du jeu). Une synchronisation manuelle ignore ce délai. Pendant qu’un jeu est lu, un bail de 5 minutes, renouvelé automatiquement, évite qu’un autre processus le traite en même temps. La source est lue hors de la transaction de publication. Le worker et `warehouse:sync` purgent les exécutions de plus de 90 jours qui dépassent aussi les 1 000 dernières lignes du jeu, au plus une fois par heure. `warehouse:sync` sans `--watch` retourne un code de sortie non nul si un jeu est en échec.
+
 Les imports PostgreSQL peuvent activer la [synchronisation incrémentale](docs/synchronisation-incrementale.md). Le plafond est de 100 000 lignes et 20 Mio par jeu. La réconciliation complète périodique ou manuelle détecte les suppressions.
 
 Pour les rapports programmés, configurez le SMTP de Data Genius et l’appel de `POST /api/taches/medic-assist` avec le jeton `JETON_TACHES_PLANIFIEES` dans l’en-tête `Authorization: Bearer …`.
