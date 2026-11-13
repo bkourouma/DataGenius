@@ -262,5 +262,14 @@
   "alerteRaccourci": {
     "creer": "Create an alert",
     "titre": "Get notified automatically, for example by a notification and an email"
+  },
+  "erreur": {
+    "titre": "Something went wrong",
+    "description": "We could not display this page. You can try again or go back to the home page.",
+    "reessayer": "Try again",
+    "accueil": "Back to home",
+    "reference": "Error reference",
+    "introuvableTitre": "Page not found",
+    "introuvableDescription": "The page you asked for does not exist or has been moved."
   }
 }

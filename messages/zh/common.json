@@ -262,5 +262,14 @@
   "alerteRaccourci": {
     "creer": "新建提醒",
     "titre": "自动获得通知，例如通过通知和电子邮件"
+  },
+  "erreur": {
+    "titre": "出错了",
+    "description": "我们无法显示此页面。您可以重试，或返回首页。",
+    "reessayer": "重试",
+    "accueil": "返回首页",
+    "reference": "错误编号",
+    "introuvableTitre": "页面未找到",
+    "introuvableDescription": "您请求的页面不存在或已被移动。"
   }
 }
