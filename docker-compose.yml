@@ -1,0 +1,69 @@
+# Le fichier .env peut garder 127.0.0.1 pour le développement hors Docker :
+# `environment:` ci-dessous force l'hôte interne `postgres` pour DATABASE_URL dans les conteneurs.
+# Variables obligatoires dans .env : POSTGRES_PASSWORD, NEXTAUTH_SECRET, DATAGENIUS_SOURCE_KEY.
+# DATAGENIUS_WAREHOUSE_READ_URL, si utilisée, doit viser l'hôte `postgres` dans le .env de production.
+x-base-donnees: &base-donnees
+  DATABASE_URL: postgresql://${POSTGRES_USER:-datagenius_app}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans .env}@postgres:5432/${POSTGRES_DB:-datagenius}
+
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-datagenius_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans .env}
+      POSTGRES_DB: ${POSTGRES_DB:-datagenius}
+    volumes:
+      - donnees-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build: { context: ., target: outils }
+    image: datagenius-outils
+    env_file: .env
+    environment: *base-donnees
+    command: ["npx", "prisma", "migrate", "deploy"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      target: app
+      args:
+        NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3120}
+    image: datagenius-app
+    env_file: .env
+    environment: *base-donnees
+    volumes:
+      - donnees-uploads:/data/uploads
+    ports:
+      - "3120:3120"
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3120/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  worker:
+    build: { context: ., target: outils }
+    image: datagenius-outils
+    env_file: .env
+    environment: *base-donnees
+    command: ["npm", "run", "warehouse:worker"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    restart: unless-stopped
+
+volumes:
+  donnees-postgres:
+  donnees-uploads:

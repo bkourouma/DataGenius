@@ -60,6 +60,10 @@ Les calculs numériques conservent les décimales dans PostgreSQL. Les valeurs q
 
 ## Exploiter la synchronisation
 
+Pour le déploiement avec Docker, la supervision, les sauvegardes et les variables d’environnement, suivez le [guide d’exploitation](docs/exploitation.md).
+
+En production, lancez `node .next/standalone/server.js` (ou l’image Docker) : `npm start` affiche un avertissement avec `output: standalone`.
+
 ```powershell
 npm run warehouse:sync
 npm run warehouse:sync -- --force
