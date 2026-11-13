@@ -8,6 +8,7 @@ import { regleDonneesSchema } from '@/lib/auth/data-access'
 import { registrePostgres } from '@/lib/medic-assist/donnees/catalogue/registre'
 import { registreAutorise } from '@/lib/medic-assist/donnees/catalogue/autorisation'
 import { ErreurJointure, JointureSchema, lireJointures, preparerJointure, compilerJointure, SelectionJointureSchema, INDICATEUR_CORRESPONDANCE, type JointureEnregistree } from './jointures'
+import { auditerSuppression, dependancesJeuAvec, listeTitres, purgerDonneesJeu, verrouillerJeux, verrouillerSynchroJeu } from './jeux-admin'
 import { colonnesUtiliseesParCatalogue, publicationsMetier } from './modele-metier'
 
 async function avecVerrouCombinaisons<T>(action: (tx: Prisma.TransactionClient) => Promise<T>) {
@@ -30,6 +31,23 @@ export async function creerCombinaison(entree: unknown) {
     `
     return cle
   })
+}
+
+export async function supprimerCombinaison(acteur: string, cle: string) {
+  await prisma.$transaction(async tx => {
+    await verrouillerSynchroJeu(tx, cle)
+    await verrouillerJeux(tx)
+    const [existante] = await tx.$queryRaw<{ titre: string }[]>`
+      SELECT COALESCE(definition ->> 'titre', cle) AS titre FROM warehouse.combinaisons WHERE cle = ${cle} FOR UPDATE`
+    if (!existante) throw new ErreurJointure('Ce jeu combiné est introuvable.')
+    const { combinaisons } = await dependancesJeuAvec(tx, cle)
+    if (combinaisons.length) {
+      throw new ErreurJointure('Ce jeu combiné est utilisé par ' + listeTitres(combinaisons.map(c => c.titre)) + '. Supprimez d’abord ces jeux combinés.')
+    }
+    const droits = await purgerDonneesJeu(tx, cle)
+    await tx.$executeRaw`DELETE FROM warehouse.combinaisons WHERE cle = ${cle}`
+    await auditerSuppression(tx, acteur, 'Jeu combiné supprimé', existante.titre, droits)
+  }, { timeout: 15_000 })
 }
 
 export async function chargerCombinaison(cle: string) {

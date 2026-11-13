@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { VueArtefactSuivi } from '@/components/medic-assist/suivi/vue-artefact-suivi'
+import { ActionsTableau } from '../actions-tableau'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { lireTableau } from '@/lib/warehouse/tableaux'
 
@@ -29,6 +30,7 @@ export default async function TableauPage({ params, searchParams }: {
       <h1 className="text-2xl font-semibold">{tableau.titre}</h1>
       {tableau.editable && <Link className="rounded-md border px-3 py-2 text-sm hover:bg-muted" href={`${base}/modifier`}>Modifier</Link>}
     </div>
+    {tableau.editable && <ActionsTableau id={tableau.id} titre={tableau.titre} />}
     {tableau.filtres.length > 0 && <form method="get" action={base} className="flex flex-wrap items-end gap-3 rounded-lg border bg-card p-4">
       <label className="grid gap-1 text-sm">Filtre commun
         <select name="filtre" className="h-9 rounded-md border bg-background px-2" defaultValue={filtreActif?.cle ?? ''} required>
