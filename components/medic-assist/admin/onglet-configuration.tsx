@@ -43,8 +43,8 @@ import {
   FOURNISSEURS_TRANSCRIPTION,
   MODES_LANGAGE,
   VARIABLES_CLES_FOURNISSEURS,
-} from './imports-lot0';
-import type { Fournisseur, FournisseurTranscription, ModeLangage } from './imports-lot0';
+} from './dependances';
+import type { Fournisseur, FournisseurTranscription, ModeLangage } from './dependances';
 
 type EtatTest =
   | { etat: 'enCours' }

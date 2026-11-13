@@ -33,7 +33,7 @@ const destinatairesSchema = () =>
     .min(1)
     .max(LIMITES.destinatairesMax)
     .describe(
-      'Ids des utilisateurs MedicPro destinataires (rechercher_entites, type utilisateur). Jamais d’adresse e-mail.'
+      'Ids des utilisateurs Data Genius destinataires (rechercher_entites, type utilisateur). Jamais d’adresse e-mail.'
     )
 
 const formatsSchema = () =>
@@ -70,7 +70,7 @@ export const ParametresCreerTacheSchema = z
       'Détail de la tâche (contexte, attendu).'
     ).optional(),
     assigneA: IdentifiantSchema.describe(
-      'Id de l’utilisateur MedicPro chargé de la tâche (rechercher_entites, type utilisateur).'
+      'Id de l’utilisateur Data Genius chargé de la tâche (rechercher_entites, type utilisateur).'
     ),
     echeance: DateCivileSchema.optional().describe('Échéance, AAAA-MM-JJ.'),
     priorite: z
@@ -110,10 +110,10 @@ export type ParametresEnvoyerEmail = z.infer<typeof ParametresEnvoyerEmailSchema
 export const ParametresNotifierSchema = z
   .strictObject({
     destinataires: destinatairesSchema(),
-    message: texteMultiligneSurSchema(1_000, 'Texte de la notification dans MedicPro.'),
+    message: texteMultiligneSurSchema(1_000, 'Texte de la notification dans Data Genius.'),
     artefactId: artefactIdSchema('joint à la notification').optional(),
   })
-  .describe('Paramètres de notifier : une notification dans la cloche de MedicPro.')
+  .describe('Paramètres de notifier : une notification dans la cloche de Data Genius.')
 export type ParametresNotifier = z.infer<typeof ParametresNotifierSchema>
 
 export const ParametresProgrammerRapportSchema = z
@@ -137,7 +137,7 @@ export const ParametresProgrammerRapportSchema = z
     heure: z
       .string()
       .regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/)
-      .describe('Heure d’envoi HH:MM, heure du serveur MedicPro (ex. 08:00).'),
+      .describe('Heure d’envoi HH:MM, heure du serveur Data Genius (ex. 08:00).'),
     destinataires: destinatairesSchema(),
     formats: formatsSchema(),
   })
@@ -181,7 +181,7 @@ export type ParametresAction = ParametresParTypeAction[TypeAction]
 export const TypeActionSchema = z
   .enum(TYPES_ACTION)
   .describe(
-    'creer_tache (tâche assignée à un collègue), envoyer_email (artefact par e-mail), notifier (notification dans MedicPro), programmer_rapport (envoi récurrent d’un artefact).'
+    'creer_tache (tâche assignée à un collègue), envoyer_email (artefact par e-mail), notifier (notification dans Data Genius), programmer_rapport (envoi récurrent d’un artefact).'
   )
 
 /** Résultat d'une action exécutée (ou en échec). */

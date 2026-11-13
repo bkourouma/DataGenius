@@ -14,7 +14,7 @@ import { synchroniserEntrepot } from '@/lib/warehouse/synchronisation'
 describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Connecteurs administrés', () => {
   const contexte: ContexteExecution = {
     userId: randomUUID(), roleName: 'TenantAdmin', scope: { roleName: 'TenantAdmin', voitTout: true },
-    habilitations: null, locale: 'fr', maintenant: new Date(), jourLimite: 1,
+    habilitations: null, locale: 'fr', maintenant: new Date(),
   }
   const sources: string[] = []
   const jeux: string[] = []

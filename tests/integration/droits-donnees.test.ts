@@ -39,7 +39,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Droits des jeux p
     async function contexte(userId: string): Promise<ContexteExecution> {
       const scope = await getAccessScope(userId)
       if (!scope) throw new Error('Compte indisponible')
-      return { userId, roleName: scope.roleName, scope, habilitations: null, locale: 'fr', maintenant: new Date(), jourLimite: 1 }
+      return { userId, roleName: scope.roleName, scope, habilitations: null, locale: 'fr', maintenant: new Date() }
     }
     try {
       const admis = await creerCompte()

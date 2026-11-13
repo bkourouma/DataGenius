@@ -106,7 +106,7 @@ const MESSAGES_REFUS: Record<MotifTexteRefuse, string> = {
     'Texte refusé : les références de caractères (« &#… » et « &nom; ») sont interdites.',
   caractere_controle: 'Texte refusé : il contient des caractères de contrôle.',
   lien_non_interne:
-    'Texte refusé : un lien markdown doit viser une page interne de MedicPro, commençant par un seul « / » (ex. /rapports-ventes), hors /api/.',
+    'Texte refusé : un lien markdown doit viser une page interne de Data Genius, commençant par un seul « / » (ex. /tableaux), hors /api/.',
   image_markdown: 'Texte refusé : les images markdown (![...](...)) sont interdites.',
   retour_ligne: 'Texte refusé : ce champ tient sur une seule ligne.',
 }
@@ -170,7 +170,7 @@ export const IdentifiantSchema = z
   .max(64)
   .regex(/^[A-Za-z0-9_-]+$/)
   .describe(
-    'Identifiant technique d’un enregistrement MedicPro (tel que renvoyé par un outil). Ne jamais l’inventer ni l’afficher à l’utilisateur.'
+    'Identifiant technique d’un enregistrement Data Genius (tel que renvoyé par un outil). Ne jamais l’inventer ni l’afficher à l’utilisateur.'
   )
 
 /** Période mensuelle `YYYY-MM`, le format de SortiesLocales.period. */

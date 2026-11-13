@@ -1,6 +1,5 @@
 /**
- * Point UNIQUE des dependances du lot 6 (admin et transcription) envers les lots 0 et 1 :
- * contrats, gardes (lot 0) et configuration (lot 1), reexportes tels quels.
+ * Point unique des dépendances du module admin/transcription : contrats, gardes et configuration réexportés tels quels.
  */
 
 export {

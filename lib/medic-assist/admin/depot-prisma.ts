@@ -9,7 +9,7 @@ import type { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db/client'
 
 import type { AvisBrut, DonneesAvisBrutes, MessageBrut, QuestionBrute } from './avis'
-import { CLES_PARAMETRES, type PersonneDto, type ValeurAvis } from './imports-lot0-lot1'
+import { CLES_PARAMETRES, type PersonneDto, type ValeurAvis } from './dependances'
 import { CLE_PARAMETRE_TAUX_EUR } from './types'
 import { creerAccumulateurUsages, type LigneUsageGroupee } from './usages'
 

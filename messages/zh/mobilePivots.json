@@ -6,19 +6,19 @@
     "totaux": "{details}，合计包含全部数据"
   },
   "menus": {
-    "pays": "国家",
-    "produits": "产品",
-    "grossistes": "批发商",
+    "pays": "字段 A",
+    "produits": "字段 B",
+    "grossistes": "字段 C",
     "mesures": "指标"
   },
   "cumul": {
     "libelle": "累计",
-    "produits": "已移除产品明细：仅显示一行累计。",
-    "grossistes": "已移除批发商明细：按国家累计。",
-    "lesDeux": "已移除产品和批发商明细：按国家累计。",
-    "pays": "已移除国家明细：所有国家合计。",
-    "paysProduits": "已移除国家和产品：按批发商合计。",
-    "paysGrossistes": "已移除国家和批发商：按产品合计。",
+    "produits": "已移除字段 B 的明细：仅显示一行累计。",
+    "grossistes": "已移除字段 C 的明细：按字段 A 累计。",
+    "lesDeux": "已移除字段 B 和 C：按字段 A 累计。",
+    "pays": "已移除字段 A 的明细：对所有取值累计。",
+    "paysProduits": "已移除字段 A 和 B：按字段 C 累计。",
+    "paysGrossistes": "已移除字段 A 和 C：按字段 B 累计。",
     "champs": "已移除字段（{champs}）：数据已汇总。"
   },
   "champs": {
@@ -29,14 +29,14 @@
     "detail": "已显示 {affiches} / {total}",
     "retires": "{count, plural, other {已移除 # 个字段}}",
     "minimum": "{count, plural, other {至少须保留显示 # 个字段}}。",
-    "pays": "国家",
-    "produit": "产品",
-    "grossiste": "批发商",
-    "agence": "代理机构",
+    "pays": "字段 A",
+    "produit": "字段 B",
+    "grossiste": "字段 C",
+    "agence": "字段 D",
     "mois": "月份",
     "periode": "周期"
   },
   "mesures": {
-    "caSeul": "已移除产品：仅显示营业额（欧元）。"
+    "caSeul": "已移除明细：仅显示主要指标。"
   }
 }

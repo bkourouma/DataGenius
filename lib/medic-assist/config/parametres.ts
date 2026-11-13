@@ -1,7 +1,7 @@
 /**
  * Lecture et écriture de la configuration Medic Assist dans `parametres_application`.
  *
- * Modèle : `lib/services/sorties-locales-delai.ts` (défaut si absent ou illisible).
+ * Valeur par défaut si le paramètre est absent ou illisible.
  * Aucune valeur de clé API n'est lue, renvoyée ni journalisée : seulement des booléens.
  */
 

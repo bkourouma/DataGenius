@@ -1,7 +1,7 @@
 /**
  * E-mail d'un rapport programme : texte et HTML dans la langue du destinataire.
  * Tout ce qui vient de la base (noms, titre) est echappe avant d'entrer dans le
- * HTML. Meme principe que lib/services/revue-mensuelle/annonce.ts.
+ * HTML. Meme principe que les autres e-mails de l'application.
  */
 
 import { getDirection, type Locale } from '@/i18n/config'

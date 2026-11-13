@@ -7,7 +7,7 @@
 
 import { ErreurPieceJointe } from './erreurs'
 import { extraireContenu } from './extraction'
-import type { ContexteExecution, PieceJointeDto } from './imports-lot0'
+import type { ContexteExecution, PieceJointeDto } from './dependances'
 import { depotPrisma, type DepotPiecesJointes, type LignePieceJointe } from './depot-prisma'
 import {
   extensionDe,

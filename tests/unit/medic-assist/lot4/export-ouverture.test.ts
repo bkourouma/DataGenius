@@ -110,7 +110,6 @@ function contexte(locale: Locale = 'fr'): ContexteExecution {
     habilitations: null,
     locale,
     maintenant: new Date(2026, 10, 2, 9, 30),
-    jourLimite: 10,
   } as unknown as ContexteExecution;
 }
 

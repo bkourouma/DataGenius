@@ -16,7 +16,6 @@ import { ACCESS_SCOPE_INCLUDE, buildAccessScope } from '@/lib/auth/access-scope'
 import { chargerDroitsDonnees } from '@/lib/auth/data-access'
 import { STATUT_ACTIF } from '@/lib/auth/inscription'
 import { prisma } from '@/lib/db/client'
-import { lireJourLimite } from '@/lib/services/sorties-locales-delai'
 
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 // droits.ts n'est pas re-exporte par l'index des contrats : import direct (comme acces.ts).
@@ -199,6 +198,5 @@ export async function contexteDepuisCompte(
     habilitations,
     locale: langueDuCompte(utilisateur.locale),
     maintenant,
-    jourLimite: await lireJourLimite(),
   }
 }

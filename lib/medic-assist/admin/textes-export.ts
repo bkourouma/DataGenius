@@ -50,7 +50,7 @@ const dateHeure = (d: Date) =>
 
 export const TEXTES_EXPORT_USAGES: Record<Locale, TextesExportUsages> = {
   fr: {
-    titre: 'Medic Assist : usages et coûts',
+    titre: 'Data Genius : usages et coûts',
     periode: (d, f) => `Période : du ${d} au ${f}`,
     taux: (t, s) => `Taux : 1 USD = ${t} EUR (${s})`,
     sourceTauxConfig: 'saisi par l’administrateur',
@@ -92,7 +92,7 @@ export const TEXTES_EXPORT_USAGES: Record<Locale, TextesExportUsages> = {
     },
   },
   en: {
-    titre: 'Medic Assist: usage and costs',
+    titre: 'Data Genius: usage and costs',
     periode: (d, f) => `Period: ${d} to ${f}`,
     taux: (t, s) => `Rate: 1 USD = ${t} EUR (${s})`,
     sourceTauxConfig: 'set by the administrator',
@@ -134,7 +134,7 @@ export const TEXTES_EXPORT_USAGES: Record<Locale, TextesExportUsages> = {
     },
   },
   es: {
-    titre: 'Medic Assist: uso y costes',
+    titre: 'Data Genius: uso y costes',
     periode: (d, f) => `Periodo: del ${d} al ${f}`,
     taux: (t, s) => `Tasa: 1 USD = ${t} EUR (${s})`,
     sourceTauxConfig: 'indicada por el administrador',
@@ -176,7 +176,7 @@ export const TEXTES_EXPORT_USAGES: Record<Locale, TextesExportUsages> = {
     },
   },
   zh: {
-    titre: 'Medic Assist：使用量与费用',
+    titre: 'Data Genius：使用量与费用',
     periode: (d, f) => `期间：${d} 至 ${f}`,
     taux: (t, s) => `汇率：1 美元 = ${t} 欧元（${s}）`,
     sourceTauxConfig: '由管理员设置',
@@ -213,7 +213,7 @@ export const TEXTES_EXPORT_USAGES: Record<Locale, TextesExportUsages> = {
     modes: { standard: '标准', profond: '深入分析', rapide: '快速', transcription: '语音听写' },
   },
   ar: {
-    titre: 'Medic Assist: الاستخدام والتكاليف',
+    titre: 'Data Genius: الاستخدام والتكاليف',
     periode: (d, f) => `الفترة: من ${d} إلى ${f}`,
     taux: (t, s) => `سعر الصرف: 1 دولار = ${t} يورو (${s})`,
     sourceTauxConfig: 'حدده المسؤول',
@@ -255,7 +255,7 @@ export const TEXTES_EXPORT_USAGES: Record<Locale, TextesExportUsages> = {
     },
   },
   hi: {
-    titre: 'Medic Assist: उपयोग और लागत',
+    titre: 'Data Genius: उपयोग और लागत',
     periode: (d, f) => `अवधि: ${d} से ${f} तक`,
     taux: (t, s) => `दर: 1 USD = ${t} EUR (${s})`,
     sourceTauxConfig: 'प्रशासक द्वारा निर्धारित',

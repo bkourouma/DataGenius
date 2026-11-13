@@ -15,7 +15,7 @@ import { join, resolve, sep } from 'path'
 import { FileUploadService } from '@/lib/utils/file-upload'
 
 import { ErreurPieceJointe } from './erreurs'
-import { LIMITES } from './imports-lot0'
+import { LIMITES } from './dependances'
 
 export type ExtensionPieceJointe = 'xlsx' | 'csv' | 'pdf' | 'txt'
 

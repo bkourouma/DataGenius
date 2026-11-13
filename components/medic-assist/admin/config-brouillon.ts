@@ -9,14 +9,14 @@ import {
   LONGUEUR_MAX_IDENTIFIANT_MODELE,
   SUGGESTION_MODELE_TRANSCRIPTION,
 } from './constantes';
-import { MODES_LANGAGE } from './imports-lot0';
+import { MODES_LANGAGE } from './dependances';
 import type {
   ConfigTranscription,
   Fournisseur,
   FournisseurTranscription,
   ModeLangage,
   TarifModele,
-} from './imports-lot0';
+} from './dependances';
 
 export interface Brouillon {
   fournisseur: Fournisseur;

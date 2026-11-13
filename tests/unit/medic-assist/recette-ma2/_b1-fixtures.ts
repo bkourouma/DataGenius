@@ -13,7 +13,6 @@ export const CONTEXTE = {
   habilitations: null,
   locale: 'fr',
   maintenant: new Date(2026, 9, 5, 9, 30),
-  jourLimite: 10,
 } as unknown as ContexteExecution
 
 export const TOTAL = 949755.87

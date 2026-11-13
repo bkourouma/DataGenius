@@ -2,7 +2,7 @@
  * Constantes de l'interface d'administration de Medic Assist.
  */
 
-import type { FournisseurTranscription } from './imports-lot0';
+import type { FournisseurTranscription } from './dependances';
 
 /** Topic du guide de l'ecran (route /dashboard/admin/medic-assist). */
 export const TOPIC_GUIDE_ADMIN_MEDIC_ASSIST = 'administration.medic-assist-admin';

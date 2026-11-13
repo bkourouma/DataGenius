@@ -7,7 +7,7 @@
 
 import { decrireErreurPourJournal, estErreurCertificat, lireCodeReseauCause } from '../agent/erreurs'
 import { chargerSdkIa, type SdkIa } from '../transcription/sdk-ia'
-import { creerModele, type Fournisseur } from './imports-lot0-lot1'
+import { creerModele, type Fournisseur } from './dependances'
 import type { CodeErreurTest } from './types'
 
 export const DELAI_TEST_MS = 20_000

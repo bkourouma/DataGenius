@@ -158,7 +158,7 @@ export const PeriodeExerciceSchema = z.strictObject({
     .min(2000)
     .max(2100)
     .describe(
-      'Exercice ILAPHARM désigné par son année de début : l’exercice 2026 va d’avril 2026 à mars 2027.'
+      'Exercice désigné par son année de début : l’exercice 2026 va d’avril 2026 à mars 2027.'
     ),
 })
 
@@ -166,14 +166,14 @@ export const PeriodeDernierMoisClosSchema = z.strictObject({
   dernierMoisClos: z
     .literal(true)
     .describe(
-      'Le dernier mois clos (jour limite de saisie passé) : la période par défaut de tous les rapports.'
+      'Le dernier mois complet (le mois qui précède le mois en cours) : la période par défaut.'
     ),
 })
 
 export const PeriodeRequeteSchema = z
   .union([PeriodePlageSchema, PeriodeExerciceSchema, PeriodeDernierMoisClosSchema])
   .describe(
-    'Période : soit {debut, fin} en AAAA-MM, soit {exercice: année de début} (avril → mars), soit {dernierMoisClos: true}. Absente : le serveur applique la période par défaut du jeu (dernier mois clos pour les ventes). Les mois non clos sont incomplets : le dire à l’utilisateur.'
+    'Période : soit {debut, fin} en AAAA-MM, soit {exercice: année de début} (avril → mars), soit {dernierMoisClos: true}. Absente : le serveur applique la période par défaut du jeu (dernier mois complet). Le mois en cours est incomplet : le dire à l’utilisateur.'
   )
 export type PeriodeRequete = z.infer<typeof PeriodeRequeteSchema>
 

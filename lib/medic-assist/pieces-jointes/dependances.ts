@@ -1,10 +1,10 @@
 /**
- * Point UNIQUE d'import des contrats du lot 0 pour les pieces jointes.
+ * Point unique des dépendances du module pièces jointes : contrats, types et signature du jeu de données.
  *
- * - types et constantes : '@/lib/medic-assist/contrats' (aucun import serveur, charge sans cout) ;
- * - jeu de donnees      : 'enregistrerJeuDeDonnees' du lot 2 (lib/medic-assist/donnees/outils) ;
- * - garde des routes    : importee directement depuis '@/lib/medic-assist/acces' par les routes
- *   (elle tire next-auth et Prisma : on ne la reexporte pas ici pour garder ce fichier leger).
+ * - types et constantes : '@/lib/medic-assist/contrats' (aucun import serveur, charge sans coût) ;
+ * - jeu de données      : 'enregistrerJeuDeDonnees' du module donnees (lib/medic-assist/donnees/outils) ;
+ * - garde des routes    : importée directement depuis '@/lib/medic-assist/acces' par les routes
+ *   (elle tire next-auth et Prisma : on ne la réexporte pas ici pour garder ce fichier léger).
  */
 
 export { CHAMPS_TELEVERSEMENT, LIMITES } from '@/lib/medic-assist/contrats'
