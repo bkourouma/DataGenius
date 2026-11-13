@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { getDirection } from '@/i18n/config';
+import { EnTetePage } from '@/components/ui/en-tete-page';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import {
@@ -51,16 +52,7 @@ export function AdministrationMedicAssist({ identifiantAdmin }: { identifiantAdm
 
   return (
     <div className="space-y-6 py-6">
-      <div>
-        <div className="[&>div]:items-baseline [&>div]:gap-2">
-          <h1
-            className="text-2xl font-bold sm:text-3xl"
-          >
-            {t('page.titre')}
-          </h1>
-        </div>
-        <p className="mt-2 text-muted-foreground">{t('page.sousTitre')}</p>
-      </div>
+      <EnTetePage titre={t('page.titre')} description={t('page.sousTitre')} />
 
       <Tabs value={actif} onValueChange={changer} dir={direction} className="space-y-4">
         <div className="max-w-full overflow-x-auto">

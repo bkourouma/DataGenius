@@ -1,3 +1,4 @@
+import { Database } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { nonceIntegration, origineAutorisee, tableauId } from '@/lib/integration/embarquement'
@@ -19,9 +20,17 @@ export default async function Autoriser({ searchParams }: { searchParams: Record
   }
   const lisible = await chargerTableau(tableau.data, acces.contexte)
   if (!lisible) notFound()
-  return <main className="mx-auto grid max-w-lg gap-5 p-6 sm:p-10">
-    <h1 className="text-xl font-semibold">Autoriser l’affichage d’un tableau</h1>
-    <p>L’application <strong className="break-all">{origine}</strong> souhaite afficher le tableau <strong>{lisible.definition.titre}</strong> avec vos droits Data Genius.</p>
-    <Consentement tableau={tableau.data} origine={origine} nonce={nonce.data} />
+  return <main className="grid min-h-dvh place-items-center bg-muted/50 px-4 py-10">
+    <section className="w-full max-w-md rounded-xl border bg-card p-7 shadow-sm">
+      <div className="mb-6 flex items-center gap-2.5 font-semibold">
+        <span className="grid size-8 place-items-center rounded-md bg-primary text-primary-foreground">
+          <Database size={18} aria-hidden />
+        </span>
+        Data Genius
+      </div>
+      <h1 className="text-xl font-semibold">Autoriser l’affichage d’un tableau</h1>
+      <p className="mb-6 mt-3 text-sm text-muted-foreground">L’application <strong className="break-all text-foreground">{origine}</strong> souhaite afficher le tableau <strong className="text-foreground">{lisible.definition.titre}</strong> avec vos droits Data Genius.</p>
+      <Consentement tableau={tableau.data} origine={origine} nonce={nonce.data} />
+    </section>
   </main>
 }
