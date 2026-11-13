@@ -7,8 +7,8 @@
  * modele corrige sa requete au tour suivant. Les messages ne citent que des cles du
  * catalogue, jamais le schema de la base.
  *
- * La periode est RESOLUE ici (bornes 'YYYY-MM' incluses) : explicite, exercice (avril ->
- * mars, `periodesExercice`), ou dernier mois complet (`dernierMoisComplet`, le mois qui
+ * La periode est RESOLUE ici (bornes 'YYYY-MM' incluses) : explicite, exercice (annee civile par
+ * defaut, ou du mois regle par l'administrateur, `bornesExerciceCalendaire`), ou dernier mois complet (`dernierMoisComplet`, le mois qui
  * precede le mois courant, calcule depuis `maintenant` du contexte).
  */
 
@@ -321,7 +321,7 @@ function validerValeurFiltre(def: DefinitionFiltre, valeur: unknown): unknown {
 }
 
 const FORMES_PERIODE =
-  "{debut: 'YYYY-MM', fin: 'YYYY-MM'}, {exercice: 2026} (année de début) ou {dernierMoisClos: true}"
+  "{debut: 'YYYY-MM', fin: 'YYYY-MM'}, {exercice: 2026} (année de début ; année civile sauf réglage du jeu) ou {dernierMoisClos: true}"
 
 function erreurPeriode(detail: string): ErreurDonnees {
   return new ErreurDonnees(

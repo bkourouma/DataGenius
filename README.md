@@ -50,7 +50,7 @@ Une combinaison enregistre la définition du rapprochement dans Data Genius. Ses
 
 Les nouveaux imports sont lus directement dans la base de Data Genius par l’application et le worker. `DATAGENIUS_CATALOGUE` reste facultatif pour les catalogues historiques, la démonstration et les combinaisons SQL historiques. Le [catalogue de démonstration](config/demo-postgresql.json) combine deux bases fictives.
 
-Dans **Source → Catalogue métier**, vous pouvez associer une colonne de type date à un jeu et choisir le mois de début de son exercice. Les filtres par exercice suivent ce mois de début. Les regroupements par trimestre et par année suivent le calendrier civil.
+Dans **Source → Catalogue métier**, vous pouvez associer une colonne de type date à un jeu et choisir le mois de début de son exercice. Sans réglage, l’exercice suit l’année civile (janvier à décembre) ; avec un mois de début réglé, les filtres par exercice le suivent (début en avril : exercice 2026 = avril 2026 à mars 2027). Les regroupements par trimestre et par année suivent le calendrier civil.
 
 ### Publier les définitions métier
 

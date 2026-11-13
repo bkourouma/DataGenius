@@ -64,12 +64,12 @@ export const REGLES = {
     'अवधि न दी जाने पर: अंतिम पूरा महीना (चालू महीने से पहले का महीना)'
   ),
   exercice: lib(
-    'Exercice d’avril à mars ; le budget reste saisi en année civile',
-    'Fiscal year from April to March; the budget is still entered by calendar year',
-    'Ejercicio de abril a marzo; el presupuesto sigue capturado por año civil',
-    '财年为4月至次年3月；预算仍按自然年录入',
-    'السنة المالية من أبريل إلى مارس؛ وتبقى الميزانية مُدخلة بالسنة الميلادية',
-    'वित्त वर्ष अप्रैल से मार्च; बजट कैलेंडर वर्ष में दर्ज रहता है'
+    'Exercice = année civile (janvier à décembre) sauf réglage du jeu dans le catalogue ; le budget reste saisi en année civile',
+    'Fiscal year = calendar year (January to December) unless the dataset sets another start month in the catalogue; the budget is still entered by calendar year',
+    'Ejercicio = año civil (enero a diciembre) salvo que el conjunto fije otro mes de inicio en el catálogo; el presupuesto sigue capturado por año civil',
+    '财年即自然年（1月至12月），除非数据集在目录中另行设置起始月份；预算仍按自然年录入',
+    'السنة المالية هي السنة الميلادية (من يناير إلى ديسمبر) ما لم تحدد مجموعة البيانات شهر بداية آخر في الفهرس؛ وتبقى الميزانية مُدخلة بالسنة الميلادية',
+    'वित्त वर्ष = कैलेंडर वर्ष (जनवरी से दिसंबर), जब तक डेटासेट कैटलॉग में कोई और आरंभ माह तय न करे; बजट कैलेंडर वर्ष में दर्ज रहता है'
   ),
   stockInstantane: lib(
     'Le stock est un instantané d’un seul mois : les stocks de mois différents ne s’additionnent pas',

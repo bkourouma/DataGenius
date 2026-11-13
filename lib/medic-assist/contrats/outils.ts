@@ -126,7 +126,7 @@ export const EntreeResumeMensuelSchema = z
     ),
   })
   .describe(
-    'Synthèse de la revue du mois : réalisé, budget, cumul de l’exercice, prévision à fin mars, alertes, écarts par pays, mouvements.'
+    'Synthèse de la revue du mois : réalisé, budget, cumul de l’exercice, prévision à fin d’exercice, alertes, écarts par pays, mouvements.'
   )
 
 export const EntreeLirePieceJointeSchema = z

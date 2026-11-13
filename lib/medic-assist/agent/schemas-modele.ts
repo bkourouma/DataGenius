@@ -77,7 +77,7 @@ export const DESCRIPTIONS: Record<NomOutil, Record<string, string>> = {
       'Absente : défaut du jeu (dernier mois complet ; jeu sans calendrier : tout l’historique, à éviter).',
     debut: 'AAAA-MM inclus.',
     fin: 'AAAA-MM inclus.',
-    exercice: 'Année de début : 2026 = avril 2026 à mars 2027.',
+    exercice: 'Année de début : 2026 = janvier à décembre 2026 (année civile) sauf mois de début réglé pour le jeu.',
     statuts: 'Valeurs listées par catalogue_donnees.',
     recherche: 'Texte cherché dans les libellés.',
     autres: 'Filtres propres au jeu déclarés par catalogue_donnees : clé → valeur ou liste.',

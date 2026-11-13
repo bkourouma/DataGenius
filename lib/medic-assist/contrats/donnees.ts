@@ -81,7 +81,7 @@ export const ProvenanceSchema = z.object({
     .object({
       debut: PeriodeMoisSchema,
       fin: PeriodeMoisSchema,
-      /** Ex. « avril → septembre 2026 », « exercice 2026-2027 ». */
+      /** Ex. « janvier → juin 2026 », « exercice 2026-2027 ». */
       libelle: z.string().max(120),
     })
     .optional(),
@@ -158,7 +158,7 @@ export const PeriodeExerciceSchema = z.strictObject({
     .min(2000)
     .max(2100)
     .describe(
-      'Exercice désigné par son année de début : l’exercice 2026 va d’avril 2026 à mars 2027.'
+      'Exercice désigné par son année de début : l’exercice 2026 va de janvier à décembre 2026, sauf mois de début réglé pour le jeu (début avril : d’avril 2026 à mars 2027).'
     ),
 })
 
@@ -173,7 +173,7 @@ export const PeriodeDernierMoisClosSchema = z.strictObject({
 export const PeriodeRequeteSchema = z
   .union([PeriodePlageSchema, PeriodeExerciceSchema, PeriodeDernierMoisClosSchema])
   .describe(
-    'Période : soit {debut, fin} en AAAA-MM, soit {exercice: année de début} (avril → mars), soit {dernierMoisClos: true}. Absente : le serveur applique la période par défaut du jeu (dernier mois complet). Le mois en cours est incomplet : le dire à l’utilisateur.'
+    'Période : soit {debut, fin} en AAAA-MM, soit {exercice: année de début} (année civile sauf réglage du jeu), soit {dernierMoisClos: true}. Absente : le serveur applique la période par défaut du jeu (dernier mois complet). Le mois en cours est incomplet : le dire à l’utilisateur.'
   )
 export type PeriodeRequete = z.infer<typeof PeriodeRequeteSchema>
 
