@@ -108,8 +108,8 @@ export function verifierChangementRole(acteurId: string, cible: CibleCompte, nou
   }
 }
 
-/** Un mot de passe local reel contient sel et condensat ; '!' marque un compte sans mot de passe. */
+/** Un mot de passe local reel contient sel et condensat (ancien format <sel>.<hash> ou scrypt$...) ; '!' marque un compte sans mot de passe. */
 export const HASH_INUTILISABLE = '!'
 export function aMotDePasseLocal(passwordHash: string): boolean {
-  return passwordHash !== HASH_INUTILISABLE && passwordHash.includes('.')
+  return passwordHash !== HASH_INUTILISABLE && (passwordHash.includes('.') || passwordHash.startsWith('scrypt$'))
 }

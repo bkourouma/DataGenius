@@ -66,7 +66,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Comptes : invitat
     expect(envoye).toBe(true)
     expect(lien.startsWith('http://localhost:3120/definir-mot-de-passe?jeton=')).toBe(true)
     expect(compte).toMatchObject({ email, status: 'invited', passwordHash: '!', roleName: 'Member' })
-    expect(verifyPassword(MDP_1, compte.passwordHash)).toBe(false)
+    expect(await verifyPassword(MDP_1, compte.passwordHash)).toBe(false)
     await expect(getAccessScope(compte.id)).resolves.toBeNull()
     const stocke = await prisma.compteJeton.findMany({ where: { userId: compte.id } })
     expect(stocke).toHaveLength(1)
