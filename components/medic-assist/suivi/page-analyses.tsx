@@ -11,6 +11,7 @@ import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 
 import { getDirection } from '@/i18n/config';
+import { EnTetePage } from '@/components/ui/en-tete-page';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { OngletAnalyses } from './onglet-analyses';
@@ -47,12 +48,7 @@ export function PageAnalyses() {
 
   return (
     <div className="space-y-4 py-4 sm:space-y-6 sm:py-6">
-      <header className="min-w-0">
-        <h1 className="text-2xl font-bold sm:text-3xl">
-          {t('page.titre')}
-        </h1>
-        <p className="mt-1 text-muted-foreground">{t('page.description')}</p>
-      </header>
+      <EnTetePage titre={t('page.titre')} description={t('page.description')} />
 
       <Tabs value={onglet} onValueChange={changer} dir={direction} className="space-y-4">
         <TabsList

@@ -205,6 +205,9 @@
     "sousTitre": "ماذا تريد أن تعرف اليوم؟",
     "questionsTitre": "للبدء",
     "questionsListe": "أسئلة البداية",
+    "analysesTitre": "استئناف تحليل",
+    "toutVoir": "كل التحليلات",
+    "astuce": "نصيحة: يفتح {raccourci} البحث ويطرح سؤالًا من أي صفحة.",
     "briefing": {
       "titre": "موجز اليوم",
       "periode": "الفترة المرجعية: {periode}",

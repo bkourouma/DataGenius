@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T00:00:00Z",
+  "title": "Design System: Data Genius",
+  "extensions": {
+    "colorMeta": {
+      "background": { "role": "neutral", "displayName": "Béton froid", "canonical": "hsl(210 22% 95%)", "tonalRamp": ["#0B1018", "#232C37", "#36414D", "#66737F", "#8E9AA9", "#C5CDD6", "#DDE2E8", "#F5F7F9"] },
+      "foreground": { "role": "neutral", "displayName": "Encre marine", "canonical": "hsl(218 45% 12%)", "tonalRamp": ["#0B1018", "#141B25", "#232C37", "#36414D", "#4B5764", "#66737F", "#8E9AA9", "#C5CDD6"] },
+      "card": { "role": "neutral", "displayName": "Panneau blanc", "canonical": "hsl(0 0% 100%)" },
+      "primary": { "role": "primary", "displayName": "Cobalt d'action", "canonical": "hsl(216 84% 36%)", "tonalRamp": ["#081A3A", "#0D2B5E", "#0F4393", "#1553AF", "#2F6BCB", "#5C8FE0", "#BAD2F5", "#EEF4FD"] },
+      "secondary": { "role": "neutral", "displayName": "Brume", "canonical": "hsl(212 24% 92%)" },
+      "muted-foreground": { "role": "neutral", "displayName": "Gris ardoise", "canonical": "hsl(215 16% 36%)" },
+      "border": { "role": "neutral", "displayName": "Filet", "canonical": "hsl(213 20% 86%)" },
+      "input": { "role": "neutral", "displayName": "Bord de champ", "canonical": "hsl(215 14% 57%)" },
+      "shell": { "role": "neutral", "displayName": "Mur marine", "canonical": "hsl(218 62% 13%)", "tonalRamp": ["hsl(218 62% 9%)", "hsl(218 62% 13%)", "hsl(218 40% 24%)", "hsl(218 35% 36%)", "hsl(214 24% 52%)", "hsl(214 24% 68%)", "hsl(212 30% 84%)", "hsl(212 30% 92%)"] },
+      "success": { "role": "secondary", "displayName": "Vert Data Genius", "canonical": "hsl(140 56% 28%)", "tonalRamp": ["#0A2713", "#123E20", "#1B612C", "#217A35", "#2C9442", "#48B05C", "#AEE0B7", "#EDF8EF"] },
+      "warning": { "role": "secondary", "displayName": "Ocre", "canonical": "hsl(40 92% 46%)", "tonalRamp": ["#2F1E07", "#583A12", "#865810", "#AD740B", "#D49510", "#EFB11A", "#FCDD84", "#FFF8E6"] },
+      "destructive": { "role": "secondary", "displayName": "Rouge oxyde", "canonical": "hsl(6 72% 42%)", "tonalRamp": ["#3A0F09", "#5C1D13", "#8F2A19", "#B0341F", "#CC4430", "#E06550", "#F6C0B5", "#FDF2EF"] },
+      "info": { "role": "secondary", "displayName": "Sarcelle", "canonical": "hsl(188 72% 26%)", "tonalRamp": ["hsl(188 72% 12%)", "hsl(188 72% 18%)", "hsl(188 72% 26%)", "hsl(188 60% 36%)", "hsl(188 55% 48%)", "hsl(188 50% 62%)", "hsl(188 50% 80%)", "hsl(188 50% 92%)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Salutation de l'accueil uniquement." },
+      "headline": { "displayName": "Titre de page", "purpose": "Titre dans l'en-tête commun des pages." },
+      "title": { "displayName": "Titre de section", "purpose": "Sections d'une page ; 1 rem pour une carte." },
+      "body": { "displayName": "Texte courant", "purpose": "Lignes de liste, descriptions, champs." },
+      "label": { "displayName": "Libellé", "purpose": "Groupes du rail, métadonnées, badges." },
+      "code": { "displayName": "Code", "purpose": "Identifiants, numéros de lot, touches clavier ; chiffres tabulaires." }
+    },
+    "shadows": [
+      { "name": "sm", "value": "0 1px 2px 0 rgb(11 27 56 / 0.06)", "purpose": "Assise d'un bouton plein ou de l'onglet actif." },
+      { "name": "md", "value": "0 3px 8px -2px rgb(11 27 56 / 0.10), 0 1px 3px -1px rgb(11 27 56 / 0.06)", "purpose": "Pose rare d'un panneau au survol." },
+      { "name": "xl", "value": "0 16px 36px -10px rgb(11 27 56 / 0.22), 0 4px 10px -4px rgb(11 27 56 / 0.10)", "purpose": "Dialogue, palette de commandes, tiroir mobile." }
+    ],
+    "motion": [
+      { "name": "state-transition", "value": "150ms (couleur, fond, bordure, ombre)", "purpose": "Survol et focus des boutons et lignes." },
+      { "name": "dialog-enter", "value": "fade-in + zoom-in-95 (tailwindcss-animate)", "purpose": "Ouverture des dialogues ; tiroir en slide-in depuis le bord de départ." },
+      { "name": "reduced-motion", "value": "motion-reduce:animate-none", "purpose": "Toute animation est coupée sous prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "2xl", "value": "1400px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bouton primaire",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "L'unique action principale d'une page, dans l'en-tête.",
+      "html": "<button class=\"ds-btn-primary\">Ajouter une source</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 8px 16px; border: none; border-radius: 4px; background: hsl(216 84% 36%); color: #fff; font: 600 14px/20px system-ui, 'Segoe UI', Arial, sans-serif; box-shadow: 0 1px 2px 0 rgb(11 27 56 / 0.06); cursor: pointer; transition: background-color 150ms; } .ds-btn-primary:hover { background: hsl(216 84% 36% / 0.9); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px hsl(210 22% 95%), 0 0 0 4px hsl(216 86% 46%); }"
+    },
+    {
+      "name": "Bouton outline",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Actions secondaires à côté de l'action primaire.",
+      "html": "<button class=\"ds-btn-outline\">Combiner des jeux</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; height: 40px; padding: 8px 16px; border: 1px solid hsl(215 14% 57%); border-radius: 4px; background: #fff; color: hsl(218 45% 12%); font: 600 14px/20px system-ui, 'Segoe UI', Arial, sans-serif; cursor: pointer; transition: background-color 150ms; } .ds-btn-outline:hover { background: hsl(212 40% 94%); } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 2px hsl(210 22% 95%), 0 0 0 4px hsl(216 86% 46%); }"
+    },
+    {
+      "name": "Champ",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Champ de saisie standard, icône facultative.",
+      "html": "<input class=\"ds-input\" placeholder=\"Nom de la source\" />",
+      "css": ".ds-input { height: 40px; width: 280px; padding: 8px 12px; border: 1px solid hsl(215 14% 57%); border-radius: 4px; background: #fff; color: hsl(218 45% 12%); font: 400 14px/20px system-ui, 'Segoe UI', Arial, sans-serif; caret-color: hsl(216 84% 36%); } .ds-input::placeholder { color: hsl(215 16% 36%); } .ds-input:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px hsl(216 86% 46%); } .ds-input[aria-invalid=true] { border-color: hsl(6 72% 42%); }"
+    },
+    {
+      "name": "Badges d'état",
+      "kind": "chip",
+      "refersTo": "badge-success",
+      "description": "Une couleur par état : à jour, en attente, échec, information.",
+      "html": "<span class=\"ds-badge ds-ok\">À jour</span> <span class=\"ds-badge ds-wait\">En attente du premier import</span> <span class=\"ds-badge ds-fail\">Échec de synchronisation</span> <span class=\"ds-badge ds-info\">Information</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 3px; font: 600 12px/16px system-ui, 'Segoe UI', Arial, sans-serif; } .ds-ok { background: hsl(140 45% 93%); color: hsl(140 56% 28%); } .ds-wait { background: hsl(42 100% 92%); color: #6B4612; } .ds-fail { background: hsl(8 70% 94%); color: hsl(6 72% 42%); } .ds-info { background: hsl(188 50% 92%); color: hsl(188 72% 26%); }"
+    },
+    {
+      "name": "Rail latéral",
+      "kind": "nav",
+      "refersTo": "rail",
+      "description": "Mur marine nervuré : recherche Ctrl K, groupes Travail et Administration, entrée active.",
+      "html": "<nav class=\"ds-rail\"><button class=\"ds-rail-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><span>Rechercher</span><kbd>Ctrl K</kbd></button><p class=\"ds-rail-group\">Travail</p><a class=\"ds-rail-item ds-active\" href=\"#\">Conversations</a><a class=\"ds-rail-item\" href=\"#\">Tableaux</a><p class=\"ds-rail-group\">Administration</p><a class=\"ds-rail-item\" href=\"#\">Sources</a></nav>",
+      "css": ".ds-rail { width: 240px; padding: 12px; background-color: hsl(218 62% 13%); background-image: repeating-linear-gradient(90deg, hsl(0 0% 100% / 0.028) 0, hsl(0 0% 100% / 0.028) 2px, transparent 2px, transparent 7px); color: hsl(212 30% 92%); font: 400 14px/20px system-ui, 'Segoe UI', Arial, sans-serif; display: flex; flex-direction: column; gap: 2px; } .ds-rail-search { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 10px; margin-bottom: 12px; border: 1px solid hsl(218 40% 24%); border-radius: 4px; background: rgb(255 255 255 / 0.04); color: hsl(214 24% 68%); font: inherit; cursor: pointer; } .ds-rail-search span { flex: 1; text-align: start; } .ds-rail-search kbd { border: 1px solid hsl(218 40% 24%); border-radius: 2px; padding: 0 4px; font: 11px/16px ui-monospace, Consolas, monospace; } .ds-rail-search:hover { border-color: rgb(255 255 255 / 0.2); color: hsl(212 30% 92%); } .ds-rail-group { margin: 12px 0 6px; padding: 0 10px; font-size: 12px; font-weight: 500; color: hsl(214 24% 68%); } .ds-rail-item { display: flex; align-items: center; height: 36px; padding: 0 10px; border-radius: 4px; color: hsl(214 24% 68%); text-decoration: none; transition: background-color 150ms, color 150ms; } .ds-rail-item:hover { background: rgb(255 255 255 / 0.05); color: hsl(212 30% 92%); } .ds-rail-item.ds-active { background: rgb(255 255 255 / 0.11); color: #fff; font-weight: 500; } .ds-rail-item:focus-visible { outline: none; box-shadow: 0 0 0 2px #8DB4EC; }"
+    },
+    {
+      "name": "Liste à filet",
+      "kind": "card",
+      "refersTo": "list-panel",
+      "description": "Motif par défaut d'une collection : panneau blanc, lignes séparées par des filets.",
+      "html": "<ul class=\"ds-list\"><li><a href=\"#\"><span class=\"ds-list-title\">Ventes par région</span><time>12 nov.</time></a></li><li><a href=\"#\"><span class=\"ds-list-title\">Stock des dépôts</span><time>9 nov.</time></a></li></ul>",
+      "css": ".ds-list { list-style: none; margin: 0; padding: 0; width: 420px; background: #fff; border: 1px solid hsl(213 20% 86%); border-radius: 6px; overflow: hidden; font: 400 14px/20px system-ui, 'Segoe UI', Arial, sans-serif; } .ds-list li + li { border-top: 1px solid hsl(213 20% 86%); } .ds-list a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: hsl(218 45% 12%); text-decoration: none; transition: background-color 150ms; } .ds-list a:hover { background: hsl(212 24% 92%); } .ds-list a:focus-visible { outline: none; box-shadow: inset 0 0 0 2px hsl(216 86% 46%); } .ds-list-title { flex: 1; font-weight: 500; } .ds-list time { font-size: 12px; color: hsl(215 16% 36%); }"
+    },
+    {
+      "name": "État vide",
+      "kind": "custom",
+      "refersTo": "list-panel",
+      "description": "État vide qui enseigne : ce qui viendra, pourquoi c'est vide, le geste suivant.",
+      "html": "<div class=\"ds-empty\"><span class=\"ds-empty-icon\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\"/><path d=\"M3 5v14a9 3 0 0 0 18 0V5\"/></svg></span><p class=\"ds-empty-title\">Aucun tableau pour l'instant</p><p class=\"ds-empty-text\">Épinglez un résultat depuis une conversation pour composer votre premier tableau.</p></div>",
+      "css": ".ds-empty { display: flex; flex-direction: column; align-items: center; width: 420px; padding: 40px 24px; text-align: center; background: #fff; border: 1px dashed hsl(213 20% 86%); border-radius: 6px; font: 400 14px/20px system-ui, 'Segoe UI', Arial, sans-serif; color: hsl(218 45% 12%); } .ds-empty-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; margin-bottom: 12px; border-radius: 4px; background: hsl(216 84% 36% / 0.1); color: hsl(216 84% 36%); } .ds-empty-title { margin: 0; font-weight: 600; } .ds-empty-text { margin: 4px 0 0; max-width: 24rem; color: hsl(215 16% 36%); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La cour de conteneurs",
+    "overview": "Un atelier de données posé dans une cour portuaire : béton froid au sol, panneaux blancs à trait fin posés dessus, un mur marine nervuré qui porte la navigation, et des couleurs d'état peintes comme les conteneurs d'une pile. La question est toujours à un geste : Ctrl K ouvre la palette de commandes partout, et l'accueil met un grand champ de question au centre.\n\nLa densité est celle d'un outil de travail quotidien : texte courant à 14 px, titres de page resserrés (22 px), listes à filet fin plutôt que cartes empilées. Les chiffres sont le premier niveau de lecture ; les titres restent sobres pour leur laisser la place. La profondeur vient du trait de 1 px ; l'ombre ne fait qu'asseoir un panneau. Les angles sont presque vifs.\n\nL'état des données se lit d'un coup d'œil : une couleur par état, toujours la même (cobalt pour agir, vert pour achevé, ocre pour en attente, rouge oxyde pour bloqué ou expiré, sarcelle pour information).",
+    "keyCharacteristics": [
+      "Rail latéral marine nervuré de 15 rem (groupes Travail et Administration, recherche Ctrl K en tête, compte en pied) ; barre haute de 56 px sous 1024 px.",
+      "Panneaux blancs à trait fin sur fond béton froid.",
+      "Une seule action primaire cobalt par page, dans l'en-tête.",
+      "Badges d'état doux (aplat pâle, texte saturé), une couleur par état.",
+      "Codes et identifiants en chasse fixe ; chiffres tabulaires dans tout tableau.",
+      "Mouvement bref et utilitaire, coupé sous `prefers-reduced-motion`."
+    ],
+    "rules": [
+      { "name": "La règle de la peinture d'état", "body": "Une couleur par état, partout la même : vert achevé, ocre en attente, rouge oxyde bloqué, sarcelle information. Une couleur d'état ne décore jamais.", "section": "colors" },
+      { "name": "La règle du cobalt seul", "body": "Le cobalt signifie « agir » ou « ici ». Il n'est pas une couleur de fond de section.", "section": "colors" },
+      { "name": "La règle des chiffres alignés", "body": "Toute cellule de tableau et tout élément `data-figure` est en chiffres tabulaires ; les colonnes s'alignent à la virgule.", "section": "typography" },
+      { "name": "La règle du titre resserré", "body": "Aucun titre de page au-delà de 1,375 rem ; seule la salutation de l'accueil monte à 1,75 rem.", "section": "typography" },
+      { "name": "La règle de l'en-tête unique", "body": "Chaque page s'ouvre sur le même en-tête : retour éventuel, titre, une phrase qui dit à quoi sert la page, et au plus une action primaire à droite ; les autres actions passent en outline ou en lien.", "section": "layout" },
+      { "name": "La règle du trait d'abord", "body": "La profondeur vient du filet de 1 px ; une ombre n'apparaît que sur ce qui flotte au-dessus de la page.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do ouvrir chaque page par l'en-tête commun, avec au plus une action primaire cobalt.",
+      "Do exprimer l'état des données par un badge doux de la couleur d'état correspondante.",
+      "Do présenter une collection en liste à filet dans un panneau blanc de 6 px.",
+      "Do placer les formulaires secondaires dans un dialogue.",
+      "Do écrire un état vide qui enseigne : ce qui viendra, pourquoi c'est vide, le geste suivant.",
+      "Do garder Ctrl K accessible depuis chaque écran.",
+      "Do utiliser les tokens de la charte et les propriétés logiques (start/end) pour le RTL."
+    ],
+    "donts": [
+      "Don't utiliser une couleur d'état comme décoration ou le cobalt comme fond de section.",
+      "Don't empiler des formulaires repliés dans une page.",
+      "Don't poser une ombre sur un panneau au repos ; le trait suffit.",
+      "Don't dépasser 10 px d'arrondi hors avatars et pastilles.",
+      "Don't introduire des couleurs hors charte (hex codés en dur, palette Tailwind d'origine).",
+      "Don't reprendre les libellés en capitales espacées au-dessus des titres présents dans d'anciens écrans ; ce n'est pas une règle de la charte."
+    ]
+  }
+}

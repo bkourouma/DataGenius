@@ -30,7 +30,7 @@ import {
 } from '@/lib/medic-assist/client/use-conversations'
 import { useMedicChat } from '@/lib/medic-assist/client/use-medic-chat'
 import { REQUETE_XL, useMediaQuery } from '@/lib/medic-assist/client/use-media-query'
-import { Accueil } from './accueil'
+import { Accueil, AccueilEnTete, AccueilSuite } from './accueil'
 import { FilMessages } from './fil-messages'
 import { PanneauArtefacts } from './liens-lots'
 import { PoigneePanneau } from './poignee-panneau'
@@ -363,6 +363,18 @@ function CorpsConversation({
 
   const partageePar = detail?.partageePar
 
+  // Conversation vide : le champ de question monte au centre de l'accueil (lanceur).
+  const accueilAvecSaisie = chat.messages.length === 0 && !lectureSeule
+  const zoneSaisie = (
+    <ZoneSaisie
+      ref={saisie}
+      onEnvoyer={envoyerSaisie}
+      onArreter={chat.arreter}
+      enCours={enCours}
+      conversationVide={chat.messages.length === 0}
+    />
+  )
+
   return (
     <div ref={racine} className="relative flex min-h-0 flex-1">
       <div ref={refColonne} className="flex min-w-0 flex-1 flex-col">
@@ -371,6 +383,7 @@ function CorpsConversation({
           desactive={lectureSeule}
           onFichiers={(fichiers) => saisie.current?.ajouterFichiers(fichiers)}
         >
+          {accueilAvecSaisie ? null : (
           <FilMessages
             messages={chat.messages}
             statut={chat.statut}
@@ -386,6 +399,7 @@ function CorpsConversation({
             onOuvrirArtefact={ouvrirArtefact}
             accueil={<Accueil prenom={prenom} roleName={roleName} onPoser={envoyerTexte} />}
           />
+          )}
           {lectureSeule ? (
             <div className="shrink-0 px-4 pb-3 pt-1">
               <div
@@ -401,15 +415,27 @@ function CorpsConversation({
               </div>
             </div>
           ) : (
-            <div className="shrink-0 px-4 pb-3 pt-1">
-              <div className="mx-auto w-full max-w-[760px]">
-                <ZoneSaisie
-                  ref={saisie}
-                  onEnvoyer={envoyerSaisie}
-                  onArreter={chat.arreter}
-                  enCours={enCours}
-                  conversationVide={chat.messages.length === 0}
-                />
+            // Un seul emplacement pour le champ : il ne se remonte pas au premier envoi
+            // (focus, brouillon, pieces jointes et mode « Analyse approfondie » conserves).
+            // Conversation vide : l'emplacement devient le lanceur qui defile, avec la
+            // salutation au-dessus du champ et les suggestions en dessous.
+            <div
+              className={
+                accueilAvecSaisie
+                  ? 'min-h-0 flex-1 overflow-y-auto overscroll-contain'
+                  : 'shrink-0 px-4 pb-3 pt-1'
+              }
+            >
+              <div
+                className={
+                  accueilAvecSaisie
+                    ? 'mx-auto flex w-full max-w-[760px] flex-col gap-7 px-4 pb-6 pt-[6vh] sm:pt-[12vh]'
+                    : 'mx-auto w-full max-w-[760px]'
+                }
+              >
+                {accueilAvecSaisie ? <AccueilEnTete prenom={prenom} /> : null}
+                <div className={accueilAvecSaisie ? '[&_textarea]:min-h-[3.25rem]' : undefined}>{zoneSaisie}</div>
+                {accueilAvecSaisie ? <AccueilSuite onPoser={envoyerTexte} /> : null}
               </div>
             </div>
           )}

@@ -1,7 +1,8 @@
-import Link from 'next/link'
+import { AlertTriangle } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { chargerCombinaison, jeuxPourCombinaison } from '@/lib/warehouse/combinaisons-admin'
+import { EnTetePage } from '@/components/ui/en-tete-page'
 import { FormulaireCombinaison } from '../formulaire'
 
 export const dynamic = 'force-dynamic'
@@ -18,14 +19,22 @@ export default async function ModifierJeuCombine({ params }: { params: { cle: st
   const disponible = jeux?.some(jeu => jeu.cle === edition.definition.gauche) &&
     jeux?.some(jeu => jeu.cle === edition.definition.droite)
   return (
-    <section className="mx-auto max-w-4xl space-y-5 py-6">
-      <Link className="text-sm text-primary hover:underline" href="/sources#combinaisons">Jeux combinés</Link>
-      <header className="space-y-1">
-        <h1 className="text-2xl font-bold">Modifier {edition.definition.titre}</h1>
-        <p className="text-sm text-muted-foreground">Ajustez les lignes à conserver, les liaisons ou les colonnes du résultat, puis prévisualisez la jointure.</p>
-      </header>
-      {jeux === null && <p role="alert">Catalogue indisponible. Vérifiez l’état de l’entrepôt.</p>}
-      {jeux && !disponible && <p role="alert">Un des jeux source est indisponible. Rétablissez-le pour modifier la combinaison.</p>}
+    <section className="mx-auto max-w-4xl space-y-6">
+      <EnTetePage
+        retour={{ href: '/sources#combinaisons', libelle: 'Jeux combinés' }}
+        titre={'Modifier ' + edition.definition.titre}
+        description="Ajustez les lignes à conserver, les liaisons ou les colonnes du résultat, puis prévisualisez la jointure."
+      />
+      {jeux === null && (
+        <p role="status" className="flex items-start gap-2 rounded-md bg-danger-soft p-3 text-sm text-destructive">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />Catalogue indisponible. Vérifiez l’état de l’entrepôt.
+        </p>
+      )}
+      {jeux && !disponible && (
+        <p role="status" className="flex items-start gap-2 rounded-md bg-warning-soft p-3 text-sm text-yellow-800">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />Un des jeux source est indisponible. Rétablissez-le pour modifier la combinaison.
+        </p>
+      )}
       {jeux && disponible && <FormulaireCombinaison key={edition.revision} jeux={jeux} edition={edition} />}
     </section>
   )

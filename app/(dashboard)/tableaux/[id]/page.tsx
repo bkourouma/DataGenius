@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
+import { Pencil } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { EnTetePage } from '@/components/ui/en-tete-page'
 import { VueArtefactSuivi } from '@/components/medic-assist/suivi/vue-artefact-suivi'
 import { ActionsTableau } from '../actions-tableau'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
@@ -25,11 +28,11 @@ export default async function TableauPage({ params, searchParams }: {
   const query = new URLSearchParams(filtreActif ? { filtre: filtreActif.cle, valeur: filtreActif.valeur } : {})
 
   return <section className="mx-auto max-w-6xl space-y-5">
-    <Link className="text-sm text-primary hover:underline" href="/tableaux">Tous les tableaux</Link>
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <h1 className="text-2xl font-semibold">{tableau.titre}</h1>
-      {tableau.editable && <Link className="rounded-md border px-3 py-2 text-sm hover:bg-muted" href={`${base}/modifier`}>Modifier</Link>}
-    </div>
+    <EnTetePage
+      retour={{ href: '/tableaux', libelle: 'Tableaux de bord' }}
+      titre={tableau.titre}
+      description={tableau.editable ? 'Vos indicateurs et analyses réunis ; modifiez le tableau pour changer ses tuiles.' : 'Tableau partagé avec vous en lecture seule.'}
+      actions={tableau.editable ? <Button asChild variant="outline"><Link href={`${base}/modifier`}><Pencil aria-hidden />Modifier</Link></Button> : undefined} />
     {tableau.editable && <ActionsTableau id={tableau.id} titre={tableau.titre} />}
     {tableau.filtres.length > 0 && <form method="get" action={base} className="flex flex-wrap items-end gap-3 rounded-lg border bg-card p-4">
       <label className="grid gap-1 text-sm">Filtre commun

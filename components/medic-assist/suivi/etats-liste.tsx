@@ -8,7 +8,10 @@
 import type { ReactNode } from 'react';
 import { useLocale } from 'next-intl';
 
+import { AlertCircle, Inbox } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
+import { EtatVide } from '@/components/ui/en-tete-page';
 import { toIntlTag } from '@/i18n/config';
 
 export function BlocErreur({
@@ -23,10 +26,19 @@ export function BlocErreur({
   onReessayer: () => void;
 }) {
   return (
-    <div role="alert" className="rounded-lg border border-destructive/40 bg-danger-soft p-4">
-      <p className="text-sm font-semibold text-destructive">{titre}</p>
-      <p className="mt-1 text-sm text-foreground">{texte}</p>
-      <Button variant="outline" className="mt-3 min-h-11 sm:min-h-10" onClick={onReessayer}>
+    <div
+      role="alert"
+      className="flex flex-col items-center rounded-lg border border-destructive/40 bg-card px-6 py-10 text-center"
+    >
+      <span
+        className="mb-3 flex size-10 items-center justify-center rounded-md bg-destructive/10 text-destructive"
+        aria-hidden
+      >
+        <AlertCircle className="size-5" />
+      </span>
+      <p className="font-semibold">{titre}</p>
+      <p className="mt-1 max-w-sm text-pretty text-sm text-muted-foreground">{texte}</p>
+      <Button variant="outline" className="mt-4 min-h-11 sm:min-h-10" onClick={onReessayer}>
         {reessayer}
       </Button>
     </div>
@@ -43,11 +55,9 @@ export function BlocVide({
   icone?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border bg-card px-4 py-10 text-center">
-      {icone}
-      {titre && <p className="text-base font-semibold">{titre}</p>}
-      <p className="max-w-prose text-sm text-muted-foreground">{texte}</p>
-    </div>
+    <EtatVide icone={icone ?? <Inbox />} titre={titre ?? texte}>
+      {titre ? texte : null}
+    </EtatVide>
   );
 }
 

@@ -205,6 +205,9 @@
     "sousTitre": "Que souhaitez-vous savoir aujourd'hui ?",
     "questionsTitre": "Pour commencer",
     "questionsListe": "Questions de départ",
+    "analysesTitre": "Reprendre une analyse",
+    "toutVoir": "Toutes les analyses",
+    "astuce": "Astuce : {raccourci} ouvre la recherche et pose une question depuis n'importe quelle page.",
     "briefing": {
       "titre": "Briefing du jour",
       "periode": "Période de référence : {periode}",

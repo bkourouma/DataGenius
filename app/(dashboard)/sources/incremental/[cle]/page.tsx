@@ -1,7 +1,9 @@
-import Link from 'next/link'
+import { AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { chargerIncremental } from '@/lib/warehouse/incremental-admin'
+import { Badge } from '@/components/ui/badge'
+import { EnTetePage } from '@/components/ui/en-tete-page'
 import { FormulaireIncremental } from './formulaire'
 
 export const dynamic = 'force-dynamic'
@@ -24,16 +26,25 @@ export default async function ImportIncremental({ params, searchParams }: {
   const date = jeu.etat?.reconcilie_a?.toLocaleString('fr', { timeZone: 'UTC' })
   const message = messages.get(searchParams.etat ?? '')
   return (
-    <section className="mx-auto max-w-4xl space-y-5 py-6">
-      <Link href={'/sources/qualite/' + jeu.cle} className="text-sm text-primary hover:underline">Qualité et suivi</Link>
-      <h1 className="text-2xl font-bold">Synchronisation incrémentale · {jeu.titre}</h1>
-      <p className="text-sm text-muted-foreground">La source doit mettre à jour l’horodatage à chaque modification. Une réconciliation relit toutes les lignes pour détecter les suppressions.</p>
-      <dl className="grid gap-3 rounded-lg border bg-card p-5 text-sm sm:grid-cols-2">
-        <div><dt>Mode</dt><dd>{jeu.etat ? 'Incrémental activé' : 'Lecture complète'}</dd></div>
-        <div><dt>Dernière réconciliation</dt><dd>{date ? date + ' UTC' : '—'}</dd></div>
-        {jeu.etat?.curseur && <div><dt>Dernier horodatage lu</dt><dd>{jeu.etat.curseur}</dd></div>}
-      </dl>
-      {message && <p role={searchParams.etat === 'echec' ? 'alert' : 'status'} className="text-sm">{message}</p>}
+    <section className="mx-auto max-w-4xl space-y-6">
+      <EnTetePage
+        retour={{ href: '/sources/qualite/' + jeu.cle, libelle: 'Qualité et suivi' }}
+        titre={'Synchronisation incrémentale · ' + jeu.titre}
+        description="La source doit mettre à jour l’horodatage à chaque modification. Une réconciliation relit toutes les lignes pour détecter les suppressions."
+      />
+      <section className="space-y-4 rounded-lg border bg-card p-5">
+        <h2 className="text-base font-semibold">État actuel</h2>
+        <dl className="grid gap-3 text-sm sm:grid-cols-2">
+          <div><dt className="text-muted-foreground">Mode</dt><dd className="mt-0.5">{jeu.etat ? <Badge variant="success">Incrémental activé</Badge> : <Badge variant="outline">Lecture complète</Badge>}</dd></div>
+          <div><dt className="text-muted-foreground">Dernière réconciliation</dt><dd>{date ? date + ' UTC' : '—'}</dd></div>
+          {jeu.etat?.curseur && <div><dt className="text-muted-foreground">Dernier horodatage lu</dt><dd>{jeu.etat.curseur}</dd></div>}
+        </dl>
+      </section>
+      {message && (searchParams.etat === 'echec'
+        ? <p role="alert" className="flex items-start gap-2 rounded-md bg-danger-soft p-3 text-sm text-destructive"><AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />{message}</p>
+        : <p role="status" className={'flex items-start gap-2 rounded-md p-3 text-sm ' + (searchParams.etat === 'en_cours' ? 'bg-warning-soft text-yellow-800' : 'bg-success-soft text-success')}>
+            {searchParams.etat === 'en_cours' ? <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden /> : <CheckCircle2 className="mt-0.5 size-4 shrink-0" aria-hidden />}{message}
+          </p>)}
       <FormulaireIncremental key={jeu.etat?.version ?? 0} jeu={jeu} />
     </section>
   )

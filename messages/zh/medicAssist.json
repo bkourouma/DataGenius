@@ -205,6 +205,9 @@
     "sousTitre": "今天想了解些什么？",
     "questionsTitre": "从这里开始",
     "questionsListe": "起始问题",
+    "analysesTitre": "继续一项分析",
+    "toutVoir": "全部分析",
+    "astuce": "提示：在任意页面按 {raccourci} 打开搜索并提问。",
     "briefing": {
       "titre": "今日简报",
       "periode": "参考期间：{periode}",
