@@ -248,5 +248,43 @@
     "contexte": "Context: {ecran}",
     "retirerContexte": "Remove the screen context",
     "aide": "Enter to send, Esc to close"
+  },
+  "demarrage": {
+    "titre": "Getting started",
+    "progression": "{faites} of {total}",
+    "listeLabel": "Getting started steps",
+    "fait": "Done",
+    "aFaire": "To do",
+    "masquer": "Hide this guide",
+    "etapes": {
+      "source": {
+        "libelle": "Add a data source",
+        "description": "A database, file or API that Data Genius can read.",
+        "lien": "Add a source"
+      },
+      "import": {
+        "libelle": "Import a dataset",
+        "description": "Choose the tables or sheets to make available.",
+        "lien": "Import a dataset"
+      },
+      "catalogue": {
+        "libelle": "Publish the business catalog",
+        "description": "Describe what the columns mean to get reliable answers.",
+        "lien": "Open the catalogs"
+      },
+      "question": {
+        "libelle": "Ask a first question",
+        "description": "Try one of the starter questions below."
+      },
+      "collegue": {
+        "libelle": "Invite a colleague",
+        "description": "Give someone on your team access.",
+        "lien": "Invite a colleague"
+      }
+    },
+    "membreSansJeu": {
+      "titre": "No data available to you yet",
+      "texte": "Your administrator needs to give you access to data before you can ask questions. Contact them to request it."
+    }
   }
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import { useTranslations } from 'next-intl'
+import { Demarrage } from './demarrage'
 import { questionsDepart } from './questions-depart'
 
 export interface AccueilProps {
@@ -27,6 +28,8 @@ export function Accueil({ prenom, onPoser }: AccueilProps) {
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">{t('accueil.sousTitre')}</p>
       </header>
+
+      <Demarrage />
 
       <section aria-labelledby="questions-depart-titre">
         <h2 id="questions-depart-titre" className="mb-2 text-base font-semibold">

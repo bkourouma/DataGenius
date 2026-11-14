@@ -248,5 +248,43 @@
     "contexte": "Contexto: {ecran}",
     "retirerContexte": "Quitar el contexto de la pantalla",
     "aide": "Enter para enviar, Esc para cerrar"
+  },
+  "demarrage": {
+    "titre": "Primeros pasos",
+    "progression": "{faites} de {total}",
+    "listeLabel": "Pasos de inicio",
+    "fait": "Hecho",
+    "aFaire": "Pendiente",
+    "masquer": "Ocultar esta guía",
+    "etapes": {
+      "source": {
+        "libelle": "Añadir una fuente de datos",
+        "description": "Una base de datos, un archivo o una API que Data Genius pueda leer.",
+        "lien": "Añadir una fuente"
+      },
+      "import": {
+        "libelle": "Importar un conjunto de datos",
+        "description": "Elija las tablas u hojas que quiere poner a disposición.",
+        "lien": "Importar un conjunto"
+      },
+      "catalogue": {
+        "libelle": "Publicar el catálogo de negocio",
+        "description": "Describa el significado de las columnas para obtener respuestas fiables.",
+        "lien": "Abrir los catálogos"
+      },
+      "question": {
+        "libelle": "Hacer una primera pregunta",
+        "description": "Pruebe una de las preguntas de ejemplo que aparecen abajo."
+      },
+      "collegue": {
+        "libelle": "Invitar a un colega",
+        "description": "Dé acceso a una persona de su equipo.",
+        "lien": "Invitar a un colega"
+      }
+    },
+    "membreSansJeu": {
+      "titre": "Todavía no tiene datos accesibles",
+      "texte": "Su administrador debe darle acceso a datos antes de que pueda hacer preguntas. Póngase en contacto con él para solicitarlo."
+    }
   }
 }
