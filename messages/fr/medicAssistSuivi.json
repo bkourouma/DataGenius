@@ -89,6 +89,7 @@
     "enCours": "Traitement en cours…",
     "nonExecute": "Rien n'est exécuté tant que vous n'avez pas confirmé.",
     "destinataires": "Destinataires",
+    "messageEnvoye": "Message qui sera envoyé",
     "assigne": "Assignée à",
     "echeance": "Échéance",
     "destinatairesRequis": "Choisissez au moins un destinataire pour confirmer.",
