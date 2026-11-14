@@ -287,6 +287,15 @@ model Task {
   @@index([status])
   @@map("tasks")
 }
+model TentativeConnexion {
+  cle          String    @id
+  echecs       Int
+  fenetreDebut DateTime
+  bloqueJusqua DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  @@map("auth_tentatives")
+}
 model ParametreApplication {
   id        String   @id @default(cuid())
   cle       String   @unique

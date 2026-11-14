@@ -149,6 +149,14 @@ async function verifierDroits(
   return { comptes, artefact }
 }
 
+/**
+ * Garde-fou serveur sur le message libre d'un e-mail (R12), INDEPENDANT du schema
+ * Zod : le schema refuse deja > LIMITES.longueurMaxMessageAction (2000) ; ce plafond
+ * plus lache protege si le schema est un jour relache. Le message est affiche en
+ * entier sur la carte avant confirmation, il doit rester lisible.
+ */
+const LONGUEUR_MAX_MESSAGE_EMAIL = 5000
+
 /** Valide avec le schema REEL du type (strictObject : un champ inconnu est refuse). */
 function validerParametres(type: TypeAction, parametres: unknown): ParametresAction {
   const schema = SCHEMAS_PARAMETRES_ACTION[type]
@@ -159,6 +167,12 @@ function validerParametres(type: TypeAction, parametres: unknown): ParametresAct
       'invalide',
       lecture.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ')
     )
+  }
+  if (type === 'envoyer_email') {
+    const message = (lecture.data as ParametresEnvoyerEmail).message
+    if (typeof message === 'string' && message.length > LONGUEUR_MAX_MESSAGE_EMAIL) {
+      throw new ErreurSuivi('invalide', `message: ${LONGUEUR_MAX_MESSAGE_EMAIL} caracteres maximum`)
+    }
   }
   return lecture.data as ParametresAction
 }
@@ -235,6 +249,10 @@ async function composerResume(
     }
     case 'envoyer_email': {
       const p = parametres as ParametresEnvoyerEmail
+      // Le `message` libre n'est PAS dans le resume (il serait duplique) : la carte
+      // de confirmation affiche le texte integral depuis `parametres.message`.
+      // A l'envoi, composerEmailArtefact (emails.ts) l'echappe avec echapper() avant
+      // de l'inserer dans le HTML (retours a la ligne -> <br> apres echappement).
       const principal = t('actionResume.envoyerEmail', {
         titre: titreArtefact,
         destinataires: noms,

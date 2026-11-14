@@ -89,6 +89,7 @@
     "enCours": "Processing…",
     "nonExecute": "Nothing is carried out until you confirm.",
     "destinataires": "Recipients",
+    "messageEnvoye": "Message that will be sent",
     "assigne": "Assigned to",
     "echeance": "Due date",
     "destinatairesRequis": "Choose at least one recipient to confirm.",

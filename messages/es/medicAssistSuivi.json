@@ -89,6 +89,7 @@
     "enCours": "Procesando…",
     "nonExecute": "No se ejecuta nada hasta que confirme.",
     "destinataires": "Destinatarios",
+    "messageEnvoye": "Mensaje que se enviará",
     "assigne": "Asignada a",
     "echeance": "Fecha límite",
     "destinatairesRequis": "Elija al menos un destinatario para confirmar.",
