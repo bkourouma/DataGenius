@@ -60,6 +60,9 @@ export class ErreurArtefact extends Error {
   }
 }
 
+/** Taille maximale d'une spécification d'artefact, en octets UTF-8 du JSON sérialisé (1 Mo). */
+export const SPEC_TAILLE_MAX_OCTETS = 1_048_576
+
 const ESSAIS_MAX = 3
 /** Garde-fou sur les listes de partages et d'épingles d'un lecteur. */
 const LISTE_ACCES_MAX = 2_000
@@ -72,6 +75,7 @@ const MESSAGES = {
   artefact: 'Artefact introuvable.',
   version: 'Version introuvable.',
   interdit: 'Modification non autorisée.',
+  specTropVolumineuse: 'Spécification trop volumineuse (1 Mo maximum).',
   conflit: 'Une version plus récente existe : recharger l’artefact.',
 } as const
 
@@ -81,6 +85,16 @@ const MESSAGES = {
 
 /** Revalide une spécification (le modèle ou le client peuvent se tromper). */
 export function validerSpec(brut: unknown): ArtefactSpec {
+  // Limite de taille avant tout traitement et toute écriture en base.
+  let octets = 0
+  try {
+    octets = Buffer.byteLength(JSON.stringify(brut) ?? '', 'utf8')
+  } catch {
+    throw new ErreurArtefact('spec_invalide', 'Spécification invalide (non sérialisable).')
+  }
+  if (octets > SPEC_TAILLE_MAX_OCTETS) {
+    throw new ErreurArtefact('spec_invalide', MESSAGES.specTropVolumineuse)
+  }
   const lecture = ArtefactSpecSchema.safeParse(brut)
   if (lecture.success) return lecture.data
   const details = lecture.error.issues

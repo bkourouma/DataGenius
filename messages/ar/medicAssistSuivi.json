@@ -89,6 +89,7 @@
     "enCours": "جارٍ التنفيذ…",
     "nonExecute": "لن يُنفَّذ أي شيء قبل أن تؤكد.",
     "destinataires": "المستلمون",
+    "messageEnvoye": "الرسالة التي سيتم إرسالها",
     "assigne": "مُسندة إلى",
     "echeance": "تاريخ الاستحقاق",
     "destinatairesRequis": "اختر مستلمًا واحدًا على الأقل للتأكيد.",
@@ -213,6 +214,8 @@
   "notifRapport": {
     "titre": "تقرير: «{titre}»",
     "message": "أرسله {proprietaire}، {frequence}. افتح التحليل لعرض الأرقام ضمن نطاقك.",
+    "echecTitre": "تعذّر إرسال التقرير المجدول",
+    "echecMessage": "تعذّر إرسال التقرير «{titre}» بعد {essais} محاولات. ستُجرى محاولة جديدة في الموعد المجدول التالي.",
     "frequence": {
       "quotidien": "كل يوم",
       "hebdomadaire": "كل أسبوع",

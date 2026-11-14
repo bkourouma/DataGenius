@@ -54,7 +54,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Préparation et q
 
     await expect(enregistrerQualite(jeu, 0, definition)).rejects.toThrow('Rechargez')
     await enregistrerQualite(jeu, 1, { ...definition, controles: [{ type: 'unique', colonnes: ['equipe'] }] })
-    expect(await synchroniserEntrepot({ jeu })).toEqual([{ jeu, statut: 'echec' }])
+    expect(await synchroniserEntrepot({ jeu })).toEqual([{ jeu, statut: 'echec', code: 'unique' }])
     expect((await requeteCopie())[0]).toEqual(publication)
     const fiche = await chargerQualite(jeu)
     expect(fiche?.version).toBe(2)
@@ -68,7 +68,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Préparation et q
     expect(fiche?.derniereReussite).not.toBeNull()
     const contexte: ContexteExecution = {
       userId: 'recette-fraicheur', roleName: 'TenantAdmin', scope: { roleName: 'TenantAdmin', voitTout: true },
-      habilitations: null, locale: 'fr', maintenant: new Date('2026-11-12T12:00:00Z'), jourLimite: 1,
+      habilitations: null, locale: 'fr', maintenant: new Date('2026-11-12T12:00:00Z'),
     }
     const calcul = await calculerSql({ objectif: 'Vérifier la provenance de la dernière publication',
       sql: 'SELECT COUNT(*) AS total FROM mv_' + jeu }, contexte)

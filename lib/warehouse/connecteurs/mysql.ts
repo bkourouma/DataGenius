@@ -1,5 +1,6 @@
 import { createConnection, escapeId, type Connection, type RowDataPacket } from 'mysql2'
 import { z } from 'zod'
+import { verifierHoteSource } from '../hotes-sources'
 import { MAX_LIGNES_SOURCE, publierLignes, type ColonneSource, type Connecteur, type TableSource } from './contrat'
 
 export const ConnexionMySql = z.strictObject({
@@ -13,6 +14,7 @@ export const ConnexionMySql = z.strictObject({
 type Configuration = z.infer<typeof ConnexionMySql>
 
 async function lireMySql<T>(config: Configuration, lire: (connexion: Connection) => Promise<T>) {
+  await verifierHoteSource(config.hote)
   const connexion = createConnection({
     host: config.hote.replace(/^\[|\]$/g, ''), port: config.port, database: config.base,
     user: config.utilisateur, password: config.motDePasse,
@@ -22,6 +24,11 @@ async function lireMySql<T>(config: Configuration, lire: (connexion: Connection)
   })
   try {
     await connexion.promise().query({ sql: 'START TRANSACTION READ ONLY', timeout: 5_000 })
+    // Plafond côté serveur (ms) pour les SELECT : le timeout client seul laisserait la requête tourner.
+    // MariaDB et MySQL < 5.7.8 ignorent cette variable (erreur 1193) : on continue sans plafond serveur.
+    await connexion.promise().query({ sql: 'SET SESSION MAX_EXECUTION_TIME = 15000', timeout: 5_000 }).catch(erreur => {
+      if ((erreur as { errno?: number } | null)?.errno !== 1193) throw erreur
+    })
     return await lire(connexion)
   } finally {
     connexion.destroy()

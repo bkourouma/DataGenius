@@ -197,7 +197,7 @@ export function OngletAnalyses() {
                     <Button asChild className="min-h-11 flex-1 sm:min-h-10 sm:flex-none">
                       <Link
                         prefetch={false}
-                        href={`/medic-assist/analyses/${encodeURIComponent(a.artefactId)}`}
+                        href={`/assistant/analyses/${encodeURIComponent(a.artefactId)}`}
                         aria-label={t('ouvrirAria', { titre: a.titre })}
                       >
                         {t('ouvrir')}

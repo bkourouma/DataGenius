@@ -50,7 +50,7 @@ const CLE_ERREUR: Record<CodeErreurTelechargement | 'png', string> = {
 export function nomBaseFichier(titre: string): string {
   // eslint-disable-next-line no-control-regex
   const propre = titre.replace(/[<>:"/\\|?*\u0000-\u001f]/g, ' ').replace(/\s+/g, ' ').trim()
-  return propre.slice(0, 80).trim() || 'Medic Assist'
+  return propre.slice(0, 80).trim() || 'Data Genius'
 }
 
 /**

@@ -16,8 +16,9 @@
  */
 
 import type { Locale } from '@/i18n/config'
+import { journal } from '@/lib/journal'
 
-import { tarifModele } from '../admin/imports-lot0-lot1'
+import { tarifModele } from '../admin/dependances'
 import type { MoteurTranscription } from './moteur'
 import { chargerSdkIa, type SdkIa } from './sdk-ia'
 import { arrondirCout, coutTranscriptionUsd, dureeRetenueSecondes } from './tarifs'
@@ -43,6 +44,8 @@ export interface DemandeTranscription {
   langue: string
   /** Duree annoncee par le client (secondes), non fiable : voir tarifs.ts. */
   dureeSecondesClient?: number
+  /** Signal de la requete : l'abandon du client annule l'appel au fournisseur. */
+  signal?: AbortSignal
 }
 
 export interface ResultatTranscription {
@@ -75,6 +78,15 @@ export class ErreurTranscription extends Error {
   }
 }
 
+/** Le client a abandonne la requete : ce n'est pas un echec du fournisseur. */
+export class TranscriptionAnnulee extends Error {
+  readonly code = 'annule'
+  constructor() {
+    super('Transcription cancelled.')
+    this.name = 'TranscriptionAnnulee'
+  }
+}
+
 function consigneGemini(langue: string): string {
   return (
     `Transcribe this audio recording faithfully, word for word. The spoken language is ` +
@@ -101,6 +113,10 @@ export async function transcrire(
 
   const controleur = new AbortController()
   const minuteur = setTimeout(() => controleur.abort(), delaiMs)
+  const signalClient = demande.signal
+  const surAbandon = () => controleur.abort()
+  if (signalClient?.aborted) controleur.abort()
+  else signalClient?.addEventListener('abort', surAbandon, { once: true })
   try {
     const sdk = await charger()
     let texte: string
@@ -174,10 +190,13 @@ export async function transcrire(
       dureeMs: Math.max(0, maintenant() - debut),
     }
   } catch (erreur) {
+    // Abandon du client (et non delai interne) : aucun echec du fournisseur a compter.
+    if (signalClient?.aborted) throw new TranscriptionAnnulee()
     // Journal sans donnee : ni message du SDK (il peut citer la cle ou le corps de la
     // reponse), ni texte, ni audio. Seuls le fournisseur, le nom de l'erreur et le statut HTTP.
     const e = erreur as { name?: unknown; statusCode?: unknown }
-    console.error('[medic-assist] transcription en echec', {
+    journal.erreur('transcription : échec', {
+      domaine: 'medic-assist',
       fournisseur,
       erreur: typeof e?.name === 'string' ? e.name : 'inconnue',
       statut: typeof e?.statusCode === 'number' ? e.statusCode : undefined,
@@ -185,5 +204,6 @@ export async function transcrire(
     throw new ErreurTranscription(Math.max(0, maintenant() - debut))
   } finally {
     clearTimeout(minuteur)
+    signalClient?.removeEventListener('abort', surAbandon)
   }
 }

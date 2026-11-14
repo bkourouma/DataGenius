@@ -15,6 +15,7 @@ import { toIntlTag } from '@/i18n/config';
 import { cn } from '@/lib/utils';
 import {
   CODES_ERREUR_TEST,
+  PLAFOND_COUT_MAX_USD_ADMIN,
   TAUX_EUR_PAR_USD_DEFAUT,
   type ConfigAdminReponse,
   type CorpsTestAdmin,
@@ -26,11 +27,14 @@ import {
   brouillonDepuis,
   calculerMiseAJour,
   changerFournisseur,
+  changerSecours,
   changerTranscription,
   estModifie,
+  lirePlafond,
   lireTaux,
   modelesEnErreur,
   problemeModele,
+  secoursEnErreur,
   tarifDuModele,
   texteTaux,
   transcriptionEnErreur,
@@ -43,8 +47,8 @@ import {
   FOURNISSEURS_TRANSCRIPTION,
   MODES_LANGAGE,
   VARIABLES_CLES_FOURNISSEURS,
-} from './imports-lot0';
-import type { Fournisseur, FournisseurTranscription, ModeLangage } from './imports-lot0';
+} from './dependances';
+import type { Fournisseur, FournisseurTranscription, ModeLangage } from './dependances';
 
 type EtatTest =
   | { etat: 'enCours' }
@@ -134,6 +138,7 @@ function ChoixExclusif({
 }
 
 const CHOIX_NAVIGATEUR = 'navigateur';
+const CHOIX_AUCUN = 'aucun';
 
 export function OngletConfiguration() {
   const t = useTranslations('medicAssistAdmin');
@@ -152,6 +157,8 @@ export function OngletConfiguration() {
 
   const idTaux = useId();
   const idTranscription = useId();
+  const idPlafond = useId();
+  const idSecours = useId();
 
   useEffect(() => {
     const controle = new AbortController();
@@ -324,6 +331,37 @@ export function OngletConfiguration() {
     }),
   ];
 
+  const optionsSecours: OptionChoix[] = [
+    {
+      valeur: CHOIX_AUCUN,
+      libelle: t('gardeFous.secours.aucun'),
+      description: t('gardeFous.secours.aucunDescription'),
+    },
+    ...FOURNISSEURS.map(id => {
+      const disponible = fournisseurDisponible(id);
+      return {
+        valeur: id,
+        libelle: t(`fournisseurs.${id}`),
+        desactive: !disponible,
+        description: disponible
+          ? t('configuration.fournisseur.disponible')
+          : t('configuration.fournisseur.indisponible', {
+              variable: VARIABLES_CLES_FOURNISSEURS[id],
+            }),
+      };
+    }),
+  ];
+  const plafondSaisi = lirePlafond(brouillon.plafond);
+  const plafondInvalide = plafondSaisi === null;
+  const erreurSecours = secoursEnErreur(brouillon);
+  const suggestionSecours = brouillon.modeleSecours
+    ? (serveur.modelesParDefaut[brouillon.modeleSecours.fournisseur]?.standard ?? '')
+    : '';
+  const modelesConnusSecours = brouillon.modeleSecours
+    ? serveur.tarifs
+        .filter(tarif => tarif.fournisseur === brouillon.modeleSecours?.fournisseur)
+        .map(tarif => tarif.modele)
+    : [];
   const tauxSaisi = lireTaux(brouillon.taux);
   const tauxInvalide = tauxSaisi === null;
   const enErreur = modelesEnErreur(brouillon);
@@ -331,6 +369,8 @@ export function OngletConfiguration() {
   const peutEnregistrer =
     modifie &&
     !tauxInvalide &&
+    !plafondInvalide &&
+    erreurSecours === null &&
     enErreur.length === 0 &&
     erreurTranscription === null &&
     !enregistrement;
@@ -589,6 +629,88 @@ export function OngletConfiguration() {
               {erreurTranscription ? (
                 <p className="text-xs font-medium text-destructive">
                   {erreurTranscription === 'vide'
+                    ? t('configuration.modeles.vide')
+                    : t('configuration.modeles.invalide')}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('gardeFous.titre')}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="max-w-sm space-y-2">
+            <Label htmlFor={idPlafond}>{t('gardeFous.plafond.libelle')}</Label>
+            <Input
+              id={idPlafond}
+              inputMode="decimal"
+              autoComplete="off"
+              dir="ltr"
+              data-figure
+              value={brouillon.plafond}
+              aria-invalid={plafondInvalide}
+              aria-describedby={`${idPlafond}-aide${plafondInvalide ? ` ${idPlafond}-erreur` : ''}`}
+              onChange={e => modifierBrouillon({ plafond: e.target.value })}
+            />
+            <p id={`${idPlafond}-aide`} className="text-xs text-muted-foreground">
+              {t('gardeFous.plafond.aide', { defaut: serveur.plafondParDefaut })}
+            </p>
+            {plafondInvalide ? (
+              <p id={`${idPlafond}-erreur`} className="text-xs font-medium text-destructive">
+                {t('gardeFous.plafond.invalide', { max: PLAFOND_COUT_MAX_USD_ADMIN })}
+              </p>
+            ) : null}
+          </div>
+
+          <ChoixExclusif
+            nom="secours"
+            legende={t('gardeFous.secours.libelle')}
+            aide={t('gardeFous.secours.aide')}
+            options={optionsSecours}
+            valeur={brouillon.modeleSecours?.fournisseur ?? CHOIX_AUCUN}
+            onChange={valeur =>
+              setBrouillon(courant =>
+                courant
+                  ? changerSecours(courant, serveur, valeur === CHOIX_AUCUN ? null : (valeur as Fournisseur))
+                  : courant
+              )
+            }
+          />
+          {brouillon.modeleSecours ? (
+            <div className="max-w-md space-y-1.5">
+              <Label htmlFor={idSecours}>{t('gardeFous.secours.modele')}</Label>
+              <Input
+                id={idSecours}
+                list={`${idSecours}-liste`}
+                value={brouillon.modeleSecours.modele}
+                placeholder={suggestionSecours}
+                autoComplete="off"
+                spellCheck={false}
+                dir="ltr"
+                aria-invalid={erreurSecours !== null}
+                aria-describedby={`${idSecours}-aide${erreurSecours ? ` ${idSecours}-erreur` : ''}`}
+                onChange={e =>
+                  brouillon.modeleSecours &&
+                  modifierBrouillon({
+                    modeleSecours: { ...brouillon.modeleSecours, modele: e.target.value },
+                  })
+                }
+              />
+              <datalist id={`${idSecours}-liste`}>
+                {modelesConnusSecours.map(modele => (
+                  <option key={modele} value={modele} />
+                ))}
+              </datalist>
+              <p id={`${idSecours}-aide`} className="text-xs text-muted-foreground">
+                {t('gardeFous.secours.modeleAide', { modele: suggestionSecours })}
+              </p>
+              {erreurSecours ? (
+                <p id={`${idSecours}-erreur`} className="text-xs font-medium text-destructive">
+                  {erreurSecours === 'vide'
                     ? t('configuration.modeles.vide')
                     : t('configuration.modeles.invalide')}
                 </p>

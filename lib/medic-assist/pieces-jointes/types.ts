@@ -1,6 +1,6 @@
 /** Types communs des pieces jointes (extraction, resume, lecture). */
 
-import type { ColonneJeu, LigneJeu } from './imports-lot0'
+import type { ColonneJeu, LigneJeu } from './dependances'
 
 /** Plafonds d'extraction. */
 export const PLAFONDS = {

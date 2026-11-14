@@ -20,7 +20,7 @@ import { proposerAction } from '@/lib/medic-assist/suivi/actions'
 
 import { creerOutils, type DependancesOutils, type OptionsOutils } from './outils'
 function indisponible(): never {
-  throw new ErreurDonnees('Cet outil est propre à MedicPro.', 'requete_invalide')
+  throw new ErreurDonnees('Cet outil est propre à Data Genius.', 'requete_invalide')
 }
 
 const rechercherEntites: DependancesOutils['rechercherEntites'] = async (_ctx, entree) => {

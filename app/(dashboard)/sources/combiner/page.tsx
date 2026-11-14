@@ -8,7 +8,7 @@ import { FormulaireCombinaison } from './formulaire'
 export const dynamic = 'force-dynamic'
 
 export default async function Combiner() {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   const jeux = await jeuxPourCombinaison().catch(() => null)
   return (
     <section className="mx-auto max-w-4xl space-y-6">

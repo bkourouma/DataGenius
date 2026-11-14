@@ -7,6 +7,7 @@ import {
   Settings2,
   ShieldCheck,
   TrendingUp,
+  Users,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -28,8 +29,8 @@ const TRAVAIL: GroupeNavigation = {
   id: 'travail',
   libelle: 'Travail',
   entrees: [
-    { href: '/medic-assist', libelle: 'Conversations', icone: MessagesSquare, motsCles: 'chat assistant question' },
-    { href: '/medic-assist/analyses', libelle: 'Analyses', icone: BookMarked, motsCles: 'enregistrees partages rapports taches' },
+    { href: '/assistant', libelle: 'Conversations', icone: MessagesSquare, motsCles: 'chat assistant question' },
+    { href: '/assistant/analyses', libelle: 'Analyses', icone: BookMarked, motsCles: 'enregistrees partages rapports taches' },
     { href: '/tableaux', libelle: 'Tableaux de bord', icone: LayoutDashboard, motsCles: 'dashboard indicateurs alertes' },
     { href: '/tendances', libelle: 'Tendances', icone: TrendingUp, motsCles: 'evolution courbe periode' },
     { href: '/espaces', libelle: 'Espaces', icone: Boxes, motsCles: 'jeux donnees domaines' },
@@ -41,8 +42,9 @@ const ADMINISTRATION: GroupeNavigation = {
   libelle: 'Administration',
   entrees: [
     { href: '/sources', libelle: 'Sources', icone: PlugZap, motsCles: 'connexion base import synchronisation postgresql mysql api fichier' },
+    { href: '/utilisateurs', libelle: 'Utilisateurs', icone: Users, motsCles: 'comptes membres invitations roles' },
     { href: '/sources/droits', libelle: 'Droits d’accès', icone: ShieldCheck, motsCles: 'groupes membres permissions' },
-    { href: '/dashboard/admin/medic-assist', libelle: 'Paramètres', icone: Settings2, motsCles: 'configuration fournisseur ia usages avis' },
+    { href: '/dashboard/admin/assistant', libelle: 'Paramètres', icone: Settings2, motsCles: 'configuration fournisseur ia usages avis' },
   ],
 }
 
@@ -52,7 +54,7 @@ export function groupesNavigation(estAdmin: boolean): GroupeNavigation[] {
 
 /**
  * Entree active : celle dont le chemin est le plus long prefixe de la page
- * courante (`/medic-assist/analyses/x` active « Analyses », pas « Conversations »).
+ * courante (`/assistant/analyses/x` active « Analyses », pas « Conversations »).
  */
 export function entreeActive(chemin: string | null, groupes: GroupeNavigation[]): string | null {
   if (!chemin) return null

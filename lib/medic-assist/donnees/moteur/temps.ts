@@ -4,10 +4,10 @@
  *
  * Le moteur ne suppose RIEN d'autre que le contrat `TempsJeu` (catalogue/types.ts) : une vue
  * de jeu a temps expose `periode` ('YYYY-MM'), `annee`, `mois` (1-12) et `exercice` (annee
- * de depart, avril -> mars). Les expressions ci-dessous n'utilisent que ces quatre colonnes.
+ * de depart ; janvier -> decembre par defaut). Les expressions ci-dessous n'utilisent que ces quatre colonnes.
  */
 
-import { libellePeriodeVentes } from '@/lib/reports/plage-ventes-defaut'
+import { libellePeriodeCourte } from '@/lib/donnees/periodes'
 import { MOIS_DEBUT_EXERCICE } from '@/lib/utils/exercice'
 import { citer } from '@/lib/warehouse/configuration'
 
@@ -24,11 +24,11 @@ export const GRANULARITES: readonly Granularite[] = ['mois', 'trimestre', 'exerc
  * Dimensions temporelles generiques d'un jeu a temps, par granularite. Leur cle est aussi
  * celle de la colonne rendue.
  *  - mois : la periode 'YYYY-MM' ;
- *  - trimestre : trimestre CIVIL 'YYYY-Tn' (T1 = janvier-mars). Hypothese : l'exercice
- *    commence en avril, un trimestre d'exercice serait decale ; on garde le civil, signale
- *    dans la provenance ;
- *  - exercice : libelle 'YYYY/YYYY+1' (comme `libelleExercice`), plutot que l'entier 2026,
- *    qu'on confondrait avec l'annee civile et qu'un format numerique ecrirait « 2 026 » ;
+ *  - trimestre : trimestre CIVIL 'YYYY-Tn' (T1 = janvier-mars). Hypothese : un exercice decale
+ *    (mois de debut regle par l'administrateur) rendrait un trimestre d'exercice decale ; on
+ *    garde le civil, signale dans la provenance ;
+ *  - exercice : annee de depart en texte ('2026' par defaut, 'YYYY/YYYY+1' si decale, comme `libelleExercice`), plutot que l'entier 2026,
+ *    qu'un format numerique ecrirait « 2 026 » ;
  *  - annee : annee civile, en texte pour la meme raison.
  */
 export const DIMENSIONS_TEMPORELLES: Record<Granularite, DefinitionDimension> = {
@@ -50,9 +50,9 @@ export const DIMENSIONS_TEMPORELLES: Record<Granularite, DefinitionDimension> = 
     cle: 'exercice',
     libelle: TEXTES_MOTEUR.colonneExercice,
     definition:
-      "Exercice d'avril a mars, au format YYYY/YYYY+1 (2026/2027 = avril 2026 a mars 2027).",
+      "Exercice civil, au format YYYY (2026 = janvier a decembre 2026).",
     type: 'texte',
-    expression: "(exercice)::int::text || '/' || ((exercice)::int + 1)::text",
+    expression: '(exercice)::int::text',
   },
   annee: {
     cle: 'annee',
@@ -147,12 +147,12 @@ export function estAuGrainDuMois(dimension: DefinitionDimension): boolean {
 }
 
 /**
- * Libelle court d'une periode, comme les ecrans de ventes (`libellePeriodeVentes`) :
+ * Libelle court d'une periode (`libellePeriodeCourte`) :
  * « 09/26 », « 04/26 – 09/26 ». Quand plusieurs mois tiennent dans un meme exercice, on
  * ajoute « ; exercice 2026/2027 » (mot traduit, millesime identique dans toutes les langues).
  */
 export function libellePeriode(debut: string, fin: string, locale: Locale, moisDebut = MOIS_DEBUT_EXERCICE): string {
-  const base = libellePeriodeVentes(`${debut}-01`, `${fin}-01`)
+  const base = libellePeriodeCourte(debut, fin)
   if (debut === fin) return base
   const exerciceDePeriode = (periode: string) => {
     const [annee, mois] = periode.split('-').map(Number)

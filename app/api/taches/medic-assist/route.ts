@@ -13,13 +13,20 @@
  */
 
 import { createHash, timingSafeEqual } from 'crypto'
+import { journal } from '@/lib/journal'
 import { NextRequest, NextResponse } from 'next/server'
 
+import { purgerPiecesJointes } from '@/lib/medic-assist/pieces-jointes/purge'
 import { traiterRapportsEchus } from '@/lib/medic-assist/suivi/rapports-programmes'
 import { nomErreur } from '@/lib/medic-assist/suivi/erreurs'
 import { traiterAlertesTableaux } from '@/lib/warehouse/tableaux-alertes'
 
 export const dynamic = 'force-dynamic'
+/** Secondes : le traitement des rapports peut etre long (exports + envois). */
+export const maxDuration = 300
+
+/** Au-dela, la boucle des rapports ne commence plus de rapport (le reste est repris a l'appel suivant). */
+const BUDGET_RAPPORTS_MS = 240_000
 
 /** En dessous, un jeton se devine : la route le traite comme absent. */
 const LONGUEUR_MIN_JETON = 32
@@ -44,11 +51,30 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const [bilan, alertes] = await Promise.all([traiterRapportsEchus(), traiterAlertesTableaux()])
-    console.info('[medic-assist] Rapports programmés :', JSON.stringify(bilan))
-    return NextResponse.json({ ...bilan, alertes })
+    const [bilan, alertes] = await Promise.all([
+      traiterRapportsEchus({ budgetMs: BUDGET_RAPPORTS_MS }),
+      traiterAlertesTableaux(),
+    ])
+    journal.info('Rapports programmés traités', { domaine: 'taches', ...bilan })
+
+    // Purge des pieces jointes : un echec ne fait echouer ni le reste ni la reponse.
+    let purge: { lignesSupprimees: number; fichiersSupprimes: number } | { erreur: true } = {
+      erreur: true,
+    }
+    try {
+      purge = await purgerPiecesJointes()
+      journal.info('Purge des pièces jointes terminée', { domaine: 'taches', tache: 'purge-pieces-jointes', ...purge })
+    } catch (error) {
+      journal.erreur('Purge des pièces jointes en échec', {
+        domaine: 'taches',
+        tache: 'purge-pieces-jointes',
+        resultat: 'echec',
+        nomErreur: nomErreur(error),
+      })
+    }
+    return NextResponse.json({ ...bilan, alertes, purge })
   } catch (error) {
-    console.error('[medic-assist] Rapports programmés interrompus :', nomErreur(error))
+    journal.erreur('Rapports programmés interrompus', { domaine: 'taches', erreur: nomErreur(error) })
     return NextResponse.json(
       { error: "Erreur lors de l'envoi des rapports programmés" },
       { status: 500 }

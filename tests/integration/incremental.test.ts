@@ -57,14 +57,14 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Import incrément
       expect(await copie()).toEqual({ lignes: 59_999, total: 1_800_031_991 })
 
       await redacteur.$executeRaw`INSERT INTO ${table} VALUES (2, 9, '2026-01-01Z')`
-      expect(await reconciliation()).toEqual([{ jeu: cle, statut: 'echec' }])
+      expect(await reconciliation()).toEqual([{ jeu: cle, statut: 'echec', code: 'incremental_cle' }])
       expect((await copie()).lignes).toBe(59_999)
       await redacteur.$executeRaw`DELETE FROM ${table} WHERE id = 2 AND valeur = 9`
       await redacteur.$executeRaw`UPDATE ${table} SET valeur = -5, modifie_a = '2026-01-01T16:40:02Z' WHERE id = 2`
       await enregistrerQualite(cle, 0, { filtres: [], normalisations: [], controles: [
         { type: 'plage', colonnes: ['valeur'], min: '0' },
       ] })
-      expect(await delta()).toEqual([{ jeu: cle, statut: 'echec' }])
+      expect(await delta()).toEqual([{ jeu: cle, statut: 'echec', code: 'plage' }])
       expect((await chargerIncremental(cle))?.etat?.curseur).toBe('2026-01-01T16:40:01.000123Z')
       expect(await copie()).toEqual({ lignes: 59_999, total: 1_800_031_991 })
       const executions = await prisma.$queryRaw<{ mode: string | null; lignes: number; code: string | null }[]>`
@@ -79,8 +79,8 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Import incrément
       await redacteur.$executeRaw`DELETE FROM ${table} WHERE id = 4`
       await prisma.$executeRaw`UPDATE warehouse.incremental SET reconcilie_a = now() - interval '2 days' WHERE jeu = ${cle}`
       await prisma.$executeRaw`UPDATE warehouse.synchronisations SET verifie_a = now() - interval '1 minute' WHERE jeu = ${cle}`
-      expect(await synchroniserEntrepot({ jeu: cle })).toEqual([{ jeu: cle, statut: 'pas_echu' }])
-      await prisma.$executeRaw`UPDATE warehouse.synchronisations SET verifie_a = now() - interval '25 hours' WHERE jeu = ${cle}`
+      expect(await synchroniserEntrepot({ jeu: cle })).toEqual([{ jeu: cle, statut: 'pas_echu', code: 'backoff' }])
+      await prisma.$executeRaw`UPDATE warehouse.synchronisations SET verifie_a = now() - interval '25 hours', prochain_essai_a = NULL WHERE jeu = ${cle}`
       expect(await synchroniserEntrepot({ jeu: cle })).toEqual([{ jeu: cle, statut: 'publie' }])
       expect(await copie()).toEqual({ lignes: 59_998, total: 1_800_030_997 })
     } finally {

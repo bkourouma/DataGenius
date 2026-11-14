@@ -31,7 +31,6 @@ const CONTEXTE = {
   habilitations: null,
   locale: 'fr',
   maintenant: new Date(2026, 10, 2),
-  jourLimite: 10,
 } as unknown as ContexteExecution
 
 const TABLEAU = { type: 'tableau', titre: 'CA par pays', jeuDeDonneesId: 'jeu1' } as const

@@ -21,7 +21,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Tendances sur ind
     const support = new PrismaClient({ datasourceUrl: urlOwner.href })
     const acteur = randomUUID()
     const contexte: ContexteExecution = { userId: acteur, roleName: 'TenantAdmin', scope: { roleName: 'TenantAdmin', voitTout: true },
-      habilitations: null, locale: 'fr', maintenant: new Date('2027-03-12T12:00:00Z'), jourLimite: 1 }
+      habilitations: null, locale: 'fr', maintenant: new Date('2027-03-12T12:00:00Z') }
     let source: string | undefined
     let jeu: string | undefined
     let compte: string | undefined

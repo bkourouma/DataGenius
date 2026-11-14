@@ -11,7 +11,7 @@ export default async function CatalogueMetier({ params, searchParams }: {
   params: { cle: string }
   searchParams: { publication?: string }
 }) {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   if (!/^[a-z][a-z0-9_]{0,59}$/.test(params.cle)) notFound()
   const catalogue = await chargerCatalogueMetier(params.cle)
   if (!catalogue) notFound()

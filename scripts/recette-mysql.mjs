@@ -38,7 +38,7 @@ try {
   const npm = process.env.npm_execpath
   if (!npm) throw new Error('Lancez cette recette via npm run test:mysql.')
   const resultat = spawnSync(process.execPath, [npm, 'run', 'test:postgres', '--', 'tests/integration/connecteurs.test.ts'], {
-    stdio: 'inherit', env: { ...process.env, DATAGENIUS_TEST_MYSQL_URL },
+    stdio: 'inherit', env: { ...process.env, DATAGENIUS_TEST_MYSQL_URL, DATAGENIUS_SOURCES_HOTES_AUTORISES: '127.0.0.1' },
   })
   if (resultat.error) throw resultat.error
   process.exitCode = resultat.status ?? 1

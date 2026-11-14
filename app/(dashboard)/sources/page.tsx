@@ -4,14 +4,14 @@ import { etatEntrepot } from '@/lib/warehouse/synchronisation'
 import Link from 'next/link'
 import { Combine, Database, FileSpreadsheet, Globe, Server, ShieldCheck } from 'lucide-react'
 import { listerCombinaisons } from '@/lib/warehouse/combinaisons-admin'
-import { listerSources } from '@/lib/warehouse/sources-admin'
+import { dependancesJeu, listerSources } from '@/lib/warehouse/sources-admin'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
 import { EnTetePage, EtatVide } from '@/components/ui/en-tete-page'
-import { Soumettre } from './formulaires'
+import { FormulaireActualiser } from './formulaires'
+import { FormulaireGestionJeu, FormulaireSupprimerCombinaison } from './formulaires-gestion'
 import { BoutonAjouterSource } from './ajouter-source'
 import { FrequenceDialogue } from './frequence-dialogue'
-import { actualiserJeu } from './actions'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,11 +23,15 @@ const lienDiscret = 'text-sm font-medium text-primary hover:underline'
 
 export default async function Sources() {
   const garde = await exigerAdminMedicAssist()
-  if (!garde.ok) redirect('/medic-assist')
+  if (!garde.ok) redirect('/assistant')
   const [jeux, sources, combinaisons] = await Promise.all([
     etatEntrepot().catch(() => null), listerSources().catch(() => null),
     listerCombinaisons().catch(() => null),
   ])
+  const dependances = new Map(await Promise.all([
+    ...(jeux ?? []).filter(j => j.modifiable).map(j => j.cle),
+    ...(combinaisons ?? []).map(c => c.cle),
+  ].map(async cle => [cle, await dependancesJeu(cle).catch(() => null)] as const)))
 
   return (
     <section className="mx-auto max-w-4xl space-y-8">
@@ -66,10 +70,7 @@ export default async function Sources() {
                 <div><dt className="text-muted-foreground">Dernière vérification</dt><dd className="font-medium">{etat?.verifie_a ? date.format(etat.verifie_a) + ' UTC' : '—'}</dd></div>
               </dl>
               <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-4">
-                <form action={actualiserJeu}>
-                  <input type="hidden" name="jeu" value={cle} />
-                  <Soumettre texte={'Synchroniser ' + titre} attente="Synchronisation en cours…" variant="outline" />
-                </form>
+                <FormulaireActualiser cle={cle} titre={titre} />
                 {modifiable && <div className="flex flex-wrap items-center gap-3">
                   <FrequenceDialogue cle={cle} titre={titre} frequence={frequence} />
                   <LienCatalogue cle={cle} titre={titre} />
@@ -78,6 +79,7 @@ export default async function Sources() {
                   </Link>
                 </div>}
               </div>
+              {modifiable && <FormulaireGestionJeu cle={cle} titre={titre} dependances={dependances.get(cle) ?? null} />}
             </li>
           ))}
         </ul>
@@ -144,6 +146,7 @@ export default async function Sources() {
                   {' · ' + jeu.liens + ' liaison(s) · ' + jeu.colonnes + ' colonne(s)'}
                 </p>
                 {!jeu.disponible && <p className="text-sm text-destructive">Un jeu ou une colonne de la combinaison est indisponible.</p>}
+                <FormulaireSupprimerCombinaison cle={jeu.cle} titre={jeu.titre} dependances={dependances.get(jeu.cle) ?? null} />
               </li>
             ))}
           </ul>

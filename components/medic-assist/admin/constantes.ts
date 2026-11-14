@@ -2,9 +2,9 @@
  * Constantes de l'interface d'administration de Medic Assist.
  */
 
-import type { FournisseurTranscription } from './imports-lot0';
+import type { FournisseurTranscription } from './dependances';
 
-/** Topic du guide de l'ecran (route /dashboard/admin/medic-assist). */
+/** Topic du guide de l'ecran (route /dashboard/admin/assistant). */
 export const TOPIC_GUIDE_ADMIN_MEDIC_ASSIST = 'administration.medic-assist-admin';
 
 export const ONGLETS = ['configuration', 'usages', 'avis'] as const;
@@ -26,7 +26,7 @@ export const URL_USAGES = '/api/medic-assist/admin/usages';
 export const URL_AVIS = '/api/medic-assist/admin/avis';
 
 /** Page de l'assistant, lue par le lot 3 (parametre `c` = identifiant de conversation). */
-export const CHEMIN_MEDIC_ASSIST = '/medic-assist';
+export const CHEMIN_MEDIC_ASSIST = '/assistant';
 export const PARAMETRE_CONVERSATION = 'c';
 
 /** Taille d'une page d'avis demandee au serveur. */

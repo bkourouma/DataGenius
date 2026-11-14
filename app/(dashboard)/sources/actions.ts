@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { journal } from '@/lib/journal'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { synchroniserEntrepot } from '@/lib/warehouse/synchronisation'
 import {
@@ -13,7 +14,14 @@ import {
   creerImport,
   modifierFrequence,
   ErreurAdministrationSource,
+  chargerConnexionSource,
+  modifierSource,
+  supprimerSource,
+  renommerImport,
+  supprimerImport,
 } from '@/lib/warehouse/sources-admin'
+import { dernierCodeExecution } from '@/lib/warehouse/jeux-admin'
+import { retourSynchro } from '@/lib/warehouse/libelles-synchro'
 import { MAX_FICHIER } from '@/lib/warehouse/connecteurs/fichier'
 
 type Etat = { erreur?: string; succes?: string }
@@ -107,11 +115,102 @@ export async function changerFrequence(_etat: Etat, formulaire: FormData): Promi
   return { succes: 'Fréquence enregistrée.' }
 }
 
-export async function actualiserJeu(formulaire: FormData) {
-  const garde = await exigerAdminMedicAssist()
-  if (!garde.ok) return
+
+const CLE_JEU = /^[a-z][a-z0-9_]{0,59}$/
+const ID_SOURCE = /^[A-Za-z0-9_-]{1,64}$/
+
+export async function actualiserJeu(_etat: Etat, formulaire: FormData): Promise<Etat> {
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
   const jeu = formulaire.get('jeu')
-  if (typeof jeu !== 'string' || !/^[a-z][a-z0-9_]{0,59}$/.test(jeu)) return
-  await synchroniserEntrepot({ forcer: true, jeu })
+  if (typeof jeu !== 'string' || !CLE_JEU.test(jeu)) return { erreur: 'Jeu introuvable.' }
+  let resultats: { jeu: string; statut: string; code?: string }[]
+  try {
+    resultats = await synchroniserEntrepot({ forcer: true, jeu })
+  } catch (erreur) {
+    journal.erreur('Synchronisation manuelle impossible', { domaine: 'sources', jeu, erreur: erreur instanceof Error ? erreur.name : 'inconnue' })
+    return { erreur: 'Synchronisation impossible. Réessayez dans un instant.' }
+  }
   revalidatePath('/sources')
+  const resultat = resultats[0]
+  if (!resultat) return { erreur: 'Jeu introuvable.' }
+  // Sans code dans le résultat (lot de fiabilité non fusionné), relit le dernier code enregistré.
+  let code: string | null | undefined = resultat.code
+  if (resultat.statut === 'echec' && !code) code = await dernierCodeExecution(jeu).catch(() => null)
+  return retourSynchro({ statut: resultat.statut, code })
+}
+
+export async function modifierConnexion(_etat: Etat, formulaire: FormData): Promise<Etat> {
+  const garde = await exigerAdminMedicAssist()
+  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  const id = formulaire.get('sourceId')
+  if (typeof id !== 'string' || !ID_SOURCE.test(id)) return { erreur: 'Source introuvable.' }
+  try {
+    const actuelle = await chargerConnexionSource(id)
+    if (!actuelle) return { erreur: 'Source introuvable.' }
+    const champ = (nom: string) => formulaire.get(nom)
+    let entree: Record<string, unknown>
+    if (actuelle.type === 'rest') {
+      entree = { titre: champ('titre'), url: champ('url'), token: champ('token'), chemin: champ('chemin'), parametrePage: champ('parametrePage') }
+    } else if (actuelle.type === 'fichier') {
+      entree = { titre: champ('titre') }
+    } else {
+      entree = {
+        titre: champ('titre'), hote: champ('hote'), port: champ('port'), base: champ('base'),
+        utilisateur: champ('utilisateur'), motDePasse: champ('motDePasse'), tls: champ('tls'),
+      }
+    }
+    await modifierSource(id, entree)
+  } catch (erreur) {
+    return {
+      erreur: erreur instanceof ErreurAdministrationSource ? erreur.message :
+        'Modification refusée : la connexion n’a pas pu être testée. Les paramètres actuels sont conservés.',
+    }
+  }
+  revalidatePath('/sources')
+  revalidatePath('/sources/' + id)
+  return { succes: 'Connexion modifiée et testée.' }
+}
+
+export async function supprimerConnexion(_etat: Etat, formulaire: FormData): Promise<Etat> {
+  const garde = await exigerAdminMedicAssist()
+  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  const id = formulaire.get('sourceId')
+  if (typeof id !== 'string' || !ID_SOURCE.test(id)) return { erreur: 'Source introuvable.' }
+  if (formulaire.get('confirmation') !== 'on') return { erreur: 'Cochez la case de confirmation pour supprimer la source.' }
+  try {
+    await supprimerSource(garde.contexte.userId, id)
+  } catch (erreur) {
+    return { erreur: erreur instanceof ErreurAdministrationSource ? erreur.message : 'Suppression impossible. Réessayez dans un instant.' }
+  }
+  revalidatePath('/sources')
+  redirect('/sources')
+}
+
+export async function renommerJeu(_etat: Etat, formulaire: FormData): Promise<Etat> {
+  const garde = await exigerAdminMedicAssist()
+  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  const cle = formulaire.get('jeu')
+  if (typeof cle !== 'string' || !CLE_JEU.test(cle)) return { erreur: 'Import introuvable.' }
+  try {
+    await renommerImport(garde.contexte.userId, cle, formulaire.get('titre'))
+  } catch (erreur) {
+    return { erreur: erreur instanceof ErreurAdministrationSource ? erreur.message : 'Nom non enregistré. Indiquez un nom de 1 à 120 caractères.' }
+  }
+  revalidatePath('/sources')
+  return { succes: 'Nom enregistré.' }
+}
+
+export async function supprimerJeu(_etat: Etat, formulaire: FormData): Promise<Etat> {
+  const garde = await exigerAdminMedicAssist()
+  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  const cle = formulaire.get('jeu')
+  if (typeof cle !== 'string' || !CLE_JEU.test(cle)) return { erreur: 'Import introuvable.' }
+  if (formulaire.get('confirmation') !== 'on') return { erreur: 'Cochez la case de confirmation pour supprimer l’import.' }
+  try {
+    await supprimerImport(garde.contexte.userId, cle)
+  } catch (erreur) {
+    return { erreur: erreur instanceof ErreurAdministrationSource ? erreur.message : 'Suppression impossible. Réessayez dans un instant.' }
+  }
+  revalidatePath('/sources')
+  return { succes: 'Import supprimé.' }
 }

@@ -40,7 +40,6 @@ const CONTEXTE = {
   habilitations: null,
   locale: 'fr',
   maintenant: new Date(2026, 10, 2, 9, 30),
-  jourLimite: 10,
 } as unknown as ContexteExecution;
 
 const JEU: JeuComplet = {

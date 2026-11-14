@@ -50,7 +50,7 @@ Une combinaison enregistre la définition du rapprochement dans Data Genius. Ses
 
 Les nouveaux imports sont lus directement dans la base de Data Genius par l’application et le worker. `DATAGENIUS_CATALOGUE` reste facultatif pour les catalogues historiques, la démonstration et les combinaisons SQL historiques. Le [catalogue de démonstration](config/demo-postgresql.json) combine deux bases fictives.
 
-Dans **Source → Catalogue métier**, vous pouvez associer une colonne de type date à un jeu et choisir le mois de début de son exercice. Les filtres par exercice suivent ce mois de début. Les regroupements par trimestre et par année suivent le calendrier civil.
+Dans **Source → Catalogue métier**, vous pouvez associer une colonne de type date à un jeu et choisir le mois de début de son exercice. Sans réglage, l’exercice suit l’année civile (janvier à décembre) ; avec un mois de début réglé, les filtres par exercice le suivent (début en avril : exercice 2026 = avril 2026 à mars 2027). Les regroupements par trimestre et par année suivent le calendrier civil.
 
 ### Publier les définitions métier
 
@@ -59,6 +59,10 @@ Depuis un import administré ou un jeu combiné, ouvrez **Catalogue métier**. R
 Les calculs numériques conservent les décimales dans PostgreSQL. Les valeurs qui dépassent la précision des nombres de tableur sont transportées sous forme de chaînes décimales et exportées en texte dans les cellules Excel pour préserver leurs chiffres.
 
 ## Exploiter la synchronisation
+
+Pour le déploiement avec Docker, la supervision, les sauvegardes et les variables d’environnement, suivez le [guide d’exploitation](docs/exploitation.md).
+
+En production, lancez `node .next/standalone/server.js` (ou l’image Docker) : `npm start` affiche un avertissement avec `output: standalone`.
 
 ```powershell
 npm run warehouse:sync
@@ -71,6 +75,8 @@ La première commande traite les jeux échus. `--force` déclenche une vérifica
 Chaque vérification relit les colonnes sélectionnées. Data Genius compare le contenu et publie atomiquement une copie si des lignes ont été ajoutées, modifiées ou supprimées. En cas d’échec, la dernière copie publiée reste disponible et la page **Source** indique l’erreur. Les analyses précisent la date de publication des copies utilisées. Les combinaisons utilisent la dernière copie de chacun de leurs jeux et peuvent donc réunir des données publiées à des moments différents.
 
 Les imports complets sont limités à 50 000 lignes et environ 20 Mio par jeu.
+
+Chaque jeu est traité isolément : l’échec d’un jeu n’empêche pas les suivants. Après un échec, le jeu n’est retenté qu’après un délai croissant (2, 4, 8 minutes… plafonné à 60 minutes et à la fréquence du jeu). Une synchronisation manuelle ignore ce délai. Pendant qu’un jeu est lu, un bail de 5 minutes, renouvelé automatiquement, évite qu’un autre processus le traite en même temps. La source est lue hors de la transaction de publication. Le worker et `warehouse:sync` purgent les exécutions de plus de 90 jours qui dépassent aussi les 1 000 dernières lignes du jeu, au plus une fois par heure. `warehouse:sync` sans `--watch` retourne un code de sortie non nul si un jeu est en échec.
 
 Les imports PostgreSQL peuvent activer la [synchronisation incrémentale](docs/synchronisation-incrementale.md). Le plafond est de 100 000 lignes et 20 Mio par jeu. La réconciliation complète périodique ou manuelle détecte les suppressions.
 

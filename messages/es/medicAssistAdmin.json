@@ -65,6 +65,7 @@
     "feuilleIntrouvable": "No se encuentra esta hoja en el libro.",
     "plageInvalide": "El rango de celdas solicitado no es válido.",
     "fichierStockeIntrouvable": "El archivo ya no está disponible. Adjúntelo de nuevo.",
+    "quota_pieces_jointes": "Se alcanzó el límite de archivos adjuntos (100 archivos o 200 MB). Elimine conversaciones antiguas para liberar espacio.",
     "transcriptionIndisponible": "El dictado por el servidor no está activado. Use el dictado del navegador.",
     "transcriptionEchec": "La transcripción ha fallado. Inténtelo de nuevo o escriba su mensaje.",
     "audioAbsent": "No se ha recibido ninguna grabación de audio.",
@@ -282,6 +283,22 @@
       "regleTypesInferes": "Tipos de columna (texto, número, fecha, porcentaje) deducidos del contenido del archivo.",
       "reglePourcentage": "Porcentajes expresados en puntos (85 = 85 %).",
       "regleTronque": "Hoja truncada: se leyeron las primeras {max, number} filas de {total, number}."
+    }
+  },
+  "gardeFous": {
+    "titre": "Salvaguardas",
+    "plafond": {
+      "libelle": "Límite de coste de IA por usuario y día (USD)",
+      "aide": "Coste máximo de IA que un usuario puede generar en un día. 0 desactiva el límite. Valor predeterminado: {defaut} USD.",
+      "invalide": "Introduzca un número entre 0 y {max}."
+    },
+    "secours": {
+      "libelle": "Modelo de respaldo",
+      "aide": "Opcional. Se usa automáticamente si falla el modelo principal. El proveedor debe tener una clave en el servidor.",
+      "aucun": "Ninguno",
+      "aucunDescription": "Sin modelo de respaldo.",
+      "modele": "Modelo de respaldo (identificador)",
+      "modeleAide": "La lista ofrece los modelos conocidos. Sugerencia: {modele}."
     }
   }
 }

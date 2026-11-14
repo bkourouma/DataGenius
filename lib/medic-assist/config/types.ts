@@ -31,8 +31,18 @@ export interface ConfigMedicAssist {
   transcription: ConfigTranscription
 }
 
+/** Modèle utilisé quand le modèle principal échoue. */
+export interface ModeleSecours {
+  fournisseur: Fournisseur
+  modele: string
+}
+
 /** Configuration réellement appliquée, après repli éventuel sur Claude. */
 export interface ConfigEffective extends ConfigMedicAssist {
+  /** Plafond de coût IA par utilisateur et par jour, en USD (0 = désactivé). */
+  plafondCoutJournalierUsd: number
+  /** Modèle de secours (clé disponible, différent du principal) ou null. */
+  modeleSecours: ModeleSecours | null
   /** Vrai si le fournisseur demandé n'avait plus de clé et que Claude le remplace. */
   repliSurClaude: boolean
   /** Fournisseur configuré en base (égal à `fournisseur` quand il n'y a pas de repli). */
@@ -54,6 +64,8 @@ export type CodeErreurConfig =
   | 'fournisseur_indisponible'
   | 'modele_invalide'
   | 'transcription_indisponible'
+  | 'plafond_invalide'
+  | 'modele_secours_inconnu'
 
 /** Erreur de validation à l'écriture de la configuration. Ne contient jamais de clé. */
 export class ErreurConfigMedicAssist extends Error {

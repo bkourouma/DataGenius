@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
-import { enregistrerTableau, ErreurTableau } from '@/lib/warehouse/tableaux'
+import { dupliquerTableau, enregistrerTableau, ErreurTableau, supprimerTableau } from '@/lib/warehouse/tableaux'
 
 export async function enregistrer(edition: { id: string; version: number } | null, _etat: { erreur?: string }, formulaire: FormData): Promise<{ erreur?: string }> {
   const acces = await exigerMedicAssist()
@@ -19,4 +19,36 @@ export async function enregistrer(edition: { id: string; version: number } | nul
   revalidatePath('/tableaux')
   revalidatePath(`/tableaux/${id}`)
   redirect(`/tableaux/${id}`)
+}
+
+type EtatAction = { erreur?: string; succes?: string }
+
+export async function dupliquer(_etat: EtatAction, formulaire: FormData): Promise<EtatAction> {
+  const acces = await exigerMedicAssist()
+  if (!acces.ok) return { erreur: 'Session expirée. Reconnectez-vous.' }
+  const id = formulaire.get('id')
+  if (typeof id !== 'string' || !id || id.length > 64) return { erreur: 'Tableau introuvable.' }
+  let copie: string
+  try {
+    copie = await dupliquerTableau(acces.contexte, id)
+  } catch (erreur) {
+    return { erreur: erreur instanceof ErreurTableau ? erreur.message : 'Duplication impossible.' }
+  }
+  revalidatePath('/tableaux')
+  redirect(`/tableaux/${copie}`)
+}
+
+export async function supprimer(_etat: EtatAction, formulaire: FormData): Promise<EtatAction> {
+  const acces = await exigerMedicAssist()
+  if (!acces.ok) return { erreur: 'Session expirée. Reconnectez-vous.' }
+  const id = formulaire.get('id')
+  if (typeof id !== 'string' || !id || id.length > 64) return { erreur: 'Tableau introuvable.' }
+  if (formulaire.get('confirmation') !== 'on') return { erreur: 'Cochez la case de confirmation pour supprimer le tableau.' }
+  try {
+    await supprimerTableau(acces.contexte, id)
+  } catch (erreur) {
+    return { erreur: erreur instanceof ErreurTableau ? erreur.message : 'Suppression impossible.' }
+  }
+  revalidatePath('/tableaux')
+  redirect('/tableaux')
 }

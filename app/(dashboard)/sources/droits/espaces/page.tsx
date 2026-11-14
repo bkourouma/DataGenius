@@ -6,7 +6,7 @@ import { definitionsEspaces } from '@/lib/warehouse/espaces'
 import { FormulaireEspace } from './formulaire'
 
 export default async function GererEspacesPage() {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   const [{ groupes, jeux }, espaces] = await Promise.all([configurationDroits(), definitionsEspaces()])
   const affectations = new Map(espaces.flatMap(e => e.jeux.map(jeu => [jeu, e.id] as const)))
   const choix = (id?: string) => jeux.map(jeu => ({ cle: jeu.cle, titre: jeu.titre,

@@ -299,6 +299,7 @@
       "introuvable": "找不到此工件，或您无权访问。",
       "formatNonSupporte": "此工件不支持该导出格式。",
       "formatInvalide": "未知的导出格式。支持的格式：xlsx、csv、pdf、pptx。",
+      "exportsOccupes": "正在进行的导出过多。请稍后再试。",
       "tropDeLignes": "此工件行数过多，无法导出。请缩小筛选范围后重试。",
       "limiteDebit": "数据重新计算请求过多。请在 {minutes, plural, other {# 分钟}}后重新导出。",
       "echec": "导出失败。请稍后重试。"

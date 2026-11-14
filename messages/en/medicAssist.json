@@ -114,7 +114,7 @@
       "interroger_donnees": "Querying {jeu}…",
       "interroger_donnees_sans_jeu": "Querying the data…",
       "requete_sql": "Calculating from the data…",
-      "resume_mensuel": "Preparing the monthly summary…",
+      "resume_mensuel": "Preparing the summary…",
       "lire_piece_jointe": "Reading the attachment…",
       "creer_artefact": "Preparing the result…",
       "modifier_artefact": "Updating the result…",
@@ -124,22 +124,22 @@
       "autre": "Working on your request…"
     },
     "jeux": {
-      "ventes": "sales",
-      "budget": "the budget",
-      "stocks": "stock",
-      "rentabilite": "profitability",
-      "prix": "prices",
-      "produits": "products",
-      "pays": "countries",
-      "grossistes": "wholesalers",
-      "agences": "agencies",
-      "molecules": "molecules",
-      "procedures_amm": "MA procedures",
-      "visas": "visas",
-      "mep": "market launches",
-      "info_pays": "country information",
-      "ventes_concurrents": "competitor sales",
-      "taches": "tasks"
+      "ventes": "the data",
+      "budget": "the data",
+      "stocks": "the data",
+      "rentabilite": "the data",
+      "prix": "the data",
+      "produits": "the data",
+      "pays": "the data",
+      "grossistes": "the data",
+      "agences": "the data",
+      "molecules": "the data",
+      "procedures_amm": "the data",
+      "visas": "the data",
+      "mep": "the data",
+      "info_pays": "the data",
+      "ventes_concurrents": "the data",
+      "taches": "the data"
     },
     "puceDonnees": "Data: {count, plural, =0 {no rows} one {# row} other {# rows}}",
     "puceDonneesPeriode": "Data: {count, plural, =0 {no rows} one {# row} other {# rows}} · {periode}",
@@ -220,11 +220,11 @@
       "graviteAttention": "To watch",
       "graviteInfo": "Information",
       "categorie": {
-        "visas": "Visas",
-        "budget": "Budget",
-        "saisie": "Data entry",
-        "stocks": "Stock",
-        "amm": "MA"
+        "visas": "Deadlines",
+        "budget": "Targets",
+        "saisie": "Data quality",
+        "stocks": "Volumes",
+        "amm": "Compliance"
       },
       "voirEcran": "Open the screen",
       "voirTout": "See all ({count})",
@@ -251,5 +251,55 @@
     "contexte": "Context: {ecran}",
     "retirerContexte": "Remove the screen context",
     "aide": "Enter to send, Esc to close"
+  },
+  "demarrage": {
+    "titre": "Getting started",
+    "progression": "{faites} of {total}",
+    "listeLabel": "Getting started steps",
+    "fait": "Done",
+    "aFaire": "To do",
+    "masquer": "Hide this guide",
+    "etapes": {
+      "source": {
+        "libelle": "Add a data source",
+        "description": "A database, file or API that Data Genius can read.",
+        "lien": "Add a source"
+      },
+      "import": {
+        "libelle": "Import a dataset",
+        "description": "Choose the tables or sheets to make available.",
+        "lien": "Import a dataset"
+      },
+      "catalogue": {
+        "libelle": "Publish the business catalog",
+        "description": "Describe what the columns mean to get reliable answers.",
+        "lien": "Open the catalogs"
+      },
+      "question": {
+        "libelle": "Ask a first question",
+        "description": "Try one of the starter questions below."
+      },
+      "collegue": {
+        "libelle": "Invite a colleague",
+        "description": "Give someone on your team access.",
+        "lien": "Invite a colleague"
+      }
+    },
+    "membreSansJeu": {
+      "titre": "No data available to you yet",
+      "texte": "Your administrator needs to give you access to data before you can ask questions. Contact them to request it."
+    }
+  },
+  "gardeFous": {
+    "erreurs": {
+      "tour_en_cours": "A response is already in progress in this conversation. Wait for it to finish, then try again.",
+      "message_deja_recu": "This message has already been received: it is being processed or has been processed. Reload the conversation to see the answer."
+    },
+    "quotaEpuiseHeure": "Your daily assistant usage quota has been used up. It will be renewed at {heure}.",
+    "reference": "Reference: {reference}",
+    "api": {
+      "limiteDebit": "Too many dictations in a short time. Wait a few minutes, then try again.",
+      "quotaEpuise": "Your daily assistant usage quota has been used up. Try again tomorrow."
+    }
   }
 }

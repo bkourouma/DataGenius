@@ -25,6 +25,4 @@ export interface ContexteExecution {
   conversationId?: string
   /** Horloge de la requete : toute date relative se calcule depuis elle. */
   maintenant: Date
-  /** Jour limite de saisie des sorties locales (lireJourLimite), pour le « dernier mois clos ». */
-  jourLimite: number
 }

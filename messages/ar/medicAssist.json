@@ -114,7 +114,7 @@
       "interroger_donnees": "جارٍ الاستعلام عن {jeu}…",
       "interroger_donnees_sans_jeu": "جارٍ الاستعلام عن البيانات…",
       "requete_sql": "جارٍ الحساب انطلاقًا من البيانات…",
-      "resume_mensuel": "جارٍ إعداد الملخص الشهري…",
+      "resume_mensuel": "جارٍ إعداد الملخص…",
       "lire_piece_jointe": "جارٍ قراءة المرفق…",
       "creer_artefact": "جارٍ إعداد النتيجة…",
       "modifier_artefact": "جارٍ تحديث النتيجة…",
@@ -124,22 +124,22 @@
       "autre": "جارٍ العمل على طلبك…"
     },
     "jeux": {
-      "ventes": "المبيعات",
-      "budget": "الميزانية",
-      "stocks": "المخزون",
-      "rentabilite": "الربحية",
-      "prix": "الأسعار",
-      "produits": "المنتجات",
-      "pays": "الدول",
-      "grossistes": "موزعي الجملة",
-      "agences": "الوكالات",
-      "molecules": "الجزيئات",
-      "procedures_amm": "إجراءات AMM",
-      "visas": "Visas",
-      "mep": "MEP (الإطلاق)",
-      "info_pays": "معلومات الدول",
-      "ventes_concurrents": "مبيعات المنافسين",
-      "taches": "المهام"
+      "ventes": "البيانات",
+      "budget": "البيانات",
+      "stocks": "البيانات",
+      "rentabilite": "البيانات",
+      "prix": "البيانات",
+      "produits": "البيانات",
+      "pays": "البيانات",
+      "grossistes": "البيانات",
+      "agences": "البيانات",
+      "molecules": "البيانات",
+      "procedures_amm": "البيانات",
+      "visas": "البيانات",
+      "mep": "البيانات",
+      "info_pays": "البيانات",
+      "ventes_concurrents": "البيانات",
+      "taches": "البيانات"
     },
     "puceDonnees": "البيانات: {count, plural, =0 {لا توجد أسطر} zero {لا توجد أسطر} one {سطر واحد} two {سطران} few {# أسطر} many {# سطرًا} other {# سطر}}",
     "puceDonneesPeriode": "البيانات: {count, plural, =0 {لا توجد أسطر} zero {لا توجد أسطر} one {سطر واحد} two {سطران} few {# أسطر} many {# سطرًا} other {# سطر}} · {periode}",
@@ -220,11 +220,11 @@
       "graviteAttention": "يستدعي المتابعة",
       "graviteInfo": "معلومة",
       "categorie": {
-        "visas": "Visas",
-        "budget": "الميزانية",
-        "saisie": "الإدخال",
-        "stocks": "المخزون",
-        "amm": "AMM"
+        "visas": "المواعيد النهائية",
+        "budget": "الأهداف",
+        "saisie": "جودة البيانات",
+        "stocks": "الأحجام",
+        "amm": "الامتثال"
       },
       "voirEcran": "فتح الشاشة",
       "voirTout": "عرض الكل ({count})",
@@ -251,5 +251,55 @@
     "contexte": "السياق: {ecran}",
     "retirerContexte": "إزالة سياق الشاشة",
     "aide": "اضغط Enter للإرسال، وEsc للإغلاق"
+  },
+  "demarrage": {
+    "titre": "الخطوات الأولى",
+    "progression": "{faites} من {total}",
+    "listeLabel": "خطوات البدء",
+    "fait": "تم",
+    "aFaire": "قيد الإنجاز",
+    "masquer": "إخفاء هذا الدليل",
+    "etapes": {
+      "source": {
+        "libelle": "إضافة مصدر بيانات",
+        "description": "قاعدة بيانات أو ملف أو واجهة برمجية يستطيع Data Genius قراءتها.",
+        "lien": "إضافة مصدر"
+      },
+      "import": {
+        "libelle": "استيراد مجموعة بيانات",
+        "description": "اختر الجداول أو الأوراق التي تريد إتاحتها.",
+        "lien": "استيراد مجموعة"
+      },
+      "catalogue": {
+        "libelle": "نشر الفهرس المهني",
+        "description": "صِف معنى الأعمدة للحصول على إجابات موثوقة.",
+        "lien": "فتح الفهارس"
+      },
+      "question": {
+        "libelle": "طرح السؤال الأول",
+        "description": "جرّب أحد أسئلة البداية الموجودة أدناه."
+      },
+      "collegue": {
+        "libelle": "دعوة زميل",
+        "description": "امنح شخصًا من فريقك حق الوصول.",
+        "lien": "دعوة زميل"
+      }
+    },
+    "membreSansJeu": {
+      "titre": "لا توجد بيانات متاحة لك حاليًا",
+      "texte": "يجب على المسؤول أن يمنحك حق الوصول إلى البيانات قبل أن تتمكن من طرح الأسئلة. تواصل معه لطلب ذلك."
+    }
+  },
+  "gardeFous": {
+    "erreurs": {
+      "tour_en_cours": "هناك إجابة قيد الإعداد بالفعل في هذه المحادثة. انتظر حتى تنتهي ثم أعد المحاولة.",
+      "message_deja_recu": "تم استلام هذه الرسالة بالفعل: إما أنها قيد المعالجة أو تمت معالجتها. أعد تحميل المحادثة لرؤية الإجابة."
+    },
+    "quotaEpuiseHeure": "نفدت حصتك اليومية لاستخدام المساعد. ستتجدد في {heure}.",
+    "reference": "المرجع: {reference}",
+    "api": {
+      "limiteDebit": "عدد كبير جدًا من عمليات الإملاء في وقت قصير. انتظر بضع دقائق ثم أعد المحاولة.",
+      "quotaEpuise": "نفدت حصتك اليومية لاستخدام المساعد. أعد المحاولة غدًا."
+    }
   }
 }

@@ -2,8 +2,6 @@
  * Briques communes du catalogue : libelles a six langues, regles de calcul partagees,
  * fabriques de filtres standards et petits utilitaires SQL.
  *
- * Les regles ci-dessous disent en clair ce que les ecrans officiels appliquent (voir
- * lib/reports/dimensions-actives.ts, lib/utils/exercice.ts, lib/reports/budget-calculs.ts...).
  * Un jeu les reference dans `regles` : elles remontent telles quelles dans la provenance.
  */
 
@@ -58,20 +56,20 @@ export const REGLES = {
     'निष्क्रिय उत्पाद, थोक विक्रेता और देश शामिल नहीं हैं'
   ),
   dernierMoisClos: lib(
-    'Sans période précisée : dernier mois clos (un mois est clos après le jour limite de saisie)',
-    'No period given: last closed month (a month is closed after the entry deadline day)',
-    'Sin período indicado: último mes cerrado (un mes se cierra después del día límite de captura)',
-    '未指定期间时：取最近一个已结账的月份（过了录入截止日后该月即结账）',
-    'عند عدم تحديد الفترة: آخر شهر مغلق (يُغلق الشهر بعد اليوم الأخير للإدخال)',
-    'अवधि न दी जाने पर: अंतिम बंद महीना (प्रविष्टि की अंतिम तिथि के बाद महीना बंद होता है)'
+    'Sans période précisée : dernier mois complet (le mois qui précède le mois en cours)',
+    'No period given: last complete month (the month before the current month)',
+    'Sin período indicado: último mes completo (el mes anterior al mes en curso)',
+    '未指定期间时：取最近一个完整的月份（当前月份的上一个月）',
+    'عند عدم تحديد الفترة: آخر شهر كامل (الشهر السابق للشهر الحالي)',
+    'अवधि न दी जाने पर: अंतिम पूरा महीना (चालू महीने से पहले का महीना)'
   ),
   exercice: lib(
-    'Exercice d’avril à mars ; le budget reste saisi en année civile',
-    'Fiscal year from April to March; the budget is still entered by calendar year',
-    'Ejercicio de abril a marzo; el presupuesto sigue capturado por año civil',
-    '财年为4月至次年3月；预算仍按自然年录入',
-    'السنة المالية من أبريل إلى مارس؛ وتبقى الميزانية مُدخلة بالسنة الميلادية',
-    'वित्त वर्ष अप्रैल से मार्च; बजट कैलेंडर वर्ष में दर्ज रहता है'
+    'Exercice = année civile (janvier à décembre) sauf réglage du jeu dans le catalogue ; le budget reste saisi en année civile',
+    'Fiscal year = calendar year (January to December) unless the dataset sets another start month in the catalogue; the budget is still entered by calendar year',
+    'Ejercicio = año civil (enero a diciembre) salvo que el conjunto fije otro mes de inicio en el catálogo; el presupuesto sigue capturado por año civil',
+    '财年即自然年（1月至12月），除非数据集在目录中另行设置起始月份；预算仍按自然年录入',
+    'السنة المالية هي السنة الميلادية (من يناير إلى ديسمبر) ما لم تحدد مجموعة البيانات شهر بداية آخر في الفهرس؛ وتبقى الميزانية مُدخلة بالسنة الميلادية',
+    'वित्त वर्ष = कैलेंडर वर्ष (जनवरी से दिसंबर), जब तक डेटासेट कैटलॉग में कोई और आरंभ माह तय न करे; बजट कैलेंडर वर्ष में दर्ज रहता है'
   ),
   stockInstantane: lib(
     'Le stock est un instantané d’un seul mois : les stocks de mois différents ne s’additionnent pas',

@@ -89,6 +89,7 @@
     "enCours": "正在处理…",
     "nonExecute": "在您确认之前，不会执行任何操作。",
     "destinataires": "收件人",
+    "messageEnvoye": "将发送的消息",
     "assigne": "指派给",
     "echeance": "截止日期",
     "destinatairesRequis": "请至少选择一位收件人后再确认。",
@@ -213,6 +214,8 @@
   "notifRapport": {
     "titre": "报告：“{titre}”",
     "message": "由 {proprietaire} {frequence}发送。打开分析即可查看您范围内的数字。",
+    "echecTitre": "定时报告未能发送",
+    "echecMessage": "报告“{titre}”在尝试 {essais} 次后仍未能发送。将在下一个计划时间再次尝试。",
     "frequence": {
       "quotidien": "每天",
       "hebdomadaire": "每周",

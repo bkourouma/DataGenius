@@ -6,7 +6,7 @@
  * Le type retenu pour le fournisseur est celui de la SIGNATURE.
  */
 
-import { LIMITES } from '../admin/imports-lot0-lot1'
+import { LIMITES } from '../admin/dependances'
 
 export type TypeAudio = 'webm' | 'ogg' | 'mp4' | 'wav'
 

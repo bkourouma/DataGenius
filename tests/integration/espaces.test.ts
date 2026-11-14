@@ -22,7 +22,7 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Espaces et droits
     async function contexte(): Promise<ContexteExecution> {
       const scope = await getAccessScope(compte.id)
       if (!scope) throw new Error('Compte fictif indisponible.')
-      return { scope, roleName: scope.roleName, userId: compte.id, habilitations: null, locale: 'fr', maintenant: new Date(), jourLimite: 1 }
+      return { scope, roleName: scope.roleName, userId: compte.id, habilitations: null, locale: 'fr', maintenant: new Date() }
     }
     const visible = async () => (await registreAutorise(await contexte())).some(e => e.jeu.cle === jeu)
     try {

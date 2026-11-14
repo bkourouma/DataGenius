@@ -2,7 +2,7 @@
  * Export PDF (pdfmake 0.3) d'un artefact préparé, aux couleurs des exports Excel.
  *
  * Mise en page :
- * - A4, en-tête de page « MedicPro » + titre court, pied « Exporté le … · personne » et
+ * - A4, en-tête de page « Data Genius » + titre court, pied « Exporté le … · personne » et
  *   « Page x sur y » (date = `prep.exporteLe`, jamais l'heure du serveur) ;
  * - page 1 : titre, sous-titre, lignes de contexte ; sommaire dès 3 blocs ;
  * - un bloc après l'autre : texte (markdown restreint), tableau (en-tête répété à chaque page,
@@ -814,8 +814,8 @@ export async function definitionPdf(prep: ExportPrepare): Promise<TDocumentDefin
       title: titre,
       author: 'Data Genius',
       subject: prep.sousTitre ? assainirTexte(prep.sousTitre) : undefined,
-      creator: 'MedicPro',
-      producer: 'MedicPro',
+      creator: 'Data Genius',
+      producer: 'Data Genius',
       creationDate: prep.exporteLe,
       modDate: prep.exporteLe,
     },

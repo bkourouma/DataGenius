@@ -6,6 +6,7 @@ import { useFormatter, useTranslations } from 'next-intl'
 import { ArrowRight, BookMarked, Sparkles } from 'lucide-react'
 import { listerAnalysesApi } from '@/components/medic-assist/suivi/api-analyses'
 import { useRaccourciPalette } from '@/components/coquille/raccourci'
+import { Demarrage } from './demarrage'
 import { questionsDepart } from './questions-depart'
 
 export interface AccueilProps {
@@ -38,7 +39,7 @@ function AnalysesRecentes() {
         <h2 id="analyses-recentes-titre" className="text-sm font-semibold">
           {t('accueil.analysesTitre')}
         </h2>
-        <Link href="/medic-assist/analyses" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+        <Link href="/assistant/analyses" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
           {t('accueil.toutVoir')}
           <ArrowRight className="size-3.5 rtl:-scale-x-100" aria-hidden />
         </Link>
@@ -47,7 +48,7 @@ function AnalysesRecentes() {
         {analyses.map((analyse) => (
           <li key={analyse.artefactId}>
             <Link
-              href={`/medic-assist/analyses/${encodeURIComponent(analyse.artefactId)}`}
+              href={`/assistant/analyses/${encodeURIComponent(analyse.artefactId)}`}
               className="flex items-center gap-3 px-3 py-2.5 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
             >
               <BookMarked className="size-4 shrink-0 text-muted-foreground" aria-hidden />
@@ -85,6 +86,8 @@ export function AccueilSuite({ onPoser }: { onPoser: (question: string) => void 
 
   return (
     <>
+      <Demarrage />
+
       <section aria-labelledby="questions-depart-titre" className="space-y-2">
         <h2 id="questions-depart-titre" className="text-sm font-semibold">
           {t('accueil.questionsTitre')}

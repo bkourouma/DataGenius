@@ -16,7 +16,7 @@ import { synchroniserEntrepot } from '@/lib/warehouse/synchronisation'
 describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Pilotes métier Data Genius', () => {
   const contexte: ContexteExecution = {
     userId: randomUUID(), roleName: 'TenantAdmin', scope: { roleName: 'TenantAdmin', voitTout: true },
-    habilitations: null, locale: 'fr', maintenant: new Date('2026-11-12T12:00:00Z'), jourLimite: 1,
+    habilitations: null, locale: 'fr', maintenant: new Date('2026-11-12T12:00:00Z'),
   }
   const sources: string[] = []
   const imports: string[] = []

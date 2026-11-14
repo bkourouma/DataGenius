@@ -3,20 +3,24 @@
  * configuration du serveur, corps du PUT (configuration COMPLETE). Fonctions pures.
  */
 
-import type { ConfigAdminCorpsLot6, ConfigAdminReponse } from '@/lib/medic-assist/admin/types';
+import {
+  PLAFOND_COUT_MAX_USD_ADMIN,
+  type ConfigAdminCorpsLot6,
+  type ConfigAdminReponse,
+} from '@/lib/medic-assist/admin/types';
 import {
   FORMAT_IDENTIFIANT_MODELE,
   LONGUEUR_MAX_IDENTIFIANT_MODELE,
   SUGGESTION_MODELE_TRANSCRIPTION,
 } from './constantes';
-import { MODES_LANGAGE } from './imports-lot0';
+import { MODES_LANGAGE } from './dependances';
 import type {
   ConfigTranscription,
   Fournisseur,
   FournisseurTranscription,
   ModeLangage,
   TarifModele,
-} from './imports-lot0';
+} from './dependances';
 
 export interface Brouillon {
   fournisseur: Fournisseur;
@@ -25,6 +29,35 @@ export interface Brouillon {
   transcription: ConfigTranscription;
   /** Texte saisi (virgule ou point accepte). */
   taux: string;
+  /** Plafond de cout IA par utilisateur et par jour, texte saisi (0 = desactive). */
+  plafond: string;
+  /** Modele de secours facultatif : null = aucun. */
+  modeleSecours: ModeleSecoursBrouillon;
+}
+
+export type ModeleSecoursBrouillon = { fournisseur: Fournisseur; modele: string } | null;
+
+/** Texte d'un plafond dans la langue : « 10 » ou « 7,5 ». */
+export function textePlafond(plafond: number, intlTag: string): string {
+  return new Intl.NumberFormat(intlTag, { maximumFractionDigits: 2, useGrouping: false }).format(
+    plafond
+  );
+}
+
+/** Plafond saisi (0 accepte), ou null s'il n'est pas un nombre entre 0 et le maximum. */
+export function lirePlafond(saisie: string): number | null {
+  const texte = saisie.trim().replace(/\s/g, '').replace(',', '.');
+  if (texte === '' || !/^\d*\.?\d+$|^\d+\.$/.test(texte)) return null;
+  const valeur = Number(texte);
+  if (!Number.isFinite(valeur) || valeur < 0 || valeur > PLAFOND_COUT_MAX_USD_ADMIN) return null;
+  // Strictement positif sous 0,01 : refusé (l'arrondi le ferait passer à 0 = désactivé).
+  if (valeur > 0 && valeur < 0.01) return null;
+  return Math.round(valeur * 100) / 100;
+}
+
+function memeSecours(a: ModeleSecoursBrouillon, b: ModeleSecoursBrouillon): boolean {
+  if (a === null || b === null) return a === b;
+  return a.fournisseur === b.fournisseur && a.modele.trim() === b.modele.trim();
 }
 
 /** Texte d'un taux dans la langue : « 0,92 » en francais. */
@@ -40,6 +73,8 @@ export function brouillonDepuis(config: ConfigAdminReponse, intlTag: string): Br
     modeles: { ...config.modeles },
     transcription: config.transcription ? { ...config.transcription } : null,
     taux: texteTaux(config.tauxEurParUsd, intlTag),
+    plafond: textePlafond(config.plafondCoutJournalierUsd, intlTag),
+    modeleSecours: config.modeleSecours ? { ...config.modeleSecours } : null,
   };
 }
 
@@ -68,6 +103,11 @@ export function modelesEnErreur(brouillon: Brouillon): ModeLangage[] {
   return MODES_LANGAGE.filter(mode => problemeModele(brouillon.modeles[mode]) !== null);
 }
 
+/** Probleme du modele de secours saisi (null si aucun secours choisi ou s'il est valide). */
+export function secoursEnErreur(brouillon: Brouillon): ProblemeModele | null {
+  return brouillon.modeleSecours ? problemeModele(brouillon.modeleSecours.modele) : null;
+}
+
 export function transcriptionEnErreur(brouillon: Brouillon): ProblemeModele | null {
   return brouillon.transcription ? problemeModele(brouillon.transcription.modele) : null;
 }
@@ -77,7 +117,9 @@ export function brouillonValide(brouillon: Brouillon): boolean {
   return (
     modelesEnErreur(brouillon).length === 0 &&
     transcriptionEnErreur(brouillon) === null &&
-    lireTaux(brouillon.taux) !== null
+    secoursEnErreur(brouillon) === null &&
+    lireTaux(brouillon.taux) !== null &&
+    lirePlafond(brouillon.plafond) !== null
   );
 }
 
@@ -97,6 +139,15 @@ export function estModifie(
     return true;
   }
   if (!memeTranscription(brouillon.transcription, serveur.transcription)) return true;
+  if (!memeSecours(brouillon.modeleSecours, serveur.modeleSecours)) return true;
+  const plafond = lirePlafond(brouillon.plafond);
+  if (plafond === null) {
+    if (brouillon.plafond.trim() !== textePlafond(serveur.plafondCoutJournalierUsd, intlTag)) {
+      return true;
+    }
+  } else if (plafond !== serveur.plafondCoutJournalierUsd) {
+    return true;
+  }
   const taux = lireTaux(brouillon.taux);
   if (taux === null) return brouillon.taux.trim() !== texteTaux(serveur.tauxEurParUsd, intlTag);
   return Math.abs(taux - serveur.tauxEurParUsd) > 1e-9;
@@ -114,6 +165,12 @@ export function calculerMiseAJour(
   if (!brouillonValide(brouillon)) return null;
   const taux = lireTaux(brouillon.taux) as number;
   const tauxModifie = Math.abs(taux - serveur.tauxEurParUsd) > 1e-9;
+  const plafond = lirePlafond(brouillon.plafond) as number;
+  const plafondModifie = plafond !== serveur.plafondCoutJournalierUsd;
+  const secours: ModeleSecoursBrouillon = brouillon.modeleSecours
+    ? { fournisseur: brouillon.modeleSecours.fournisseur, modele: brouillon.modeleSecours.modele.trim() }
+    : null;
+  const secoursModifie = !memeSecours(secours, serveur.modeleSecours);
 
   const corps: ConfigAdminCorpsLot6 = {
     fournisseur: brouillon.fournisseur,
@@ -129,13 +186,17 @@ export function calculerMiseAJour(
         }
       : null,
     ...(tauxModifie ? { tauxEurParUsd: taux } : {}),
+    ...(plafondModifie ? { plafondCoutJournalierUsd: plafond } : {}),
+    ...(secoursModifie ? { modeleSecours: secours } : {}),
   };
 
   const identique =
     corps.fournisseur === serveur.fournisseur &&
     MODES_LANGAGE.every(mode => corps.modeles[mode] === serveur.modeles[mode]) &&
     memeTranscription(corps.transcription, serveur.transcription) &&
-    !tauxModifie;
+    !tauxModifie &&
+    !plafondModifie &&
+    !secoursModifie;
   return identique ? null : corps;
 }
 
@@ -180,6 +241,27 @@ export function changerTranscription(
     transcription: {
       fournisseur: choix,
       modele: enregistre ?? SUGGESTION_MODELE_TRANSCRIPTION[choix],
+    },
+  };
+}
+
+/**
+ * Choix du fournisseur du modele de secours : null = aucun. Un fournisseur retrouve le
+ * secours enregistre pour lui, sinon le modele standard par defaut du fournisseur.
+ */
+export function changerSecours(
+  brouillon: Brouillon,
+  config: ConfigAdminReponse,
+  choix: Fournisseur | null
+): Brouillon {
+  if (choix === null) return { ...brouillon, modeleSecours: null };
+  if (brouillon.modeleSecours?.fournisseur === choix) return brouillon;
+  const enregistre = config.modeleSecours?.fournisseur === choix ? config.modeleSecours.modele : null;
+  return {
+    ...brouillon,
+    modeleSecours: {
+      fournisseur: choix,
+      modele: enregistre ?? config.modelesParDefaut[choix]?.standard ?? '',
     },
   };
 }

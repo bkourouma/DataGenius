@@ -114,7 +114,7 @@
       "interroger_donnees": "Interroge {jeu}…",
       "interroger_donnees_sans_jeu": "Interroge les données…",
       "requete_sql": "Calcule à partir des données…",
-      "resume_mensuel": "Prépare la synthèse mensuelle…",
+      "resume_mensuel": "Prépare la synthèse…",
       "lire_piece_jointe": "Lit la pièce jointe…",
       "creer_artefact": "Prépare le résultat…",
       "modifier_artefact": "Met à jour le résultat…",
@@ -124,22 +124,22 @@
       "autre": "Travaille sur votre demande…"
     },
     "jeux": {
-      "ventes": "les ventes",
-      "budget": "le budget",
-      "stocks": "les stocks",
-      "rentabilite": "la rentabilité",
-      "prix": "les prix",
-      "produits": "les produits",
-      "pays": "les pays",
-      "grossistes": "les grossistes",
-      "agences": "les agences",
-      "molecules": "les molécules",
-      "procedures_amm": "les procédures AMM",
-      "visas": "les visas",
-      "mep": "les mises en place",
-      "info_pays": "les informations pays",
-      "ventes_concurrents": "les ventes des concurrents",
-      "taches": "les tâches"
+      "ventes": "les données",
+      "budget": "les données",
+      "stocks": "les données",
+      "rentabilite": "les données",
+      "prix": "les données",
+      "produits": "les données",
+      "pays": "les données",
+      "grossistes": "les données",
+      "agences": "les données",
+      "molecules": "les données",
+      "procedures_amm": "les données",
+      "visas": "les données",
+      "mep": "les données",
+      "info_pays": "les données",
+      "ventes_concurrents": "les données",
+      "taches": "les données"
     },
     "puceDonnees": "Données : {count, plural, =0 {aucune ligne} one {# ligne} other {# lignes}}",
     "puceDonneesPeriode": "Données : {count, plural, =0 {aucune ligne} one {# ligne} other {# lignes}} · {periode}",
@@ -220,11 +220,11 @@
       "graviteAttention": "À surveiller",
       "graviteInfo": "Information",
       "categorie": {
-        "visas": "Visas",
-        "budget": "Budget",
-        "saisie": "Saisie",
-        "stocks": "Stocks",
-        "amm": "AMM"
+        "visas": "Échéances",
+        "budget": "Cibles",
+        "saisie": "Qualité des données",
+        "stocks": "Volumes",
+        "amm": "Conformité"
       },
       "voirEcran": "Ouvrir l'écran",
       "voirTout": "Voir tout ({count})",
@@ -251,5 +251,55 @@
     "contexte": "Contexte : {ecran}",
     "retirerContexte": "Retirer le contexte de l'écran",
     "aide": "Entrée pour envoyer, Échap pour fermer"
+  },
+  "demarrage": {
+    "titre": "Premiers pas",
+    "progression": "{faites} sur {total}",
+    "listeLabel": "Étapes de démarrage",
+    "fait": "Fait",
+    "aFaire": "À faire",
+    "masquer": "Masquer ce guide",
+    "etapes": {
+      "source": {
+        "libelle": "Ajouter une source de données",
+        "description": "Une base, un fichier ou une API que Data Genius pourra lire.",
+        "lien": "Ajouter une source"
+      },
+      "import": {
+        "libelle": "Importer un jeu de données",
+        "description": "Choisissez les tables ou feuilles à rendre disponibles.",
+        "lien": "Importer un jeu"
+      },
+      "catalogue": {
+        "libelle": "Publier le catalogue métier",
+        "description": "Décrivez le sens des colonnes pour des réponses fiables.",
+        "lien": "Ouvrir les catalogues"
+      },
+      "question": {
+        "libelle": "Poser une première question",
+        "description": "Utilisez une question de départ ci-dessous pour essayer."
+      },
+      "collegue": {
+        "libelle": "Inviter un collègue",
+        "description": "Donnez accès à une personne de votre équipe.",
+        "lien": "Inviter un collègue"
+      }
+    },
+    "membreSansJeu": {
+      "titre": "Aucune donnée accessible pour le moment",
+      "texte": "Votre administrateur doit vous ouvrir l'accès à des données avant que vous puissiez poser des questions. Contactez-le pour en faire la demande."
+    }
+  },
+  "gardeFous": {
+    "erreurs": {
+      "tour_en_cours": "Une réponse est déjà en cours dans cette conversation. Attendez qu'elle se termine, puis réessayez.",
+      "message_deja_recu": "Ce message a déjà été reçu : il est en cours de traitement ou déjà traité. Rechargez la conversation pour voir la réponse."
+    },
+    "quotaEpuiseHeure": "Votre quota d'utilisation quotidien de l'assistant est épuisé. Il sera renouvelé à {heure}.",
+    "reference": "Référence : {reference}",
+    "api": {
+      "limiteDebit": "Trop de dictées en peu de temps. Patientez quelques minutes puis réessayez.",
+      "quotaEpuise": "Votre quota d'utilisation quotidien de l'assistant est épuisé. Réessayez demain."
+    }
   }
 }

@@ -14,9 +14,20 @@
  *   flux sont des codes `medic_assist_erreur:<code>`) ; le journal serveur ne reçoit que la
  *   cause décrite par `decrireErreurPourJournal` (statut, type, message court, sans secret) ;
  * - la persistance de fin de tour ne bloque jamais la fermeture du flux.
+ *
+ * Garde-fous (lot B, R2 / R10 / R14) :
+ * - une référence d'incident (`genererReference`) par appel, portée par TOUTES les réponses
+ *   d'erreur (`details.reference`) et par chaque ligne de journal `[datagenius] chat` ;
+ * - plafond de coût journalier par utilisateur (429 `quota_epuise`), vérifié avant le verrou ;
+ * - verrou du tour (verrou.ts) : un tour à la fois par conversation, deux au plus par
+ *   utilisateur (409 `tour_en_cours`), pris après les contrôles gratuits et AVANT toute
+ *   écriture ou appel au fournisseur, libéré en fin de tour, sur erreur et sur annulation ;
+ * - idempotence de l'envoi par l'id du message client (409 `message_deja_recu`) ;
+ * - modèle de secours après épuisement des reprises sur indisponibilité (reprise.ts).
  */
 
 import { restrictionsActives } from '@/lib/auth/data-access'
+import { journal } from '@/lib/journal'
 import {
   consumeStream,
   convertToModelMessages,
@@ -80,20 +91,35 @@ import {
   enregistrerFinDeTour,
   enregistrerMessageUtilisateur,
   enregistrerTitre,
+  estViolationUnicite,
   lireConversationProprietaire,
   lireHistorique,
   lirePiecesJointesProprietaire,
   messageNonVide,
   partiesAPersister,
   rattacherPiecesJointes,
+  supprimerConversationVide,
   supprimerMessageAssistant,
+  trouverMessageParIdClient,
   type LigneUsage,
   type PieceJointeChat,
+  type UsageDeTour,
 } from './persistance'
 import { construirePromptSysteme, messagesSysteme } from './prompt-systeme'
-import { avecReprise } from './reprise'
+import { verifierQuotaJournalier } from './quota'
+import { genererReference } from './reference'
+import { avecReprise, modeleAccepteEffort } from './reprise'
 import { genererTitre, titreDeRepli } from './titre'
 import { additionnerUsages, normaliserUsage, type UsageComplet } from './usage'
+import {
+  TOURS_SIMULTANES_MAX,
+  compterToursEnCours,
+  echeanceVerrou,
+  libererVerrou,
+  prendreVerrouTour,
+  verifierLimiteUtilisateur,
+  type VerrouTour,
+} from './verrou'
 
 // ---------------------------------------------------------------------------
 // Constantes
@@ -121,9 +147,6 @@ export const MAX_JETONS_SORTIE_CLAUDE: Record<'standard' | 'profond', number> = 
 
 /** Effort de raisonnement de l'analyse approfondie (option `effort` de @ai-sdk/anthropic). */
 export const EFFORT_PROFOND = 'high' as const
-
-/** Modèles Claude qui acceptent `effort` (génération 5 et suivantes). */
-const MODELES_AVEC_EFFORT = /^claude-(opus|sonnet|haiku|fable)-5/
 
 /** Délai au plus accordé au titre avant la fermeture du flux. */
 export const DELAI_TITRE_MS = 3_000
@@ -172,13 +195,48 @@ function erreur(statut: number, error: string, message: string, details?: unknow
   }
 }
 
+/** Champs d'une ligne de journal du chat : identifiants et codes, jamais de contenu ni de secret. */
+interface IdentiteJournal {
+  reference: string
+  conversationId?: string | null
+  userId: string
+}
+
+type ChampsJournal = IdentiteJournal & { code: string; [champ: string]: unknown }
+
+const MESSAGES_JOURNAL_CHAT: Record<string, string> = {
+  erreur_flux: 'chat : erreur du flux',
+  fin_de_tour_non_enregistree: 'chat : fin de tour non enregistrée',
+  ancienne_reponse_non_supprimee: 'chat : ancienne réponse non supprimée',
+  fin_de_tour: 'chat : fin de tour',
+}
+
+function journaliserChat(champs: ChampsJournal, niveau: 'erreur' | 'info' = 'erreur'): void {
+  const evenement = typeof champs.evenement === 'string' ? champs.evenement : undefined
+  const message =
+    (evenement && MESSAGES_JOURNAL_CHAT[evenement]) ||
+    (niveau === 'info' ? 'chat : événement' : 'chat : requête en échec')
+  const ligne = { domaine: 'chat', ...champs }
+  if (niveau === 'info') journal.info(message, ligne)
+  else journal.erreur(message, ligne)
+}
+
 /**
  * Erreur du flux ou d'un outil : la cause réelle (code, statut, type du fournisseur, message
- * tronqué et sans secret) va au journal serveur ; le client ne reçoit que le code.
+ * tronqué et sans secret) va au journal serveur avec la référence ; le client ne reçoit que
+ * le code.
  */
-function formaterErreurFluxJournalisee(error: unknown): string {
-  console.error('[medic-assist/chat] erreur du flux', decrireErreurPourJournal(error))
-  return formaterErreurFlux(error)
+function formaterErreurFluxJournalisee(champs: IdentiteJournal): (error: unknown) => string {
+  return (error: unknown) => {
+    journaliserChat({
+      ...champs,
+      code: classerErreur(error).code,
+      evenement: 'erreur_flux',
+      cause: decrireErreurPourJournal(error),
+    })
+    // Suffixe de référence : le client retrouve le code par `medic_assist_erreur:<code>` et affiche la référence.
+    return `${formaterErreurFlux(error)} ${champs.reference}`
+  }
 }
 
 function nomErreur(e: unknown): string {
@@ -269,7 +327,10 @@ async function validerHistorique(
     if (seul.success) valides.push(...seul.data)
   }
   const ecartes = messages.length - valides.length
-  console.warn(`[medic-assist/chat] historique : ${ecartes} message(s) invalide(s) ignoré(s)`)
+  journal.avertissement('chat : messages d’historique invalides ignorés', {
+    domaine: 'chat',
+    ecartes,
+  })
   return valides
 }
 
@@ -323,7 +384,7 @@ function optionsFournisseur(
   modele: string,
   profond: boolean
 ): Record<string, Record<string, string>> | undefined {
-  if (fournisseur !== 'anthropic' || !profond || !MODELES_AVEC_EFFORT.test(modele)) return undefined
+  if (fournisseur !== 'anthropic' || !profond || !modeleAccepteEffort(modele)) return undefined
   return { anthropic: { effort: EFFORT_PROFOND } }
 }
 
@@ -331,10 +392,20 @@ function optionsFournisseur(
 // Exécution
 // ---------------------------------------------------------------------------
 
+/** Modèle effectivement appelé pour une étape (principal ou secours après bascule). */
+interface ModeleUtilise {
+  fournisseur: Fournisseur
+  modeleId: string
+}
+
 interface EtatTour {
   debut: number
   etapes: number
   usageEtapes: UsageComplet[]
+  /** Modèle réellement utilisé par chaque étape terminée (même index que `usageEtapes`). */
+  modelesEtapes: ModeleUtilise[]
+  /** Bascule survenue dans l'étape en cours, pas encore terminée. */
+  basculeEtape: ModeleUtilise | null
   usageTotal?: UsageComplet
   raisonFin?: string
   erreur?: CodeErreurChat
@@ -344,23 +415,83 @@ interface EtatTour {
   usagesAnnexes: Omit<LigneUsage, 'userId' | 'conversationId' | 'messageId'>[]
 }
 
+/** Modèle de secours prêt à l'emploi (clé disponible). */
+interface SecoursFlux {
+  modele: LanguageModel
+  fournisseur: Fournisseur
+  modeleId: string
+}
+
+/**
+ * Modèle de secours de la configuration, construit avec `creerModele`. Ignoré sans erreur si
+ * absent, identique au modèle principal ou sans clé (le chat garde alors le seul principal).
+ */
+function construireSecours(
+  config: ConfigEffective,
+  fournisseur: Fournisseur,
+  modeleId: string
+): SecoursFlux | null {
+  const secours = config.modeleSecours
+  if (!secours) return null
+  if (secours.fournisseur === fournisseur && secours.modele === modeleId) return null
+  try {
+    return {
+      modele: creerModele(secours.fournisseur, secours.modele),
+      fournisseur: secours.fournisseur,
+      modeleId: secours.modele,
+    }
+  } catch {
+    return null
+  }
+}
+
 /**
  * Exécute un tour de chat. Renvoie soit une erreur HTTP (rien n'est écrit en base avant les
  * contrôles), soit la réponse en flux (SSE du SDK v7).
+ *
+ * Ordre : validation du corps -> configuration -> conversation (propriétaire) -> pièces
+ * jointes -> quota journalier -> VERROU -> historique, régénération, idempotence -> écritures
+ * -> flux. Tant que le flux n'est pas lancé, toute sortie (erreur renvoyée ou exception)
+ * libère le verrou ; ensuite, c'est la fin du flux (`onEnd`) qui le libère.
  */
 export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
   const { contexte } = entree
   const { userId } = contexte
+  // Une référence par appel, générée d'abord pour que la 400 de validation la porte aussi.
+  const reference = genererReference()
+  let conversationIdJournal: string | null = null
+
+  /** Erreur HTTP journalisée ; `details.reference` est toujours présent. */
+  const echec = (
+    statut: number,
+    code: string,
+    message: string,
+    details: Record<string, unknown> = {},
+    champsSup: Record<string, unknown> = {}
+  ): ResultatChat => {
+    journaliserChat({
+      reference,
+      conversationId: conversationIdJournal,
+      userId,
+      code,
+      statut,
+      ...champsSup,
+    })
+    return erreur(statut, code, message, { reference, ...details })
+  }
 
   const analyse = CorpsRequeteChatSchema.safeParse(entree.corps)
   if (!analyse.success) {
-    return erreur(400, 'validation', 'Invalid request', analyse.error.flatten())
+    return echec(400, 'validation', 'Invalid request', { ...analyse.error.flatten() })
   }
   const corps: CorpsRequeteChat = analyse.data
   const declencheur = corps.trigger ?? 'submit-message'
   const profond = corps.modeProfond === true
   const mode: ModeLangage = profond ? 'profond' : 'standard'
+  conversationIdJournal = corps.conversationId ?? null
 
+  let verrou: VerrouTour | null = null
+  let fluxLance = false
   try {
     // 1. Configuration et modèle : 503 avant toute écriture si aucune clé n'est disponible.
     const config: ConfigEffective = await lireConfigMedicAssist()
@@ -371,7 +502,7 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
       modele = creerModele(fournisseur, modeleId)
     } catch (e) {
       if (estFournisseurAbsent(e)) {
-        return erreur(503, 'fournisseur_non_configure', 'AI provider not configured')
+        return echec(503, 'fournisseur_non_configure', 'AI provider not configured')
       }
       throw e
     }
@@ -383,7 +514,7 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
         restrictionsActives(droits) && !droits.administrateur ? droits.depuis : undefined)
       : null
     if (corps.conversationId && !conversation) {
-      return erreur(404, 'not_found', 'Conversation not found')
+      return echec(404, 'not_found', 'Conversation not found')
     }
 
     // 3. Pièces jointes de l'utilisateur.
@@ -391,47 +522,97 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
     let piecesJointes: PieceJointeChat[] = []
     if (idsPieces.length > 0) {
       const lues = await lirePiecesJointesProprietaire(userId, idsPieces)
-      if (!lues) return erreur(404, 'not_found', 'Attachment not found')
+      if (!lues) return echec(404, 'not_found', 'Attachment not found')
       piecesJointes = lues
     }
 
-    // 4. Historique relu en base ; régénération contrôlée.
+    // 4. Plafond de coût journalier (régénération comprise), avant le verrou.
+    const quota = await verifierQuotaJournalier(userId, config.plafondCoutJournalierUsd)
+    if (!quota.autorise) {
+      return echec(
+        429,
+        'quota_epuise',
+        'Daily AI cost limit reached',
+        { reinitialisationA: quota.reinitialisationA.toISOString(), plafondUsd: quota.plafondUsd },
+        { consommeUsd: quota.consommeUsd }
+      )
+    }
+
+    // 5. Verrou du tour. Conversation existante : pris maintenant. Nouvelle conversation : le
+    //    verrou est posé à sa création (étape 8) ; on refuse dès ici si l'utilisateur a déjà
+    //    atteint sa limite de tours simultanés, pour ne pas créer de conversation inutile.
+    if (conversation) {
+      const prise = await prendreVerrouTour(userId, conversation.id, new Date())
+      if (!prise.pris) {
+        return echec(409, 'tour_en_cours', 'A turn is already running', {}, { raison: prise.raison })
+      }
+      verrou = prise.verrou
+    } else if ((await compterToursEnCours(userId, new Date())) >= TOURS_SIMULTANES_MAX) {
+      return echec(409, 'tour_en_cours', 'A turn is already running', {}, {
+        raison: 'limite_utilisateur',
+      })
+    }
+
+    // 6. Historique relu en base (sous verrou) ; régénération contrôlée ; idempotence.
     let historique = conversation ? await lireHistorique(userId, conversation.id) : []
     let idARegenerer: string | null = null
     let contexteEcran: ContexteEcran | undefined = corps.contexteEcran
     let messageUtilisateur: MessageMedicAssist | null = null
+    const idClient = declencheur === 'submit-message' ? corps.message?.id : undefined
 
     if (declencheur === 'regenerate-message') {
       const dernier = historique[historique.length - 1]
       if (!dernier || dernier.id !== corps.messageId) {
         const existe = historique.some(m => m.id === corps.messageId && m.role === 'assistant')
         return existe
-          ? erreur(409, 'conflict', 'Only the last answer can be regenerated')
-          : erreur(404, 'not_found', 'Message not found')
+          ? echec(409, 'conflict', 'Only the last answer can be regenerated')
+          : echec(404, 'not_found', 'Message not found')
       }
-      if (dernier.role !== 'assistant') return erreur(404, 'not_found', 'Message not found')
+      if (dernier.role !== 'assistant') return echec(404, 'not_found', 'Message not found')
       historique = historique.slice(0, -1)
       const derniereQuestion = [...historique].reverse().find(m => m.role === 'user')
-      if (!derniereQuestion) return erreur(409, 'conflict', 'Nothing to regenerate')
+      if (!derniereQuestion) return echec(409, 'conflict', 'Nothing to regenerate')
       idARegenerer = dernier.id
       const reliquat = reliquatUtilisateur(derniereQuestion)
       if (piecesJointes.length === 0) piecesJointes = reliquat.piecesJointes
       contexteEcran = contexteEcran ?? reliquat.contexte
     } else {
-      const parts = (corps.message?.parts ?? []).map(p => ({ type: 'text' as const, text: p.text }))
-      messageUtilisateur = {
-        id: genererIdMessage(),
-        role: 'user',
-        parts,
-        metadata: {
-          creeA: new Date().toISOString(),
-          ...(piecesJointes.length > 0 ? { piecesJointesIds: piecesJointes.map(p => p.id) } : {}),
-        },
+      // Idempotence : un message déjà reçu (même id client) n'est jamais réinséré. Suivi
+      // d'une réponse : 409. Dernier message sans réponse (échec précédent, « Réessayer ») :
+      // le tour est relancé sur le message enregistré, tel qu'il a été enregistré.
+      const existant =
+        conversation && idClient
+          ? await trouverMessageParIdClient(userId, conversation.id, idClient)
+          : null
+      if (existant) {
+        const dernier = historique[historique.length - 1]
+        if (!dernier || dernier.id !== existant.id || dernier.role !== 'user') {
+          return echec(409, 'message_deja_recu', 'Message already received')
+        }
+        const reliquat = reliquatUtilisateur(dernier)
+        piecesJointes = reliquat.piecesJointes
+        contexteEcran = reliquat.contexte
+      } else {
+        const parts = (corps.message?.parts ?? []).map(p => ({
+          type: 'text' as const,
+          text: p.text,
+        }))
+        messageUtilisateur = {
+          id: genererIdMessage(),
+          role: 'user',
+          parts,
+          metadata: {
+            creeA: new Date().toISOString(),
+            ...(piecesJointes.length > 0
+              ? { piecesJointesIds: piecesJointes.map(p => p.id) }
+              : {}),
+          },
+        }
+        historique = [...historique, messageUtilisateur]
       }
-      historique = [...historique, messageUtilisateur]
     }
 
-    // 5. Validation (avant réduction : la réduction compacte les entrées d'outils, qui ne
+    // 7. Validation (avant réduction : la réduction compacte les entrées d'outils, qui ne
     //    passeraient plus leur schéma), réduction, puis conversion pour le modèle.
     const outilsValidation = creerOutilsReels(contexte)
     const valides = await validerHistorique(historique, outilsValidation)
@@ -441,11 +622,25 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
       ignoreIncompleteToolCalls: true,
     })
 
-    // 6. Écritures : conversation créée côté serveur, message utilisateur ou suppression.
+    // 8. Écritures : conversation créée côté serveur (verrou posé à la création), message
+    //    utilisateur ou suppression.
     let conversationCreee = false
     if (!conversation) {
-      conversation = await creerConversationChat(userId)
+      const maintenant = new Date()
+      const jusqua = echeanceVerrou(maintenant)
+      conversation = await creerConversationChat(userId, jusqua)
       conversationCreee = true
+      conversationIdJournal = conversation.id
+      verrou = { userId, conversationId: conversation.id, jusqua }
+      const limite = await verifierLimiteUtilisateur(verrou, maintenant)
+      if (!limite.pris) {
+        // Course rare (prise simultanée) : la conversation vide créée ici est retirée.
+        verrou = null
+        await supprimerConversationVide(userId, conversation.id)
+        return echec(409, 'tour_en_cours', 'A turn is already running', {}, {
+          raison: limite.raison,
+        })
+      }
     }
     const conversationId = conversation.id
     const titreInitial = conversation.titre
@@ -457,18 +652,30 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
     // Régénération : l'ancienne réponse n'est supprimée qu'à la fin du tour (voir onEnd), une
     // fois la nouvelle enregistrée ; un échec du fournisseur la laisse donc en place.
     if (!idARegenerer && messageUtilisateur) {
-      await enregistrerMessageUtilisateur(
-        userId,
-        conversationId,
-        { id: messageUtilisateur.id, parts: messageUtilisateur.parts },
-        {
+      try {
+        await enregistrerMessageUtilisateur(
+          userId,
           conversationId,
-          creeA: new Date().toISOString(),
-          piecesJointesIds: piecesJointes.map(p => p.id),
-          piecesJointes,
-          ...(contexteEcran ? { contexte: contexteEcran } : {}),
+          {
+            id: messageUtilisateur.id,
+            parts: messageUtilisateur.parts,
+            ...(idClient ? { idClient } : {}),
+          },
+          {
+            conversationId,
+            creeA: new Date().toISOString(),
+            piecesJointesIds: piecesJointes.map(p => p.id),
+            piecesJointes,
+            ...(contexteEcran ? { contexte: contexteEcran } : {}),
+          }
+        )
+      } catch (e) {
+        // Course d'insertion du même id client (contrainte unique) : déjà reçu.
+        if (estViolationUnicite(e)) {
+          return echec(409, 'message_deja_recu', 'Message already received')
         }
-      )
+        throw e
+      }
       if (piecesJointes.length > 0) {
         await rattacherPiecesJointes(
           userId,
@@ -482,7 +689,7 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
       messageUtilisateur ?? [...historique].reverse().find(m => m.role === 'user')
     )
 
-    // 7. Prompt système (statique en cache, dynamique ensuite).
+    // 9. Prompt système (statique en cache, dynamique ensuite).
     const prompt = construirePromptSysteme({
       contexte: contexteTour,
       modeProfond: profond,
@@ -500,6 +707,7 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
       config,
       modele,
       modeleId,
+      secours: construireSecours(config, fournisseur, modeleId),
       mode,
       profond,
       instructions,
@@ -511,11 +719,16 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
       question,
       idARegenerer,
       signal: entree.signal,
+      reference,
+      verrou,
     })
+    fluxLance = true
     return { type: 'flux', reponse, conversationId, conversationCreee }
   } catch (e) {
-    console.error('[medic-assist/chat] erreur interne', nomErreur(e))
-    return erreur(500, 'internal', 'Internal error')
+    return echec(500, 'internal', 'Internal error', {}, { erreur: nomErreur(e) })
+  } finally {
+    // Avant le flux, toute sortie libère le verrou ; après, c'est la fin du flux.
+    if (!fluxLance) await libererVerrou(verrou)
   }
 }
 
@@ -536,20 +749,98 @@ interface ParametresFlux {
   /** Réponse de l'assistant à remplacer (régénération) ; supprimée seulement si la nouvelle est enregistrée. */
   idARegenerer: string | null
   signal?: AbortSignal
+  /** Modèle de secours (R14), null si aucun. */
+  secours: SecoursFlux | null
+  /** Référence d'incident de l'appel (journal). */
+  reference: string
+  /** Verrou du tour, libéré à la fin du flux (onEnd). */
+  verrou: VerrouTour | null
+}
+
+/**
+ * Lignes d'usage du tour. Sans bascule : une ligne, au modèle principal, sur l'usage total
+ * (comportement historique). Après une bascule : UNE LIGNE PAR MODÈLE réellement utilisé,
+ * chacune au tarif de son modèle (`calculerCoutUsd` sur la somme de ses étapes) ; la première
+ * (le principal s'il a servi) porte la durée et le code d'erreur du tour, les suivantes une
+ * durée nulle (la durée du tour n'est pas comptée deux fois).
+ */
+function lignesUsageDuTour(
+  etat: EtatTour,
+  principal: ModeleUtilise,
+  mode: ModeLangage,
+  usageTotal: UsageComplet,
+  dureeMs: number,
+  erreurTour: string | null
+): { usage: UsageDeTour; usagesModeles: UsageDeTour[]; coutConnu: boolean } {
+  const cle = (m: ModeleUtilise) => `${m.fournisseur}/${m.modeleId}`
+  const autreModele = etat.modelesEtapes.some(m => cle(m) !== cle(principal))
+  if (!autreModele) {
+    const cout = calculerCoutUsd(principal.fournisseur, principal.modeleId, usageTotal)
+    return {
+      usage: {
+        fournisseur: principal.fournisseur,
+        modele: principal.modeleId,
+        mode,
+        usage: usageTotal,
+        coutUsd: cout ?? 0,
+        dureeMs,
+        erreur: erreurTour,
+      },
+      usagesModeles: [],
+      coutConnu: cout !== null,
+    }
+  }
+
+  const groupes = new Map<string, { modele: ModeleUtilise; usages: UsageComplet[] }>()
+  etat.modelesEtapes.forEach((m, i) => {
+    const groupe = groupes.get(cle(m)) ?? { modele: m, usages: [] }
+    groupe.usages.push(etat.usageEtapes[i])
+    groupes.set(cle(m), groupe)
+  })
+  const ordonnes = [...groupes.values()].sort(
+    (a, b) => Number(cle(b.modele) === cle(principal)) - Number(cle(a.modele) === cle(principal))
+  )
+  let coutConnu = true
+  const lignes: UsageDeTour[] = ordonnes.map((g, i) => {
+    const usage = additionnerUsages(g.usages)
+    const cout = calculerCoutUsd(g.modele.fournisseur, g.modele.modeleId, usage)
+    if (cout === null) coutConnu = false
+    return {
+      fournisseur: g.modele.fournisseur,
+      modele: g.modele.modeleId,
+      mode,
+      usage,
+      coutUsd: cout ?? 0,
+      dureeMs: i === 0 ? dureeMs : 0,
+      erreur: i === 0 ? erreurTour : null,
+    }
+  })
+  return { usage: lignes[0], usagesModeles: lignes.slice(1), coutConnu }
 }
 
 function lancerFlux(p: ParametresFlux): Response {
   const { contexte, config, conversationId } = p
   const fournisseur = config.fournisseur
+  const principal: ModeleUtilise = { fournisseur, modeleId: p.modeleId }
   const idReponse = genererIdMessage()
   const etat: EtatTour = {
     debut: Date.now(),
     etapes: 0,
     usageEtapes: [],
+    modelesEtapes: [],
+    basculeEtape: null,
     interrompu: false,
     texte: '',
     usagesAnnexes: [],
   }
+  const champsJournal = {
+    reference: p.reference,
+    conversationId,
+    userId: contexte.userId,
+  }
+  const formaterErreur = formaterErreurFluxJournalisee(champsJournal)
+  /** Modèle de la dernière étape terminée (celui qui a produit la réponse). */
+  const modeleFinal = (): ModeleUtilise => etat.modelesEtapes.at(-1) ?? principal
 
   const metaDebut: MetadonneesMessage = {
     conversationId,
@@ -565,10 +856,15 @@ function lancerFlux(p: ParametresFlux): Response {
   // Le coût et le détail des jetons restent côté serveur (table d'usage, administration) :
   // ils ne sont pas envoyés au navigateur.
   const metadonneesFin = (): MetadonneesMessage => {
+    const final = modeleFinal()
+    const bascule =
+      final.fournisseur !== principal.fournisseur || final.modeleId !== principal.modeleId
     return {
       dureeMs: duree(),
       etapes: etat.etapes,
       ...(etat.raisonFin ? { raisonFin: etat.raisonFin } : {}),
+      // Après une bascule, le modèle annoncé au début est corrigé par celui qui a répondu.
+      ...(bascule ? { fournisseur: final.fournisseur, modele: final.modeleId } : {}),
     }
   }
 
@@ -623,7 +919,7 @@ function lancerFlux(p: ParametresFlux): Response {
       if (!net) return undefined
       return (await enregistrerTitre(contexte.userId, conversationId, net)) ? net : undefined
     } catch (e) {
-      console.error('[medic-assist/chat] titre non enregistré', nomErreur(e))
+      journal.erreur('chat : échec du titre', { domaine: 'chat', erreur: nomErreur(e) })
       return undefined
     } finally {
       if (minuteur) clearTimeout(minuteur)
@@ -632,7 +928,7 @@ function lancerFlux(p: ParametresFlux): Response {
 
   const flux = createUIMessageStream<MessageMedicAssist>({
     originalMessages: p.originaux,
-    onError: formaterErreurFluxJournalisee,
+    onError: formaterErreur,
     execute: async ({ writer }) => {
       writer.write({ type: 'start', messageId: idReponse, messageMetadata: metaDebut })
       if (p.conversationCreee) {
@@ -645,7 +941,22 @@ function lancerFlux(p: ParametresFlux): Response {
 
       // Reprise bornée des erreurs réessayables du fournisseur, étape par étape, tant que rien
       // de l'étape n'a été diffusé ; elle remplace les reprises par défaut du SDK.
-      const reprise = avecReprise(p.modele, { signal: p.signal })
+      // Après épuisement des reprises sur indisponibilité, l'étape est rejouée une fois avec le
+      // modèle de secours ; le modèle réellement utilisé est noté pour l'usage et le tarif.
+      const reprise = avecReprise(p.modele, {
+        signal: p.signal,
+        journal: { reference: p.reference, conversationId },
+        ...(p.secours
+          ? {
+              secours: {
+                ...p.secours,
+                surBascule: info => {
+                  etat.basculeEtape = { fournisseur: info.fournisseur, modeleId: info.modeleId }
+                },
+              },
+            }
+          : {}),
+      })
       const resultat = streamText({
         model: reprise.modele,
         ...(reprise.maxRetriesSdk !== undefined ? { maxRetries: reprise.maxRetriesSdk } : {}),
@@ -664,7 +975,8 @@ function lancerFlux(p: ParametresFlux): Response {
           ? { providerOptions: optionsFournisseur(fournisseur, p.modeleId, p.profond) }
           : {}),
         // Le SDK journalise l'erreur brute par défaut (avec la requête) : coupé. L'erreur est
-        // journalisée une fois, décrite sans secret, par `formaterErreurFluxJournalisee`.
+        // journalisée une fois, décrite sans secret, par `formaterErreurFluxJournalisee`
+        // (avec la référence de l'appel).
         onError: () => {},
       })
 
@@ -672,12 +984,14 @@ function lancerFlux(p: ParametresFlux): Response {
         stream: resultat.stream,
         tools: outils,
         sendStart: false,
-        onError: formaterErreurFluxJournalisee,
+        onError: formaterErreur,
         messageMetadata: ({ part }) => {
           switch (part.type) {
             case 'finish-step':
               etat.etapes += 1
               etat.usageEtapes.push(normaliserUsage(part.usage))
+              etat.modelesEtapes.push(etat.basculeEtape ?? principal)
+              etat.basculeEtape = null
               return undefined
             case 'error':
               etat.erreur ??= classerErreur(part.error).code
@@ -711,9 +1025,10 @@ function lancerFlux(p: ParametresFlux): Response {
           const spec = construireSpecTableau(jeu, contexte.locale)
           const analyse = spec ? EntreeCreerArtefactSchema.safeParse(spec) : null
           if (!analyse?.success) {
-            console.warn(
-              '[medic-assist/chat] garde de livraison : artefact non créé (spec_invalide)'
-            )
+            journal.avertissement('chat : garde de livraison, artefact non créé', {
+              domaine: 'chat',
+              cause: 'spec_invalide',
+            })
             return
           }
           const toolCallId = `garde_${genererIdMessage()}`
@@ -724,9 +1039,10 @@ function lancerFlux(p: ParametresFlux): Response {
             ...(p.signal ? { abortSignal: p.signal } : {}),
           })
           if (estErreurOutil(sortie)) {
-            console.warn(
-              `[medic-assist/chat] garde de livraison : artefact non créé (${sortie.erreur.code})`
-            )
+            journal.avertissement('chat : garde de livraison, artefact non créé', {
+              domaine: 'chat',
+              cause: sortie.erreur.code,
+            })
             return
           }
           writer.write({
@@ -736,13 +1052,15 @@ function lancerFlux(p: ParametresFlux): Response {
             input: analyse.data,
           } as never)
           writer.write({ type: 'tool-output-available', toolCallId, output: sortie } as never)
-          console.info(
-            `[medic-assist/chat] garde de livraison : tableau créé (${jeu.nbLignes} lignes)`
-          )
+          journal.info('chat : garde de livraison, tableau créé', {
+            domaine: 'chat',
+            nbLignes: jeu.nbLignes,
+          })
         } catch (e) {
-          console.warn(
-            `[medic-assist/chat] garde de livraison : artefact non créé (${nomErreur(e)})`
-          )
+          journal.avertissement('chat : garde de livraison, artefact non créé', {
+            domaine: 'chat',
+            cause: nomErreur(e),
+          })
         }
       }
 
@@ -806,17 +1124,30 @@ function lancerFlux(p: ParametresFlux): Response {
       if (fin) writer.write(fin as never)
     },
     onEnd: async ({ responseMessage, isAborted, isCancelled }) => {
+      const interrompu = isAborted || isCancelled === true || etat.interrompu
+      const codeTour = etat.erreur ?? (interrompu ? 'annule' : null)
       try {
-        const interrompu = isAborted || isCancelled === true || etat.interrompu
         const parts = partiesAPersister(responseMessage?.parts ?? [])
         const usage = usageFinal()
-        const cout = calculerCoutUsd(fournisseur, p.modeleId, usage)
+        const { usage: ligneUsage, usagesModeles, coutConnu } = lignesUsageDuTour(
+          etat,
+          principal,
+          p.mode,
+          usage,
+          duree(),
+          codeTour
+        )
+        const coutTotal = [ligneUsage, ...usagesModeles].reduce((t, l) => t + l.coutUsd, 0)
+        const final = modeleFinal()
         const raisonFin =
           etat.raisonFin ?? (interrompu ? 'interrupted' : etat.erreur ? 'error' : undefined)
         const metadonnees: MetadonneesMessage = {
           ...metaDebut,
+          // Modèle qui a réellement produit la réponse (secours après une bascule).
+          fournisseur: final.fournisseur,
+          modele: final.modeleId,
           usage,
-          ...(cout !== null ? { coutUsd: cout } : {}),
+          ...(coutConnu ? { coutUsd: coutTotal } : {}),
           dureeMs: duree(),
           etapes: etat.etapes,
           ...(raisonFin ? { raisonFin } : {}),
@@ -832,15 +1163,8 @@ function lancerFlux(p: ParametresFlux): Response {
           ...(persisterMessage
             ? { message: { id: responseMessage?.id || idReponse, parts, metadonnees } }
             : {}),
-          usage: {
-            fournisseur,
-            modele: p.modeleId,
-            mode: p.mode,
-            usage,
-            coutUsd: cout ?? 0,
-            dureeMs: duree(),
-            erreur: etat.erreur ?? (interrompu ? 'annule' : null),
-          },
+          usage: ligneUsage,
+          usagesModeles,
           usagesAnnexes: etat.usagesAnnexes,
         })
         if (p.idARegenerer && remplacementPropre && fin.messageEnregistre) {
@@ -850,11 +1174,34 @@ function lancerFlux(p: ParametresFlux): Response {
             p.idARegenerer
           )
           if (!supprime) {
-            console.error('[medic-assist/chat] ancienne réponse non supprimée après régénération')
+            journaliserChat({
+              ...champsJournal,
+              code: 'interne',
+              evenement: 'ancienne_reponse_non_supprimee',
+            })
           }
         }
       } catch (e) {
-        console.error('[medic-assist/chat] fin de tour non enregistrée', nomErreur(e))
+        journaliserChat({
+          ...champsJournal,
+          code: 'interne',
+          evenement: 'fin_de_tour_non_enregistree',
+          erreur: nomErreur(e),
+        })
+      } finally {
+        // Libéré APRÈS les dernières écritures du tour (réponse, usage, ancienne réponse).
+        await libererVerrou(p.verrou)
+        const ligne = {
+          ...champsJournal,
+          code: codeTour ?? 'ok',
+          evenement: 'fin_de_tour',
+          etapes: etat.etapes,
+          dureeMs: duree(),
+          modele: `${modeleFinal().fournisseur}/${modeleFinal().modeleId}`,
+        }
+        // Un tour réussi ou arrêté par l'utilisateur n'est pas une erreur : niveau info.
+        if (codeTour && codeTour !== 'annule') journaliserChat(ligne)
+        else journaliserChat(ligne, 'info')
       }
     },
   })
@@ -862,8 +1209,12 @@ function lancerFlux(p: ParametresFlux): Response {
   return createUIMessageStreamResponse({
     stream: flux,
     headers: ENTETES_FLUX,
-    // Copie du flux consommée côté serveur : le tour va au bout (et se persiste) même si le
-    // client se déconnecte sans annuler la requête.
+    // `consumeStream` lit une copie du flux côté serveur : la fin du tour (onEnd, persistance,
+    // libération du verrou) ne dépend pas de la lecture par le client, et un client lent ou
+    // parti ne bloque pas la production sur un flux non lu. Il NE PROLONGE PAS le tour après
+    // une déconnexion : `abortSignal` (signal de la requête) interrompt alors `streamText` ;
+    // la réponse partielle est persistée avec `interrompu: true` (raison `interrupted`) et
+    // l'usage déjà consommé est compté (code `annule`). Voir onEnd.
     consumeSseStream: consumeStream,
   })
 }

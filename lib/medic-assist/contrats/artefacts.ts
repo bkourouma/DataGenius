@@ -28,7 +28,7 @@ import { FormatColonneSchema, TriSchema } from '@/lib/medic-assist/contrats/donn
 const titreSchema = () =>
   texteSurSchema(
     LIMITES.longueurMaxTitre,
-    'Titre court et explicite, dans la langue de l’utilisateur (ex. « CA par pays, avril → septembre 2026 »).'
+    'Titre court et explicite, dans la langue de l’utilisateur (ex. « CA par pays, janvier → juin 2026 »).'
   )
 
 const sousTitreSchema = () =>

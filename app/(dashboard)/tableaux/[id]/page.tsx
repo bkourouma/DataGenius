@@ -4,6 +4,7 @@ import { Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { EnTetePage } from '@/components/ui/en-tete-page'
 import { VueArtefactSuivi } from '@/components/medic-assist/suivi/vue-artefact-suivi'
+import { ActionsTableau } from '../actions-tableau'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { lireTableau } from '@/lib/warehouse/tableaux'
 
@@ -32,6 +33,7 @@ export default async function TableauPage({ params, searchParams }: {
       titre={tableau.titre}
       description={tableau.editable ? 'Vos indicateurs et analyses réunis ; modifiez le tableau pour changer ses tuiles.' : 'Tableau partagé avec vous en lecture seule.'}
       actions={tableau.editable ? <Button asChild variant="outline"><Link href={`${base}/modifier`}><Pencil aria-hidden />Modifier</Link></Button> : undefined} />
+    {tableau.editable && <ActionsTableau id={tableau.id} titre={tableau.titre} />}
     {tableau.filtres.length > 0 && <form method="get" action={base} className="flex flex-wrap items-end gap-3 rounded-lg border bg-card p-4">
       <label className="grid gap-1 text-sm">Filtre commun
         <select name="filtre" className="h-9 rounded-md border bg-background px-2" defaultValue={filtreActif?.cle ?? ''} required>
@@ -58,7 +60,7 @@ export default async function TableauPage({ params, searchParams }: {
           <p className="text-sm text-muted-foreground">Artefact · version {tuile.artefact.version}</p>
           {filtreActif && <p className="text-sm text-muted-foreground">L’artefact conserve ses filtres enregistrés.</p>}
           <VueArtefactSuivi artefactId={tuile.artefact.id} compact />
-          <Link className="text-sm text-primary hover:underline" href={`/medic-assist/analyses/${encodeURIComponent(tuile.artefact.id)}`}>Ouvrir l’artefact</Link>
+          <Link className="text-sm text-primary hover:underline" href={`/assistant/analyses/${encodeURIComponent(tuile.artefact.id)}`}>Ouvrir l’artefact</Link>
           {tuile.artefact.jeux.some(jeu => jeu.regles.length > 0) && <details className="text-sm text-muted-foreground">
             <summary>Provenance de l’artefact</summary>
             <ul className="mt-2 list-disc pl-5">{[...new Set(tuile.artefact.jeux.flatMap(jeu => jeu.regles))].map(regle => <li key={regle}>{regle}</li>)}</ul>
