@@ -205,6 +205,9 @@
     "sousTitre": "What would you like to know today?",
     "questionsTitre": "To get started",
     "questionsListe": "Starter questions",
+    "analysesTitre": "Pick up an analysis",
+    "toutVoir": "All analyses",
+    "astuce": "Tip: {raccourci} opens search and asks a question from any page.",
     "briefing": {
       "titre": "Today's briefing",
       "periode": "Reference period: {periode}",

@@ -1,4 +1,6 @@
 import { redirect } from 'next/navigation'
+import { TrendingUp } from 'lucide-react'
+import { EnTetePage, EtatVide } from '@/components/ui/en-tete-page'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { analyserTendance, bornesTendances, ErreurTendances, optionsTendances } from '@/lib/warehouse/tendances'
 import { FormulaireTendances } from './formulaire'
@@ -37,9 +39,9 @@ export default async function TendancesPage({ searchParams }: { searchParams: Pa
     typeof nombre === 'number' ? format.format(nombre) : nombre ?? '—'
   return (
     <section className="mx-auto max-w-5xl space-y-5">
-      <h1 className="text-2xl font-semibold">Tendances mensuelles</h1>
+      <EnTetePage titre="Tendances mensuelles" description="Repérez les écarts atypiques d’un indicateur et obtenez une estimation prudente des prochains mois." />
       {options.length ? <FormulaireTendances options={options} selection={selection} />
-        : <p className="text-muted-foreground">Aucun indicateur mensuel accessible. Configurez un calendrier sur un jeu doté d’indicateurs.</p>}
+        : <EtatVide icone={<TrendingUp />} titre="Aucun indicateur mensuel accessible">Configurez un calendrier sur un jeu doté d’indicateurs pour suivre son évolution mois par mois.</EtatVide>}
       {erreur && <p role="alert" className="text-sm text-destructive">{erreur}</p>}
       {resultat && analyse && <>
         <h2 className="text-xl font-semibold">{resultat.mesure}{resultat.unite ? ' · ' + resultat.unite : ''}</h2>

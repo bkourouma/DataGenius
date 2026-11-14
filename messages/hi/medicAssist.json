@@ -205,6 +205,9 @@
     "sousTitre": "आज आप क्या जानना चाहेंगे?",
     "questionsTitre": "शुरुआत के लिए",
     "questionsListe": "शुरुआती प्रश्न",
+    "analysesTitre": "कोई विश्लेषण फिर से खोलें",
+    "toutVoir": "सभी विश्लेषण",
+    "astuce": "सुझाव: {raccourci} किसी भी पेज से खोज खोलता है और प्रश्न पूछता है।",
     "briefing": {
       "titre": "आज का सारांश",
       "periode": "संदर्भ अवधि: {periode}",

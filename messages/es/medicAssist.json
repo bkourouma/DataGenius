@@ -205,6 +205,9 @@
     "sousTitre": "¿Qué desea saber hoy?",
     "questionsTitre": "Para empezar",
     "questionsListe": "Preguntas de inicio",
+    "analysesTitre": "Retomar un análisis",
+    "toutVoir": "Todos los análisis",
+    "astuce": "Consejo: {raccourci} abre la búsqueda y hace una pregunta desde cualquier página.",
     "briefing": {
       "titre": "Resumen del día",
       "periode": "Período de referencia: {periode}",

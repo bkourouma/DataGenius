@@ -1,8 +1,11 @@
 import Link from 'next/link'
+import { AlertTriangle } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { IdSourceSchema, TableSchema, listerColonnes, listerTables, trouverSource } from '@/lib/warehouse/sources-admin'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { EnTetePage } from '@/components/ui/en-tete-page'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { FormulaireFichierSource, FormulaireImport } from '../formulaires'
@@ -28,15 +31,15 @@ export default async function SourceDetail({ params, searchParams }: { params: {
   const element = source.type === 'fichier' ? 'feuille' : source.type === 'rest' ? 'collection' : 'table'
 
   return (
-    <section className="mx-auto max-w-6xl space-y-5 py-6">
-      <Link className="text-sm text-primary hover:underline" href="/sources">Toutes les sources</Link>
-      <header>
-        <h1 className="text-2xl font-bold">{source.titre}</h1>
-        <p className="text-sm text-muted-foreground">{typeSource[source.type]} · {source.type === 'fichier' ? source.base : source.hote + ' · ' + source.base}</p>
-      </header>
+    <section className="mx-auto max-w-6xl space-y-6">
+      <EnTetePage
+        retour={{ href: '/sources', libelle: 'Sources' }}
+        titre={<span className="flex flex-wrap items-center gap-3">{source.titre}<Badge variant="outline">{typeSource[source.type]}</Badge></span>}
+        description={source.type === 'fichier' ? source.base : source.hote + ' · ' + source.base}
+      />
       {source.type === 'fichier' && (
-        <details className="rounded-lg border bg-card p-4">
-          <summary className="cursor-pointer font-semibold">Remplacer le fichier source</summary>
+        <details className="rounded-lg border bg-card p-5">
+          <summary className="cursor-pointer text-base font-semibold">Remplacer le fichier source</summary>
           <div className="mt-4 space-y-3">
             <p className="text-sm text-muted-foreground">Conservez les noms des feuilles et des colonnes sélectionnées, puis relancez les imports liés pour publier les nouvelles données.</p>
             <FormulaireFichierSource sourceId={source.id} />
@@ -44,8 +47,8 @@ export default async function SourceDetail({ params, searchParams }: { params: {
         </details>
       )}
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(17rem,1fr)_minmax(0,2fr)]">
-        <section className="space-y-3 rounded-lg border bg-card p-4">
-          <h2 className="font-semibold">{source.type === 'fichier' ? 'Feuilles accessibles' : source.type === 'rest' ? 'Collections accessibles' : 'Tables accessibles'}</h2>
+        <section className="space-y-3 rounded-lg border bg-card p-5">
+          <h2 className="text-base font-semibold">{source.type === 'fichier' ? 'Feuilles accessibles' : source.type === 'rest' ? 'Collections accessibles' : 'Tables accessibles'}</h2>
           <form method="get" action={chemin} className="space-y-2">
             <Label htmlFor="table-q">{source.type === 'fichier' ? 'Rechercher une feuille' : source.type === 'rest' ? 'Rechercher une collection' : 'Rechercher par schéma ou table'}</Label>
             <div className="flex gap-2">
@@ -53,9 +56,9 @@ export default async function SourceDetail({ params, searchParams }: { params: {
               <Button type="submit" variant="outline">Rechercher</Button>
             </div>
           </form>
-          {inventaire === null && <p role="alert" className="text-sm text-destructive">Inventaire indisponible. Vérifiez la connexion et les droits du compte source.</p>}
-          {inventaire?.tables.length === 0 && <p className="text-sm">Aucune {element} trouvée.</p>}
-          {inventaire?.tronque && <p className="text-sm">200 résultats affichés. Affinez la recherche pour en voir d’autres.</p>}
+          {inventaire === null && <p role="status" className="flex items-start gap-2 rounded-md bg-danger-soft p-3 text-sm text-destructive"><AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />Inventaire indisponible. Vérifiez la connexion et les droits du compte source.</p>}
+          {inventaire?.tables.length === 0 && <p role="status" className="text-sm text-muted-foreground">Aucune {element} trouvée.</p>}
+          {inventaire?.tronque && <p className="text-sm text-muted-foreground">200 résultats affichés. Affinez la recherche pour en voir d’autres.</p>}
           <ul className="max-h-[32rem] divide-y overflow-auto">
             {inventaire?.tables.map(({ schema, table }) => {
               const active = choix.success && choix.data.schema === schema && choix.data.table === table
@@ -71,10 +74,10 @@ export default async function SourceDetail({ params, searchParams }: { params: {
             })}
           </ul>
         </section>
-        <section className="min-w-0 space-y-4 rounded-lg border bg-card p-4">
-          <h2 className="break-all font-semibold">{choix.success ? choix.data.schema + '.' + choix.data.table : 'Nouvel import'}</h2>
+        <section className="min-w-0 space-y-4 rounded-lg border bg-card p-5">
+          <h2 className="break-all text-base font-semibold">{choix.success ? choix.data.schema + '.' + choix.data.table : 'Nouvel import'}</h2>
           {!choix.success && <p className="text-sm text-muted-foreground">Choisissez une {element} pour voir ses colonnes et préparer un import.</p>}
-          {choix.success && !colonnes?.length && <p role="status" className="text-sm">Aucune colonne lisible pour cette {element}.</p>}
+          {choix.success && !colonnes?.length && <p role="status" className="text-sm text-muted-foreground">Aucune colonne lisible pour cette {element}.</p>}
           {choix.success && !!colonnes?.length && (
             <FormulaireImport key={JSON.stringify(choix.data)} sourceId={source.id} {...choix.data} colonnes={colonnes} />
           )}

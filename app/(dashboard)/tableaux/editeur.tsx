@@ -1,9 +1,9 @@
-import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { listerAnalyses } from '@/lib/medic-assist/suivi/analyses'
 import { chargerComptesAvecAcces } from '@/lib/medic-assist/suivi/comptes'
 import { chargerTableau, optionsTableau } from '@/lib/warehouse/tableaux'
+import { EnTetePage } from '@/components/ui/en-tete-page'
 import { FormulaireTableau } from './formulaire'
 
 export async function EditeurTableau({ id }: { id?: string }) {
@@ -21,8 +21,10 @@ export async function EditeurTableau({ id }: { id?: string }) {
   const manquants = lecteurs.filter(id => !comptes.some(compte => compte.id === id))
   const anciensLecteurs = manquants.length ? await chargerComptesAvecAcces({ ids: manquants, limite: manquants.length }) : []
   return <section className="mx-auto max-w-4xl space-y-5">
-    <Link className="text-sm text-primary hover:underline" href={id ? `/tableaux/${id}` : '/tableaux'}>Retour</Link>
-    <h1 className="text-2xl font-semibold">{id ? 'Modifier le tableau' : 'Créer un tableau de bord'}</h1>
+    <EnTetePage
+      retour={id ? { href: `/tableaux/${id}`, libelle: tableau?.definition.titre ?? 'Tableau' } : { href: '/tableaux', libelle: 'Tableaux de bord' }}
+      titre={id ? 'Modifier le tableau' : 'Créer un tableau de bord'}
+      description={id ? 'Ajustez les tuiles, les filtres communs et les personnes qui peuvent consulter ce tableau.' : 'Rassemblez des indicateurs et des analyses sur une même page, puis partagez-la en lecture.'} />
     <FormulaireTableau tableau={tableau} options={options}
       comptes={[...comptes, ...anciensLecteurs].map(c => ({ id: c.id, nom: c.nom, email: c.email }))}
       analyses={analyses.lignes.map(a => ({ id: a.artefactId, titre: a.titre }))} />
