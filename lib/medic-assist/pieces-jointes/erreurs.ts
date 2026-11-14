@@ -32,6 +32,7 @@ export type CodeErreurPieceJointe =
   | 'conversationIntrouvable'
   | 'feuilleIntrouvable'
   | 'plageInvalide'
+  | 'quota_pieces_jointes'
 
 const STATUTS: Record<CodeErreurPieceJointe, number> = {
   fichierAbsent: 400,
@@ -54,6 +55,7 @@ const STATUTS: Record<CodeErreurPieceJointe, number> = {
   conversationIntrouvable: 404,
   feuilleIntrouvable: 404,
   plageInvalide: 400,
+  quota_pieces_jointes: 413,
 }
 
 /** Replis anglais courts (le client affiche la traduction du code). */
@@ -78,6 +80,7 @@ const MESSAGES_REPLI: Record<CodeErreurPieceJointe, string> = {
   conversationIntrouvable: 'Conversation not found.',
   feuilleIntrouvable: 'Sheet not found.',
   plageInvalide: 'Invalid range.',
+  quota_pieces_jointes: 'Attachment quota reached (100 files or 200 MB per user).',
 }
 
 export class ErreurPieceJointe extends Error {
@@ -125,6 +128,7 @@ const CODE_OUTIL: Record<CodeErreurPieceJointe, CodeErreurOutil> = {
   conversationIntrouvable: 'introuvable',
   feuilleIntrouvable: 'introuvable',
   plageInvalide: 'entree_invalide',
+  quota_pieces_jointes: 'piece_jointe_illisible',
 }
 
 /** Resultat d'outil pour l'agent (contrats/outils.ts) : le modele peut corriger sa demande. */

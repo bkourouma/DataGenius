@@ -126,13 +126,27 @@ export interface DepotSuivi {
     modification: ModificationRapportProgramme
   ): Promise<RapportProgrammeRow | null>
   supprimerRapport(id: string, userId: string): Promise<boolean>
-  /** Appel systeme (tache planifiee) : rapports actifs dont prochainEnvoiA <= maintenant. */
+  /**
+   * Appel systeme (tache planifiee) : rapports actifs dont prochainEnvoiA <= maintenant
+   * ET dont le bail est absent ou expire (enCoursJusqua null ou <= maintenant).
+   */
   listerRapportsEchus(maintenant: Date, limite: number): Promise<RapportProgrammeRow[]>
   /**
-   * Compare-and-set : `updateMany({ where: { id, actif: true, prochainEnvoiA: ancien },
-   * data: { prochainEnvoiA: nouveau } })`. Vrai pour UN SEUL appelant : deux executions
-   * simultanees de la tache n'envoient pas deux fois le meme rapport.
+   * Compare-and-set qui POSE le bail : updateMany({ where: { id, actif: true,
+   * prochainEnvoiA: attendu.prochainEnvoiA, essais: attendu.essais, enCoursJusqua null ou
+   * <= maintenant }, data: { enCoursJusqua: jusqua, essais: essaisApres } }). Vrai pour UN
+   * SEUL appelant : deux executions simultanees n'envoient pas deux fois le meme rapport.
+   * prochainEnvoiA n'est PAS avance ici : il l'est a l'enregistrement du resultat.
    */
-  reserverRapport(id: string, ancien: Date, nouveau: Date): Promise<boolean>
+  reserverRapport(
+    id: string,
+    attendu: { prochainEnvoiA: Date; essais: number },
+    maintenant: Date,
+    jusqua: Date,
+    essaisApres: number
+  ): Promise<boolean>
+  /** Ecrit le resultat ; remet TOUJOURS enCoursJusqua a null (bail leve). */
   enregistrerResultatRapport(id: string, resultat: ResultatEnvoiRapport): Promise<void>
+  /** Identifiants des TenantAdmin actifs (roleName 'TenantAdmin', status 'active', non supprimes). */
+  listerAdministrateursActifs(): Promise<string[]>
 }

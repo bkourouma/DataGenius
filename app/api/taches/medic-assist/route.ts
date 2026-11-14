@@ -15,11 +15,17 @@
 import { createHash, timingSafeEqual } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 
+import { purgerPiecesJointes } from '@/lib/medic-assist/pieces-jointes/purge'
 import { traiterRapportsEchus } from '@/lib/medic-assist/suivi/rapports-programmes'
 import { nomErreur } from '@/lib/medic-assist/suivi/erreurs'
 import { traiterAlertesTableaux } from '@/lib/warehouse/tableaux-alertes'
 
 export const dynamic = 'force-dynamic'
+/** Secondes : le traitement des rapports peut etre long (exports + envois). */
+export const maxDuration = 300
+
+/** Au-dela, la boucle des rapports ne commence plus de rapport (le reste est repris a l'appel suivant). */
+const BUDGET_RAPPORTS_MS = 240_000
 
 /** En dessous, un jeton se devine : la route le traite comme absent. */
 const LONGUEUR_MIN_JETON = 32
@@ -44,9 +50,27 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const [bilan, alertes] = await Promise.all([traiterRapportsEchus(), traiterAlertesTableaux()])
+    const [bilan, alertes] = await Promise.all([
+      traiterRapportsEchus({ budgetMs: BUDGET_RAPPORTS_MS }),
+      traiterAlertesTableaux(),
+    ])
     console.info('[medic-assist] Rapports programmés :', JSON.stringify(bilan))
-    return NextResponse.json({ ...bilan, alertes })
+
+    // Purge des pieces jointes : un echec ne fait echouer ni le reste ni la reponse.
+    let purge: { lignesSupprimees: number; fichiersSupprimes: number } | { erreur: true } = {
+      erreur: true,
+    }
+    try {
+      purge = await purgerPiecesJointes()
+      console.info('[datagenius] taches', { tache: 'purge-pieces-jointes', ...purge })
+    } catch (error) {
+      console.error('[datagenius] taches', {
+        tache: 'purge-pieces-jointes',
+        resultat: 'echec',
+        nomErreur: nomErreur(error),
+      })
+    }
+    return NextResponse.json({ ...bilan, alertes, purge })
   } catch (error) {
     console.error('[medic-assist] Rapports programmés interrompus :', nomErreur(error))
     return NextResponse.json(

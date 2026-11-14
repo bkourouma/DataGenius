@@ -35,6 +35,7 @@ export const CODES_ERREUR_LOT_6 = [
   'feuilleIntrouvable',
   'plageInvalide',
   'fichierStockeIntrouvable',
+  'quota_pieces_jointes',
   // transcription
   'transcriptionIndisponible',
   'transcriptionEchec',

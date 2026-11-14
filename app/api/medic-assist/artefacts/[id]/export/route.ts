@@ -6,6 +6,12 @@ import {
   creerTraducteurServeur,
   enteteContentDisposition,
 } from '@/lib/medic-assist/artefacts/exports'
+import {
+  DELAI_MAX_FLUX_EXPORT_MS,
+  REESSAI_EXPORTS_OCCUPES_SECONDES,
+  semaphoreExports,
+} from '@/lib/medic-assist/artefacts/exports/semaphore'
+import type { ResultatExportFlux } from '@/lib/medic-assist/artefacts/exports/construire-export'
 import { ErreurExport, type CodeErreurExport } from '@/lib/medic-assist/artefacts/ports'
 import { ExportArtefactQuerySchema, IdentifiantSchema } from '@/lib/medic-assist/contrats'
 import {
@@ -15,6 +21,8 @@ import {
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+// Un gros export (chargement des jeux, puis écriture du fichier) peut dépasser la durée par défaut.
+export const maxDuration = 120
 
 interface RouteParams {
   params: { id: string }
@@ -55,6 +63,71 @@ const REPONSES_ERREUR: Record<
   echec: { status: 500, error: 'ExportFailed', cle: 'echec', repli: 'Export failed' },
 }
 
+function estFlux(
+  resultat: { buffer?: Buffer } | ResultatExportFlux
+): resultat is ResultatExportFlux {
+  return 'flux' in resultat && !!resultat.flux
+}
+
+/**
+ * Enveloppe le flux d'un export : la place du sémaphore est libérée à la fin, à l'erreur ou à
+ * l'annulation du client (une seule fois). Une erreur en cours de flux annule la réponse ;
+ * seul le nom de l'erreur est journalisé, jamais de données.
+ */
+function envelopperFlux(
+  source: ReadableStream<Uint8Array>,
+  liberer: () => void
+): ReadableStream<Uint8Array> {
+  const lecteur = source.getReader()
+  let termine = false
+  let minuteur: ReturnType<typeof setTimeout> | undefined
+  const finir = () => {
+    termine = true
+    if (minuteur !== undefined) clearTimeout(minuteur)
+    liberer()
+  }
+  return new ReadableStream<Uint8Array>({
+    start(controleur) {
+      // Délai maximal : un client qui ne lit plus sans se déconnecter garderait la place.
+      minuteur = setTimeout(() => {
+        if (termine) return
+        console.error('[medic-assist] export en échec en cours de flux', 'DelaiFluxDepasse')
+        finir()
+        lecteur.cancel().catch(() => undefined)
+        try {
+          controleur.error(new Error('Délai maximal du flux d’export dépassé'))
+        } catch {
+          // flux déjà fermé ou annulé
+        }
+      }, DELAI_MAX_FLUX_EXPORT_MS)
+    },
+    async pull(controleur) {
+      try {
+        const { done, value } = await lecteur.read()
+        if (termine) return
+        if (done) {
+          controleur.close()
+          finir()
+        } else {
+          controleur.enqueue(value)
+        }
+      } catch (erreur) {
+        if (termine) return
+        console.error(
+          '[medic-assist] export en échec en cours de flux',
+          erreur instanceof Error ? erreur.name : typeof erreur
+        )
+        finir()
+        controleur.error(erreur)
+      }
+    },
+    async cancel(raison) {
+      finir()
+      await lecteur.cancel(raison)
+    },
+  })
+}
+
 async function message(
   locale: Parameters<typeof creerTraducteurServeur>[0] | undefined,
   cle: string,
@@ -82,9 +155,12 @@ async function message(
  * - 400 : identifiant invalide, format absent ou inconnu, `version` invalide, ou format non disponible pour cet artefact (csv d'un document).
  * - 404 : artefact introuvable, d'un autre utilisateur non partagé, ou jeu inaccessible
  *   (même réponse dans les trois cas).
+ * - 503 : déjà `EXPORTS_SIMULTANES_MAX` exports en cours dans ce processus (code `exports_occupes`,
+ *   `Retry-After`), sans rien calculer. Une place est prise avant le calcul et rendue à la fin.
  * - 413 : plus de 100 000 lignes. 429 : trop de rejeux de jeux (limite de débit), avec
  *   `Retry-After` en secondes et le code `limite_debit_donnees`. 500 : échec, sans détail interne.
- * - Réponse : fichier binaire, `Content-Disposition: attachment` (nom ASCII + `filename*`
+ * - Réponse : fichier binaire (un gros xlsx est envoyé en flux, sans `Content-Length` ; toutes les
+ *   erreurs ci-dessus sont rendues AVANT le premier octet), `Content-Disposition: attachment` (nom ASCII + `filename*`
  *   UTF-8, RFC 5987), `Cache-Control: private, no-store`, `X-Content-Type-Options: nosniff`.
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
@@ -120,11 +196,54 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     )
   }
 
+  const liberer = semaphoreExports.essayerPrendre()
+  if (!liberer) {
+    return NextResponse.json(
+      {
+        error: 'ServiceUnavailable',
+        code: 'exports_occupes',
+        message: await message(
+          contexte.locale,
+          'exportsOccupes',
+          'Too many exports are running. Try again in a few seconds.'
+        ),
+      },
+      {
+        status: 503,
+        headers: {
+          'Retry-After': String(REESSAI_EXPORTS_OCCUPES_SECONDES),
+          'Cache-Control': 'private, no-store',
+        },
+      }
+    )
+  }
+  // Vrai quand le flux a repris la place : il la rend lui-même.
+  let placeTransmise = false
+
   try {
     const resultat = await construireExport(contexte, id.data, lecture.data.format, {
       version: lecture.data.version,
       exportePar: garde.session.user.name ?? undefined,
+      flux: true,
     })
+    if (estFlux(resultat)) {
+      const flux = envelopperFlux(resultat.flux, liberer)
+      placeTransmise = true
+      try {
+        return new NextResponse(flux as BodyInit, {
+          status: 200,
+          headers: {
+            'Content-Type': resultat.typeMime,
+            'Content-Disposition': enteteContentDisposition(resultat.nomFichier),
+            'Cache-Control': 'private, no-store',
+            'X-Content-Type-Options': 'nosniff',
+          },
+        })
+      } catch (erreur) {
+        await flux.cancel().catch(() => undefined)
+        throw erreur
+      }
+    }
     const corps = new Uint8Array(
       resultat.buffer.buffer,
       resultat.buffer.byteOffset,
@@ -171,5 +290,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       { error: r.error, message: await message(contexte.locale, r.cle, r.repli) },
       { status: r.status }
     )
+  } finally {
+    if (!placeTransmise) liberer()
   }
 }
