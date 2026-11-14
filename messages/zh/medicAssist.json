@@ -248,5 +248,17 @@
     "contexte": "上下文：{ecran}",
     "retirerContexte": "移除屏幕上下文",
     "aide": "按 Enter 发送，按 Esc 关闭"
+  },
+  "gardeFous": {
+    "erreurs": {
+      "tour_en_cours": "此对话中已有一个回复正在生成。请等待其完成后再重试。",
+      "message_deja_recu": "此消息已收到：正在处理或已处理完毕。请重新加载对话查看回复。"
+    },
+    "quotaEpuiseHeure": "您今天的助手使用额度已用完，将于 {heure} 重置。",
+    "reference": "参考编号：{reference}",
+    "api": {
+      "limiteDebit": "短时间内语音输入过于频繁。请等待几分钟后再试。",
+      "quotaEpuise": "您今天的助手使用额度已用完。请明天再试。"
+    }
   }
 }

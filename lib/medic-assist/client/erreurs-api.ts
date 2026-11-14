@@ -31,19 +31,31 @@ export function messageErreurApi(
   erreur: unknown,
   traducteur: TraducteurErreursApi | null | undefined,
   repli: string,
+  /** Messages des garde-fous (`medicAssist.gardeFous.api`) : essayes quand le premier n'a pas le code. */
+  traducteurSecours?: TraducteurErreursApi | null,
 ): string {
   const code = codeErreurApi(erreur)
-  if (!code || !traducteur) return repli
-  try {
-    if (traducteur.has(code)) return traducteur(code) || repli
-  } catch {
-    // namespace absent ou message mal forme : repli
+  if (!code) return repli
+  for (const t of [traducteur, traducteurSecours]) {
+    if (!t) continue
+    try {
+      if (t.has(code)) return t(code) || repli
+    } catch {
+      // namespace absent ou message mal forme : on passe au suivant, puis au repli
+    }
   }
   return repli
 }
 
-/** Fonction `(erreur, repli) => message` branchee sur le namespace des erreurs d'API. */
+/**
+ * Fonction `(erreur, repli) => message` branchee sur le namespace des erreurs d'API, avec les
+ * messages des garde-fous (`limiteDebit`, `quotaEpuise`) en secours.
+ */
 export function useMessageErreurApi(): (erreur: unknown, repli: string) => string {
   const t = useTranslations('medicAssistAdmin.erreursApi' as never) as unknown as TraducteurErreursApi
-  return useCallback((erreur: unknown, repli: string) => messageErreurApi(erreur, t, repli), [t])
+  const tGardeFous = useTranslations('medicAssist.gardeFous.api' as never) as unknown as TraducteurErreursApi
+  return useCallback(
+    (erreur: unknown, repli: string) => messageErreurApi(erreur, t, repli, tGardeFous),
+    [t, tGardeFous],
+  )
 }

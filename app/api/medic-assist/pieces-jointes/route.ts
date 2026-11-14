@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 
+import { CorpsTropVolumineux, lireOctetsBornes, requeteDepuisOctets } from '@/lib/http/corps-borne'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { CHAMPS_TELEVERSEMENT, LIMITES } from '@/lib/medic-assist/contrats'
 import { ErreurPieceJointe } from '@/lib/medic-assist/pieces-jointes/erreurs'
@@ -43,8 +44,16 @@ export async function POST(request: NextRequest) {
 
     let formulaire: FormData
     try {
-      formulaire = await request.formData()
-    } catch {
+      // Lecture en flux avec plafond reel (envoi fragmente sans content-length compris).
+      const brut = await lireOctetsBornes(
+        request,
+        LIMITES.tailleMaxPieceJointeOctets + MARGE_MULTIPART_OCTETS
+      )
+      formulaire = await requeteDepuisOctets(request, brut).formData()
+    } catch (erreur) {
+      if (erreur instanceof CorpsTropVolumineux) {
+        return reponseErreur(new ErreurPieceJointe('fichierTropGros'))
+      }
       return reponseErreur(new ErreurPieceJointe('fichierAbsent'))
     }
 

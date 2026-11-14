@@ -248,5 +248,17 @@
     "contexte": "Context: {ecran}",
     "retirerContexte": "Remove the screen context",
     "aide": "Enter to send, Esc to close"
+  },
+  "gardeFous": {
+    "erreurs": {
+      "tour_en_cours": "A response is already in progress in this conversation. Wait for it to finish, then try again.",
+      "message_deja_recu": "This message has already been received: it is being processed or has been processed. Reload the conversation to see the answer."
+    },
+    "quotaEpuiseHeure": "Your daily assistant usage quota has been used up. It will be renewed at {heure}.",
+    "reference": "Reference: {reference}",
+    "api": {
+      "limiteDebit": "Too many dictations in a short time. Wait a few minutes, then try again.",
+      "quotaEpuise": "Your daily assistant usage quota has been used up. Try again tomorrow."
+    }
   }
 }

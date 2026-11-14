@@ -6,7 +6,13 @@
  *
  * Ordre des controles : garde d'acces, moteur configure ET dont la cle existe (503
  * `transcriptionIndisponible`, l'interface masque alors le repli), taille annoncee, formulaire,
- * champs, audio (400 / 413). L'audio n'est pas conserve. L'usage est enregistre (cout a la
+ * champs, audio (400 / 413).
+ * Entre la config et la taille : limite de debit (20 dictees / 10 min / utilisateur, 429
+ * `limiteDebit` + Retry-After) puis plafond de cout journalier commun avec le chat (429
+ * `quotaEpuise`, `details.reinitialisationA` en ISO). Les erreurs 429 et 5xx portent
+ * `details.reference` (reference `DG-XXXXXX`, aussi dans le journal serveur). Le corps est lu en
+ * flux avec plafond (413 `audioTropGros` meme en envoi fragmente). Abandon du client : 499 sans
+ * corps, aucun usage enregistre. L'audio n'est pas conserve. L'usage est enregistre (cout a la
  * minute), echecs du fournisseur compris (cout 0, code `transcriptionEchec`), sans jamais
  * casser la dictee. Reponses d'erreur : { error: <code>, message } ; l'interface traduit le code.
  */
@@ -20,12 +26,18 @@ import {
   lireConfigMedicAssist,
 } from '@/lib/medic-assist/admin/imports-lot0-lot1'
 import { erreurApi } from '@/lib/medic-assist/admin/reponses'
+import type { CodeErreurLot6 } from '@/lib/medic-assist/admin/codes-erreur'
+import { verifierQuotaJournalier } from '@/lib/medic-assist/agent/quota'
+import { genererReference } from '@/lib/medic-assist/agent/reference'
+import { CorpsTropVolumineux, lireOctetsBornes, requeteDepuisOctets } from '@/lib/http/corps-borne'
+import { limiteurTranscription } from '@/lib/medic-assist/transcription/limite'
 import type { TranscriptionDto } from '@/lib/medic-assist/contrats'
 import { enregistrerUsageTranscription } from '@/lib/medic-assist/transcription/depot-prisma'
 import { moteurTranscriptionEffectif } from '@/lib/medic-assist/transcription/moteur'
 import { DUREE_MAX_SECONDES } from '@/lib/medic-assist/transcription/tarifs'
 import {
   ErreurTranscription,
+  TranscriptionAnnulee,
   LANGUE_PAR_LOCALE,
   transcrire,
 } from '@/lib/medic-assist/transcription/transcrire'
@@ -37,6 +49,23 @@ export const maxDuration = 90
 
 /** Marge pour l'enveloppe multipart autour du fichier. */
 const MARGE_ENVELOPPE_OCTETS = 64 * 1024
+
+/**
+ * Refus 429 / 5xx : { error, message, details: { reference, ... } } + en-tetes eventuels. Les codes
+ * `limiteDebit` et `quotaEpuise` ne sont pas (encore) dans CODES_ERREUR_LOT_6 : d'ou le cast.
+ */
+function refusAvecReference(
+  status: number,
+  code: string,
+  message: string,
+  reference: string,
+  details: Record<string, unknown> = {},
+  entetes: Record<string, string> = {}
+) {
+  const reponse = erreurApi(status, code as CodeErreurLot6, message, { ...details, reference })
+  for (const [nom, valeur] of Object.entries(entetes)) reponse.headers.set(nom, valeur)
+  return reponse
+}
 
 /** Langue demandee : « fr », « fr-FR »... -> « fr » ; undefined si absente, null si invalide. */
 function lireLangue(brut: unknown): string | undefined | null {
@@ -70,6 +99,49 @@ export async function POST(request: NextRequest) {
     return erreurApi(503, 'transcriptionIndisponible', 'Server-side dictation is not available.')
   }
 
+  const { userId, locale } = garde.contexte
+
+  // Limite de debit puis plafond de cout : avant toute lecture du corps.
+  const limiteur = limiteurTranscription()
+  const debit = limiteur.consommer(userId)
+  if (!debit.accepte) {
+    const reference = genererReference()
+    console.error('[datagenius] transcription', { reference, code: 'limiteDebit' })
+    return refusAvecReference(
+      429,
+      'limiteDebit',
+      'Too many dictations. Try again later.',
+      reference,
+      {},
+      { 'Retry-After': String(Math.ceil(debit.reessayerDansMs / 1000)) }
+    )
+  }
+  try {
+    const verdict = await verifierQuotaJournalier(userId, config.plafondCoutJournalierUsd)
+    if (!verdict.autorise) {
+      limiteur.rembourser(userId)
+      const reference = genererReference()
+      console.error('[datagenius] transcription', { reference, code: 'quotaEpuise' })
+      return refusAvecReference(
+        429,
+        'quotaEpuise',
+        'Daily usage limit reached.',
+        reference,
+        { reinitialisationA: verdict.reinitialisationA.toISOString() },
+        {
+          'Retry-After': String(
+            Math.max(1, Math.ceil((verdict.reinitialisationA.getTime() - Date.now()) / 1000))
+          ),
+        }
+      )
+    }
+  } catch {
+    limiteur.rembourser(userId)
+    const reference = genererReference()
+    console.error('[datagenius] transcription', { reference, code: 'quotaIndisponible' })
+    return refusAvecReference(500, 'erreurServeur', 'Could not check the usage limit.', reference)
+  }
+
   const annonce = Number(request.headers.get('content-length'))
   if (Number.isFinite(annonce) && annonce > LIMITES.tailleMaxAudioOctets + MARGE_ENVELOPPE_OCTETS) {
     return erreurApi(413, 'audioTropGros', 'Recording too large (10 MB maximum).')
@@ -77,8 +149,15 @@ export async function POST(request: NextRequest) {
 
   let formulaire: FormData
   try {
-    formulaire = await request.formData()
-  } catch {
+    const brut = await lireOctetsBornes(
+      request,
+      LIMITES.tailleMaxAudioOctets + MARGE_ENVELOPPE_OCTETS
+    )
+    formulaire = await requeteDepuisOctets(request, brut).formData()
+  } catch (erreur) {
+    if (erreur instanceof CorpsTropVolumineux) {
+      return erreurApi(413, 'audioTropGros', 'Recording too large (10 MB maximum).')
+    }
     return erreurApi(400, 'validationInvalide', 'Multipart request expected.')
   }
   const fichier = formulaire.get(CHAMPS_TELEVERSEMENT.audio)
@@ -99,7 +178,6 @@ export async function POST(request: NextRequest) {
   const audio = validerAudio({ octets, nom: fichier.name ?? '', typeAnnonce: fichier.type ?? '' })
   if (!audio.ok) return erreurApi(audio.status, audio.code, audio.message)
 
-  const { userId, locale } = garde.contexte
   try {
     const resultat = await transcrire({
       moteur,
@@ -107,6 +185,7 @@ export async function POST(request: NextRequest) {
       typeMime: audio.typeMime,
       langue: langueDemandee ?? LANGUE_PAR_LOCALE[locale] ?? 'fr',
       dureeSecondesClient: dureeClient,
+      signal: request.signal,
     })
     // Echec d'ecriture : sans effet sur la dictee (le depot journalise sans donnee).
     await Promise.resolve(
@@ -127,6 +206,10 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json(corps)
   } catch (erreur) {
+    // Abandon du client : pas un echec du fournisseur, rien a enregistrer.
+    if (erreur instanceof TranscriptionAnnulee) {
+      return new NextResponse(null, { status: 499 })
+    }
     await Promise.resolve(
       enregistrerUsageTranscription({
         userId,
@@ -139,6 +222,8 @@ export async function POST(request: NextRequest) {
         erreur: 'transcriptionEchec',
       })
     ).catch(() => undefined)
-    return erreurApi(502, 'transcriptionEchec', 'Transcription failed. Try again.')
+    const reference = genererReference()
+    console.error('[datagenius] transcription', { reference, code: 'transcriptionEchec' })
+    return refusAvecReference(502, 'transcriptionEchec', 'Transcription failed. Try again.', reference)
   }
 }

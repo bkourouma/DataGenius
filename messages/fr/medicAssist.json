@@ -248,5 +248,17 @@
     "contexte": "Contexte : {ecran}",
     "retirerContexte": "Retirer le contexte de l'écran",
     "aide": "Entrée pour envoyer, Échap pour fermer"
+  },
+  "gardeFous": {
+    "erreurs": {
+      "tour_en_cours": "Une réponse est déjà en cours dans cette conversation. Attendez qu'elle se termine, puis réessayez.",
+      "message_deja_recu": "Ce message a déjà été reçu : il est en cours de traitement ou déjà traité. Rechargez la conversation pour voir la réponse."
+    },
+    "quotaEpuiseHeure": "Votre quota d'utilisation quotidien de l'assistant est épuisé. Il sera renouvelé à {heure}.",
+    "reference": "Référence : {reference}",
+    "api": {
+      "limiteDebit": "Trop de dictées en peu de temps. Patientez quelques minutes puis réessayez.",
+      "quotaEpuise": "Votre quota d'utilisation quotidien de l'assistant est épuisé. Réessayez demain."
+    }
   }
 }

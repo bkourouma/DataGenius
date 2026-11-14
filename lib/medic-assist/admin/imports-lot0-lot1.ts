@@ -40,6 +40,11 @@ export type {
 export { exigerAdminMedicAssist, exigerMedicAssist } from '@/lib/medic-assist/acces'
 
 export {
+  PLAFOND_COUT_DEFAUT_USD,
+  PLAFOND_COUT_MAX_USD,
+  ecrireGardeFous,
+  validerGardeFous,
+  type ModeleSecours,
   ecrireConfigMedicAssist,
   fournisseursDisponibles,
   lireConfigMedicAssist,
