@@ -1,5 +1,6 @@
 import { lookup } from 'node:dns/promises'
 import { isIP } from 'node:net'
+import { journal } from '@/lib/journal'
 
 /**
  * Filtre des hôtes des connecteurs PostgreSQL et MySQL. Sans autorisation explicite, un
@@ -85,12 +86,12 @@ export async function verifierHoteSource(
   try {
     adresses = isIP(nom) ? [nom] : await resoudre(nom)
   } catch {
-    console.warn('[datagenius] sources', { evenement: 'hote_non_resolu', hote: nom })
+    journal.avertissement('Hôte de source non résolu', { domaine: 'sources', evenement: 'hote_non_resolu' })
     throw new ErreurHoteSource(MESSAGE)
   }
   const refusees = adresses.filter(a => adresseRestreinte(a) && !autorises.has(normaliser(a)))
   if (!adresses.length || refusees.length) {
-    console.warn('[datagenius] sources', { evenement: 'hote_refuse', hote: nom, adresses: refusees })
+    journal.avertissement('Hôte de source refusé', { domaine: 'sources', evenement: 'hote_refuse', adressesRefusees: refusees.length })
     throw new ErreurHoteSource(MESSAGE)
   }
 }

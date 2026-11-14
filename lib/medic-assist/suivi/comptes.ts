@@ -1,5 +1,5 @@
 /**
- * Comptes MedicPro qui peuvent recevoir ou se voir confier quelque chose de la
+ * Comptes Data Genius qui peuvent recevoir ou se voir confier quelque chose de la
  * part de Medic Assist (partage, e-mail, notification, tache, rapport programme).
  *
  * HYPOTHESE H7 (prudente) : un destinataire doit avoir lui-meme acces a Medic

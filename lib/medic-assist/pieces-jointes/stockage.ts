@@ -10,6 +10,7 @@
 
 import { existsSync } from 'fs'
 import { mkdir, readFile, unlink, writeFile } from 'fs/promises'
+import { journal } from '@/lib/journal'
 import { join, resolve, sep } from 'path'
 
 import { FileUploadService } from '@/lib/utils/file-upload'
@@ -112,9 +113,9 @@ export async function supprimerFichierStocke(nomStocke: string): Promise<void> {
   try {
     await unlink(chemin)
   } catch (erreur) {
-    console.error(
-      'Medic Assist : suppression du fichier impossible',
-      (erreur as NodeJS.ErrnoException).code
-    )
+    journal.erreur('Suppression du fichier impossible', {
+      domaine: 'pieces-jointes',
+      code: (erreur as NodeJS.ErrnoException).code,
+    })
   }
 }

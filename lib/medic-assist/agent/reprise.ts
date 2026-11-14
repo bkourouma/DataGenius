@@ -16,6 +16,7 @@
  * (authentification, requête refusée, délai, annulation…).
  */
 import { wrapLanguageModel, type LanguageModel } from 'ai'
+import { journal } from '@/lib/journal'
 import {
   classerErreur,
   decrireErreurPourJournal,
@@ -33,7 +34,7 @@ export interface PolitiqueReprise {
   gigue?: number
   /** Remplaçable en test. Doit rejeter (AbortError) si le signal est annulé pendant l'attente. */
   attendre?: (ms: number, signal?: AbortSignal) => Promise<void>
-  /** Journal d'une reprise (défaut : console.warn). */
+  /** Journal d'une reprise (défaut : journal structuré). */
   journaliser?: (message: string) => void
 }
 
@@ -212,7 +213,9 @@ export function avecReprise(
   const delais = politique.delaisMs
   const gigue = politique.gigue ?? GIGUE_DEFAUT
   const attendre = politique.attendre ?? attendreParDefaut
-  const journaliser = politique.journaliser ?? ((message: string) => console.warn(message))
+  const journaliser =
+    politique.journaliser ??
+    ((message: string) => journal.avertissement('chat : reprise du modèle', { domaine: 'chat', detail: message }))
   const secours = options.secours && estModeleV4(options.secours.modele) ? options.secours : null
   const principal = modele as ModeleV4
   const nomPrincipal = `${principal.provider ?? 'inconnu'}/${principal.modelId ?? 'inconnu'}`
@@ -259,7 +262,8 @@ export function avecReprise(
             modeleId: secours.modeleId,
             cause: classerErreur(erreur).code,
           }
-          console.warn('[datagenius] chat', {
+          journal.avertissement('chat : bascule vers le modèle de secours', {
+            domaine: 'chat',
             reference: options.journal?.reference,
             conversationId: options.journal?.conversationId,
             evenement: 'bascule_modele_secours',

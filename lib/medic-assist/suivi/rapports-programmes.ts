@@ -51,7 +51,9 @@ import { obtenirDepot } from './depot-prisma'
 import { prochainEnvoiA, validerPlanning, type Planning } from './echeances'
 import { composerEmailRapport } from './emails-rapport'
 import { ErreurSuivi, nomErreur } from './erreurs'
+import { defaultLocale, isLocale, type Locale } from '@/i18n/config'
 import { creerNotificationSuivi } from './notifications'
+import { journal } from '@/lib/journal'
 import { traducteurSuivi } from './emails'
 import { exigerExpediteurProprietaire, exigerProprietaireArtefact } from './proprietaire'
 import type { CompteResume, ModificationRapportProgramme, RapportProgrammeRow } from './types'
@@ -65,9 +67,7 @@ const DUREE_BAIL_MS = 10 * 60 * 1000
 /** Essais rates (dont plantages) avant d'abandonner l'echeance et de notifier. */
 const MAX_ESSAIS = 3
 
-const NOTIFICATION_ECHEC_TITRE = 'Rapport programmé non envoyé'
-const NOTIFICATION_ECHEC_MESSAGE = (titre: string): string =>
-  `Le rapport « ${titre} » n'a pas pu être envoyé après 3 tentatives. Une nouvelle tentative aura lieu à la prochaine échéance.`
+const log = journal.enfant({ domaine: 'rapports' })
 
 // ---------------------------------------------------------------------------
 // Formes JSON
@@ -348,6 +348,26 @@ async function nomDuCompte(userId: string): Promise<string> {
   return compte ? `${compte.firstName} ${compte.lastName}`.trim() : ''
 }
 
+/** Langue de chaque destinataire (User.locale, repli defaultLocale) ; ne leve jamais. */
+async function languesDesDestinataires(ids: string[]): Promise<Map<string, Locale>> {
+  const langues = new Map<string, Locale>()
+  try {
+    const comptes = await prisma.user.findMany({
+      where: { id: { in: ids } },
+      select: { id: true, locale: true },
+    })
+    for (const compte of comptes) {
+      langues.set(compte.id, isLocale(compte.locale) ? compte.locale : defaultLocale)
+    }
+  } catch (error) {
+    log.erreur('Lecture des langues des destinataires impossible', {
+      etape: 'langues_destinataires',
+      nomErreur: nomErreur(error),
+    })
+  }
+  return langues
+}
+
 /** Cree la notification d'echec definitif ; ne leve jamais. */
 async function notifierEchecDefinitif(
   rapport: RapportProgrammeRow,
@@ -358,24 +378,29 @@ async function notifierEchecDefinitif(
     const admins = await depot.listerAdministrateursActifs()
     destinataires = [...new Set([rapport.userId, ...admins])]
   } catch (error) {
-    console.error('[datagenius] rapports', {
+    log.erreur("Lecture des administrateurs impossible pour la notification d'échec", {
       rapportId: rapport.id,
       etape: 'lister_administrateurs',
       resultat: 'echec',
       nomErreur: nomErreur(error),
     })
   }
+  const langues = await languesDesDestinataires(destinataires)
   for (const userId of destinataires) {
     try {
+      const t = await traducteurSuivi(langues.get(userId) ?? defaultLocale)
       await creerNotificationSuivi({
         userId,
         type: TYPES_NOTIFICATION.rapport,
-        titre: NOTIFICATION_ECHEC_TITRE,
-        message: NOTIFICATION_ECHEC_MESSAGE(rapport.artefactTitre),
+        titre: t('notifRapport.echecTitre'),
+        message: t('notifRapport.echecMessage', {
+          titre: rapport.artefactTitre,
+          essais: MAX_ESSAIS,
+        }),
         entite: { type: 'artefact', id: rapport.artefactId },
       })
     } catch (error) {
-      console.error('[datagenius] rapports', {
+      log.erreur('Notification de rapport impossible', {
         rapportId: rapport.id,
         destinataireId: userId,
         etape: 'notification',
@@ -401,8 +426,8 @@ function journaliserEnvoi(
     essai,
     ...(nom ? { nomErreur: nom } : {}),
   }
-  if (ok) console.info('[datagenius] rapports', ligne)
-  else console.error('[datagenius] rapports', ligne)
+  if (ok) log.info('Rapport envoyé à un destinataire', ligne)
+  else log.erreur('Envoi du rapport à un destinataire impossible', ligne)
 }
 
 async function envoyerRapport(
@@ -449,7 +474,7 @@ async function envoyerRapport(
       })
     }
   } catch (error) {
-    console.error('[datagenius] rapports', {
+    log.erreur('Export du rapport impossible', {
       rapportId: rapport.id,
       etape: 'export',
       resultat: 'echec',
@@ -501,7 +526,7 @@ async function envoyerRapport(
         entite: { type: 'artefact', id: artefact.id },
       })
     } catch (error) {
-      console.error('[datagenius] rapports', {
+      log.erreur('Notification de rapport impossible', {
         rapportId: rapport.id,
         destinataireId: destinataire.id,
         etape: 'notification',
@@ -530,7 +555,7 @@ async function traiterUnRapport(
   try {
     nouveau = prochainEnvoiA(rapport, maintenant)
   } catch (error) {
-    console.error('[datagenius] rapports', {
+    log.erreur("Calcul de l'échéance du rapport impossible", {
       rapportId: rapport.id,
       etape: 'planning',
       resultat: 'echec',
@@ -570,7 +595,7 @@ async function traiterUnRapport(
     const issue = await envoyerRapport(rapport, maintenant, depot, options, essaisAvant + 1)
     return { issue, essaisAvant, nouveau }
   } catch (error) {
-    console.error('[datagenius] rapports', {
+    log.erreur('Traitement du rapport en échec', {
       rapportId: rapport.id,
       etape: 'traitement',
       resultat: 'echec',
@@ -648,7 +673,7 @@ export async function traiterRapportsEchus(
       traitement = await traiterUnRapport(rapport, maintenant, depot, options)
     } catch (error) {
       // Echec avant reservation : rien n'est reserve, le rapport reste echu. Il ne bloque pas les suivants.
-      console.error('[datagenius] rapports', {
+      log.erreur('Réservation du rapport impossible', {
         rapportId: rapport.id,
         etape: 'reservation',
         resultat: 'echec',
@@ -665,7 +690,7 @@ export async function traiterRapportsEchus(
       await terminerRapport(rapport, traitement, maintenant, depot)
     } catch (error) {
       // Le bail expirera seul (10 min) et le rapport sera repris.
-      console.error('[datagenius] rapports', {
+      log.erreur('Enregistrement du résultat du rapport impossible', {
         rapportId: rapport.id,
         etape: 'resultat',
         resultat: 'echec',

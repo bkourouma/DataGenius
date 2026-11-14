@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { prisma } from '@/lib/db/client'
+import { journal } from '@/lib/journal'
 
 export const FENETRE_MINUTES = 15
 export const SEUIL_EMAIL = 5
@@ -108,9 +109,10 @@ export const magasinPrisma: MagasinTentatives = {
 }
 
 function journaliser(evenement: string, cle?: string, erreur?: unknown) {
-  console.warn('[datagenius] auth', {
+  journal.avertissement('Événement du limiteur de connexion', {
+    domaine: 'auth',
     evenement,
-    cle: cle?.slice(0, 12),
+    empreinte: cle?.slice(0, 12),
     erreur: erreur instanceof Error ? erreur.name : undefined,
   })
 }

@@ -12,6 +12,7 @@
 import { Prisma } from '@prisma/client'
 
 import { prisma } from '@/lib/db/client'
+import { journal } from '@/lib/journal'
 import type {
   ContexteEcran,
   MessageMedicAssist,
@@ -417,7 +418,8 @@ export async function enregistrerFinDeTour(fin: FinDeTour): Promise<ResultatFinD
       return resultat
     })
   } catch (erreur) {
-    console.error('[datagenius] chat', {
+    journal.erreur('chat : fin de tour non enregistrée', {
+      domaine: 'chat',
       conversationId,
       evenement: 'fin_de_tour_non_enregistree',
       erreur: nomErreur(erreur),
@@ -431,7 +433,8 @@ export async function enregistrerFinDeTour(fin: FinDeTour): Promise<ResultatFinD
       await enregistrerUsage({ ...ligne, userId, conversationId, messageId: null })
       if (index < lignesTour.length) usageEnregistre = true
     } catch (erreur) {
-      console.error('[datagenius] chat', {
+      journal.erreur('chat : usage non enregistré', {
+        domaine: 'chat',
         conversationId,
         evenement: 'usage_non_enregistre',
         erreur: nomErreur(erreur),

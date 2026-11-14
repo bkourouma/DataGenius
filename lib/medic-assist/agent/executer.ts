@@ -27,6 +27,7 @@
  */
 
 import { restrictionsActives } from '@/lib/auth/data-access'
+import { journal } from '@/lib/journal'
 import {
   consumeStream,
   convertToModelMessages,
@@ -203,8 +204,21 @@ interface IdentiteJournal {
 
 type ChampsJournal = IdentiteJournal & { code: string; [champ: string]: unknown }
 
-function journaliserChat(champs: ChampsJournal): void {
-  console.error('[datagenius] chat', champs)
+const MESSAGES_JOURNAL_CHAT: Record<string, string> = {
+  erreur_flux: 'chat : erreur du flux',
+  fin_de_tour_non_enregistree: 'chat : fin de tour non enregistrée',
+  ancienne_reponse_non_supprimee: 'chat : ancienne réponse non supprimée',
+  fin_de_tour: 'chat : fin de tour',
+}
+
+function journaliserChat(champs: ChampsJournal, niveau: 'erreur' | 'info' = 'erreur'): void {
+  const evenement = typeof champs.evenement === 'string' ? champs.evenement : undefined
+  const message =
+    (evenement && MESSAGES_JOURNAL_CHAT[evenement]) ||
+    (niveau === 'info' ? 'chat : événement' : 'chat : requête en échec')
+  const ligne = { domaine: 'chat', ...champs }
+  if (niveau === 'info') journal.info(message, ligne)
+  else journal.erreur(message, ligne)
 }
 
 /**
@@ -313,7 +327,10 @@ async function validerHistorique(
     if (seul.success) valides.push(...seul.data)
   }
   const ecartes = messages.length - valides.length
-  console.warn(`[medic-assist/chat] historique : ${ecartes} message(s) invalide(s) ignoré(s)`)
+  journal.avertissement('chat : messages d’historique invalides ignorés', {
+    domaine: 'chat',
+    ecartes,
+  })
   return valides
 }
 
@@ -450,7 +467,7 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
     code: string,
     message: string,
     details: Record<string, unknown> = {},
-    journal: Record<string, unknown> = {}
+    champsSup: Record<string, unknown> = {}
   ): ResultatChat => {
     journaliserChat({
       reference,
@@ -458,7 +475,7 @@ export async function executerChat(entree: EntreeChat): Promise<ResultatChat> {
       userId,
       code,
       statut,
-      ...journal,
+      ...champsSup,
     })
     return erreur(statut, code, message, { reference, ...details })
   }
@@ -902,7 +919,7 @@ function lancerFlux(p: ParametresFlux): Response {
       if (!net) return undefined
       return (await enregistrerTitre(contexte.userId, conversationId, net)) ? net : undefined
     } catch (e) {
-      console.error('[medic-assist/chat] titre non enregistré', nomErreur(e))
+      journal.erreur('chat : échec du titre', { domaine: 'chat', erreur: nomErreur(e) })
       return undefined
     } finally {
       if (minuteur) clearTimeout(minuteur)
@@ -1008,9 +1025,10 @@ function lancerFlux(p: ParametresFlux): Response {
           const spec = construireSpecTableau(jeu, contexte.locale)
           const analyse = spec ? EntreeCreerArtefactSchema.safeParse(spec) : null
           if (!analyse?.success) {
-            console.warn(
-              '[medic-assist/chat] garde de livraison : artefact non créé (spec_invalide)'
-            )
+            journal.avertissement('chat : garde de livraison, artefact non créé', {
+              domaine: 'chat',
+              cause: 'spec_invalide',
+            })
             return
           }
           const toolCallId = `garde_${genererIdMessage()}`
@@ -1021,9 +1039,10 @@ function lancerFlux(p: ParametresFlux): Response {
             ...(p.signal ? { abortSignal: p.signal } : {}),
           })
           if (estErreurOutil(sortie)) {
-            console.warn(
-              `[medic-assist/chat] garde de livraison : artefact non créé (${sortie.erreur.code})`
-            )
+            journal.avertissement('chat : garde de livraison, artefact non créé', {
+              domaine: 'chat',
+              cause: sortie.erreur.code,
+            })
             return
           }
           writer.write({
@@ -1033,13 +1052,15 @@ function lancerFlux(p: ParametresFlux): Response {
             input: analyse.data,
           } as never)
           writer.write({ type: 'tool-output-available', toolCallId, output: sortie } as never)
-          console.info(
-            `[medic-assist/chat] garde de livraison : tableau créé (${jeu.nbLignes} lignes)`
-          )
+          journal.info('chat : garde de livraison, tableau créé', {
+            domaine: 'chat',
+            nbLignes: jeu.nbLignes,
+          })
         } catch (e) {
-          console.warn(
-            `[medic-assist/chat] garde de livraison : artefact non créé (${nomErreur(e)})`
-          )
+          journal.avertissement('chat : garde de livraison, artefact non créé', {
+            domaine: 'chat',
+            cause: nomErreur(e),
+          })
         }
       }
 
@@ -1180,7 +1201,7 @@ function lancerFlux(p: ParametresFlux): Response {
         }
         // Un tour réussi ou arrêté par l'utilisateur n'est pas une erreur : niveau info.
         if (codeTour && codeTour !== 'annule') journaliserChat(ligne)
-        else console.info('[datagenius] chat', ligne)
+        else journaliserChat(ligne, 'info')
       }
     },
   })

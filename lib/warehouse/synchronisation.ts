@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto'
 import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db/client'
+import { journal } from '@/lib/journal'
 import { citer, jeuxEntrepot, typeSql, type JeuEntrepot } from './configuration'
 import { transactionLecture, transactionLectureUrl } from './postgres'
 import { preparerLignes, validerDefinitionQualite, type LigneImport } from './qualite'
@@ -325,7 +326,7 @@ async function synchroniserJeu(entree: JeuEntrepot, forcer: boolean, reconcilier
   const resultat = (statut: Statut, code: string | null): ResultatDetaille =>
     ({ jeu: jeu.cle, statut, ...(code ? { code } : {}), dureeMs: Math.max(0, Date.now() - debut) })
   const bailPerdu = () => {
-    console.warn('[datagenius] synchronisation', { jeu: jeu.cle, code: 'bail_perdu', dureeMs: Math.max(0, Date.now() - debut) })
+    journal.avertissement('Bail de synchronisation perdu', { domaine: 'synchronisation', jeu: jeu.cle, code: 'bail_perdu', dureeMs: Math.max(0, Date.now() - debut) })
     return resultat('en_cours', 'bail_perdu')
   }
   let bail = false
@@ -345,14 +346,14 @@ async function synchroniserJeu(entree: JeuEntrepot, forcer: boolean, reconcilier
     if (erreur instanceof ErreurBail) return bailPerdu()
     if (erreur instanceof ErreurJeuSupprime) return resultat('echec', 'jeu_supprime')
     const code = codeException(erreur)
-    console.error('[datagenius] synchronisation', { jeu: jeu.cle, code, ...causeJournal(erreur), dureeMs: Date.now() - debut })
+    journal.erreur('Échec de la synchronisation', { domaine: 'synchronisation', jeu: jeu.cle, code, ...causeJournal(erreur), dureeMs: Date.now() - debut })
     try {
       await enregistrerEchecInterne(entree, code, debut, proprietaire)
     } catch (secondaire) {
       if (secondaire instanceof ErreurBail) return bailPerdu()
       if (secondaire instanceof ErreurJeuSupprime) return resultat('echec', 'jeu_supprime')
-      console.error('[datagenius] synchronisation', {
-        jeu: jeu.cle, code: 'enregistrement_impossible', ...causeJournal(secondaire),
+      journal.erreur('Enregistrement de l\'échec impossible', {
+        domaine: 'synchronisation', jeu: jeu.cle, code: 'enregistrement_impossible', ...causeJournal(secondaire),
       })
     }
     return resultat('echec', code)

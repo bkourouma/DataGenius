@@ -13,6 +13,7 @@
  */
 
 import { createHash, timingSafeEqual } from 'crypto'
+import { journal } from '@/lib/journal'
 import { NextRequest, NextResponse } from 'next/server'
 
 import { purgerPiecesJointes } from '@/lib/medic-assist/pieces-jointes/purge'
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
       traiterRapportsEchus({ budgetMs: BUDGET_RAPPORTS_MS }),
       traiterAlertesTableaux(),
     ])
-    console.info('[medic-assist] Rapports programmés :', JSON.stringify(bilan))
+    journal.info('Rapports programmés traités', { domaine: 'taches', ...bilan })
 
     // Purge des pieces jointes : un echec ne fait echouer ni le reste ni la reponse.
     let purge: { lignesSupprimees: number; fichiersSupprimes: number } | { erreur: true } = {
@@ -62,9 +63,10 @@ export async function POST(request: NextRequest) {
     }
     try {
       purge = await purgerPiecesJointes()
-      console.info('[datagenius] taches', { tache: 'purge-pieces-jointes', ...purge })
+      journal.info('Purge des pièces jointes terminée', { domaine: 'taches', tache: 'purge-pieces-jointes', ...purge })
     } catch (error) {
-      console.error('[datagenius] taches', {
+      journal.erreur('Purge des pièces jointes en échec', {
+        domaine: 'taches',
         tache: 'purge-pieces-jointes',
         resultat: 'echec',
         nomErreur: nomErreur(error),
@@ -72,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json({ ...bilan, alertes, purge })
   } catch (error) {
-    console.error('[medic-assist] Rapports programmés interrompus :', nomErreur(error))
+    journal.erreur('Rapports programmés interrompus', { domaine: 'taches', erreur: nomErreur(error) })
     return NextResponse.json(
       { error: "Erreur lors de l'envoi des rapports programmés" },
       { status: 500 }

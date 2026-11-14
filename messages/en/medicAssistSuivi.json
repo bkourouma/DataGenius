@@ -214,6 +214,8 @@
   "notifRapport": {
     "titre": "Report: “{titre}”",
     "message": "Sent by {proprietaire}, {frequence}. Open the analysis to see the figures within your scope.",
+    "echecTitre": "Scheduled report not sent",
+    "echecMessage": "The report “{titre}” could not be sent after {essais} attempts. Another attempt will be made at the next scheduled time.",
     "frequence": {
       "quotidien": "every day",
       "hebdomadaire": "every week",

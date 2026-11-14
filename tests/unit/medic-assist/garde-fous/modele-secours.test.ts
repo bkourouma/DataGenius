@@ -96,6 +96,13 @@ function secoursOpenAI(etape: (n: number, o: unknown) => Morceau[] = () => etape
   return modeleSimule(etape, 'openai.responses', 'gpt-6.1-sol')
 }
 
+/** Lignes JSON écrites par le journal structuré sur un canal de la console. */
+function lignesJournal(canal: 'error' | 'warn' | 'info'): Array<Record<string, unknown>> {
+  return vi
+    .mocked(console[canal])
+    .mock.calls.map(appel => JSON.parse(String(appel[0])) as Record<string, unknown>)
+}
+
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(() => undefined)
   vi.spyOn(console, 'error').mockImplementation(() => undefined)
@@ -137,14 +144,17 @@ describe('avecReprise : bascule vers le modèle de secours', () => {
         cause: 'fournisseur_indisponible',
       },
     ])
-    expect(console.warn).toHaveBeenCalledWith('[datagenius] chat', {
-      reference: 'DG-REF001',
-      conversationId: 'conv-1',
-      evenement: 'bascule_modele_secours',
-      de: 'anthropic.messages/claude-sonnet-5-5',
-      vers: 'openai/gpt-6.1-sol',
-      cause: 'fournisseur_indisponible',
-    })
+    expect(lignesJournal('warn')).toContainEqual(
+      expect.objectContaining({
+        niveau: 'avertissement',
+        reference: 'DG-REF001',
+        conversationId: 'conv-1',
+        evenement: 'bascule_modele_secours',
+        de: 'anthropic.messages/claude-sonnet-5-5',
+        vers: 'openai/gpt-6.1-sol',
+        cause: 'fournisseur_indisponible',
+      })
+    )
   })
 
   it('erreur levée par doStream (429 limite de débit) -> bascule aussi', async () => {
@@ -315,8 +325,7 @@ describe('executerChat : modèle de secours et usage au bon modèle', () => {
 
     const reponse = tables.messages.find(m => m.role === 'assistant')!
     expect(reponse.metadonnees).toMatchObject({ fournisseur: 'openai', modele: 'gpt-6.1-sol' })
-    expect(console.warn).toHaveBeenCalledWith(
-      '[datagenius] chat',
+    expect(lignesJournal('warn')).toContainEqual(
       expect.objectContaining({ reference: 'DG-TEST03', evenement: 'bascule_modele_secours' })
     )
   })

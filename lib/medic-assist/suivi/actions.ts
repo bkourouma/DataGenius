@@ -50,10 +50,13 @@ import { obtenirDepot } from './depot-prisma'
 import { finDeJourneeParis } from './echeances'
 import { composerEmailArtefact, listeFormats, traducteurSuivi, type Traducteur } from './emails'
 import { ErreurSuivi, nomErreur } from './erreurs'
+import { journal } from '@/lib/journal'
 import { creerNotificationSuivi } from './notifications'
 import { exigerExpediteurProprietaire, exigerProprietaireArtefact } from './proprietaire'
 import { creerRapportProgramme } from './rapports-programmes'
 import type { ActionRow, ArtefactVisible, CompteNotifiable } from './types'
+
+const log = journal.enfant({ domaine: 'actions' })
 
 export interface DependancesActions {
   depot?: DepotSuivi
@@ -428,7 +431,7 @@ export async function executerAction(
   } catch (error) {
     const code = codeEchec(error)
     if (code === 'execution_impossible') {
-      console.error(`[medic-assist] action ${ligne.type} en echec :`, nomErreur(error))
+      log.erreur('Action en échec', { type: ligne.type, nomErreur: nomErreur(error) })
     }
     const cle = CODES_ECHEC_DECRITS.includes(code) ? code : 'generique'
     await depot.terminerAction(ligne.id, contexte.userId, {
@@ -443,7 +446,10 @@ export async function executerAction(
   try {
     await depot.terminerAction(ligne.id, contexte.userId, { statut: 'executee', resultat })
   } catch (error) {
-    console.error(`[medic-assist] action ${ligne.type} executee, resultat non enregistre :`, nomErreur(error))
+    log.erreur('Action exécutée, résultat non enregistré', {
+      type: ligne.type,
+      nomErreur: nomErreur(error),
+    })
   }
   const relue = await relireEtat(depot, contexte, ligne.id)
   return relue.resultat ? relue : { ...relue, resultat }
@@ -660,7 +666,7 @@ async function executerEnvoyerEmail(
       })
     }
   } catch (error) {
-    console.error('[medic-assist] export impossible :', nomErreur(error))
+    log.erreur('Export impossible', { nomErreur: nomErreur(error) })
     throw new ErreurExecution('export_impossible')
   }
 
@@ -698,7 +704,7 @@ async function executerEnvoyerEmail(
       if (parti) envoyes += 1
       else echecs += 1
     } catch (error) {
-      console.error('[medic-assist] e-mail non envoye :', nomErreur(error))
+      log.erreur('E-mail non envoyé', { nomErreur: nomErreur(error) })
       echecs += 1
     }
   }

@@ -1,6 +1,7 @@
 'use server'
 
 import { demanderReinitialisation } from '@/lib/auth/comptes'
+import { journal } from '@/lib/journal'
 
 export interface EtatDemande {
   confirmation?: string
@@ -15,7 +16,7 @@ export async function demanderLienAction(_etat: EtatDemande, formData: FormData)
   try {
     if (typeof email === 'string') await demanderReinitialisation(email.slice(0, 254))
   } catch {
-    console.error('[datagenius] comptes', { action: 'reinitialisation_erreur' })
+    journal.erreur('Échec de la demande de réinitialisation', { domaine: 'comptes', action: 'reinitialisation_erreur' })
   }
   return { confirmation: CONFIRMATION_DEMANDE }
 }

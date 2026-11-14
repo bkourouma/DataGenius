@@ -96,4 +96,40 @@ describe('verifierEnvironnement', () => {
     const messages = avert.mock.calls.map((c) => c[0] as string).join('\n')
     expect(messages).not.toContain('clé IA')
   })
+
+  it('valide DATAGENIUS_PROXY_DE_CONFIANCE sans afficher la valeur', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    expect(() =>
+      verifierEnvironnement('web', { ...valide, DATAGENIUS_PROXY_DE_CONFIANCE: '1' })
+    ).not.toThrow()
+    for (const mauvaise of ['abc', '-1', '11', '1.5']) {
+      const e = attraper({ ...valide, DATAGENIUS_PROXY_DE_CONFIANCE: mauvaise })
+      expect(e.variables).toEqual(['DATAGENIUS_PROXY_DE_CONFIANCE'])
+      expect(e.message).not.toContain(mauvaise === 'abc' ? 'abc' : `: ${mauvaise}`)
+    }
+  })
+
+  it('refuse SMTP_SECURE, APP_URL et NEXT_PUBLIC_TIMEZONE invalides', () => {
+    expect(attraper({ ...valide, SMTP_SECURE: 'oui' }).variables).toEqual(['SMTP_SECURE'])
+    expect(attraper({ ...valide, APP_URL: 'ftp://x' }).variables).toEqual(['APP_URL'])
+    expect(attraper({ ...valide, NEXT_PUBLIC_TIMEZONE: 'Mars/Olympus' }).variables).toEqual([
+      'NEXT_PUBLIC_TIMEZONE',
+    ])
+  })
+
+  it('accepte les variables facultatives documentées', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    expect(() =>
+      verifierEnvironnement('worker', {
+        DATABASE_URL: valide.DATABASE_URL,
+        SMTP_SECURE: 'true',
+        APP_URL: 'https://datagenius.example.com',
+        UPLOAD_DIR: '/data/uploads',
+        NEXT_PUBLIC_TIMEZONE: 'Africa/Abidjan',
+        DATAGENIUS_EMBED_ORIGINS: 'https://portail.example',
+        DATAGENIUS_REST_ORIGINES_PRIVEES: 'https://api.interne.example',
+        DATAGENIUS_CATALOGUE: 'config/demo.json',
+      })
+    ).not.toThrow()
+  })
 })

@@ -11,6 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { journal } from '@/lib/journal'
 
 import { LIMITES } from '@/lib/medic-assist/contrats/constantes'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
   } catch (erreur) {
     // Filet : executerChat gere ses erreurs ; seul le nom de l'erreur est journalise.
     const reference = genererReference()
-    console.error('[datagenius] chat', { reference, erreur: (erreur as Error)?.name })
+    journal.erreur('Échec du chat', { domaine: 'chat', reference, erreur: (erreur as Error)?.name })
     return NextResponse.json(
       { error: 'internal', message: 'Internal error', details: { reference } },
       { status: 500 }

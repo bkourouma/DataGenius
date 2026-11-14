@@ -7,7 +7,7 @@
  *
  * Beton froid en fond, panneaux blancs a trait fin, mur marine nervure pour le
  * menu. Une couleur par etat, comme la peinture d'une pile de conteneurs :
- *   cobalt = agir, vert MedicPro = acheve, ocre = en attente,
+ *   cobalt = agir, vert Data Genius = acheve, ocre = en attente,
  *   rouge oxyde = bloque ou expire, sarcelle = information.
  * Les valeurs sont des triplets HSL pour que `bg-primary/10` etc. continuent
  * de fonctionner.

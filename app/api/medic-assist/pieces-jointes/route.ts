@@ -9,6 +9,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { journal } from '@/lib/journal'
 
 import { CorpsTropVolumineux, lireOctetsBornes, requeteDepuisOctets } from '@/lib/http/corps-borne'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest) {
   } catch (erreur) {
     if (erreur instanceof ErreurPieceJointe) return reponseErreur(erreur)
     // Seul le type de l'erreur est journalise : jamais le fichier ni son nom.
-    console.error('Medic Assist : envoi de piece jointe impossible', (erreur as Error)?.name)
+    journal.erreur('Envoi de pièce jointe impossible', { domaine: 'pieces-jointes', erreur: (erreur as Error)?.name })
     return NextResponse.json(
       { error: 'erreurServeur', message: 'Unable to save the attachment.' },
       { status: 500 }

@@ -214,6 +214,8 @@
   "notifRapport": {
     "titre": "报告：“{titre}”",
     "message": "由 {proprietaire} {frequence}发送。打开分析即可查看您范围内的数字。",
+    "echecTitre": "定时报告未能发送",
+    "echecMessage": "报告“{titre}”在尝试 {essais} 次后仍未能发送。将在下一个计划时间再次尝试。",
     "frequence": {
       "quotidien": "每天",
       "hebdomadaire": "每周",

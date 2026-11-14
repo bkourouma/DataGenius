@@ -67,7 +67,9 @@ describe('demanderLienAction', () => {
     expect(inconnu).toEqual(connu)
     expect(erreur).toEqual(connu)
     expect(connu.confirmation).toContain('Le lien est valable 1 heure.')
-    expect(console.error).toHaveBeenCalledWith('[datagenius] comptes', { action: 'reinitialisation_erreur' })
+    const journal = JSON.stringify(vi.mocked(console.error).mock.calls)
+    expect(journal).toContain('reinitialisation_erreur')
+    expect(journal).not.toMatch(/smtp|@x\.fr/)
   })
 })
 

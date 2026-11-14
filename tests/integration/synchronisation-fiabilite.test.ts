@@ -114,9 +114,11 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Fiabilité de la 
     expect(etatA.prochain_essai_a!.getTime()).toBeGreaterThan(Date.now())
     expect(await baux(a, b)).toBe(0)
 
-    const appels = espion.mock.calls.filter(appel => appel[0] === '[datagenius] synchronisation')
+    const appels = espion.mock.calls
+      .map(appel => JSON.parse(appel[0] as string) as Record<string, unknown>)
+      .filter(ligne => ligne.domaine === 'synchronisation')
     expect(appels.length).toBeGreaterThanOrEqual(1)
-    expect(appels[0][1]).toEqual(expect.objectContaining({ jeu: a, code: 'interne' }))
+    expect(appels[0]).toEqual(expect.objectContaining({ jeu: a, code: 'interne' }))
     const journal = JSON.stringify(appels)
     expect(journal).not.toContain('panne simulee secrete')
     expect(journal).not.toContain('postgresql://')
@@ -296,8 +298,8 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Fiabilité de la 
       SELECT count(*)::int AS n FROM warehouse.synchronisations WHERE jeu = ${cle}`)[0].n).toBe(0)
     // Le bail de l'autre processus n'est pas libéré par celui qui l'a perdu.
     expect(await baux(cle)).toBe(1)
-    expect(avertissement).toHaveBeenCalledWith('[datagenius] synchronisation',
-      expect.objectContaining({ jeu: cle, code: 'bail_perdu' }))
+    expect(avertissement.mock.calls.map(appel => JSON.parse(appel[0] as string))).toContainEqual(
+      expect.objectContaining({ domaine: 'synchronisation', jeu: cle, code: 'bail_perdu' }))
   }, 60_000)
 
   it("n'écrit rien si le jeu est supprimé pendant la lecture", async () => {

@@ -21,6 +21,7 @@
  */
 
 import { prisma } from '@/lib/db/client'
+import { journal } from '@/lib/journal'
 
 /** Durée d'un verrou : au-delà de la durée maximale d'un tour (300 s), avec une marge. */
 export const DUREE_VERROU_MS = 6 * 60_000
@@ -88,7 +89,8 @@ export async function libererVerrou(verrou: VerrouTour | null | undefined): Prom
     })
     return resultat.count > 0
   } catch (erreur) {
-    console.error('[datagenius] chat', {
+    journal.erreur('chat : verrou non libéré', {
+      domaine: 'chat',
       conversationId: verrou.conversationId,
       evenement: 'verrou_non_libere',
       erreur: erreur instanceof Error ? erreur.name : typeof erreur,

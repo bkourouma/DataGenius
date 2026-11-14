@@ -214,6 +214,8 @@
   "notifRapport": {
     "titre": "تقرير: «{titre}»",
     "message": "أرسله {proprietaire}، {frequence}. افتح التحليل لعرض الأرقام ضمن نطاقك.",
+    "echecTitre": "تعذّر إرسال التقرير المجدول",
+    "echecMessage": "تعذّر إرسال التقرير «{titre}» بعد {essais} محاولات. ستُجرى محاولة جديدة في الموعد المجدول التالي.",
     "frequence": {
       "quotidien": "كل يوم",
       "hebdomadaire": "كل أسبوع",

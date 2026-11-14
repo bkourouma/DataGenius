@@ -18,6 +18,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { journal } from '@/lib/journal'
 
 import {
   CHAMPS_TELEVERSEMENT,
@@ -106,7 +107,7 @@ export async function POST(request: NextRequest) {
   const debit = limiteur.consommer(userId)
   if (!debit.accepte) {
     const reference = genererReference()
-    console.error('[datagenius] transcription', { reference, code: 'limiteDebit' })
+    journal.erreur('Transcription refusée : limite de débit', { domaine: 'transcription', reference, code: 'limiteDebit' })
     return refusAvecReference(
       429,
       'limiteDebit',
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
     if (!verdict.autorise) {
       limiteur.rembourser(userId)
       const reference = genererReference()
-      console.error('[datagenius] transcription', { reference, code: 'quotaEpuise' })
+      journal.erreur('Transcription refusée : quota épuisé', { domaine: 'transcription', reference, code: 'quotaEpuise' })
       return refusAvecReference(
         429,
         'quotaEpuise',
@@ -138,7 +139,7 @@ export async function POST(request: NextRequest) {
   } catch {
     limiteur.rembourser(userId)
     const reference = genererReference()
-    console.error('[datagenius] transcription', { reference, code: 'quotaIndisponible' })
+    journal.erreur('Vérification du quota impossible', { domaine: 'transcription', reference, code: 'quotaIndisponible' })
     return refusAvecReference(500, 'erreurServeur', 'Could not check the usage limit.', reference)
   }
 
@@ -223,7 +224,7 @@ export async function POST(request: NextRequest) {
       })
     ).catch(() => undefined)
     const reference = genererReference()
-    console.error('[datagenius] transcription', { reference, code: 'transcriptionEchec' })
+    journal.erreur('Échec de la transcription', { domaine: 'transcription', reference, code: 'transcriptionEchec' })
     return refusAvecReference(502, 'transcriptionEchec', 'Transcription failed. Try again.', reference)
   }
 }

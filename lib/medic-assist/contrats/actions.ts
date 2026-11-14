@@ -4,7 +4,7 @@
  * clic de l'utilisateur sur la carte de confirmation, après une nouvelle
  * vérification des droits (POST /api/medic-assist/actions/[id]/confirmer).
  *
- * Les destinataires sont toujours des utilisateurs MedicPro, désignés par leur id
+ * Les destinataires sont toujours des utilisateurs Data Genius, désignés par leur id
  * (obtenu par rechercher_entites, type « utilisateur ») : jamais d'adresse e-mail
  * libre.
  */

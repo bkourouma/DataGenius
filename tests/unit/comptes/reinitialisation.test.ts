@@ -59,7 +59,9 @@ describe('demanderReinitialisation', () => {
     vi.stubEnv('APP_URL', '')
     etat.compte = COMPTE
     await expect(demanderReinitialisation('jean@example.test')).resolves.toBeUndefined()
-    expect(erreur).toHaveBeenCalledWith('[datagenius] comptes', { action: 'reinitialisation_url_absente' })
+    expect(JSON.parse(erreur.mock.calls[0][0] as string)).toMatchObject({
+      niveau: 'erreur', domaine: 'comptes', action: 'reinitialisation_url_absente',
+    })
     expect(etat.crees).toHaveLength(0)
   })
 

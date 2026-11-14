@@ -13,6 +13,7 @@
  */
 
 import { readdir, stat, unlink } from 'fs/promises'
+import { journal } from '@/lib/journal'
 
 import { depotPrisma, type DepotPiecesJointes } from './depot-prisma'
 import { cheminStocke, dossierPiecesJointes } from './stockage'
@@ -56,7 +57,7 @@ export async function purgerPiecesJointes(
     } catch (erreur) {
       if (codeErreur(erreur) !== 'ENOENT') {
         erreurs++
-        console.error('[datagenius] pieces-jointes', { code: codeErreur(erreur) })
+        journal.erreur('Échec de la purge des pièces jointes', { domaine: 'pieces-jointes', code: codeErreur(erreur) })
       }
       return false
     }
@@ -82,7 +83,7 @@ export async function purgerPiecesJointes(
     }
   } catch (erreur) {
     erreurs++
-    console.error('[datagenius] pieces-jointes', { code: codeErreur(erreur) })
+    journal.erreur('Échec de la purge des pièces jointes', { domaine: 'pieces-jointes', code: codeErreur(erreur) })
   }
 
   // (b) Fichiers du dossier dedie sans ligne en base.
@@ -105,7 +106,7 @@ export async function purgerPiecesJointes(
         } catch (erreur) {
           if (codeErreur(erreur) !== 'ENOENT') {
             erreurs++
-            console.error('[datagenius] pieces-jointes', { code: codeErreur(erreur) })
+            journal.erreur('Échec de la purge des pièces jointes', { domaine: 'pieces-jointes', code: codeErreur(erreur) })
           }
         }
       }
@@ -118,9 +119,9 @@ export async function purgerPiecesJointes(
     }
   } catch (erreur) {
     erreurs++
-    console.error('[datagenius] pieces-jointes', { code: codeErreur(erreur) })
+    journal.erreur('Échec de la purge des pièces jointes', { domaine: 'pieces-jointes', code: codeErreur(erreur) })
   }
 
-  console.info('[datagenius] pieces-jointes', { lignesSupprimees, fichiersSupprimes, erreurs })
+  journal.info('Purge des pièces jointes effectuée', { domaine: 'pieces-jointes', lignesSupprimees, fichiersSupprimes, erreurs })
   return { lignesSupprimees, fichiersSupprimes }
 }
