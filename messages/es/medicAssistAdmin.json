@@ -65,6 +65,7 @@
     "feuilleIntrouvable": "No se encuentra esta hoja en el libro.",
     "plageInvalide": "El rango de celdas solicitado no es válido.",
     "fichierStockeIntrouvable": "El archivo ya no está disponible. Adjúntelo de nuevo.",
+    "quota_pieces_jointes": "Se alcanzó el límite de archivos adjuntos (100 archivos o 200 MB). Elimine conversaciones antiguas para liberar espacio.",
     "transcriptionIndisponible": "El dictado por el servidor no está activado. Use el dictado del navegador.",
     "transcriptionEchec": "La transcripción ha fallado. Inténtelo de nuevo o escriba su mensaje.",
     "audioAbsent": "No se ha recibido ninguna grabación de audio.",

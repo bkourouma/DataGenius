@@ -65,6 +65,7 @@
     "feuilleIntrouvable": "工作簿中找不到此工作表。",
     "plageInvalide": "请求的单元格区域无效。",
     "fichierStockeIntrouvable": "该文件已不可用。请重新添加。",
+    "quota_pieces_jointes": "已达到附件上限（100 个文件或 200 MB）。请删除旧对话以释放空间。",
     "transcriptionIndisponible": "服务器听写未启用。请使用浏览器听写。",
     "transcriptionEchec": "转写失败。请重试或直接输入消息。",
     "audioAbsent": "未收到任何录音。",

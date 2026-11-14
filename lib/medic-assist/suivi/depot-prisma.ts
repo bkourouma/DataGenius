@@ -130,6 +130,8 @@ function enRapportRow(ligne: LigneRapport): RapportProgrammeRow {
     dernierEnvoiA: ligne.dernierEnvoiA,
     dernierStatut: statut,
     derniereErreur: ligne.dernierErreur,
+    essais: ligne.essais,
+    enCoursJusqua: ligne.enCoursJusqua,
     creeA: ligne.createdAt,
   } as RapportProgrammeRow
 }
@@ -683,6 +685,11 @@ export function creerDepotPrisma(client: PrismaClient = prisma): DepotSuivi {
       if (modification.prochainEnvoiA !== undefined && modification.prochainEnvoiA !== null) {
         donnees.prochainEnvoiA = modification.prochainEnvoiA
       }
+      // Desactivation ou nouvelle echeance : le bail est leve et le compteur d'essais repart de zero.
+      if (modification.actif === false || donnees.prochainEnvoiA !== undefined) {
+        donnees.enCoursJusqua = null
+        donnees.essais = 0
+      }
       const { count } = await client.assistantRapportProgramme.updateMany({
         where: { id, userId },
         data: donnees,
@@ -699,17 +706,27 @@ export function creerDepotPrisma(client: PrismaClient = prisma): DepotSuivi {
 
     async listerRapportsEchus(maintenant, limite) {
       const lignes = await client.assistantRapportProgramme.findMany({
-        where: { actif: true, prochainEnvoiA: { lte: maintenant } },
+        where: {
+          actif: true,
+          prochainEnvoiA: { lte: maintenant },
+          OR: [{ enCoursJusqua: null }, { enCoursJusqua: { lte: maintenant } }],
+        },
         orderBy: { prochainEnvoiA: 'asc' },
         take: limite,
       })
       return lignes.map(enRapportRow)
     },
 
-    async reserverRapport(id, ancien, nouveau) {
+    async reserverRapport(id, attendu, maintenant, jusqua, essaisApres) {
       const { count } = await client.assistantRapportProgramme.updateMany({
-        where: { id, actif: true, prochainEnvoiA: ancien },
-        data: { prochainEnvoiA: nouveau },
+        where: {
+          id,
+          actif: true,
+          prochainEnvoiA: attendu.prochainEnvoiA,
+          essais: attendu.essais,
+          OR: [{ enCoursJusqua: null }, { enCoursJusqua: { lte: maintenant } }],
+        },
+        data: { enCoursJusqua: jusqua, essais: essaisApres },
       })
       return count === 1
     },
@@ -717,8 +734,22 @@ export function creerDepotPrisma(client: PrismaClient = prisma): DepotSuivi {
     async enregistrerResultatRapport(id, resultat) {
       await client.assistantRapportProgramme.updateMany({
         where: { id },
-        data: { dernierEnvoiA: resultat.dernierEnvoiA, ...statutEnBase(resultat) },
+        data: {
+          dernierEnvoiA: resultat.dernierEnvoiA,
+          ...statutEnBase(resultat),
+          essais: resultat.essais,
+          ...(resultat.prochainEnvoiA ? { prochainEnvoiA: resultat.prochainEnvoiA } : {}),
+          enCoursJusqua: null,
+        },
       })
+    },
+
+    async listerAdministrateursActifs() {
+      const lignes = await client.user.findMany({
+        where: { roleName: 'TenantAdmin', status: 'active', deletedAt: null },
+        select: { id: true },
+      })
+      return lignes.map(l => l.id)
     },
   }
 

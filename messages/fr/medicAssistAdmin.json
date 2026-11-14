@@ -65,6 +65,7 @@
     "feuilleIntrouvable": "Cette feuille est introuvable dans le classeur.",
     "plageInvalide": "La plage de cellules demandée est invalide.",
     "fichierStockeIntrouvable": "Le fichier n'est plus disponible. Joignez-le de nouveau.",
+    "quota_pieces_jointes": "Limite de pièces jointes atteinte (100 fichiers ou 200 Mo). Supprimez d'anciennes conversations pour libérer de la place.",
     "transcriptionIndisponible": "La dictée par le serveur n'est pas activée. Utilisez la dictée du navigateur.",
     "transcriptionEchec": "La transcription a échoué. Réessayez ou saisissez votre message.",
     "audioAbsent": "Aucun enregistrement audio n'a été reçu.",

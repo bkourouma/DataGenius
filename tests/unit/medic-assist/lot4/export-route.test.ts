@@ -121,7 +121,7 @@ describe('GET /api/medic-assist/artefacts/[id]/export', () => {
     expect(format).toBe('csv');
     expect(contexte).toBe(CONTEXTE);
     expect(contexte.userId).toBe('u1');
-    expect(options).toEqual({ version: undefined, exportePar: 'Aïcha Diallo' });
+    expect(options).toEqual({ version: undefined, exportePar: 'Aïcha Diallo', flux: true });
   });
 
   it('transmet la version demandée et refuse une version invalide (400)', async () => {
@@ -134,6 +134,7 @@ describe('GET /api/medic-assist/artefacts/[id]/export', () => {
     expect(orchestrateur.construireExport.mock.calls[0][3]).toEqual({
       version: 3,
       exportePar: 'Aïcha Diallo',
+      flux: true,
     });
     for (const query of [
       '?format=pdf&version=0',

@@ -65,6 +65,7 @@
     "feuilleIntrouvable": "This sheet cannot be found in the workbook.",
     "plageInvalide": "The requested cell range is invalid.",
     "fichierStockeIntrouvable": "The file is no longer available. Attach it again.",
+    "quota_pieces_jointes": "Attachment limit reached (100 files or 200 MB). Delete old conversations to free up space.",
     "transcriptionIndisponible": "Server-side dictation is not enabled. Use your browser's dictation.",
     "transcriptionEchec": "The transcription failed. Try again or type your message.",
     "audioAbsent": "No audio recording was received.",

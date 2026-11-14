@@ -182,6 +182,9 @@ model AssistantRapportProgramme {
   // 'succes' | 'echec'
   dernierStatut    String?
   dernierErreur    String?
+  // Reprise : essais ratés de l'échéance en cours (0 à 3) et bail de réservation (10 min).
+  essais           Int       @default(0)
+  enCoursJusqua    DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 

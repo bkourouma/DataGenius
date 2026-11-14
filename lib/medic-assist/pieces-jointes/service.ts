@@ -24,6 +24,10 @@ import {
   type ResumePieceJointe,
 } from './types'
 
+/** Quota cumule par utilisateur : 200 Mo et 100 fichiers. */
+export const QUOTA_OCTETS = 200 * 1024 * 1024
+export const QUOTA_FICHIERS = 100
+
 export interface FichierEnvoye {
   nom: string
   octets: Buffer
@@ -91,6 +95,15 @@ export async function enregistrerPieceJointe(
     !(await depot.conversationDuProprietaire(conversationId, contexte.userId))
   ) {
     throw new ErreurPieceJointe('conversationIntrouvable')
+  }
+
+  // Quota par utilisateur, verifie avant toute ecriture sur disque.
+  const usage = await depot.usageDeLUtilisateur(contexte.userId)
+  if (
+    usage.nombre + 1 > QUOTA_FICHIERS ||
+    usage.octets + fichier.octets.byteLength > QUOTA_OCTETS
+  ) {
+    throw new ErreurPieceJointe('quota_pieces_jointes')
   }
 
   const stocke = await stockerFichier(fichier.nom, fichier.octets)
