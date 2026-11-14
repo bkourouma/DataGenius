@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic'
 type Parametres = { q?: string; schema?: string; table?: string }
 
 export default async function SourceDetail({ params, searchParams }: { params: { id: string }; searchParams: Parametres }) {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   if (!IdSourceSchema.safeParse(params.id).success) notFound()
   const source = await trouverSource(params.id)
   if (!source) notFound()

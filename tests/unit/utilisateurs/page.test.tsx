@@ -20,7 +20,7 @@ describe('page Utilisateurs', () => {
 
   it('redirige sans lister les comptes si la garde refuse', async () => {
     vi.mocked(exigerAdminMedicAssist).mockResolvedValue({ ok: false, reponse: {} } as never)
-    await expect(UtilisateursPage()).rejects.toThrow('REDIRECT:/medic-assist')
+    await expect(UtilisateursPage()).rejects.toThrow('REDIRECT:/assistant')
     expect(listerComptes).not.toHaveBeenCalled()
   })
 

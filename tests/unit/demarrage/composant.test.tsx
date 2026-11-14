@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const masquerDemarrage = vi.hoisted(() => vi.fn())
-vi.mock('@/app/(dashboard)/medic-assist/actions', () => ({ masquerDemarrage }))
+vi.mock('@/app/(dashboard)/assistant/actions', () => ({ masquerDemarrage }))
 
 import { Demarrage, DemarrageProvider } from '@/components/medic-assist/chat/demarrage'
 import type { ValeurDemarrage } from '@/lib/medic-assist/demarrage'

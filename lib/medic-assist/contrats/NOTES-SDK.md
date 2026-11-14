@@ -174,7 +174,7 @@ d'où `FOURNISSEURS_TRANSCRIPTION = ['openai', 'google']`.
   le catalogue) ne sont pas des champs de premier niveau, ils vont dans `filtres.autres`
   (`Record<string, scalaire | tableau de scalaires>`). Le serveur revalide ces clés contre le
   catalogue (OpenAI retire `propertyNames` du JSON Schema).
-- **Garde de la page `/medic-assist`** : le middleware ne filtre que les comptes Agency (et les
+- **Garde de la page `/assistant`** : le middleware ne filtre que les comptes Agency (et les
   profils par habilitation). Un CountryLead ou un Partner atteindrait la page : le lot 3 doit
   donc la garder CÔTÉ SERVEUR (layout ou page serveur : session, `getAccessScope`,
   `peutUtiliserMedicAssist`, sinon `redirect`/`notFound`), en plus de `exigerMedicAssist()` sur

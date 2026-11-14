@@ -32,7 +32,7 @@ export default function Connexion() {
     } catch {
       // Un retour invalide utilise l'accueil de l'application.
     }
-    return '/medic-assist'
+    return '/assistant'
   }
 
   async function connecter(event: FormEvent<HTMLFormElement>) {
