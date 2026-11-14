@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { journal } from '@/lib/journal'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { synchroniserEntrepot } from '@/lib/warehouse/synchronisation'
 import {
@@ -126,7 +127,7 @@ export async function actualiserJeu(_etat: Etat, formulaire: FormData): Promise<
   try {
     resultats = await synchroniserEntrepot({ forcer: true, jeu })
   } catch (erreur) {
-    console.error('[datagenius] sources', { evenement: 'synchro_manuelle', jeu, erreur: erreur instanceof Error ? erreur.message : 'inconnue' })
+    journal.erreur('Synchronisation manuelle impossible', { domaine: 'sources', jeu, erreur: erreur instanceof Error ? erreur.name : 'inconnue' })
     return { erreur: 'Synchronisation impossible. Réessayez dans un instant.' }
   }
   revalidatePath('/sources')

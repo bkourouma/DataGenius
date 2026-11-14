@@ -85,6 +85,7 @@ describe('erreurs', () => {
     const etat = await inviter({}, entree)
     expect(etat.erreur).toBe('Opération impossible pour le moment. Réessayez plus tard.')
     expect(JSON.stringify(log.mock.calls)).not.toMatch(/a@x\.fr|jeton-123/)
+    expect(JSON.stringify(log.mock.calls)).toContain('comptes')
     expect(revalidatePath).not.toHaveBeenCalled()
     log.mockRestore()
   })

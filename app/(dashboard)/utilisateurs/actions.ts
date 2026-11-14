@@ -10,6 +10,7 @@ import {
   renvoyerInvitation,
   type ResultatInvitation,
 } from '@/lib/auth/comptes'
+import { journal } from '@/lib/journal'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 
 export type EtatUtilisateurs = { erreur?: string; succes?: string; lien?: string; expireA?: string }
@@ -27,7 +28,7 @@ function texte(formulaire: FormData, nom: string): string {
 function erreurAffichable(erreur: unknown): EtatUtilisateurs {
   if (erreur instanceof ErreurComptes) return { erreur: erreur.message }
   // Pas d'e-mail ni de jeton dans les journaux : seulement le type d'erreur.
-  console.error('Gestion des utilisateurs : échec inattendu', erreur instanceof Error ? erreur.name : typeof erreur)
+  journal.erreur('Gestion des utilisateurs : échec inattendu', { domaine: 'comptes', erreur: erreur instanceof Error ? erreur.name : typeof erreur })
   return { erreur: ECHEC }
 }
 
