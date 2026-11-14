@@ -212,31 +212,30 @@ describe('POST /transcription : corps borné', () => {
     expect(dictee.transcrire).not.toHaveBeenCalled()
   })
 
-  // 21 requêtes multipart séquentielles (analyse réelle du corps par undici) : ~60 ms en local mais ~5 s
-  // sur les exécuteurs lents de la CI, d'où un délai explicite. Aucune attente ni minuteur dans le code testé.
+  // Les 20 premières dictées portent un multipart écrit à la main (le FormData/File de jsdom n'est pas
+  // sérialisable par undici de façon fiable : attente infinie sous Node 22). La 21e est refusée avant
+  // toute lecture du corps, donc sans corps.
   it('21e dictée : 429 limiteDebit avec Retry-After et référence', async () => {
+    const corpsAudio = multipartManuel('audio', 'a.webm', 'xxxx')
     for (let i = 0; i < 20; i += 1) {
-      const f = new FormData()
-      f.set('audio', new File([new Uint8Array(4)], 'a.webm', { type: 'audio/webm' }))
-      await transcription(
+      const reponse = await transcription(
         new NextRequest('http://localhost/api/medic-assist/transcription', {
           method: 'POST',
-          body: f,
+          headers: { 'content-type': 'multipart/form-data; boundary=BORNE' },
+          body: corpsAudio,
         })
       )
+      expect(reponse.status).not.toBe(429)
     }
     const reponse = await transcription(
-      new NextRequest('http://localhost/api/medic-assist/transcription', {
-        method: 'POST',
-        body: new FormData(),
-      })
+      new NextRequest('http://localhost/api/medic-assist/transcription', { method: 'POST' })
     )
     expect(reponse.status).toBe(429)
     expect(Number(reponse.headers.get('Retry-After'))).toBeGreaterThan(0)
     const corps = await reponse.json()
     expect(corps.error).toBe('limiteDebit')
     expect(corps.details.reference).toMatch(/^DG-/)
-  }, 30_000)
+  })
 
   it('plafond de coût atteint : 429 quotaEpuise avec reinitialisationA, sans lire le corps', async () => {
     const fin = new Date('2026-11-13T23:00:00Z')
