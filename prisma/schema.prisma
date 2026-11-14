@@ -39,6 +39,9 @@ model AssistantConversation {
   epinglee        Boolean  @default(false)
   archivee        Boolean  @default(false)
   dernierMessageA DateTime @default(now())
+  /// Verrou du tour en cours (lib/medic-assist/agent/verrou.ts) : échéance, null si libre.
+  /// Un verrou échu est considéré comme libre (filet si la libération n'a pas eu lieu).
+  tourEnCoursJusqua DateTime?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -60,6 +63,9 @@ model AssistantMessage {
   role           String
   parts          Json
   metadonnees    Json?
+  /// Id du UIMessage fourni par le client (idempotence de l'envoi) ; null pour les réponses
+  /// de l'assistant et les messages antérieurs. La clé primaire reste l'id du serveur.
+  idClient       String?
   createdAt      DateTime @default(now())
 
   conversation AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -67,6 +73,7 @@ model AssistantMessage {
   actions      AssistantAction[]
   usages       AssistantUsage[]
 
+  @@unique([conversationId, idClient])
   @@index([conversationId, createdAt])
   @@map("assistant_messages")
 }

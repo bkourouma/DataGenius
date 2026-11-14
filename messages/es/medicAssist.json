@@ -286,5 +286,17 @@
       "titre": "Todavía no tiene datos accesibles",
       "texte": "Su administrador debe darle acceso a datos antes de que pueda hacer preguntas. Póngase en contacto con él para solicitarlo."
     }
+  },
+  "gardeFous": {
+    "erreurs": {
+      "tour_en_cours": "Ya hay una respuesta en curso en esta conversación. Espere a que termine y vuelva a intentarlo.",
+      "message_deja_recu": "Este mensaje ya se recibió: se está procesando o ya se procesó. Recargue la conversación para ver la respuesta."
+    },
+    "quotaEpuiseHeure": "Se ha agotado su cuota diaria de uso del asistente. Se renovará a las {heure}.",
+    "reference": "Referencia: {reference}",
+    "api": {
+      "limiteDebit": "Demasiados dictados en poco tiempo. Espere unos minutos y vuelva a intentarlo.",
+      "quotaEpuise": "Se ha agotado su cuota diaria de uso del asistente. Inténtelo de nuevo mañana."
+    }
   }
 }

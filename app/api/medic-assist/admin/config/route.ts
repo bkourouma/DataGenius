@@ -19,6 +19,8 @@ import {
 } from '@/lib/medic-assist/admin/depot-prisma'
 import {
   ecrireConfigMedicAssist,
+  ecrireGardeFous,
+  validerGardeFous,
   exigerAdminMedicAssist,
   fournisseursDisponibles,
   fournisseursTranscriptionDisponibles,
@@ -64,7 +66,7 @@ export async function PUT(request: NextRequest) {
   if (brut === null) return erreurApi(400, 'validationInvalide', 'JSON body expected.')
   const analyse = ConfigAdminCorpsLot6Schema.safeParse(brut)
   if (!analyse.success) return erreurValidation(analyse.error)
-  const { config, tauxEurParUsd } = separerTaux(analyse.data)
+  const { config, tauxEurParUsd, gardeFous } = separerTaux(analyse.data)
 
   const indisponible = () =>
     erreurApi(400, 'fournisseurIndisponible', 'This provider has no API key on the server.')
@@ -77,7 +79,10 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
+    // Tout est validé avant la première écriture (pas d'enregistrement partiel).
+    validerGardeFous(gardeFous)
     await ecrireConfigMedicAssist(garde.contexte, config)
+    await ecrireGardeFous(garde.contexte.userId, gardeFous)
     if (tauxEurParUsd !== undefined) {
       await ecrireTauxEurParUsd(tauxEurParUsd, garde.contexte.userId)
     }

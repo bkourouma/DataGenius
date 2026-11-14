@@ -12,6 +12,7 @@ import { z } from 'zod'
 
 import {
   ConfigAdminCorpsSchema,
+  FOURNISSEURS,
   type ConfigAdminDto,
   type Fournisseur,
   type ModeLangage,
@@ -34,7 +35,15 @@ export type TauxSource = 'config' | 'defaut'
 export interface ConfigAdminReponse extends ConfigAdminDto {
   tauxEurParUsd: number
   tauxSource: TauxSource
+  /** Plafond de coût IA par utilisateur et par jour, en USD (0 = désactivé). */
+  plafondCoutJournalierUsd: number
+  plafondParDefaut: number
+  /** Modèle de secours effectif (null = aucun). */
+  modeleSecours: { fournisseur: Fournisseur; modele: string } | null
 }
+
+/** Plafond maximal saisissable, en USD (miroir de PLAFOND_COUT_MAX_USD côté serveur). */
+export const PLAFOND_COUT_MAX_USD_ADMIN = 10000
 
 /**
  * Corps de PUT : celui du lot 0 (fournisseur, 3 modeles, transcription : TOUS les champs),
@@ -42,6 +51,23 @@ export interface ConfigAdminReponse extends ConfigAdminDto {
  */
 export const ConfigAdminCorpsLot6Schema = ConfigAdminCorpsSchema.extend({
   tauxEurParUsd: z.number().gt(0).max(TAUX_EUR_PAR_USD_MAX).optional(),
+  /** Absent = inchangé ; 0 = plafond désactivé. */
+  plafondCoutJournalierUsd: z
+    .number()
+    .finite()
+    .min(0)
+    .max(PLAFOND_COUT_MAX_USD_ADMIN)
+    .refine(v => v === 0 || v >= 0.01, 'Un plafond positif doit valoir au moins 0,01.')
+    .optional(),
+  /** Absent = inchangé ; null = aucun modèle de secours. */
+  modeleSecours: z
+    .object({
+      fournisseur: z.enum(FOURNISSEURS),
+      modele: z.string().min(1).max(100).regex(/^\S+$/),
+    })
+    .strict()
+    .nullable()
+    .optional(),
 }).strict()
 export type ConfigAdminCorpsLot6 = z.infer<typeof ConfigAdminCorpsLot6Schema>
 

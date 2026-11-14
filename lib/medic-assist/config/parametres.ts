@@ -5,7 +5,6 @@
  * Aucune valeur de clé API n'est lue, renvoyée ni journalisée : seulement des booléens.
  */
 
-import { z } from 'zod'
 import { prisma } from '@/lib/db/client'
 import {
   CLES_PARAMETRES,
@@ -17,6 +16,14 @@ import {
   type ContexteExecution,
   type FournisseurTranscription,
 } from '@/lib/medic-assist/contrats'
+import {
+  CLE_MODELE_SECOURS,
+  CLE_PLAFOND_COUT_JOURNALIER,
+  LONGUEUR_MAX_MODELE,
+  identifiantModele,
+  lireModeleSecours,
+  lirePlafondCout,
+} from './garde-fous'
 import { estFournisseur, fournisseurDisponible, modelesParDefaut } from './fournisseurs'
 import {
   ErreurConfigMedicAssist,
@@ -24,16 +31,14 @@ import {
   type ConfigMedicAssist,
   type ConfigTranscription,
   type Fournisseur,
+  type ModeleSecours,
 } from './types'
 
 export { ErreurConfigMedicAssist }
 
 type Env = Record<string, string | undefined>
 
-export const LONGUEUR_MAX_MODELE = 100
-
-/** Identifiant de modèle : non vide, 100 caractères au plus, sans espace. */
-const identifiantModele = z.string().min(1).max(LONGUEUR_MAX_MODELE).regex(/^\S+$/)
+export { LONGUEUR_MAX_MODELE }
 
 function estFournisseurTranscription(valeur: unknown): valeur is FournisseurTranscription {
   return (FOURNISSEURS_TRANSCRIPTION as readonly unknown[]).includes(valeur)
@@ -78,10 +83,34 @@ export function serialiserTranscription(transcription: ConfigTranscription): str
     : ''
 }
 
+/**
+ * Un secours dont la clé a disparu, ou identique au modèle principal de chaque mode
+ * (il ne servirait à rien), est ignoré.
+ */
+function secoursUtile(
+  secours: ModeleSecours | null,
+  fournisseur: Fournisseur,
+  modeles: Record<string, string>,
+  env: Env
+): ModeleSecours | null {
+  if (!secours || !fournisseurDisponible(secours.fournisseur, env)) return null
+  const identique =
+    secours.fournisseur === fournisseur && Object.values(modeles).every(m => m === secours.modele)
+  return identique ? null : secours
+}
+
 /** Configuration appliquée : valeurs de la base, défauts, puis repli sur Claude si besoin. */
 export async function lireConfigMedicAssist(env: Env = process.env): Promise<ConfigEffective> {
   const lignes = await prisma.parametreApplication.findMany({
-    where: { cle: { in: Object.values(CLES_PARAMETRES) } },
+    where: {
+      cle: {
+        in: [
+          ...Object.values(CLES_PARAMETRES),
+          CLE_PLAFOND_COUT_JOURNALIER,
+          CLE_MODELE_SECOURS,
+        ],
+      },
+    },
     select: { cle: true, valeur: true },
   })
   const valeurs = new Map<string, string>(lignes.map(l => [l.cle, l.valeur]))
@@ -103,10 +132,16 @@ export async function lireConfigMedicAssist(env: Env = process.env): Promise<Con
     !fournisseurDisponible(fournisseurDemande, env) &&
     fournisseurDisponible('anthropic', env)
 
+  const plafondCoutJournalierUsd = lirePlafondCout(valeurs.get(CLE_PLAFOND_COUT_JOURNALIER))
+  const secoursBrut = lireModeleSecours(valeurs.get(CLE_MODELE_SECOURS))
+
   if (repli) {
+    const modelesRepli = modelesParDefaut('anthropic')
     return {
       fournisseur: 'anthropic',
-      modeles: modelesParDefaut('anthropic'),
+      modeles: modelesRepli,
+      plafondCoutJournalierUsd,
+      modeleSecours: secoursUtile(secoursBrut, 'anthropic', modelesRepli, env),
       transcription,
       repliSurClaude: true,
       fournisseurDemande,
@@ -116,6 +151,8 @@ export async function lireConfigMedicAssist(env: Env = process.env): Promise<Con
   return {
     fournisseur: fournisseurDemande,
     modeles,
+    plafondCoutJournalierUsd,
+    modeleSecours: secoursUtile(secoursBrut, fournisseurDemande, modeles, env),
     transcription,
     repliSurClaude: false,
     fournisseurDemande,

@@ -11,9 +11,11 @@ import {
   fournisseursDisponibles,
   fournisseursTranscriptionDisponibles,
   modelesParDefaut,
+  PLAFOND_COUT_DEFAUT_USD,
   tarifsConnus,
   type ConfigAdminCorps,
   type ConfigMedicAssist,
+  type ModeleSecours,
   type PersonneDto,
 } from './dependances'
 import {
@@ -40,9 +42,17 @@ export const schemaCorpsTest = z
 export function separerTaux(corps: ConfigAdminCorpsLot6): {
   config: ConfigAdminCorps
   tauxEurParUsd: number | undefined
+  gardeFous: { plafondCoutJournalierUsd?: number; modeleSecours?: ModeleSecours | null }
 } {
-  const { tauxEurParUsd, ...config } = corps
-  return { config, tauxEurParUsd }
+  const { tauxEurParUsd, plafondCoutJournalierUsd, modeleSecours, ...config } = corps
+  return {
+    config,
+    tauxEurParUsd,
+    gardeFous: {
+      ...(plafondCoutJournalierUsd !== undefined ? { plafondCoutJournalierUsd } : {}),
+      ...(modeleSecours !== undefined ? { modeleSecours } : {}),
+    },
+  }
 }
 
 export interface MiseAJourConfig {
@@ -51,7 +61,10 @@ export interface MiseAJourConfig {
 }
 
 export function construireConfigAdminReponse(
-  config: ConfigMedicAssist,
+  config: ConfigMedicAssist & {
+    plafondCoutJournalierUsd: number
+    modeleSecours: ModeleSecours | null
+  },
   tauxSaisi: number | null,
   maj: MiseAJourConfig
 ): ConfigAdminReponse {
@@ -67,6 +80,9 @@ export function construireConfigAdminReponse(
     majPar: maj.majPar,
     tauxEurParUsd: tauxSaisi ?? TAUX_EUR_PAR_USD_DEFAUT,
     tauxSource: tauxSaisi === null ? 'defaut' : 'config',
+    plafondCoutJournalierUsd: config.plafondCoutJournalierUsd,
+    plafondParDefaut: PLAFOND_COUT_DEFAUT_USD,
+    modeleSecours: config.modeleSecours,
   }
 }
 
@@ -82,6 +98,13 @@ export function codeErreurConfig(
   ) {
     return 'fournisseurIndisponible'
   }
-  if (code === 'fournisseur_inconnu' || code === 'modele_invalide') return 'validationInvalide'
+  if (
+    code === 'fournisseur_inconnu' ||
+    code === 'modele_invalide' ||
+    code === 'plafond_invalide' ||
+    code === 'modele_secours_inconnu'
+  ) {
+    return 'validationInvalide'
+  }
   return null
 }
