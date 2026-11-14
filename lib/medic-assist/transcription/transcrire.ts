@@ -16,6 +16,7 @@
  */
 
 import type { Locale } from '@/i18n/config'
+import { journal } from '@/lib/journal'
 
 import { tarifModele } from '../admin/dependances'
 import type { MoteurTranscription } from './moteur'
@@ -194,7 +195,8 @@ export async function transcrire(
     // Journal sans donnee : ni message du SDK (il peut citer la cle ou le corps de la
     // reponse), ni texte, ni audio. Seuls le fournisseur, le nom de l'erreur et le statut HTTP.
     const e = erreur as { name?: unknown; statusCode?: unknown }
-    console.error('[medic-assist] transcription en echec', {
+    journal.erreur('transcription : échec', {
+      domaine: 'medic-assist',
       fournisseur,
       erreur: typeof e?.name === 'string' ? e.name : 'inconnue',
       statut: typeof e?.statusCode === 'number' ? e.statusCode : undefined,

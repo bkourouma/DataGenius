@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { journal } from '@/lib/journal'
 
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import {
@@ -91,7 +92,7 @@ function envelopperFlux(
       // Délai maximal : un client qui ne lit plus sans se déconnecter garderait la place.
       minuteur = setTimeout(() => {
         if (termine) return
-        console.error('[medic-assist] export en échec en cours de flux', 'DelaiFluxDepasse')
+        journal.erreur('Export en échec en cours de flux', { domaine: 'medic-assist', erreur: 'DelaiFluxDepasse' })
         finir()
         lecteur.cancel().catch(() => undefined)
         try {
@@ -113,10 +114,10 @@ function envelopperFlux(
         }
       } catch (erreur) {
         if (termine) return
-        console.error(
-          '[medic-assist] export en échec en cours de flux',
-          erreur instanceof Error ? erreur.name : typeof erreur
-        )
+        journal.erreur('Export en échec en cours de flux', {
+          domaine: 'medic-assist',
+          erreur: erreur instanceof Error ? erreur.name : typeof erreur,
+        })
         finir()
         controleur.error(erreur)
       }
@@ -264,10 +265,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     if (code === 'echec') {
       // Ni titre, ni données, ni message d'origine : seulement le type de l'erreur.
       const cause = erreur instanceof ErreurExport ? (erreur as { cause?: unknown }).cause : erreur
-      console.error(
-        '[medic-assist] export en échec',
-        cause instanceof Error ? cause.name : typeof cause
-      )
+      journal.erreur('Export en échec', {
+        domaine: 'medic-assist',
+        erreur: cause instanceof Error ? cause.name : typeof cause,
+      })
     }
     const r = REPONSES_ERREUR[code]
     if (code === 'limite_debit') {

@@ -110,7 +110,7 @@ export const ProvenanceSchema = z.object({
     .optional(),
   /** Requête SQL exécutée : affichée aux administrateurs seulement. */
   sql: z.string().optional(),
-  /** Écran équivalent de MedicPro, avec les paramètres d'URL qu'il lit vraiment. */
+  /** Écran équivalent de Data Genius, avec les paramètres d'URL qu'il lit vraiment. */
   lienEcran: LienInterneSchema.optional(),
   calculeA: HorodatageSchema,
 })

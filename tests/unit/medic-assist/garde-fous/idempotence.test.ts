@@ -57,6 +57,13 @@ function chat(corps: unknown) {
   return executerChat({ contexte, corps })
 }
 
+/** Lignes JSON écrites par le journal structuré sur un canal de la console. */
+function lignesJournal(canal: 'error' | 'warn' | 'info'): Array<Record<string, unknown>> {
+  return vi
+    .mocked(console[canal])
+    .mock.calls.map(appel => JSON.parse(String(appel[0])) as Record<string, unknown>)
+}
+
 beforeEach(() => {
   reinitialiserBase()
   appelsModele = 0
@@ -217,9 +224,13 @@ describe('quota journalier', () => {
     expect(h.quota).toHaveBeenCalledWith(UTILISATEUR, 10)
     expect(tables.conversations).toHaveLength(0)
     expect(appelsModele).toBe(0)
-    expect(console.error).toHaveBeenCalledWith(
-      '[datagenius] chat',
-      expect.objectContaining({ reference: 'DG-TEST02', code: 'quota_epuise', userId: UTILISATEUR })
+    expect(lignesJournal('error')).toContainEqual(
+      expect.objectContaining({
+        niveau: 'erreur',
+        reference: 'DG-TEST02',
+        code: 'quota_epuise',
+        userId: UTILISATEUR,
+      })
     )
   })
 
@@ -330,9 +341,12 @@ describe('transaction de fin de tour', () => {
       ['claude-sonnet-5-5', null],
       ['claude-haiku-5-5', null],
     ])
-    expect(console.error).toHaveBeenCalledWith(
-      '[datagenius] chat',
-      expect.objectContaining({ evenement: 'fin_de_tour_non_enregistree', erreur: 'Error' })
+    expect(lignesJournal('error')).toContainEqual(
+      expect.objectContaining({
+        niveau: 'erreur',
+        evenement: 'fin_de_tour_non_enregistree',
+        erreur: 'Error',
+      })
     )
   })
 })

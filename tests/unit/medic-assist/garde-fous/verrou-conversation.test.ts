@@ -65,6 +65,13 @@ function chat(corps: unknown, signal?: AbortSignal) {
   return executerChat({ contexte, corps, ...(signal ? { signal } : {}) })
 }
 
+/** Lignes JSON écrites par le journal structuré sur un canal de la console. */
+function lignesJournal(canal: 'error' | 'warn' | 'info'): Array<Record<string, unknown>> {
+  return vi
+    .mocked(console[canal])
+    .mock.calls.map(appel => JSON.parse(String(appel[0])) as Record<string, unknown>)
+}
+
 beforeEach(() => {
   reinitialiserBase()
   h.lireConfig.mockResolvedValue(configDe())
@@ -233,9 +240,9 @@ describe('executerChat : un tour à la fois par conversation', () => {
       corps: { error: 'internal', details: { reference: 'DG-TEST01' } },
     })
     expect(conv.tourEnCoursJusqua).toBeNull()
-    expect(console.error).toHaveBeenCalledWith(
-      '[datagenius] chat',
+    expect(lignesJournal('error')).toContainEqual(
       expect.objectContaining({
+        niveau: 'erreur',
         reference: 'DG-TEST01',
         conversationId: conv.id,
         userId: UTILISATEUR,

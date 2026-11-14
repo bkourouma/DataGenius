@@ -214,6 +214,8 @@
   "notifRapport": {
     "titre": "Rapport : « {titre} »",
     "message": "Envoyé par {proprietaire}, {frequence}. Ouvrez l'analyse pour voir les chiffres dans votre périmètre.",
+    "echecTitre": "Rapport programmé non envoyé",
+    "echecMessage": "Le rapport « {titre} » n'a pas pu être envoyé après {essais} tentatives. Une nouvelle tentative aura lieu à la prochaine échéance.",
     "frequence": {
       "quotidien": "chaque jour",
       "hebdomadaire": "chaque semaine",

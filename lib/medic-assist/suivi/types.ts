@@ -13,7 +13,7 @@ import type {
   TypeAction,
 } from '@/lib/medic-assist/contrats'
 
-/** Compte MedicPro actif qui a acces a Medic Assist (destinataire possible). */
+/** Compte Data Genius actif qui a acces a Medic Assist (destinataire possible). */
 export interface CompteResume {
   id: string
   /** « Prenom Nom » : c'est ce qui s'affiche, jamais l'identifiant. */

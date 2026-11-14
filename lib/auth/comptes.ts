@@ -6,6 +6,7 @@
  * Le jeton clair n'existe qu'en memoire (lien + e-mail) : la base ne garde que son SHA-256.
  */
 import { prisma } from '@/lib/db/client'
+import { journal } from '@/lib/journal'
 import { hashPassword } from '@/lib/auth/password'
 import { envoyerInvitation, envoyerReinitialisation } from '@/lib/mail/comptes'
 import {
@@ -58,7 +59,7 @@ const ORDRE_STATUT: Record<StatutCompte, number> = { actif: 0, invite: 1, desact
 
 /** Jamais d'e-mail ni de jeton dans les journaux : uniquement des identifiants. */
 function journaliser(action: string, acteur: string | null, cible: string): void {
-  console.info('[datagenius] comptes', { action, acteur, cible })
+  journal.info('Action sur un compte', { domaine: 'comptes', action, acteur, cible })
 }
 
 async function verrouillerComptes(tx: Tx): Promise<void> {
@@ -235,7 +236,7 @@ export async function demanderReinitialisation(email: string): Promise<void> {
     const adresse = normaliserEmail(email)
     if (!emailValide(adresse)) return
     if (!urlPubliqueConfiguree()) {
-      console.error('[datagenius] comptes', { action: 'reinitialisation_url_absente' })
+      journal.erreur('URL publique absente pour la réinitialisation', { domaine: 'comptes', action: 'reinitialisation_url_absente' })
       return
     }
     const resultat = await prisma.$transaction(async tx => {
@@ -257,8 +258,8 @@ export async function demanderReinitialisation(email: string): Promise<void> {
     )).catch(() => undefined)
   } catch (erreur) {
     // Meme reponse dans tous les cas ; l'erreur technique est journalisee sans donnee personnelle.
-    console.error('[datagenius] comptes', {
-      action: 'reinitialisation_erreur', erreur: erreur instanceof Error ? erreur.name : 'inconnue',
+    journal.erreur('Erreur lors de la réinitialisation', {
+      domaine: 'comptes', action: 'reinitialisation_erreur', erreur: erreur instanceof Error ? erreur.name : 'inconnue',
     })
   }
 }

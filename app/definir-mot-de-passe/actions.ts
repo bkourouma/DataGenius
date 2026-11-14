@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { definirMotDePasse, ErreurComptes } from '@/lib/auth/comptes'
+import { journal } from '@/lib/journal'
 
 export interface EtatDefinition {
   erreur?: string
@@ -20,7 +21,7 @@ export async function definirMotDePasseAction(_etat: EtatDefinition, formData: F
     await definirMotDePasse(jeton, motDePasse)
   } catch (erreur) {
     if (erreur instanceof ErreurComptes) return { erreur: erreur.message }
-    console.error('[datagenius] comptes', { action: 'definition_mot_de_passe_erreur' })
+    journal.erreur('Échec de la définition du mot de passe', { domaine: 'comptes', action: 'definition_mot_de_passe_erreur' })
     return { erreur: 'Impossible de définir le mot de passe. Réessayez.' }
   }
   redirect('/login?reinitialise=1')

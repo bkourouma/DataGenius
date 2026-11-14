@@ -139,7 +139,7 @@ describe('donnees des jeux', () => {
     });
     expect(r.donnees).toEqual({});
     expect(r.id).toBe('a');
-    expect(console.error).toHaveBeenCalledWith(expect.any(String), 'ErreurLot2');
+    expect(JSON.stringify(vi.mocked(console.error).mock.calls)).toContain('ErreurLot2');
     expect(JSON.stringify(vi.mocked(console.error).mock.calls)).not.toContain('mv_secrete');
   });
 

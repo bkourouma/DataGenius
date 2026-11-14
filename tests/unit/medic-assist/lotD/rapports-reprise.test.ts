@@ -12,7 +12,12 @@ const { creerNotification, validerDestinataires, contexteDepuisCompte, composerE
 )
 
 vi.mock('@/lib/db/client', () => ({
-  prisma: { user: { findFirst: vi.fn(async () => ({ firstName: 'Awa', lastName: 'Diallo' })) } },
+  prisma: {
+    user: {
+      findFirst: vi.fn(async () => ({ firstName: 'Awa', lastName: 'Diallo' })),
+      findMany: vi.fn(async () => []),
+    },
+  },
 }))
 vi.mock('@/lib/mail/transport', () => ({ envoyerMail: vi.fn() }))
 vi.mock('@/lib/medic-assist/suivi/dependances', () => ({ construireExport: vi.fn() }))
@@ -24,7 +29,9 @@ vi.mock('@/lib/medic-assist/suivi/comptes', () => ({
 vi.mock('@/lib/auth/data-access', () => ({ destinataireCouvrePerimetre: vi.fn(async () => true) }))
 vi.mock('@/lib/medic-assist/suivi/emails-rapport', () => ({ composerEmailRapport: composerEmail }))
 vi.mock('@/lib/medic-assist/suivi/emails', () => ({
-  traducteurSuivi: vi.fn(async () => (cle: string) => cle),
+  traducteurSuivi: vi.fn(
+    async () => (cle: string, params?: { titre?: string }) => `${cle}|${params?.titre ?? ''}`
+  ),
 }))
 vi.mock('@/lib/medic-assist/suivi/notifications', () => ({
   creerNotificationSuivi: creerNotification,
@@ -217,13 +224,25 @@ describe('rapports programmes : reprise', () => {
     expect(lignes).not.toContain(ADRESSE)
     expect(lignes).not.toContain('example.test')
     expect(lignes).not.toContain(SUJET)
-    expect(info).toHaveBeenCalledWith(
-      '[datagenius] rapports',
-      expect.objectContaining({ rapportId: 'rap-1', destinataireId: 'd1', resultat: 'ok', essai: 1 })
+    const lire = (appels: unknown[][]) => appels.map(c => JSON.parse(String(c[0])))
+    expect(lire(info.mock.calls)).toContainEqual(
+      expect.objectContaining({
+        domaine: 'rapports',
+        niveau: 'info',
+        rapportId: 'rap-1',
+        destinataireId: 'd1',
+        resultat: 'ok',
+        essai: 1,
+      })
     )
-    expect(erreur).toHaveBeenCalledWith(
-      '[datagenius] rapports',
-      expect.objectContaining({ destinataireId: 'd2', resultat: 'echec', essai: 1 })
+    expect(lire(erreur.mock.calls)).toContainEqual(
+      expect.objectContaining({
+        domaine: 'rapports',
+        niveau: 'erreur',
+        destinataireId: 'd2',
+        resultat: 'echec',
+        essai: 1,
+      })
     )
   })
 

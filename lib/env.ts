@@ -61,6 +61,33 @@ const schemaBase = {
   GOOGLE_GENERATIVE_AI_API_KEY: facultative(texteNonVide),
   DEEPSEEK_API_KEY: facultative(texteNonVide),
   DATAGENIUS_SOURCES_HOTES_AUTORISES: facultative(z.string()),
+  // Nombre de sauts de proxy de confiance devant l'application (0 : en-têtes d'IP ignorés).
+  DATAGENIUS_PROXY_DE_CONFIANCE: facultative(
+    z
+      .string()
+      .regex(/^\d+$/, 'entier attendu')
+      .refine((v) => Number(v) <= 10, 'hors plage (0 à 10)')
+  ),
+  DATAGENIUS_OIDC_ISSUER: facultative(texteNonVide),
+  DATAGENIUS_OIDC_CLIENT_ID: facultative(texteNonVide),
+  DATAGENIUS_OIDC_CLIENT_SECRET: facultative(texteNonVide),
+  DATAGENIUS_EMBED_ORIGINS: facultative(z.string()),
+  DATAGENIUS_REST_ORIGINES_PRIVEES: facultative(z.string()),
+  DATAGENIUS_CATALOGUE: facultative(texteNonVide),
+  SMTP_SECURE: facultative(z.enum(['true', 'false'], { message: '« true » ou « false » attendu' })),
+  APP_URL: facultative(urlAvec(['http:', 'https:'], 'http ou https')),
+  UPLOAD_DIR: facultative(texteNonVide),
+  MEDIC_ASSIST_POLICES_PDF: facultative(texteNonVide),
+  NEXT_PUBLIC_TIMEZONE: facultative(
+    z.string().refine((v) => {
+      try {
+        new Intl.DateTimeFormat('fr', { timeZone: v })
+        return true
+      } catch {
+        return false
+      }
+    }, 'fuseau IANA invalide')
+  ),
 }
 
 const schemaWeb = z.object({
@@ -116,6 +143,11 @@ function avertirFacultatives(contexte: ContexteEnvironnement, v: EnvironnementVa
   }
   if (!v.DATAGENIUS_WAREHOUSE_READ_URL) {
     journal.avertissement('DATAGENIUS_WAREHOUSE_READ_URL absente : lecture de l’entrepôt non isolée')
+  }
+  if (contexte === 'web' && !v.DATAGENIUS_PROXY_DE_CONFIANCE) {
+    journal.avertissement(
+      'DATAGENIUS_PROXY_DE_CONFIANCE absente : seule la limite de connexion par e-mail s’applique'
+    )
   }
   if (!v.JETON_TACHES_PLANIFIEES) {
     journal.avertissement('JETON_TACHES_PLANIFIEES absent : tâches planifiées désactivées')

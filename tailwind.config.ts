@@ -28,7 +28,7 @@ const config = {
         // La palette Tailwind par defaut est remplacee : des centaines de classes
         // `slate-*`, `gray-*`, `blue-*`, `green-*`, `red-*`, `yellow-*` sont ecrites
         // en dur dans les ecrans. En redefinissant les echelles ici, tous suivent la
-        // charte (neutres teintes marine, bleu cobalt, vert MedicPro, rouge oxyde,
+        // charte (neutres teintes marine, bleu cobalt, vert Data Genius, rouge oxyde,
         // ocre) sans toucher chaque fichier.
         slate: {
           50: "#F5F7F9", 100: "#EBEEF2", 200: "#DDE2E8", 300: "#C5CDD6", 400: "#8E9AA9",
