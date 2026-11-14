@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function UtilisateursPage() {
   const acces = await exigerAdminMedicAssist()
-  if (!acces.ok) redirect('/medic-assist')
+  if (!acces.ok) redirect('/assistant')
   const comptes = await listerComptes()
   const serialisables = comptes.map(c => ({ ...c, invitationExpireA: c.invitationExpireA?.toISOString() ?? null }))
   return <section className="mx-auto max-w-5xl space-y-8 py-6">

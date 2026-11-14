@@ -7,7 +7,7 @@ import { FormulaireCombinaison } from '../formulaire'
 export const dynamic = 'force-dynamic'
 
 export default async function ModifierJeuCombine({ params }: { params: { cle: string } }) {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   if (!/^combinaison_[0-9a-f]{32}$/.test(params.cle)) notFound()
   const [edition, jeux] = await Promise.all([
     chargerCombinaison(params.cle),

@@ -13,7 +13,7 @@ const statuts = { publie: 'Copie publiée', identique: 'Copie inchangée', echec
 export default async function QualiteImport({ params, searchParams }: {
   params: { cle: string }; searchParams: { etat?: string }
 }) {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   if (!/^[a-z][a-z0-9_]{0,59}$/.test(params.cle)) notFound()
   const jeu = await chargerQualite(params.cle)
   if (!jeu) notFound()

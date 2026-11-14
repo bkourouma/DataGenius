@@ -218,7 +218,7 @@ export interface TacheJson {
   creeParNom: string | null
   /** Vrai si la tache m'est assignee (je peux la marquer terminee). */
   assigneeAMoi: boolean
-  /** Conversation d'origine, si connue (lien /medic-assist?c=...). */
+  /** Conversation d'origine, si connue (lien /assistant?c=...). */
   conversationId: string | null
   /**
    * Vrai seulement si `conversationId` est present ET que la conversation appartient

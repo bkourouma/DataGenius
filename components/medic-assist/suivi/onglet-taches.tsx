@@ -191,7 +191,7 @@ export function OngletTaches() {
                     {tache.conversationId && tache.conversationOuvrable && (
                       <Link
                         prefetch={false}
-                        href={`/medic-assist?c=${encodeURIComponent(tache.conversationId)}`}
+                        href={`/assistant?c=${encodeURIComponent(tache.conversationId)}`}
                         className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline sm:min-h-0"
                       >
                         {t('voirConversation')}

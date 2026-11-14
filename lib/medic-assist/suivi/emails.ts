@@ -55,7 +55,7 @@ export interface EmailArtefact {
 
 /** Lien de l'e-mail : l'onglet « partages » de Mes analyses. */
 export function urlAnalysesPartagees(): string {
-  return `${urlApplication()}/medic-assist/analyses?onglet=partages`
+  return `${urlApplication()}/assistant/analyses?onglet=partages`
 }
 
 export async function composerEmailArtefact(entree: EntreeEmailArtefact): Promise<EmailArtefact> {

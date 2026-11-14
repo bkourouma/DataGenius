@@ -71,8 +71,8 @@ const CHAMPS_MODIFIABLES: Record<TypeAction, readonly string[]> = {
 }
 
 /** Ecran de la liste des taches / rapports de l'utilisateur (onglets de Mes analyses). */
-const HREF_TACHES = '/medic-assist/analyses?onglet=taches'
-const HREF_RAPPORTS = '/medic-assist/analyses?onglet=rapports'
+const HREF_TACHES = '/assistant/analyses?onglet=taches'
+const HREF_RAPPORTS = '/assistant/analyses?onglet=rapports'
 
 /** Codes d'echec qui ont une phrase dediee (actionResultat.echec.<code>). */
 const CODES_ECHEC_DECRITS = [

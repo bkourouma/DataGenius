@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { createContext, useContext, useState, useTransition, type ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
-import { masquerDemarrage } from '@/app/(dashboard)/medic-assist/actions'
+import { masquerDemarrage } from '@/app/(dashboard)/assistant/actions'
 import type { ValeurDemarrage } from '@/lib/medic-assist/demarrage'
 
 const DemarrageContext = createContext<ValeurDemarrage | null>(null)

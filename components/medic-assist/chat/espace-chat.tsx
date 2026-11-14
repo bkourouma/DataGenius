@@ -19,7 +19,7 @@ import { ConversationChat } from './conversation-chat'
 import { GabaritPleinEcran } from './gabarit-plein-ecran'
 import { ListeConversations } from './liste-conversations'
 
-const CHEMIN = '/medic-assist'
+const CHEMIN = '/assistant'
 
 function urlConversation(id: string): string {
   return `${CHEMIN}?c=${encodeURIComponent(id)}`

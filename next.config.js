@@ -16,6 +16,16 @@ function entetesTransversaux() {
 module.exports = withNextIntl({
   reactStrictMode: true,
   output: 'standalone',
+  // Anciennes adresses de l'assistant (les routes /api/medic-assist/** restent inchangées).
+  // Next.js conserve la requête (?c=...) lors d'une redirection.
+  async redirects() {
+    return [
+      { source: '/medic-assist', destination: '/assistant', permanent: true },
+      { source: '/medic-assist/:path*', destination: '/assistant/:path*', permanent: true },
+      { source: '/dashboard/admin/medic-assist', destination: '/dashboard/admin/assistant', permanent: true },
+      { source: '/dashboard/admin/medic-assist/:path*', destination: '/dashboard/admin/assistant/:path*', permanent: true },
+    ]
+  },
   async headers() {
     const transversaux = entetesTransversaux()
     return [

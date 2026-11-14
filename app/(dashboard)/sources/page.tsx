@@ -14,7 +14,7 @@ const date = new Intl.DateTimeFormat('fr', { dateStyle: 'short', timeStyle: 'sho
 
 export default async function Sources() {
   const garde = await exigerAdminMedicAssist()
-  if (!garde.ok) redirect('/medic-assist')
+  if (!garde.ok) redirect('/assistant')
   const [jeux, sources, combinaisons] = await Promise.all([
     etatEntrepot().catch(() => null), listerSources().catch(() => null),
     listerCombinaisons().catch(() => null),

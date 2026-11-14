@@ -17,7 +17,7 @@ export default async function AnalysePage({ params }: Props) {
   return (
     <div className="space-y-4 py-4 sm:space-y-6 sm:py-6">
       <Link
-        href="/medic-assist/analyses"
+        href="/assistant/analyses"
         prefetch={false}
         className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline sm:min-h-0"
       >

@@ -57,7 +57,7 @@ export default async function TableauPage({ params, searchParams }: {
           <p className="text-sm text-muted-foreground">Artefact · version {tuile.artefact.version}</p>
           {filtreActif && <p className="text-sm text-muted-foreground">L’artefact conserve ses filtres enregistrés.</p>}
           <VueArtefactSuivi artefactId={tuile.artefact.id} compact />
-          <Link className="text-sm text-primary hover:underline" href={`/medic-assist/analyses/${encodeURIComponent(tuile.artefact.id)}`}>Ouvrir l’artefact</Link>
+          <Link className="text-sm text-primary hover:underline" href={`/assistant/analyses/${encodeURIComponent(tuile.artefact.id)}`}>Ouvrir l’artefact</Link>
           {tuile.artefact.jeux.some(jeu => jeu.regles.length > 0) && <details className="text-sm text-muted-foreground">
             <summary>Provenance de l’artefact</summary>
             <ul className="mt-2 list-disc pl-5">{[...new Set(tuile.artefact.jeux.flatMap(jeu => jeu.regles))].map(regle => <li key={regle}>{regle}</li>)}</ul>
