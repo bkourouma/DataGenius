@@ -1,20 +1,24 @@
 'use client'
 
 import { useEffect, useState, type FormEvent } from 'react'
+import Link from 'next/link'
 import { getProviders, signIn } from 'next-auth/react'
 import { Database } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { MESSAGE_MOT_DE_PASSE_DEFINI, messageErreurConnexion } from './messages'
 
 export default function Connexion() {
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
   const [entreprise, setEntreprise] = useState(false)
+  const [succes, setSucces] = useState('')
 
   useEffect(() => {
     const parametres = new URLSearchParams(window.location.search)
-    if (parametres.has('error')) setError('Connexion impossible. Vérifiez que votre compte est autorisé.')
+    if (parametres.has('error')) setError(messageErreurConnexion(parametres.get('error'), 'url'))
+    if (parametres.get('reinitialise') === '1') setSucces(MESSAGE_MOT_DE_PASSE_DEFINI)
     void getProviders().then(fournisseurs => setEntreprise(Boolean(fournisseurs?.entreprise)), () => setEntreprise(false))
   }, [])
 
@@ -36,6 +40,7 @@ export default function Connexion() {
     const form = new FormData(event.currentTarget)
     setPending(true)
     setError('')
+    setSucces('')
     try {
       const result = await signIn('credentials', {
         email: form.get('email'),
@@ -43,7 +48,7 @@ export default function Connexion() {
         redirect: false,
       })
       if (result?.ok) window.location.assign(destination())
-      else setError('Identifiants invalides.')
+      else setError(messageErreurConnexion(result?.error, 'formulaire'))
     } catch {
       setError('Connexion indisponible. Réessayez.')
     } finally {
@@ -78,7 +83,9 @@ export default function Connexion() {
           <div className="grid gap-2">
             <Label htmlFor="password">Mot de passe</Label>
             <Input id="password" name="password" type="password" autoComplete="current-password" maxLength={256} required />
+            <Link href="/mot-de-passe-oublie" className="text-sm text-primary underline-offset-4 hover:underline">Mot de passe oublié ?</Link>
           </div>
+          {succes && <p role="status" className="text-sm text-emerald-700">{succes}</p>}
           {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
           <Button disabled={pending}>{pending ? 'Connexion…' : 'Se connecter'}</Button>
         </form>

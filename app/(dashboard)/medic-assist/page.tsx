@@ -2,10 +2,13 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { getTranslations } from 'next-intl/server'
+import { DemarrageProvider } from '@/components/medic-assist/chat/demarrage'
 import { EspaceChat } from '@/components/medic-assist/chat/espace-chat'
 import { getAccessScope } from '@/lib/auth/access-scope'
 import { authOptions } from '@/lib/auth/config'
+import { exigerAdminMedicAssist, exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { peutUtiliserMedicAssist } from '@/lib/medic-assist/contrats/droits'
+import { etatDemarrage, valeurDemarrage, type ValeurDemarrage } from '@/lib/medic-assist/demarrage'
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -34,5 +37,27 @@ export default async function MedicAssistPage() {
   const habilitations = session.user.habilitations ?? null
   if (!peutUtiliserMedicAssist(scope.roleName, scope, habilitations)) redirect('/dashboard')
 
-  return <EspaceChat />
+  // Le guide ne doit jamais empecher l'affichage de la page.
+  let guide: ValeurDemarrage | null = null
+  try {
+    const admin = await exigerAdminMedicAssist()
+    const acces = admin.ok ? admin : await exigerMedicAssist()
+    if (acces.ok) {
+      const etat = await etatDemarrage({
+        userId: session.user.id,
+        roleName: scope.roleName,
+        contexte: acces.contexte,
+        admin: admin.ok,
+      })
+      guide = valeurDemarrage(etat)
+    }
+  } catch {
+    guide = null
+  }
+
+  return (
+    <DemarrageProvider valeur={guide}>
+      <EspaceChat />
+    </DemarrageProvider>
+  )
 }

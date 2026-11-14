@@ -248,5 +248,43 @@
     "contexte": "上下文：{ecran}",
     "retirerContexte": "移除屏幕上下文",
     "aide": "按 Enter 发送，按 Esc 关闭"
+  },
+  "demarrage": {
+    "titre": "快速入门",
+    "progression": "已完成 {faites} / {total}",
+    "listeLabel": "入门步骤",
+    "fait": "已完成",
+    "aFaire": "待完成",
+    "masquer": "隐藏此指南",
+    "etapes": {
+      "source": {
+        "libelle": "添加数据源",
+        "description": "Data Genius 可以读取的数据库、文件或 API。",
+        "lien": "添加数据源"
+      },
+      "import": {
+        "libelle": "导入数据集",
+        "description": "选择要开放使用的表或工作表。",
+        "lien": "导入数据集"
+      },
+      "catalogue": {
+        "libelle": "发布业务目录",
+        "description": "说明各列的含义，以获得可靠的回答。",
+        "lien": "打开目录"
+      },
+      "question": {
+        "libelle": "提出第一个问题",
+        "description": "试试下方的起始问题。"
+      },
+      "collegue": {
+        "libelle": "邀请同事",
+        "description": "为团队成员开通访问权限。",
+        "lien": "邀请同事"
+      }
+    },
+    "membreSansJeu": {
+      "titre": "您暂时没有可访问的数据",
+      "texte": "管理员需要先为您开通数据访问权限，您才能提问。请联系管理员申请。"
+    }
   }
 }

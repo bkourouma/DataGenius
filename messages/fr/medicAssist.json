@@ -248,5 +248,43 @@
     "contexte": "Contexte : {ecran}",
     "retirerContexte": "Retirer le contexte de l'écran",
     "aide": "Entrée pour envoyer, Échap pour fermer"
+  },
+  "demarrage": {
+    "titre": "Premiers pas",
+    "progression": "{faites} sur {total}",
+    "listeLabel": "Étapes de démarrage",
+    "fait": "Fait",
+    "aFaire": "À faire",
+    "masquer": "Masquer ce guide",
+    "etapes": {
+      "source": {
+        "libelle": "Ajouter une source de données",
+        "description": "Une base, un fichier ou une API que Data Genius pourra lire.",
+        "lien": "Ajouter une source"
+      },
+      "import": {
+        "libelle": "Importer un jeu de données",
+        "description": "Choisissez les tables ou feuilles à rendre disponibles.",
+        "lien": "Importer un jeu"
+      },
+      "catalogue": {
+        "libelle": "Publier le catalogue métier",
+        "description": "Décrivez le sens des colonnes pour des réponses fiables.",
+        "lien": "Ouvrir les catalogues"
+      },
+      "question": {
+        "libelle": "Poser une première question",
+        "description": "Utilisez une question de départ ci-dessous pour essayer."
+      },
+      "collegue": {
+        "libelle": "Inviter un collègue",
+        "description": "Donnez accès à une personne de votre équipe.",
+        "lien": "Inviter un collègue"
+      }
+    },
+    "membreSansJeu": {
+      "titre": "Aucune donnée accessible pour le moment",
+      "texte": "Votre administrateur doit vous ouvrir l'accès à des données avant que vous puissiez poser des questions. Contactez-le pour en faire la demande."
+    }
   }
 }

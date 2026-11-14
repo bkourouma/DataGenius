@@ -29,6 +29,7 @@ model User {
   assistantAvis            AssistantAvis[]             @relation("AssistantAvisUser")
   assistantUsages          AssistantUsage[]            @relation("AssistantUsageUser")
   assistantPiecesJointes   AssistantPieceJointe[]      @relation("AssistantPieceJointeUser")
+  comptesJetons            CompteJeton[]
   @@map("users")
 }
 model AssistantConversation {
@@ -325,4 +326,19 @@ model Notification {
   @@index([status])
   @@index([userId, readAt])
   @@map("notifications")
+}
+
+model CompteJeton {
+  id       String    @id @default(cuid())
+  userId   String
+  type     String
+  hash     String    @unique
+  expireA  DateTime
+  utiliseA DateTime?
+  creeA    DateTime  @default(now())
+  creePar  String?
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, creeA])
+  @@map("comptes_jetons")
 }
