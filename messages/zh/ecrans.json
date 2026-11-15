@@ -1,1 +1,280 @@
-{}
+{
+  "coquille": {
+    "metadata": {
+      "description": "通过对话分析您的数据并生成报告。"
+    },
+    "rechercher": "搜索",
+    "rechercherOuDemander": "搜索或提问",
+    "espaceDeTravail": "工作区",
+    "seDeconnecter": "退出登录",
+    "ouvrirMenu": "打开菜单",
+    "fermerMenu": "关闭菜单",
+    "menu": "菜单",
+    "compte": "账户",
+    "administrateur": "管理员",
+    "membre": "成员",
+    "groupes": {
+      "travail": "工作",
+      "administration": "管理"
+    },
+    "nav": {
+      "conversations": {
+        "libelle": "对话",
+        "motsCles": "聊天 助手 问题"
+      },
+      "analyses": {
+        "libelle": "分析",
+        "motsCles": "已保存 共享 报告 任务"
+      },
+      "tableaux": {
+        "libelle": "仪表板",
+        "motsCles": "看板 指标 警报"
+      },
+      "tendances": {
+        "libelle": "趋势",
+        "motsCles": "演变 曲线 时段"
+      },
+      "espaces": {
+        "libelle": "空间",
+        "motsCles": "数据集 数据 领域"
+      },
+      "recherche": {
+        "libelle": "搜索",
+        "motsCles": "查找 寻找 检索"
+      },
+      "glossaire": {
+        "libelle": "术语表",
+        "motsCles": "定义 术语 词汇"
+      },
+      "sources": {
+        "libelle": "数据源",
+        "motsCles": "连接 数据库 导入 同步 postgresql mysql api 文件"
+      },
+      "utilisateurs": {
+        "libelle": "用户",
+        "motsCles": "账户 成员 邀请 角色"
+      },
+      "droits": {
+        "libelle": "访问权限",
+        "motsCles": "分组 成员 权限"
+      },
+      "parametres": {
+        "libelle": "设置",
+        "motsCles": "配置 提供商 人工智能 使用 反馈"
+      },
+      "journal": {
+        "libelle": "审计日志",
+        "motsCles": "审计 历史 痕迹 事件 登录"
+      }
+    },
+    "palette": {
+      "placeholder": "前往某个页面或提出问题…",
+      "echap": "Esc",
+      "entree": "回车",
+      "commandes": "命令",
+      "aucunResultat": "没有匹配的页面。",
+      "parcourir": "浏览",
+      "valider": "确认",
+      "aideQuestion": "输入问题即可发送给助手",
+      "poserQuestion": "向助手提出这个问题",
+      "sections": {
+        "aller": "前往",
+        "tableaux": "仪表板",
+        "analyses": "分析",
+        "demander": "提问"
+      },
+      "nouvelleConversation": {
+        "libelle": "新对话",
+        "motsCles": "聊天 问题"
+      }
+    }
+  },
+  "connexion": {
+    "titre": "登录",
+    "sousTitre": "进入您的 Data Genius 工作区。",
+    "accroche": "通过对话查询您的数据，轻松找回您的分析和仪表板。",
+    "points": {
+      "question": "提出问题，答案连同数据一并送达。",
+      "tableaux": "将您的分析保存在可随时分享的仪表板中。",
+      "sources": "基于最新的数据源开展工作。"
+    },
+    "email": "电子邮箱",
+    "motDePasse": "密码",
+    "motDePasseOublie": "忘记密码？",
+    "seConnecter": "登录",
+    "enCours": "正在登录…",
+    "entreprise": "企业登录",
+    "erreurs": {
+      "tropDeTentatives": "尝试次数过多，请在 15 分钟后重试。",
+      "identifiantsInvalides": "登录凭据无效。",
+      "connexionImpossible": "无法登录，请确认您的账户已获授权。",
+      "indisponible": "登录暂不可用，请重试。",
+      "entrepriseIndisponible": "企业登录暂不可用，请重试。"
+    },
+    "succes": {
+      "motDePasseDefini": "您的密码已设置，现在可以登录。"
+    }
+  },
+  "langue": {
+    "libelle": "界面语言"
+  },
+  "motDePasseOublie": {
+    "metaTitre": "忘记密码",
+    "titre": "忘记密码",
+    "intro": "请输入您的电子邮件地址，以接收重置链接。",
+    "entreprise": "如果您的登录由公司统一管理，请在登录页面使用企业登录。",
+    "retour": "返回登录",
+    "adresse": "电子邮件地址",
+    "envoyer": "发送链接",
+    "envoi": "正在发送…",
+    "confirmation": "如果有账户与此地址匹配，包含重置链接的电子邮件已发送。该链接有效期为 1 小时。"
+  },
+  "definirMotDePasse": {
+    "metaTitre": "设置密码",
+    "bienvenue": "欢迎，{prenom}",
+    "nouveauTitre": "新密码",
+    "choisir": "请选择您的密码",
+    "invalideTitre": "链接无效",
+    "invalide": "此链接无效或已过期。",
+    "nouveauLien": "申请新链接",
+    "retour": "返回登录",
+    "nouveauMotDePasse": "新密码",
+    "aide": "至少 {min} 个字符",
+    "confirmer": "确认密码",
+    "enregistrer": "保存密码",
+    "enregistrement": "正在保存…",
+    "formulaireIncomplet": "表单不完整。",
+    "differents": "两次输入的密码不一致。",
+    "echec": "无法设置密码，请重试。"
+  },
+  "tendances": {
+    "titre": "月度趋势",
+    "description": "发现某项指标的异常偏差，并获得对未来几个月的审慎估计。",
+    "aucunTitre": "没有可用的月度指标",
+    "aucunDescription": "请在带有指标的数据集上配置日历，以逐月跟踪其变化。",
+    "indisponible": "分析暂时不可用。",
+    "jeu": "数据集",
+    "choisirJeu": "选择数据集",
+    "indicateur": "指标",
+    "choisirIndicateur": "选择指标",
+    "premierMois": "起始月份",
+    "dernierMois": "截止月份",
+    "horizon": "预测月数",
+    "analyser": "分析趋势",
+    "observations": "观测值与异常偏差",
+    "observationsAide": "该信号将每个数值与前六个月进行比较。当稳健偏差得分超过 3.5 时出现；若中位离散度为零，则数值一发生变化就会出现。",
+    "manquants": "{count, plural, other {{n} 个月没有数值。}}",
+    "horsPrecision": "{count, plural, other {{n} 个数值未经转换直接显示，并已从估计中排除。}}",
+    "mois": "月份",
+    "valeur": "数值",
+    "ecart": "偏差",
+    "atypique": "异常",
+    "previsions": "预测",
+    "previsionsAide": "估计值取最近三个月的中位数。当积累了十二个一个月期的历史误差后，区间会在估计值上下各加减其第 90 百分位数。",
+    "validation": "{count, plural, other {基于 {n} 次连续历史预测的平均绝对误差 · {mae}}}",
+    "estimation": "估计值",
+    "bande": "历史区间",
+    "bandeValeurs": "{bas} 至 {haut}",
+    "serieInsuffisante": "{count, plural, other {期末需要连续六个可用月份。当前序列 · {n} 个月。}}",
+    "provenance": "数据来源"
+  },
+  "espaces": {
+    "titre": "数据空间",
+    "description": "数据空间按团队或主题归集数据集。您只能看到有权访问的空间。",
+    "gerer": "管理数据空间",
+    "aucunTitre": "没有可访问的空间",
+    "aucunAdmin": "创建一个空间，用于归集数据集并选择谁可以查看。",
+    "aucunMembre": "请管理员授予您访问某个空间的权限。",
+    "nbJeux": "{count, plural, other {{n} 个数据集}}",
+    "listeJeux": "数据集",
+    "aucunJeu": "此空间中没有数据集。"
+  },
+  "utilisateurs": {
+    "titre": "用户",
+    "description": "邀请成员、管理其角色，并停用不再需要访问 Data Genius 的账户。",
+    "inviterTitre": "邀请用户",
+    "comptes": "账户（{n}）",
+    "aucunCompte": "暂无账户。",
+    "vous": "（您）",
+    "groupes": "分组：",
+    "aucunGroupe": "无分组",
+    "connexionEntreprise": "企业登录",
+    "role": {
+      "admin": "管理员",
+      "membre": "成员"
+    },
+    "statut": {
+      "actif": "已启用",
+      "desactive": "已停用",
+      "invite": "已邀请",
+      "inviteExpire": "已邀请 · 截止 {date}"
+    },
+    "lien": {
+      "titre": "邀请链接",
+      "copier": "复制",
+      "copie": "已复制",
+      "avertissementDate": "此链接可用于创建密码：请仅与受邀人分享；链接将在所示日期（{date}）失效。",
+      "avertissementListe": "此链接可用于创建密码：请仅与受邀人分享；链接将在账户列表中所示的日期失效。"
+    },
+    "formulaire": {
+      "email": "电子邮件地址",
+      "role": "角色",
+      "prenom": "名",
+      "nom": "姓",
+      "envoyer": "发送邀请",
+      "envoi": "正在发送…"
+    },
+    "actions": {
+      "propreCompte": "您不能在此修改自己的账户。",
+      "renvoyer": "重新发送邀请",
+      "renvoi": "正在重新发送…",
+      "reactiver": "重新启用",
+      "reactivation": "正在重新启用…",
+      "desactiver": "停用",
+      "desactiverTitre": "确定停用 {nom} 吗？",
+      "desactiverDescription": "此人将无法再登录，其数据会被保留。您之后可以重新启用该账户。",
+      "desactiverConfirmer": "停用账户",
+      "passerMembre": "设为成员",
+      "passerAdmin": "设为管理员",
+      "passerMembreTitre": "将 {nom} 改为成员吗？",
+      "passerAdminTitre": "将 {nom} 设为管理员吗？",
+      "passerMembreDescription": "此人将失去管理权限（用户、数据源、设置），只能查看其所在分组被授权的数据。",
+      "passerAdminDescription": "此人将可以管理用户、数据源和设置，并能查看所有数据。",
+      "annuler": "取消"
+    },
+    "serveur": {
+      "refus": "仅限管理员访问。",
+      "echec": "暂时无法执行此操作，请稍后重试。",
+      "courrierNonParti": "邮件未能发送（SMTP 未配置或发送失败）。请自行转发此链接：",
+      "invitationEnvoyee": "邀请已发送至 {adresse}。",
+      "personneInvitee": "受邀人",
+      "desactive": "账户已停用。",
+      "reactive": "账户已重新启用。",
+      "roleModifie": "角色已修改。"
+    }
+  },
+  "mails": {
+    "pied": "此为自动发送的邮件，请勿回复。",
+    "bonjour": "{prenom}，您好：",
+    "invitation": {
+      "sujet": "您收到了 Data Genius 的邀请",
+      "introPar": "{par} 邀请您加入 Data Genius。",
+      "introAdmin": "一位管理员邀请您加入 Data Genius。",
+      "choisir": "请选择您的密码以激活账户：",
+      "validite": "此链接有效期为 7 天，且只能使用一次。",
+      "titre": "激活您的账户",
+      "corps": "请选择您的密码以激活账户。此链接有效期为 7 天，且只能使用一次。",
+      "bouton": "设置我的密码"
+    },
+    "reinitialisation": {
+      "sujet": "重置您的 Data Genius 密码",
+      "intro": "我们收到了重置您密码的请求。要设置新密码：",
+      "validite": "此链接有效期为 1 小时。",
+      "ignorer": "如果这不是您本人的操作，请忽略此邮件：您的密码不会改变。",
+      "titre": "重置您的密码",
+      "corps": "我们收到了重置您密码的请求。此链接有效期为 1 小时。",
+      "ignorerHtml": "如果这不是您本人的操作，请忽略此邮件：您的密码不会改变。",
+      "bouton": "设置新密码"
+    }
+  }
+}

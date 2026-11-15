@@ -1,54 +1,93 @@
+import { createTranslator } from 'next-intl'
+
+import { defaultLocale, getDirection, isLocale, type Locale } from '@/i18n/config'
+import { loadMessages } from '@/i18n/messages'
+import { prisma } from '@/lib/db/client'
 import { echapper, gabarit } from '@/lib/mail/gabarit'
 import { envoyerMail } from '@/lib/mail/transport'
 
 interface Destinataire {
   email: string
   prenom: string
+  /** Langue du message ; à défaut, celle du compte (User.locale), sinon le français. */
+  locale?: string
+}
+
+type Traducteur = (cle: string, valeurs?: Record<string, string | number>) => string
+
+/** Langue fournie, sinon celle du compte ; toute valeur absente, invalide ou illisible donne le français. */
+async function langueDestinataire(destinataire: Destinataire): Promise<Locale> {
+  if (destinataire.locale !== undefined) return isLocale(destinataire.locale) ? destinataire.locale : defaultLocale
+  try {
+    const compte = await prisma.user.findUnique({
+      where: { email: destinataire.email.trim().toLowerCase() },
+      select: { locale: true },
+    })
+    return isLocale(compte?.locale) ? compte.locale : defaultLocale
+  } catch {
+    return defaultLocale
+  }
+}
+
+async function traducteurMails(locale: Locale): Promise<Traducteur> {
+  return createTranslator({
+    locale,
+    messages: await loadMessages(locale),
+    namespace: 'ecrans.mails' as never,
+  }) as unknown as Traducteur
 }
 
 export async function envoyerInvitation(destinataire: Destinataire, lien: string, invitePar?: string): Promise<boolean> {
+  const locale = await langueDestinataire(destinataire)
+  const t = await traducteurMails(locale)
   const par = invitePar?.trim()
-  const intro = par
-    ? `${par} vous invite à rejoindre Data Genius.`
-    : 'Un administrateur vous invite à rejoindre Data Genius.'
+  const intro = par ? t('invitation.introPar', { par }) : t('invitation.introAdmin')
   return envoyerMail({
     to: destinataire.email,
-    subject: 'Votre invitation à Data Genius',
+    subject: t('invitation.sujet'),
     text: [
-      `Bonjour ${destinataire.prenom},`, '', intro,
-      'Choisissez votre mot de passe pour activer votre compte :', lien, '',
-      "Ce lien est valable 7 jours et ne peut servir qu'une fois.",
+      t('bonjour', { prenom: destinataire.prenom }), '', intro,
+      t('invitation.choisir'), lien, '',
+      t('invitation.validite'),
     ].join('\n'),
     html: gabarit({
-      titre: 'Activez votre compte',
+      titre: t('invitation.titre'),
       corps: [
-        `Bonjour ${echapper(destinataire.prenom)},`,
+        t('bonjour', { prenom: echapper(destinataire.prenom) }),
         echapper(intro),
-        'Choisissez votre mot de passe pour activer votre compte. Ce lien est valable 7 jours et ne peut servir qu’une fois.',
+        t('invitation.corps'),
       ],
-      lien: { url: lien, libelle: 'Choisir mon mot de passe' },
+      lien: { url: lien, libelle: t('invitation.bouton') },
+      langue: locale,
+      direction: getDirection(locale),
+      pied: t('pied'),
     }),
   })
 }
 
 export async function envoyerReinitialisation(destinataire: Destinataire, lien: string): Promise<boolean> {
+  const locale = await langueDestinataire(destinataire)
+  const t = await traducteurMails(locale)
   return envoyerMail({
     to: destinataire.email,
-    subject: 'Réinitialisation de votre mot de passe Data Genius',
+    subject: t('reinitialisation.sujet'),
     text: [
-      `Bonjour ${destinataire.prenom},`, '',
-      'Une réinitialisation de votre mot de passe a été demandée. Pour en choisir un nouveau :', lien, '',
-      'Ce lien est valable 1 heure.',
-      "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message : votre mot de passe reste inchangé.",
+      t('bonjour', { prenom: destinataire.prenom }), '',
+      t('reinitialisation.intro'), lien, '',
+      t('reinitialisation.validite'),
+      t('reinitialisation.ignorer'),
     ].join('\n'),
     html: gabarit({
-      titre: 'Réinitialiser votre mot de passe',
+      titre: t('reinitialisation.titre'),
       corps: [
-        `Bonjour ${echapper(destinataire.prenom)},`,
-        'Une réinitialisation de votre mot de passe a été demandée. Ce lien est valable 1 heure.',
-        'Si vous n’êtes pas à l’origine de cette demande, ignorez ce message : votre mot de passe reste inchangé.',
+        t('bonjour', { prenom: echapper(destinataire.prenom) }),
+        t('reinitialisation.corps'),
+        t('reinitialisation.ignorerHtml'),
       ],
-      lien: { url: lien, libelle: 'Choisir un nouveau mot de passe' },
+      lien: { url: lien, libelle: t('reinitialisation.bouton') },
+      langue: locale,
+      direction: getDirection(locale),
+      pied: t('pied'),
     }),
   })
 }

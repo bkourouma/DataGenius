@@ -1,13 +1,18 @@
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import { Database } from 'lucide-react'
 import { verifierJeton } from '@/lib/auth/comptes'
 import { FormulaireDefinition } from './formulaire'
 
 // Le jeton est dans l'URL : pas de Referer, pas d'indexation, pas de cache.
-export const metadata = { title: 'Définir le mot de passe', referrer: 'no-referrer', robots: { index: false, follow: false } }
+export async function generateMetadata() {
+  const t = await getTranslations('ecrans.definirMotDePasse')
+  return { title: t('metaTitre'), referrer: 'no-referrer' as const, robots: { index: false, follow: false } }
+}
 export const dynamic = 'force-dynamic'
 
 export default async function DefinirMotDePasse({ searchParams }: { searchParams: { jeton?: string | string[] } }) {
+  const t = await getTranslations('ecrans.definirMotDePasse')
   const brut = searchParams?.jeton
   const jeton = typeof brut === 'string' ? brut : ''
   const resultat = jeton ? await verifierJeton(jeton) : { valide: false as const }
@@ -23,20 +28,20 @@ export default async function DefinirMotDePasse({ searchParams }: { searchParams
         {resultat.valide ? (
           <>
             <h1 className="text-2xl font-bold">
-              {resultat.type === 'invitation' ? `Bienvenue, ${resultat.prenom}` : 'Nouveau mot de passe'}
+              {resultat.type === 'invitation' ? t('bienvenue', { prenom: resultat.prenom }) : t('nouveauTitre')}
             </h1>
-            {resultat.type === 'invitation' && <p className="mt-1 text-sm text-muted-foreground">Choisissez votre mot de passe</p>}
+            {resultat.type === 'invitation' && <p className="mt-1 text-sm text-muted-foreground">{t('choisir')}</p>}
             <div className="mt-5">
               <FormulaireDefinition jeton={jeton} />
             </div>
           </>
         ) : (
           <>
-            <h1 className="mb-3 text-2xl font-bold">Lien invalide</h1>
-            <p role="alert" className="text-sm text-destructive">Ce lien est invalide ou a expiré.</p>
+            <h1 className="mb-3 text-2xl font-bold">{t('invalideTitre')}</h1>
+            <p role="alert" className="text-sm text-destructive">{t('invalide')}</p>
             <div className="mt-4 flex flex-col gap-2">
-              <Link href="/mot-de-passe-oublie" className={lien}>Demander un nouveau lien</Link>
-              <Link href="/login" className={lien}>Retour à la connexion</Link>
+              <Link href="/mot-de-passe-oublie" className={lien}>{t('nouveauLien')}</Link>
+              <Link href="/login" className={lien}>{t('retour')}</Link>
             </div>
           </>
         )}
