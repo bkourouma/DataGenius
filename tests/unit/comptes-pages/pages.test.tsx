@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createTranslator } from 'next-intl'
+import { loadMessages } from '@/i18n/messages'
 
 const { comptes, ErreurComptes } = vi.hoisted(() => {
   class ErreurComptes extends Error {}
@@ -30,6 +32,8 @@ import { demanderLienAction } from '@/app/mot-de-passe-oublie/actions'
 import { definirMotDePasseAction } from '@/app/definir-mot-de-passe/actions'
 import DefinirMotDePasse from '@/app/definir-mot-de-passe/page'
 
+const messages = await loadMessages('fr')
+
 function formulaire(champs: Record<string, string>) {
   const f = new FormData()
   for (const [k, v] of Object.entries(champs)) f.set(k, v)
@@ -43,15 +47,22 @@ beforeEach(() => {
 })
 
 describe('messageErreurConnexion', () => {
+  // La fonction renvoie une clé stable ; la page la traduit (ecrans.connexion.erreurs.*).
+  const traduire = (cle: string) => createTranslator({ locale: 'fr', messages, namespace: 'ecrans.connexion.erreurs' as never })(cle as never)
+
   it('trop_de_tentatives', () => {
-    expect(messageErreurConnexion('trop_de_tentatives', 'formulaire')).toBe('Trop de tentatives. Réessayez dans 15 minutes.')
-    expect(messageErreurConnexion('trop_de_tentatives', 'url')).toBe('Trop de tentatives. Réessayez dans 15 minutes.')
+    expect(messageErreurConnexion('trop_de_tentatives', 'formulaire')).toBe('tropDeTentatives')
+    expect(messageErreurConnexion('trop_de_tentatives', 'url')).toBe('tropDeTentatives')
+    expect(traduire('tropDeTentatives')).toBe('Trop de tentatives. Réessayez dans 15 minutes.')
   })
   it('CredentialsSignin et codes inconnus', () => {
-    expect(messageErreurConnexion('CredentialsSignin', 'formulaire')).toBe('Identifiants invalides.')
-    expect(messageErreurConnexion(undefined, 'formulaire')).toBe('Identifiants invalides.')
-    expect(messageErreurConnexion('CredentialsSignin', 'url')).toBe('Connexion impossible. Vérifiez que votre compte est autorisé.')
+    expect(messageErreurConnexion('CredentialsSignin', 'formulaire')).toBe('identifiantsInvalides')
+    expect(messageErreurConnexion(undefined, 'formulaire')).toBe('identifiantsInvalides')
+    expect(traduire('identifiantsInvalides')).toBe('Identifiants invalides.')
+    expect(messageErreurConnexion('CredentialsSignin', 'url')).toBe('connexionImpossible')
+    expect(traduire('connexionImpossible')).toBe('Connexion impossible. Vérifiez que votre compte est autorisé.')
     expect(messageErreurConnexion('Xyz', 'url')).not.toContain('Xyz')
+    expect(messageErreurConnexion('Xyz', 'formulaire')).not.toContain('Xyz')
   })
 })
 

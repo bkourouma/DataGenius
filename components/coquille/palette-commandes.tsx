@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { BookMarked, CornerDownLeft, LayoutDashboard, Plus, Search, Sparkles, type LucideIcon } from 'lucide-react'
 import { construireContexteEcran, useContexteEcranMedicAssist } from '@/lib/medic-assist/client/contexte-ecran'
@@ -12,7 +13,7 @@ import type { GroupeNavigation } from './navigation'
 
 interface Commande {
   id: string
-  section: 'Aller à' | 'Tableaux' | 'Analyses' | 'Demander'
+  section: 'aller' | 'tableaux' | 'analyses' | 'demander'
   libelle: string
   detail?: string
   icone: LucideIcon
@@ -35,6 +36,7 @@ export function PaletteCommandes({
   groupes: GroupeNavigation[]
   tableaux?: { id: string; titre: string }[]
 }) {
+  const t = useTranslations('ecrans.coquille')
   const router = useRouter()
   const chemin = usePathname()
   const [requete, setRequete] = useState('')
@@ -80,11 +82,11 @@ export function PaletteCommandes({
     const correspond = (...textes: (string | undefined)[]) =>
       !filtre || filtre.split(/\s+/).every((mot) => textes.some((t) => t && normaliser(t).includes(mot)))
 
-    if (correspond('Nouvelle conversation', 'chat question')) {
+    if (correspond(t('palette.nouvelleConversation.libelle'), t('palette.nouvelleConversation.motsCles'))) {
       liste.push({
         id: 'nouvelle',
-        section: 'Aller à',
-        libelle: 'Nouvelle conversation',
+        section: 'aller',
+        libelle: t('palette.nouvelleConversation.libelle'),
         icone: Plus,
         executer: () => {
           fermer()
@@ -94,12 +96,14 @@ export function PaletteCommandes({
     }
     for (const groupe of groupes) {
       for (const entree of groupe.entrees) {
-        if (!correspond(entree.libelle, entree.motsCles, groupe.libelle)) continue
+        const libelle = t(`nav.${entree.cle}.libelle`)
+        const groupeLibelle = t(`groupes.${groupe.id}`)
+        if (!correspond(libelle, t(`nav.${entree.cle}.motsCles`), groupeLibelle)) continue
         liste.push({
           id: entree.href,
-          section: 'Aller à',
-          libelle: entree.libelle,
-          detail: groupe.id === 'administration' ? 'Administration' : undefined,
+          section: 'aller',
+          libelle,
+          detail: groupe.id === 'administration' ? groupeLibelle : undefined,
           icone: entree.icone,
           executer: () => {
             fermer()
@@ -112,7 +116,7 @@ export function PaletteCommandes({
       for (const tableau of tableaux.filter((t) => correspond(t.titre)).slice(0, 5)) {
         liste.push({
           id: 'tableau-' + tableau.id,
-          section: 'Tableaux',
+          section: 'tableaux',
           libelle: tableau.titre,
           icone: LayoutDashboard,
           executer: () => {
@@ -126,7 +130,7 @@ export function PaletteCommandes({
     for (const analyse of analyses) {
       liste.push({
         id: 'analyse-' + analyse.artefactId,
-        section: 'Analyses',
+        section: 'analyses',
         libelle: analyse.titre,
         detail: analyse.sousTitre ?? undefined,
         icone: BookMarked,
@@ -141,9 +145,9 @@ export function PaletteCommandes({
     if (question) {
       liste.push({
         id: 'demander',
-        section: 'Demander',
+        section: 'demander',
         libelle: question,
-        detail: 'Poser la question à l’assistant',
+        detail: t('palette.poserQuestion'),
         icone: Sparkles,
         executer: () => {
           // Hors du chat, la page d'ou part la question l'accompagne comme contexte.
@@ -164,7 +168,7 @@ export function PaletteCommandes({
     }
 
     return liste
-  }, [requete, groupes, chemin, router, onOuverteChange, analyses, tableaux])
+  }, [requete, groupes, chemin, router, onOuverteChange, analyses, tableaux, t])
 
   useEffect(() => {
     setIndexActif(0)
@@ -199,7 +203,7 @@ export function PaletteCommandes({
           aria-describedby={undefined}
           className="fixed inset-x-3 top-[10vh] z-50 mx-auto flex max-h-[70vh] max-w-xl flex-col overflow-hidden rounded-xl border bg-card shadow-xl data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-[0.98] motion-reduce:animate-none"
         >
-          <DialogPrimitive.Title className="sr-only">Rechercher ou demander</DialogPrimitive.Title>
+          <DialogPrimitive.Title className="sr-only">{t('rechercherOuDemander')}</DialogPrimitive.Title>
           <div className="flex items-center gap-3 border-b px-4">
             <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
             <input
@@ -207,7 +211,7 @@ export function PaletteCommandes({
               value={requete}
               onChange={(e) => setRequete(e.target.value)}
               onKeyDown={surTouche}
-              placeholder="Aller à une page ou poser une question…"
+              placeholder={t('palette.placeholder')}
               role="combobox"
               aria-expanded="true"
               aria-controls={idListe}
@@ -215,9 +219,9 @@ export function PaletteCommandes({
               aria-autocomplete="list"
               className="h-14 min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
             />
-            <kbd className="hidden rounded border bg-muted px-1.5 py-0.5 font-mono text-2xs text-muted-foreground sm:inline">Échap</kbd>
+            <kbd className="hidden rounded border bg-muted px-1.5 py-0.5 font-mono text-2xs text-muted-foreground sm:inline">{t('palette.echap')}</kbd>
           </div>
-          <ul ref={refListe} id={idListe} role="listbox" aria-label="Commandes" className="overflow-y-auto overscroll-contain p-2">
+          <ul ref={refListe} id={idListe} role="listbox" aria-label={t('palette.commandes')} className="overflow-y-auto overscroll-contain p-2">
             {commandes.map((commande, i) => {
               const nouvelleSection = i === 0 || commandes[i - 1].section !== commande.section
               const Icone = commande.icone
@@ -226,7 +230,7 @@ export function PaletteCommandes({
                 <li key={commande.id} role="presentation">
                   {nouvelleSection && (
                     <p role="presentation" className="px-2 pb-1 pt-2 text-xs font-medium text-muted-foreground first:pt-1">
-                      {commande.section}
+                      {t(`palette.sections.${commande.section}`)}
                     </p>
                   )}
                   <div
@@ -244,7 +248,7 @@ export function PaletteCommandes({
                     <span
                       className={cn(
                         'flex size-8 shrink-0 items-center justify-center rounded-md border',
-                        commande.section === 'Demander' ? 'border-primary/30 bg-primary/10 text-primary' : 'bg-card text-muted-foreground',
+                        commande.section === 'demander' ? 'border-primary/30 bg-primary/10 text-primary' : 'bg-card text-muted-foreground',
                       )}
                     >
                       <Icone className="size-4" aria-hidden />
@@ -260,14 +264,14 @@ export function PaletteCommandes({
             })}
             {!commandes.length && (
               <li role="presentation" className="px-3 py-6 text-center text-sm text-muted-foreground">
-                Aucune page ne correspond.
+                {t('palette.aucunResultat')}
               </li>
             )}
           </ul>
           <p className="hidden items-center gap-4 border-t bg-muted/50 px-4 py-2 text-xs text-muted-foreground sm:flex">
-            <span><kbd className="font-mono">↑ ↓</kbd> parcourir</span>
-            <span><kbd className="font-mono">Entrée</kbd> valider</span>
-            <span className="ms-auto">Tapez une question pour l’envoyer à l’assistant</span>
+            <span><kbd className="font-mono">↑ ↓</kbd> {t('palette.parcourir')}</span>
+            <span><kbd className="font-mono">{t('palette.entree')}</kbd> {t('palette.valider')}</span>
+            <span className="ms-auto">{t('palette.aideQuestion')}</span>
           </p>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

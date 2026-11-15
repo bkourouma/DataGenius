@@ -1,15 +1,18 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { NextIntlClientProvider } from 'next-intl'
-import { getLocale, getMessages } from 'next-intl/server'
+import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Toaster } from 'sonner'
 import { getDirection } from '@/i18n/config'
 import { Providers } from './providers'
 import './globals.css'
 
-export const metadata: Metadata = {
-  title: 'Data Genius',
-  description: 'Analysez vos données et créez des rapports par la conversation.',
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('ecrans.coquille.metadata')
+  return {
+    title: 'Data Genius',
+    description: t('description'),
+  }
 }
 
 export default async function RootLayout({ children }: { children: ReactNode }) {

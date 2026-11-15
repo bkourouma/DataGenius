@@ -4,12 +4,14 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { useTranslations } from 'next-intl'
 import { signOut } from 'next-auth/react'
 import { Database, LogOut, Menu, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ClocheNotifications } from '@/components/notifications/cloche-notifications'
 import { entreeActive, groupesNavigation, initiales, type GroupeNavigation } from './navigation'
 import { PaletteCommandes } from './palette-commandes'
+import { SelecteurLangue } from './selecteur-langue'
 import { useRaccourciPalette } from './raccourci'
 
 export interface CoquilleProps {
@@ -50,6 +52,7 @@ function Rail({
   const chemin = usePathname()
   const actif = entreeActive(chemin, groupes)
   const raccourci = useRaccourciPalette()
+  const t = useTranslations('ecrans.coquille')
 
   return (
     <div className="flex h-full flex-col text-shell-foreground">
@@ -61,24 +64,24 @@ function Rail({
         <button
           type="button"
           onClick={onRechercher}
-          aria-label="Rechercher ou demander"
-          title="Rechercher ou demander"
+          aria-label={t('rechercherOuDemander')}
+          title={t('rechercherOuDemander')}
           className="flex h-9 w-full items-center gap-2 rounded-md border border-shell-line bg-white/[0.04] px-2.5 text-sm text-shell-muted transition-colors hover:border-white/20 hover:bg-white/[0.07] hover:text-shell-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
         >
           <Search className="size-4 shrink-0" aria-hidden />
-          <span className="flex-1 truncate text-start">Rechercher</span>
+          <span className="flex-1 truncate text-start">{t('rechercher')}</span>
           <kbd className="rounded-sm border border-shell-line px-1 font-mono text-2xs">{raccourci}</kbd>
         </button>
       </div>
 
-      <nav aria-label="Espace de travail" className="flex-1 overflow-y-auto px-3 py-2">
+      <nav aria-label={t('espaceDeTravail')} className="flex-1 overflow-y-auto px-3 py-2">
         {groupes.map((groupe) => (
           <div key={groupe.id} className="mb-5 last:mb-0">
             {groupes.length > 1 && (
-              <p className="px-2.5 pb-1.5 text-xs font-medium text-shell-muted">{groupe.libelle}</p>
+              <p className="px-2.5 pb-1.5 text-xs font-medium text-shell-muted">{t(`groupes.${groupe.id}`)}</p>
             )}
             <ul className="space-y-0.5">
-              {groupe.entrees.map(({ href, libelle, icone: Icone }) => {
+              {groupe.entrees.map(({ href, cle, icone: Icone }) => {
                 const estActif = href === actif
                 return (
                   <li key={href}>
@@ -94,7 +97,7 @@ function Rail({
                       )}
                     >
                       <Icone className={cn('size-4 shrink-0', estActif && 'text-blue-300')} aria-hidden />
-                      {libelle}
+                      {t(`nav.${cle}.libelle`)}
                     </Link>
                   </li>
                 )
@@ -104,27 +107,32 @@ function Rail({
         ))}
       </nav>
 
-      <div className="flex shrink-0 items-center gap-2.5 border-t border-shell-line px-3 py-3">
-        <span
-          aria-hidden
-          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white"
-        >
-          {initiales(nom || courriel)}
-        </span>
-        <div className="min-w-0 flex-1 leading-tight">
-          <p className="truncate text-sm font-medium text-white">{nom || courriel || 'Compte'}</p>
-          <p className="truncate text-xs text-shell-muted">{estAdmin ? 'Administrateur' : 'Membre'}</p>
+      <div className="shrink-0 border-t border-shell-line px-3 py-3">
+        <div className="flex items-center gap-2.5">
+          <span
+            aria-hidden
+            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold text-white"
+          >
+            {initiales(nom || courriel)}
+          </span>
+          <div className="min-w-0 flex-1 leading-tight">
+            <p className="truncate text-sm font-medium text-white">{nom || courriel || t('compte')}</p>
+            <p className="truncate text-xs text-shell-muted">{estAdmin ? t('administrateur') : t('membre')}</p>
+          </div>
         </div>
-        <ClocheNotifications />
-        <button
-          type="button"
-          aria-label="Se déconnecter"
-          title="Se déconnecter"
-          onClick={() => signOut({ callbackUrl: '/login' })}
-          className="cible-tactile flex size-8 items-center justify-center rounded-md text-shell-muted transition-colors hover:bg-white/[0.07] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-        >
-          <LogOut className="size-4 rtl:-scale-x-100" aria-hidden />
-        </button>
+        <div className="mt-2 flex items-center justify-end gap-1">
+          <SelecteurLangue variante="rail" />
+          <ClocheNotifications />
+          <button
+            type="button"
+            aria-label={t('seDeconnecter')}
+            title={t('seDeconnecter')}
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="cible-tactile flex size-8 items-center justify-center rounded-md text-shell-muted transition-colors hover:bg-white/[0.07] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+          >
+            <LogOut className="size-4 rtl:-scale-x-100" aria-hidden />
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -138,6 +146,7 @@ function Rail({
  * recherche) et le rail dans un tiroir. Ctrl K / ⌘K ouvre la palette partout.
  */
 export function Coquille({ estAdmin, nom, courriel, tableaux = [], children }: CoquilleProps) {
+  const t = useTranslations('ecrans.coquille')
   const groupes = useMemo(() => groupesNavigation(estAdmin), [estAdmin])
   const [paletteOuverte, setPaletteOuverte] = useState(false)
   const [tiroirOuvert, setTiroirOuvert] = useState(false)
@@ -171,7 +180,7 @@ export function Coquille({ estAdmin, nom, courriel, tableaux = [], children }: C
       <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b bg-card px-2 lg:hidden">
         <DialogPrimitive.Root open={tiroirOuvert} onOpenChange={setTiroirOuvert}>
           <DialogPrimitive.Trigger
-            aria-label="Ouvrir le menu"
+            aria-label={t('ouvrirMenu')}
             className="cible-tactile flex size-10 items-center justify-center rounded-md text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Menu className="size-5" aria-hidden />
@@ -182,9 +191,9 @@ export function Coquille({ estAdmin, nom, courriel, tableaux = [], children }: C
               aria-describedby={undefined}
               className="rib-wall fixed inset-y-0 start-0 z-50 w-[min(17rem,85vw)] shadow-xl data-[state=open]:animate-in data-[state=open]:slide-in-from-left motion-reduce:animate-none rtl:data-[state=open]:slide-in-from-right"
             >
-              <DialogPrimitive.Title className="sr-only">Menu</DialogPrimitive.Title>
+              <DialogPrimitive.Title className="sr-only">{t('menu')}</DialogPrimitive.Title>
               <DialogPrimitive.Close
-                aria-label="Fermer le menu"
+                aria-label={t('fermerMenu')}
                 className="absolute end-2 top-2 flex size-10 items-center justify-center rounded-md text-shell-muted hover:bg-white/[0.07] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
               >
                 <X className="size-5" aria-hidden />
@@ -204,7 +213,7 @@ export function Coquille({ estAdmin, nom, courriel, tableaux = [], children }: C
         <button
           type="button"
           onClick={rechercher}
-          aria-label="Rechercher ou demander"
+          aria-label={t('rechercherOuDemander')}
           className="cible-tactile ms-auto flex size-10 items-center justify-center rounded-md text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Search className="size-5" aria-hidden />
