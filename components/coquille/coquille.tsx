@@ -7,6 +7,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { signOut } from 'next-auth/react'
 import { Database, LogOut, Menu, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { ClocheNotifications } from '@/components/notifications/cloche-notifications'
 import { entreeActive, groupesNavigation, initiales, type GroupeNavigation } from './navigation'
 import { PaletteCommandes } from './palette-commandes'
 import { useRaccourciPalette } from './raccourci'
@@ -114,6 +115,7 @@ function Rail({
           <p className="truncate text-sm font-medium text-white">{nom || courriel || 'Compte'}</p>
           <p className="truncate text-xs text-shell-muted">{estAdmin ? 'Administrateur' : 'Membre'}</p>
         </div>
+        <ClocheNotifications />
         <button
           type="button"
           aria-label="Se déconnecter"
