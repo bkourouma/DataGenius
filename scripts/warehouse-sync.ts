@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { hostname } from 'node:os'
 import { setTimeout } from 'node:timers/promises'
+import { purgerJournalAudit } from '@/lib/audit/purge'
 import { prisma } from '@/lib/db/client'
 import { ErreurEnvironnement, verifierEnvironnement } from '@/lib/env'
 import { journal } from '@/lib/journal'
@@ -101,6 +102,7 @@ async function main() {
         if (!boucle) process.exitCode = 1
       }
       await purger(!boucle)
+      await purgerJournalAudit({ forcer: !boucle })
     })
     await battre({ dureeMs: Date.now() - debutTour, jeux, erreurs })
     await nettoyerInstances()

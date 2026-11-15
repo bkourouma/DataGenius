@@ -11,6 +11,7 @@ import {
   renvoyerInvitation,
   type ResultatInvitation,
 } from '@/lib/auth/comptes'
+import { enregistrerAudit } from '@/lib/audit/enregistrer'
 import { journal } from '@/lib/journal'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 
@@ -49,6 +50,7 @@ export async function inviter(_: EtatUtilisateurs, formulaire: FormData): Promis
       nom: texte(formulaire, 'nom'),
       role: texte(formulaire, 'role'),
     })
+    await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.invitation', cible: { type: 'utilisateur' }, details: { role: texte(formulaire, 'role'), envoye: resultat.envoye } })
     revalidatePath('/utilisateurs')
     return etatInvitation(resultat, email, t)
   } catch (erreur) {
@@ -62,6 +64,7 @@ export async function renvoyer(_: EtatUtilisateurs, formulaire: FormData): Promi
   if (!acces.ok) return { erreur: t('refus') }
   try {
     const resultat = await renvoyerInvitation(acces.contexte.userId, texte(formulaire, 'compteId'))
+    await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.invitation_renvoyee', cible: { type: 'utilisateur', id: texte(formulaire, 'compteId') }, details: { envoye: resultat.envoye } })
     revalidatePath('/utilisateurs')
     return etatInvitation(resultat, texte(formulaire, 'email') || t('personneInvitee'), t)
   } catch (erreur) {
@@ -78,6 +81,7 @@ export async function desactiver(_: EtatUtilisateurs, formulaire: FormData): Pro
   } catch (erreur) {
     return erreurAffichable(erreur, t)
   }
+  await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.desactivation', cible: { type: 'utilisateur', id: texte(formulaire, 'compteId') } })
   revalidatePath('/utilisateurs')
   return { succes: t('desactive') }
 }
@@ -91,6 +95,7 @@ export async function reactiver(_: EtatUtilisateurs, formulaire: FormData): Prom
   } catch (erreur) {
     return erreurAffichable(erreur, t)
   }
+  await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.reactivation', cible: { type: 'utilisateur', id: texte(formulaire, 'compteId') } })
   revalidatePath('/utilisateurs')
   return { succes: t('reactive') }
 }
@@ -104,6 +109,7 @@ export async function changerRole(_: EtatUtilisateurs, formulaire: FormData): Pr
   } catch (erreur) {
     return erreurAffichable(erreur, t)
   }
+  await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.role_modifie', cible: { type: 'utilisateur', id: texte(formulaire, 'compteId') }, details: { role: texte(formulaire, 'role') } })
   revalidatePath('/utilisateurs')
   return { succes: t('roleModifie') }
 }

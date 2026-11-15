@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   faux: vi.fn(), verify: vi.fn(), hash: vi.fn(), rehacher: vi.fn(),
 }))
 
+vi.mock('@/lib/audit/enregistrer', () => ({ enregistrerAudit: vi.fn() }))
 vi.mock('@/lib/db/client', () => ({ prisma: { user: { findFirst: mocks.findFirst, update: mocks.update } } }))
 vi.mock('@/lib/auth/oidc', () => ({
   configurationOidc: () => null, FOURNISSEUR_OIDC: 'oidc', fournisseurOidc: vi.fn(), trouverUtilisateurOidc: vi.fn(),

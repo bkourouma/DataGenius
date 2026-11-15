@@ -1,1 +1,102 @@
-{}
+{
+  "titre": "Journal d’audit",
+  "introduction": "Retrouvez qui a fait quoi, et quand : sources, exports, partages, connexions, comptes et droits. Seuls les administrateurs peuvent consulter ce journal.",
+  "retention": "Les événements sont conservés {jours} jours, puis supprimés automatiquement.",
+  "fuseau": "Heures affichées en {fuseau}.",
+  "filtres": {
+    "legende": "Filtrer le journal",
+    "du": "Du",
+    "au": "Au",
+    "acteur": "Acteur",
+    "acteurAide": "Identifiant, nom ou fragment d’adresse e-mail du compte.",
+    "famille": "Type d’action",
+    "action": "Action",
+    "cible": "Cible",
+    "toutes": "Tous les types",
+    "tous": "Toutes les actions",
+    "appliquer": "Filtrer",
+    "reinitialiser": "Réinitialiser"
+  },
+  "tableau": {
+    "legende": "Événements du journal d’audit, du plus récent au plus ancien"
+  },
+  "colonnes": {
+    "date": "Date",
+    "acteur": "Acteur",
+    "action": "Action",
+    "cible": "Cible",
+    "resultat": "Résultat",
+    "ip": "Adresse IP",
+    "details": "Détails"
+  },
+  "familles": {
+    "source": "Sources",
+    "export": "Exports",
+    "partage": "Partages",
+    "connexion": "Connexions",
+    "utilisateur": "Utilisateurs",
+    "droits": "Droits d’accès",
+    "journal": "Journal d’audit"
+  },
+  "actions": {
+    "source_creation": "Création d’une source",
+    "source_modification": "Modification d’une source",
+    "source_suppression": "Suppression d’une source",
+    "source_synchronisation": "Synchronisation d’une source",
+    "export_artefact": "Export d’un artefact",
+    "partage_creation": "Création d’un partage",
+    "partage_retrait": "Retrait d’un partage",
+    "connexion_reussie": "Connexion réussie",
+    "connexion_echec": "Échec de connexion",
+    "connexion_bloquee": "Connexion bloquée",
+    "utilisateur_invitation": "Invitation d’un utilisateur",
+    "utilisateur_invitation_renvoyee": "Invitation renvoyée",
+    "utilisateur_role_modifie": "Rôle d’un utilisateur modifié",
+    "utilisateur_desactivation": "Désactivation d’un compte",
+    "utilisateur_reactivation": "Réactivation d’un compte",
+    "droits_modification": "Modification des droits",
+    "journal_export": "Export du journal d’audit"
+  },
+  "resultats": {
+    "succes": "Réussi",
+    "echec": "Échec",
+    "refuse": "Refusé"
+  },
+  "cibles": {
+    "source": "Source",
+    "jeu": "Import",
+    "utilisateur": "Utilisateur",
+    "artefact": "Artefact",
+    "conversation": "Conversation",
+    "partage": "Partage",
+    "droits": "Droits",
+    "journal": "Journal"
+  },
+  "acteurInconnu": "Inconnu",
+  "vide": "Aucun événement ne correspond à ces filtres.",
+  "detailsAfficher": "Afficher les détails",
+  "aucunDetail": "Aucun détail",
+  "pagination": {
+    "navigation": "Pagination du journal",
+    "precedent": "Précédent",
+    "suivant": "Suivant",
+    "page": "Page {page} sur {pages}",
+    "total": "{total} événements au total"
+  },
+  "export": {
+    "lien": "Exporter en CSV",
+    "mention": "L’export est limité aux {max} événements les plus récents correspondant aux filtres.",
+    "colonnes": {
+      "date": "Date (UTC)",
+      "acteur": "Acteur",
+      "acteurId": "Identifiant de l’acteur",
+      "action": "Action",
+      "cibleType": "Type de cible",
+      "cibleId": "Identifiant de la cible",
+      "cibleLibelle": "Libellé de la cible",
+      "resultat": "Résultat",
+      "ip": "Adresse IP",
+      "details": "Détails (JSON)"
+    }
+  }
+}
