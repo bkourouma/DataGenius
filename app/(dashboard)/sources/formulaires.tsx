@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react'
 import { useFormState, useFormStatus } from 'react-dom'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,62 +25,65 @@ export function Retour({ erreur, succes }: { erreur?: string; succes?: string })
 }
 
 export function FormulaireConnexion({ moteur = 'postgresql' }: { moteur?: 'postgresql' | 'mysql' }) {
+  const t = useTranslations('sources.formulaires')
   const id = useId()
   const [etat, action] = useFormState(ajouterConnexion, {})
   return (
     <form action={action} className="space-y-4">
       <input type="hidden" name="moteur" value={moteur} />
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>Nom de la source</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-base'}>Nom de la base</Label><Input id={id + '-base'} name="base" required maxLength={63} /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-hote'}>Hôte</Label><Input id={id + '-hote'} name="hote" required maxLength={253} /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-port'}>Port</Label><Input id={id + '-port'} name="port" type="number" defaultValue={moteur === 'mysql' ? 3306 : 5432} min={1} max={65535} required /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-utilisateur'}>Utilisateur de lecture</Label><Input id={id + '-utilisateur'} name="utilisateur" required maxLength={63} autoComplete="off" /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-mdp'}>Mot de passe</Label><Input id={id + '-mdp'} name="motDePasse" type="password" maxLength={1024} autoComplete="new-password" /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-tls'}>Connexion TLS</Label>
+        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>{t('nomSource')}</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-base'}>{t('nomBase')}</Label><Input id={id + '-base'} name="base" required maxLength={63} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-hote'}>{t('hote')}</Label><Input id={id + '-hote'} name="hote" required maxLength={253} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-port'}>{t('port')}</Label><Input id={id + '-port'} name="port" type="number" defaultValue={moteur === 'mysql' ? 3306 : 5432} min={1} max={65535} required /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-utilisateur'}>{t('utilisateurLecture')}</Label><Input id={id + '-utilisateur'} name="utilisateur" required maxLength={63} autoComplete="off" /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-mdp'}>{t('motDePasse')}</Label><Input id={id + '-mdp'} name="motDePasse" type="password" maxLength={1024} autoComplete="new-password" /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-tls'}>{t('tls')}</Label>
           <select id={id + '-tls'} name="tls" defaultValue="require" className="h-10 rounded-md border border-input bg-background px-3 text-sm">
-            <option value="require">Requise</option><option value="disable">Désactivée (réseau de confiance)</option>
+            <option value="require">{t('tlsRequise')}</option><option value="disable">{t('tlsDesactivee')}</option>
           </select>
         </div>
       </div>
       <Retour {...etat} />
-      <Soumettre texte="Tester et ajouter la source" attente="Connexion en cours…" />
+      <Soumettre texte={t('testerAjouter')} attente={t('connexionEnCours')} />
     </form>
   )
 }
 
 export function FormulaireConnexionRest() {
+  const t = useTranslations('sources.formulaires')
   const id = useId()
   const [etat, action] = useFormState(ajouterConnexionRest, {})
   return (
     <form action={action} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>Nom de la source</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-url'}>URL de l’API</Label><Input id={id + '-url'} name="url" type="url" required maxLength={2000} /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-token'}>Jeton d’accès (facultatif)</Label><Input id={id + '-token'} name="token" type="password" autoComplete="new-password" /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-chemin'}>Chemin du tableau JSON (facultatif)</Label><Input id={id + '-chemin'} name="chemin" placeholder="data.resultats" /></div>
-        <div className="grid gap-2"><Label htmlFor={id + '-page'}>Paramètre de page (facultatif)</Label><Input id={id + '-page'} name="parametrePage" placeholder="page" /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>{t('nomSource')}</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-url'}>{t('urlApi')}</Label><Input id={id + '-url'} name="url" type="url" required maxLength={2000} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-token'}>{t('jetonFacultatif')}</Label><Input id={id + '-token'} name="token" type="password" autoComplete="new-password" /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-chemin'}>{t('cheminFacultatif')}</Label><Input id={id + '-chemin'} name="chemin" placeholder={t('exempleChemin')} /></div>
+        <div className="grid gap-2"><Label htmlFor={id + '-page'}>{t('parametrePageFacultatif')}</Label><Input id={id + '-page'} name="parametrePage" placeholder={t('exempleParametrePage')} /></div>
       </div>
       <Retour {...etat} />
-      <Soumettre texte="Tester et ajouter la source" attente="Connexion en cours…" />
+      <Soumettre texte={t('testerAjouter')} attente={t('connexionEnCours')} />
     </form>
   )
 }
 
 export function FormulaireFichierSource({ sourceId }: { sourceId?: string }) {
+  const t = useTranslations('sources.formulaires')
   const id = useId()
   const [etat, action] = useFormState(importerFichierSource, {})
   return (
     <form action={action} className="space-y-4">
       {sourceId ? <input type="hidden" name="sourceId" value={sourceId} /> :
-        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>Nom de la source</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>}
+        <div className="grid gap-2"><Label htmlFor={id + '-titre'}>{t('nomSource')}</Label><Input id={id + '-titre'} name="titre" required maxLength={120} /></div>}
       <div className="grid gap-2">
-        <Label htmlFor={id + '-fichier'}>Fichier CSV ou Excel (.xlsx)</Label>
+        <Label htmlFor={id + '-fichier'}>{t('fichierCsvExcel')}</Label>
         <Input id={id + '-fichier'} name="fichier" type="file" required accept=".csv,.xlsx" />
-        <p className="text-sm text-muted-foreground">5 Mio et 5 000 lignes de données par feuille au maximum.</p>
+        <p className="text-sm text-muted-foreground">{t('limitesFichier')}</p>
       </div>
       <Retour {...etat} />
-      <Soumettre texte={sourceId ? 'Remplacer le fichier' : 'Ajouter la source'} attente="Import en cours…" />
+      <Soumettre texte={sourceId ? t('remplacerFichier') : t('ajouterSource')} attente={t('importEnCours')} />
     </form>
   )
 }
@@ -90,6 +94,7 @@ export function FormulaireImport({ sourceId, schema, table, colonnes }: {
   table: string
   colonnes: { nom: string; typePostgres: string }[]
 }) {
+  const t = useTranslations('sources.formulaires')
   const [etat, action] = useFormState(ajouterImport, {})
   const [selection, setSelection] = useState<string[]>([])
   const [filtre, setFiltre] = useState('')
@@ -100,12 +105,12 @@ export function FormulaireImport({ sourceId, schema, table, colonnes }: {
       <input type="hidden" name="schema" value={schema} />
       <input type="hidden" name="table" value={table} />
       {selection.map(nom => <input key={nom} type="hidden" name="colonnes" value={nom} />)}
-      <div className="grid gap-2"><Label htmlFor="import-titre">Nom du jeu</Label><Input id="import-titre" name="titre" defaultValue={table} maxLength={120} required /></div>
-      <div className="grid gap-2"><Label htmlFor="import-description">Description (facultative)</Label><Textarea id="import-description" name="description" maxLength={300} rows={2} /></div>
+      <div className="grid gap-2"><Label htmlFor="import-titre">{t('nomJeu')}</Label><Input id="import-titre" name="titre" defaultValue={table} maxLength={120} required /></div>
+      <div className="grid gap-2"><Label htmlFor="import-description">{t('descriptionFacultative')}</Label><Textarea id="import-description" name="description" maxLength={300} rows={2} /></div>
       <fieldset className="space-y-2">
-        <legend className="font-medium">Colonnes à importer</legend>
-        <Input aria-label="Filtrer les colonnes" placeholder="Filtrer les colonnes" value={filtre} onChange={e => setFiltre(e.target.value)} />
-        <p className="text-sm text-muted-foreground" aria-live="polite">{selection.length} colonne(s) sélectionnée(s) sur 50 possibles</p>
+        <legend className="font-medium">{t('colonnesAImporter')}</legend>
+        <Input aria-label={t('filtrerColonnes')} placeholder={t('filtrerColonnes')} value={filtre} onChange={e => setFiltre(e.target.value)} />
+        <p className="text-sm text-muted-foreground" aria-live="polite">{t('colonnesSelectionnees', { n: selection.length })}</p>
         <ul className="max-h-72 divide-y overflow-auto rounded-md border">
           {visibles.map(({ nom, typePostgres }) => {
             const coche = selection.includes(nom)
@@ -120,26 +125,27 @@ export function FormulaireImport({ sourceId, schema, table, colonnes }: {
               </li>
             )
           })}
-          {visibles.length === 0 && <li className="p-3 text-sm text-muted-foreground">Aucune colonne correspondante.</li>}
+          {visibles.length === 0 && <li className="p-3 text-sm text-muted-foreground">{t('aucuneColonne')}</li>}
         </ul>
       </fieldset>
-      <div className="grid gap-2"><Label htmlFor="import-frequence">Fréquence (minutes)</Label><Input id="import-frequence" className="max-w-40" name="frequenceMinutes" type="number" min={1} max={10080} defaultValue={60} required /></div>
+      <div className="grid gap-2"><Label htmlFor="import-frequence">{t('frequenceMinutes')}</Label><Input id="import-frequence" className="max-w-40" name="frequenceMinutes" type="number" min={1} max={10080} defaultValue={60} required /></div>
       <Retour {...etat} />
-      <Soumettre texte="Enregistrer l’import" attente="Enregistrement…" />
+      <Soumettre texte={t('enregistrerImport')} attente={t('enregistrement')} />
     </form>
   )
 }
 
 export function FormulaireFrequence({ cle, frequence }: { cle: string; frequence: number }) {
+  const t = useTranslations('sources.formulaires')
   const [etat, action] = useFormState(changerFrequence, {})
   const id = useId()
   return (
     <form action={action} className="space-y-2">
       <input type="hidden" name="jeu" value={cle} />
-      <Label htmlFor={id}>Fréquence (minutes)</Label>
+      <Label htmlFor={id}>{t('frequenceMinutes')}</Label>
       <div className="flex flex-wrap items-center gap-2">
         <Input id={id} className="max-w-28" name="frequenceMinutes" type="number" min={1} max={10080} defaultValue={frequence} required />
-        <Soumettre texte="Enregistrer la fréquence" attente="Enregistrement…" variant="outline" />
+        <Soumettre texte={t('enregistrerFrequence')} attente={t('enregistrement')} variant="outline" />
       </div>
       <Retour {...etat} />
     </form>
@@ -147,11 +153,12 @@ export function FormulaireFrequence({ cle, frequence }: { cle: string; frequence
 }
 
 export function FormulaireActualiser({ cle, titre }: { cle: string; titre: string }) {
+  const t = useTranslations('sources.formulaires')
   const [etat, action] = useFormState(actualiserJeu, {})
   return (
     <form action={action} className="space-y-2">
       <input type="hidden" name="jeu" value={cle} />
-      <Soumettre texte={'Synchroniser ' + titre} attente="Synchronisation en cours…" variant="outline" />
+      <Soumettre texte={t('synchroniser', { titre })} attente={t('synchroEnCours')} variant="outline" />
       <Retour {...etat} />
     </form>
   )

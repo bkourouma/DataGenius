@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { enregistrerAuditSession } from '@/lib/audit/session'
 import { journal } from '@/lib/journal'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
@@ -22,13 +23,15 @@ import {
   supprimerImport,
 } from '@/lib/warehouse/sources-admin'
 import { dernierCodeExecution } from '@/lib/warehouse/jeux-admin'
-import { retourSynchro } from '@/lib/warehouse/libelles-synchro'
 import { MAX_FICHIER } from '@/lib/warehouse/connecteurs/fichier'
+import { messageErreurLib } from './erreurs-lib'
+import { retourSynchroTraduit } from './retour-synchro'
 
 type Etat = { erreur?: string; succes?: string }
 
 export async function ajouterConnexion(_etat: Etat, formulaire: FormData): Promise<Etat> {
-  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   let id: string
   try {
     const connexion = {
@@ -39,15 +42,16 @@ export async function ajouterConnexion(_etat: Etat, formulaire: FormData): Promi
     const titre = formulaire.get('titre')
     id = formulaire.get('moteur') === 'mysql' ? await ajouterSourceMySql(titre, connexion) : await ajouterSource({ titre, ...connexion })
   } catch {
-    return { erreur: 'Connexion impossible. Vérifiez les paramètres, le compte de lecture et la configuration du serveur.' }
+    return { erreur: t('connexionImpossible') }
   }
-  await enregistrerAuditSession({ action: 'source.creation', cible: { type: 'source', id, libelle: String(formulaire.get('titre') ?? '') }, details: { moteur: String(formulaire.get('moteur') ?? 'postgresql') } })
+  await enregistrerAuditSession({ action: 'source.creation', cible: { type: 'source', id, libelle: String(formulaire.get('titre') ?? '') }, details: { moteur: formulaire.get('moteur') === 'mysql' ? 'mysql' : 'postgresql' } })
   revalidatePath('/sources')
   redirect('/sources/' + id)
 }
 
 export async function ajouterConnexionRest(_etat: Etat, formulaire: FormData): Promise<Etat> {
-  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   let id: string
   try {
     id = await ajouterSourceRest(formulaire.get('titre'), {
@@ -55,7 +59,7 @@ export async function ajouterConnexionRest(_etat: Etat, formulaire: FormData): P
       chemin: formulaire.get('chemin'), parametrePage: formulaire.get('parametrePage'),
     })
   } catch {
-    return { erreur: 'API indisponible. Vérifiez l’URL autorisée, le jeton et le chemin vers le tableau JSON.' }
+    return { erreur: t('apiIndisponible') }
   }
   await enregistrerAuditSession({ action: 'source.creation', cible: { type: 'source', id, libelle: String(formulaire.get('titre') ?? '') }, details: { moteur: 'rest' } })
   revalidatePath('/sources')
@@ -63,9 +67,10 @@ export async function ajouterConnexionRest(_etat: Etat, formulaire: FormData): P
 }
 
 export async function importerFichierSource(_etat: Etat, formulaire: FormData): Promise<Etat> {
-  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   const fichier = formulaire.get('fichier')
-  if (!(fichier instanceof File) || !fichier.size || fichier.size > MAX_FICHIER) return { erreur: 'Choisissez un fichier CSV ou Excel de 5 Mio maximum.' }
+  if (!(fichier instanceof File) || !fichier.size || fichier.size > MAX_FICHIER) return { erreur: t('fichierInvalide') }
   const source = formulaire.get('sourceId')
   let id: string
   try {
@@ -77,19 +82,20 @@ export async function importerFichierSource(_etat: Etat, formulaire: FormData): 
       id = await ajouterSourceFichier(formulaire.get('titre'), config)
     }
   } catch {
-    return { erreur: 'Fichier non enregistré. Vérifiez son format et la présence d’au moins une feuille importable de 5 000 lignes au plus.' }
+    return { erreur: t('fichierNonEnregistre') }
   }
   await enregistrerAuditSession({ action: typeof source === 'string' ? 'source.modification' : 'source.creation', cible: { type: 'source', id, libelle: typeof source === 'string' ? undefined : String(formulaire.get('titre') ?? '') }, details: { moteur: 'fichier' } })
   revalidatePath('/sources')
   if (typeof source === 'string') {
     revalidatePath('/sources/' + id)
-    return { succes: 'Fichier remplacé. Relancez les imports liés pour publier les nouvelles données.' }
+    return { succes: t('fichierRemplace') }
   }
   redirect('/sources/' + id)
 }
 
 export async function ajouterImport(_etat: Etat, formulaire: FormData): Promise<Etat> {
-  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   try {
     await creerImport({
       sourceId: formulaire.get('sourceId'), schema: formulaire.get('schema'), table: formulaire.get('table'),
@@ -98,8 +104,8 @@ export async function ajouterImport(_etat: Etat, formulaire: FormData): Promise<
     })
   } catch (erreur) {
     return {
-      erreur: erreur instanceof ErreurAdministrationSource ? erreur.message :
-        'Import non enregistré. Sélectionnez entre 1 et 50 colonnes accessibles et une fréquence valide.',
+      erreur: erreur instanceof ErreurAdministrationSource ? await messageErreurLib(erreur.message) :
+        t('importNonEnregistre'),
     }
   }
   revalidatePath('/sources')
@@ -107,16 +113,17 @@ export async function ajouterImport(_etat: Etat, formulaire: FormData): Promise<
 }
 
 export async function changerFrequence(_etat: Etat, formulaire: FormData): Promise<Etat> {
-  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   try {
     const cle = formulaire.get('jeu')
-    if (typeof cle !== 'string') return { erreur: 'Import introuvable.' }
+    if (typeof cle !== 'string') return { erreur: t('importIntrouvable') }
     await modifierFrequence(cle, formulaire.get('frequenceMinutes'))
   } catch {
-    return { erreur: 'Fréquence non enregistrée. Indiquez de 1 à 10 080 minutes.' }
+    return { erreur: t('frequenceNonEnregistree') }
   }
   revalidatePath('/sources')
-  return { succes: 'Fréquence enregistrée.' }
+  return { succes: t('frequenceEnregistree') }
 }
 
 
@@ -124,34 +131,36 @@ const CLE_JEU = /^[a-z][a-z0-9_]{0,59}$/
 const ID_SOURCE = /^[A-Za-z0-9_-]{1,64}$/
 
 export async function actualiserJeu(_etat: Etat, formulaire: FormData): Promise<Etat> {
-  if (!(await exigerAdminMedicAssist()).ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!(await exigerAdminMedicAssist()).ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   const jeu = formulaire.get('jeu')
-  if (typeof jeu !== 'string' || !CLE_JEU.test(jeu)) return { erreur: 'Jeu introuvable.' }
+  if (typeof jeu !== 'string' || !CLE_JEU.test(jeu)) return { erreur: t('jeuIntrouvable') }
   let resultats: { jeu: string; statut: string; code?: string }[]
   try {
     resultats = await synchroniserEntrepot({ forcer: true, jeu })
   } catch (erreur) {
     journal.erreur('Synchronisation manuelle impossible', { domaine: 'sources', jeu, erreur: erreur instanceof Error ? erreur.name : 'inconnue' })
-    return { erreur: 'Synchronisation impossible. Réessayez dans un instant.' }
+    return { erreur: t('synchroImpossible') }
   }
   revalidatePath('/sources')
   const resultat = resultats[0]
-  if (!resultat) return { erreur: 'Jeu introuvable.' }
+  if (!resultat) return { erreur: t('jeuIntrouvable') }
   await enregistrerAuditSession({ action: 'source.synchronisation', cible: { type: 'jeu', id: jeu }, resultat: resultat.statut === 'echec' ? 'echec' : 'succes', details: { statut: resultat.statut, code: resultat.code ?? null } })
   // Sans code dans le résultat (lot de fiabilité non fusionné), relit le dernier code enregistré.
   let code: string | null | undefined = resultat.code
   if (resultat.statut === 'echec' && !code) code = await dernierCodeExecution(jeu).catch(() => null)
-  return retourSynchro({ statut: resultat.statut, code })
+  return retourSynchroTraduit(await getTranslations('sources.synchro'), { statut: resultat.statut, code })
 }
 
 export async function modifierConnexion(_etat: Etat, formulaire: FormData): Promise<Etat> {
   const garde = await exigerAdminMedicAssist()
-  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!garde.ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   const id = formulaire.get('sourceId')
-  if (typeof id !== 'string' || !ID_SOURCE.test(id)) return { erreur: 'Source introuvable.' }
+  if (typeof id !== 'string' || !ID_SOURCE.test(id)) return { erreur: t('sourceIntrouvable') }
   try {
     const actuelle = await chargerConnexionSource(id)
-    if (!actuelle) return { erreur: 'Source introuvable.' }
+    if (!actuelle) return { erreur: t('sourceIntrouvable') }
     const champ = (nom: string) => formulaire.get(nom)
     let entree: Record<string, unknown>
     if (actuelle.type === 'rest') {
@@ -167,26 +176,27 @@ export async function modifierConnexion(_etat: Etat, formulaire: FormData): Prom
     await modifierSource(id, entree)
   } catch (erreur) {
     return {
-      erreur: erreur instanceof ErreurAdministrationSource ? erreur.message :
-        'Modification refusée : la connexion n’a pas pu être testée. Les paramètres actuels sont conservés.',
+      erreur: erreur instanceof ErreurAdministrationSource ? await messageErreurLib(erreur.message) :
+        t('modificationRefusee'),
     }
   }
   await enregistrerAuditSession({ action: 'source.modification', cible: { type: 'source', id }, details: { moteur: 'connexion' } })
   revalidatePath('/sources')
   revalidatePath('/sources/' + id)
-  return { succes: 'Connexion modifiée et testée.' }
+  return { succes: t('connexionModifiee') }
 }
 
 export async function supprimerConnexion(_etat: Etat, formulaire: FormData): Promise<Etat> {
   const garde = await exigerAdminMedicAssist()
-  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!garde.ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   const id = formulaire.get('sourceId')
-  if (typeof id !== 'string' || !ID_SOURCE.test(id)) return { erreur: 'Source introuvable.' }
-  if (formulaire.get('confirmation') !== 'on') return { erreur: 'Cochez la case de confirmation pour supprimer la source.' }
+  if (typeof id !== 'string' || !ID_SOURCE.test(id)) return { erreur: t('sourceIntrouvable') }
+  if (formulaire.get('confirmation') !== 'on') return { erreur: t('confirmerSuppressionSource') }
   try {
     await supprimerSource(garde.contexte.userId, id)
   } catch (erreur) {
-    return { erreur: erreur instanceof ErreurAdministrationSource ? erreur.message : 'Suppression impossible. Réessayez dans un instant.' }
+    return { erreur: erreur instanceof ErreurAdministrationSource ? await messageErreurLib(erreur.message) : t('suppressionImpossible') }
   }
   await enregistrerAuditSession({ action: 'source.suppression', cible: { type: 'source', id } })
   revalidatePath('/sources')
@@ -195,29 +205,31 @@ export async function supprimerConnexion(_etat: Etat, formulaire: FormData): Pro
 
 export async function renommerJeu(_etat: Etat, formulaire: FormData): Promise<Etat> {
   const garde = await exigerAdminMedicAssist()
-  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!garde.ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   const cle = formulaire.get('jeu')
-  if (typeof cle !== 'string' || !CLE_JEU.test(cle)) return { erreur: 'Import introuvable.' }
+  if (typeof cle !== 'string' || !CLE_JEU.test(cle)) return { erreur: t('importIntrouvable') }
   try {
     await renommerImport(garde.contexte.userId, cle, formulaire.get('titre'))
   } catch (erreur) {
-    return { erreur: erreur instanceof ErreurAdministrationSource ? erreur.message : 'Nom non enregistré. Indiquez un nom de 1 à 120 caractères.' }
+    return { erreur: erreur instanceof ErreurAdministrationSource ? await messageErreurLib(erreur.message) : t('nomNonEnregistre') }
   }
   revalidatePath('/sources')
-  return { succes: 'Nom enregistré.' }
+  return { succes: t('nomEnregistre') }
 }
 
 export async function supprimerJeu(_etat: Etat, formulaire: FormData): Promise<Etat> {
   const garde = await exigerAdminMedicAssist()
-  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  if (!garde.ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  const t = await getTranslations('sources.actions')
   const cle = formulaire.get('jeu')
-  if (typeof cle !== 'string' || !CLE_JEU.test(cle)) return { erreur: 'Import introuvable.' }
-  if (formulaire.get('confirmation') !== 'on') return { erreur: 'Cochez la case de confirmation pour supprimer l’import.' }
+  if (typeof cle !== 'string' || !CLE_JEU.test(cle)) return { erreur: t('importIntrouvable') }
+  if (formulaire.get('confirmation') !== 'on') return { erreur: t('confirmerSuppressionImport') }
   try {
     await supprimerImport(garde.contexte.userId, cle)
   } catch (erreur) {
-    return { erreur: erreur instanceof ErreurAdministrationSource ? erreur.message : 'Suppression impossible. Réessayez dans un instant.' }
+    return { erreur: erreur instanceof ErreurAdministrationSource ? await messageErreurLib(erreur.message) : t('suppressionImpossible') }
   }
   revalidatePath('/sources')
-  return { succes: 'Import supprimé.' }
+  return { succes: t('importSupprime') }
 }

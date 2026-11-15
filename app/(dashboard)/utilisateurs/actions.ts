@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { getTranslations } from 'next-intl/server'
 import {
   changerRoleCompte,
   desactiverCompte,
@@ -16,32 +17,31 @@ import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 
 export type EtatUtilisateurs = { erreur?: string; succes?: string; lien?: string; expireA?: string }
 
-const REFUS = 'Accès réservé aux administrateurs.'
-const ECHEC = 'Opération impossible pour le moment. Réessayez plus tard.'
-const COURRIER_NON_PARTI =
-  "Le courrier n'a pas pu être envoyé (SMTP non configuré ou en échec). Transmettez ce lien vous-même :"
+const traduire = () => getTranslations('ecrans.utilisateurs.serveur')
+type Traducteur = Awaited<ReturnType<typeof traduire>>
 
 function texte(formulaire: FormData, nom: string): string {
   const valeur = formulaire.get(nom)
   return typeof valeur === 'string' ? valeur.trim() : ''
 }
 
-function erreurAffichable(erreur: unknown): EtatUtilisateurs {
+function erreurAffichable(erreur: unknown, t: Traducteur): EtatUtilisateurs {
   if (erreur instanceof ErreurComptes) return { erreur: erreur.message }
   // Pas d'e-mail ni de jeton dans les journaux : seulement le type d'erreur.
   journal.erreur('Gestion des utilisateurs : échec inattendu', { domaine: 'comptes', erreur: erreur instanceof Error ? erreur.name : typeof erreur })
-  return { erreur: ECHEC }
+  return { erreur: t('echec') }
 }
 
-function etatInvitation(resultat: ResultatInvitation, adresse: string): EtatUtilisateurs {
+function etatInvitation(resultat: ResultatInvitation, adresse: string, t: Traducteur): EtatUtilisateurs {
   return resultat.envoye
-    ? { succes: `Invitation envoyée à ${adresse}.` }
-    : { succes: COURRIER_NON_PARTI, lien: resultat.lien, expireA: resultat.expireA?.toISOString() }
+    ? { succes: t('invitationEnvoyee', { adresse }) }
+    : { succes: t('courrierNonParti'), lien: resultat.lien, expireA: resultat.expireA?.toISOString() }
 }
 
 export async function inviter(_: EtatUtilisateurs, formulaire: FormData): Promise<EtatUtilisateurs> {
+  const t = await traduire()
   const acces = await exigerAdminMedicAssist()
-  if (!acces.ok) return { erreur: REFUS }
+  if (!acces.ok) return { erreur: t('refus') }
   const email = texte(formulaire, 'email')
   try {
     const resultat = await inviterUtilisateur(acces.contexte.userId, {
@@ -52,60 +52,64 @@ export async function inviter(_: EtatUtilisateurs, formulaire: FormData): Promis
     })
     await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.invitation', cible: { type: 'utilisateur' }, details: { role: texte(formulaire, 'role'), envoye: resultat.envoye } })
     revalidatePath('/utilisateurs')
-    return etatInvitation(resultat, email)
+    return etatInvitation(resultat, email, t)
   } catch (erreur) {
-    return erreurAffichable(erreur)
+    return erreurAffichable(erreur, t)
   }
 }
 
 export async function renvoyer(_: EtatUtilisateurs, formulaire: FormData): Promise<EtatUtilisateurs> {
+  const t = await traduire()
   const acces = await exigerAdminMedicAssist()
-  if (!acces.ok) return { erreur: REFUS }
+  if (!acces.ok) return { erreur: t('refus') }
   try {
     const resultat = await renvoyerInvitation(acces.contexte.userId, texte(formulaire, 'compteId'))
     await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.invitation_renvoyee', cible: { type: 'utilisateur', id: texte(formulaire, 'compteId') }, details: { envoye: resultat.envoye } })
     revalidatePath('/utilisateurs')
-    return etatInvitation(resultat, texte(formulaire, 'email') || 'la personne invitée')
+    return etatInvitation(resultat, texte(formulaire, 'email') || t('personneInvitee'), t)
   } catch (erreur) {
-    return erreurAffichable(erreur)
+    return erreurAffichable(erreur, t)
   }
 }
 
 export async function desactiver(_: EtatUtilisateurs, formulaire: FormData): Promise<EtatUtilisateurs> {
+  const t = await traduire()
   const acces = await exigerAdminMedicAssist()
-  if (!acces.ok) return { erreur: REFUS }
+  if (!acces.ok) return { erreur: t('refus') }
   try {
     await desactiverCompte(acces.contexte.userId, texte(formulaire, 'compteId'))
   } catch (erreur) {
-    return erreurAffichable(erreur)
+    return erreurAffichable(erreur, t)
   }
   await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.desactivation', cible: { type: 'utilisateur', id: texte(formulaire, 'compteId') } })
   revalidatePath('/utilisateurs')
-  return { succes: 'Compte désactivé.' }
+  return { succes: t('desactive') }
 }
 
 export async function reactiver(_: EtatUtilisateurs, formulaire: FormData): Promise<EtatUtilisateurs> {
+  const t = await traduire()
   const acces = await exigerAdminMedicAssist()
-  if (!acces.ok) return { erreur: REFUS }
+  if (!acces.ok) return { erreur: t('refus') }
   try {
     await reactiverCompte(acces.contexte.userId, texte(formulaire, 'compteId'))
   } catch (erreur) {
-    return erreurAffichable(erreur)
+    return erreurAffichable(erreur, t)
   }
   await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.reactivation', cible: { type: 'utilisateur', id: texte(formulaire, 'compteId') } })
   revalidatePath('/utilisateurs')
-  return { succes: 'Compte réactivé.' }
+  return { succes: t('reactive') }
 }
 
 export async function changerRole(_: EtatUtilisateurs, formulaire: FormData): Promise<EtatUtilisateurs> {
+  const t = await traduire()
   const acces = await exigerAdminMedicAssist()
-  if (!acces.ok) return { erreur: REFUS }
+  if (!acces.ok) return { erreur: t('refus') }
   try {
     await changerRoleCompte(acces.contexte.userId, texte(formulaire, 'compteId'), texte(formulaire, 'role'))
   } catch (erreur) {
-    return erreurAffichable(erreur)
+    return erreurAffichable(erreur, t)
   }
   await enregistrerAudit({ acteurId: acces.contexte.userId, action: 'utilisateur.role_modifie', cible: { type: 'utilisateur', id: texte(formulaire, 'compteId') }, details: { role: texte(formulaire, 'role') } })
   revalidatePath('/utilisateurs')
-  return { succes: 'Rôle modifié.' }
+  return { succes: t('roleModifie') }
 }

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { AlertTriangle } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { IdSourceSchema, TableSchema, chargerConnexionSource, dependancesSource, listerColonnes, listerTables, trouverSource } from '@/lib/warehouse/sources-admin'
 import { Button } from '@/components/ui/button'
@@ -17,6 +18,8 @@ type Parametres = { q?: string; schema?: string; table?: string }
 
 export default async function SourceDetail({ params, searchParams }: { params: { id: string }; searchParams: Parametres }) {
   if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
+  const t = await getTranslations('sources.detail')
+  const tType = await getTranslations('sources.typeSource')
   if (!IdSourceSchema.safeParse(params.id).success) notFound()
   const source = await trouverSource(params.id)
   if (!source) notFound()
@@ -30,52 +33,52 @@ export default async function SourceDetail({ params, searchParams }: { params: {
     choix.success ? listerColonnes(source.id, choix.data).catch(() => null) : Promise.resolve(null),
   ])
   const chemin = '/sources/' + source.id
-  const typeSource = { postgresql: 'PostgreSQL', mysql: 'MySQL', rest: 'API REST', fichier: 'Fichier' }
-  const element = source.type === 'fichier' ? 'feuille' : source.type === 'rest' ? 'collection' : 'table'
+  // Clé de variante par type de source : les phrases s'accordent en genre, une clé par type (pas de concaténation).
+  const variante = source.type === 'fichier' ? 'fichier' : source.type === 'rest' ? 'rest' : 'base'
 
   return (
     <section className="mx-auto max-w-6xl space-y-6">
       <EnTetePage
-        retour={{ href: '/sources', libelle: 'Sources' }}
-        titre={<span className="flex flex-wrap items-center gap-3">{source.titre}<Badge variant="outline">{typeSource[source.type]}</Badge></span>}
+        retour={{ href: '/sources', libelle: t('sources') }}
+        titre={<span className="flex flex-wrap items-center gap-3">{source.titre}<Badge variant="outline">{tType(source.type)}</Badge></span>}
         description={source.type === 'fichier' ? source.base : source.hote + ' · ' + source.base}
       />
       {source.type === 'fichier' && (
         <details className="rounded-lg border bg-card p-5">
-          <summary className="cursor-pointer text-base font-semibold">Remplacer le fichier source</summary>
+          <summary className="cursor-pointer text-base font-semibold">{t('remplacerFichier')}</summary>
           <div className="mt-4 space-y-3">
-            <p className="text-sm text-muted-foreground">Conservez les noms des feuilles et des colonnes sélectionnées, puis relancez les imports liés pour publier les nouvelles données.</p>
+            <p className="text-sm text-muted-foreground">{t('aideRemplacer')}</p>
             <FormulaireFichierSource sourceId={source.id} />
           </div>
         </details>
       )}
       {connexion && (
         <details className="rounded-lg border bg-card p-4">
-          <summary className="cursor-pointer font-semibold">Modifier la connexion</summary>
+          <summary className="cursor-pointer font-semibold">{t('modifierConnexion')}</summary>
           <div className="mt-4"><FormulaireModifierConnexion sourceId={source.id} connexion={connexion} /></div>
         </details>
       )}
       <details className="rounded-lg border bg-card p-4">
-        <summary className="cursor-pointer font-semibold">Supprimer la source</summary>
+        <summary className="cursor-pointer font-semibold">{t('supprimerSource')}</summary>
         <div className="mt-4">
           {dependances
             ? <FormulaireSupprimerConnexion sourceId={source.id} imports={dependances.imports} />
-            : <p role="status" className="text-sm">Dépendances indisponibles pour le moment : la suppression est désactivée.</p>}
+            : <p role="status" className="text-sm">{t('depIndisponibles')}</p>}
         </div>
       </details>
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(17rem,1fr)_minmax(0,2fr)]">
         <section className="space-y-3 rounded-lg border bg-card p-5">
-          <h2 className="text-base font-semibold">{source.type === 'fichier' ? 'Feuilles accessibles' : source.type === 'rest' ? 'Collections accessibles' : 'Tables accessibles'}</h2>
+          <h2 className="text-base font-semibold">{t('accessibles.' + variante)}</h2>
           <form method="get" action={chemin} className="space-y-2">
-            <Label htmlFor="table-q">{source.type === 'fichier' ? 'Rechercher une feuille' : source.type === 'rest' ? 'Rechercher une collection' : 'Rechercher par schéma ou table'}</Label>
+            <Label htmlFor="table-q">{t('rechercher.' + variante)}</Label>
             <div className="flex gap-2">
               <Input id="table-q" name="q" defaultValue={recherche} maxLength={120} />
-              <Button type="submit" variant="outline">Rechercher</Button>
+              <Button type="submit" variant="outline">{t('rechercherBouton')}</Button>
             </div>
           </form>
-          {inventaire === null && <p role="status" className="flex items-start gap-2 rounded-md bg-danger-soft p-3 text-sm text-destructive"><AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />Inventaire indisponible. Vérifiez la connexion et les droits du compte source.</p>}
-          {inventaire?.tables.length === 0 && <p role="status" className="text-sm text-muted-foreground">Aucune {element} trouvée.</p>}
-          {inventaire?.tronque && <p className="text-sm text-muted-foreground">200 résultats affichés. Affinez la recherche pour en voir d’autres.</p>}
+          {inventaire === null && <p role="status" className="flex items-start gap-2 rounded-md bg-danger-soft p-3 text-sm text-destructive"><AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />{t('inventaireIndisponible')}</p>}
+          {inventaire?.tables.length === 0 && <p role="status" className="text-sm text-muted-foreground">{t('aucun.' + variante)}</p>}
+          {inventaire?.tronque && <p className="text-sm text-muted-foreground">{t('tronque')}</p>}
           <ul className="max-h-[32rem] divide-y overflow-auto">
             {inventaire?.tables.map(({ schema, table }) => {
               const active = choix.success && choix.data.schema === schema && choix.data.table === table
@@ -92,9 +95,9 @@ export default async function SourceDetail({ params, searchParams }: { params: {
           </ul>
         </section>
         <section className="min-w-0 space-y-4 rounded-lg border bg-card p-5">
-          <h2 className="break-all text-base font-semibold">{choix.success ? choix.data.schema + '.' + choix.data.table : 'Nouvel import'}</h2>
-          {!choix.success && <p className="text-sm text-muted-foreground">Choisissez une {element} pour voir ses colonnes et préparer un import.</p>}
-          {choix.success && !colonnes?.length && <p role="status" className="text-sm text-muted-foreground">Aucune colonne lisible pour cette {element}.</p>}
+          <h2 className="break-all text-base font-semibold">{choix.success ? choix.data.schema + '.' + choix.data.table : t('nouvelImport')}</h2>
+          {!choix.success && <p className="text-sm text-muted-foreground">{t('choisir.' + variante)}</p>}
+          {choix.success && !colonnes?.length && <p role="status" className="text-sm text-muted-foreground">{t('aucuneColonne.' + variante)}</p>}
           {choix.success && !!colonnes?.length && (
             <FormulaireImport key={JSON.stringify(choix.data)} sourceId={source.id} {...choix.data} colonnes={colonnes} />
           )}
