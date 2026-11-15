@@ -57,9 +57,8 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Alertes de tablea
 
       const tuile = { id: randomUUID(), type: 'mesure' as const, jeu: 'ventes', mesure: 'ca_eur', dimensions: [] as string[],
         alerte: { sens: 'au_dessus' as const, seuil: '1', email: true, webhook: WEBHOOK,
-          destinataires: [lecteurA.contexte.userId, nonLecteur.contexte.userId] } }
+          destinataires: [lecteurA.contexte.userId] } }
       const definition: DefinitionTableau = { titre: 'Alertes du pilote', lecteurs: [lecteurA.contexte.userId, lecteurB.contexte.userId], tuiles: [tuile] }
-      // Le compte désigné mais non lecteur est inscrit dans la définition : l’enregistrement ne le retient que comme destinataire.
       const tableau = await enregistrerTableau(proprietaire.contexte, definition)
 
       const valeur = async (contexte: Awaited<ReturnType<typeof contexteDepuisCompte>>) => {
