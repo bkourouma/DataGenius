@@ -2,23 +2,39 @@
 
 import { useState } from 'react'
 import { useFormState } from 'react-dom'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { chargerTableau, optionsTableau } from '@/lib/warehouse/tableaux'
-import type { DefinitionTableau } from '@/lib/warehouse/tableaux-modeles'
+import type { AlerteTuile, DefinitionTableau } from '@/lib/warehouse/tableaux-modeles'
 import { Soumettre } from '../sources/formulaires'
 import { enregistrer } from './actions'
 
 type Tuile = DefinitionTableau['tuiles'][number]
 type Tableau = Awaited<ReturnType<typeof chargerTableau>>
+type ReglagesAlerte = { sens: AlerteTuile['sens']; seuil: string; destinataires?: string[]; email?: boolean; webhook?: string }
+
+/** Reconstruit l'alerte en retirant les réglages vides (le schéma strict refuse `[]`, `false` et `''`). */
+function normaliserAlerte(base: ReglagesAlerte): AlerteTuile {
+  const { destinataires, email, webhook, ...socle } = base
+  return {
+    ...socle,
+    ...(destinataires?.length ? { destinataires } : {}),
+    ...(email ? { email: true } : {}),
+    ...(webhook?.trim() ? { webhook: webhook.trim() } : {}),
+  }
+}
+
 const selection = 'block min-h-10 w-full rounded-md border border-input bg-background px-3 text-sm'
 
-export function FormulaireTableau({ tableau, options, comptes, analyses }: {
+export function FormulaireTableau({ tableau, options, comptes, analyses, estAdmin }: {
   tableau: Tableau
   options: Awaited<ReturnType<typeof optionsTableau>>
   comptes: { id: string; nom: string; email: string }[]
   analyses: { id: string; titre: string }[]
+  estAdmin: boolean
 }) {
+  const t = useTranslations('notifications')
   const [tuiles, setTuiles] = useState(tableau?.definition.tuiles ?? [])
   const [lecteurs, setLecteurs] = useState(tableau?.definition.lecteurs ?? [])
   const [etat, action] = useFormState(enregistrer.bind(null, tableau ? { id: tableau.id, version: tableau.version } : null), {})
@@ -97,17 +113,55 @@ export function FormulaireTableau({ tableau, options, comptes, analyses }: {
               <label className="block space-y-1 text-sm">Alerte
                 <select className={selection} value={tuile.alerte?.sens ?? ''} onChange={event => {
                   const sens = event.target.value
-                  modifier({ ...tuile, alerte: sens === 'au_dessus' || sens === 'au_dessous' ? { sens, seuil: tuile.alerte?.seuil ?? '' } : undefined })
+                  modifier({ ...tuile, alerte: sens === 'au_dessus' || sens === 'au_dessous' ? normaliserAlerte({ ...tuile.alerte, sens, seuil: tuile.alerte?.seuil ?? '' }) : undefined })
                 }}>
                   <option value="">Désactivée</option><option value="au_dessus">Au seuil ou au-dessus</option><option value="au_dessous">Au seuil ou en dessous</option>
                 </select>
               </label>
               {tuile.alerte && <label className="block space-y-1 text-sm">Seuil
                 <Input inputMode="decimal" required value={tuile.alerte.seuil} onChange={event => {
-                  if (tuile.alerte) modifier({ ...tuile, alerte: { ...tuile.alerte, seuil: event.target.value.replace(',', '.') } })
+                  if (tuile.alerte) modifier({ ...tuile, alerte: normaliserAlerte({ ...tuile.alerte, seuil: event.target.value.replace(',', '.') }) })
                 }} />
               </label>}
             </div>
+            {tuile.alerte && (() => {
+              const alerte = tuile.alerte
+              const lecteursCoches = lecteurs.map(id => {
+                const compte = comptes.find(c => c.id === id)
+                return { id, nom: compte ? compte.nom || compte.email : 'Compte indisponible' }
+              })
+              const majAlerte = (reglages: Partial<Pick<AlerteTuile, 'destinataires' | 'email' | 'webhook'>>) =>
+                modifier({ ...tuile, alerte: normaliserAlerte({ ...alerte, ...reglages }) })
+              return <fieldset className="space-y-3 rounded-md border p-3">
+                <legend className="px-1 text-sm font-medium">{t('editeur.legende')}</legend>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">{t('editeur.destinatairesTitre')}</p>
+                  <p className="text-sm text-muted-foreground">{t('editeur.destinatairesAide')}</p>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" checked disabled readOnly />
+                    {t('editeur.moi')}
+                  </label>
+                  {lecteursCoches.length === 0
+                    ? <p className="text-sm text-muted-foreground">{t('editeur.aucunLecteur')}</p>
+                    : <div className="grid gap-2 sm:grid-cols-2">{lecteursCoches.map(lecteur => <label key={lecteur.id} className="flex items-center gap-2 text-sm">
+                      <input type="checkbox" checked={alerte.destinataires?.includes(lecteur.id) ?? false}
+                        onChange={event => majAlerte({ destinataires: event.target.checked ? [...(alerte.destinataires ?? []), lecteur.id] : (alerte.destinataires ?? []).filter(id => id !== lecteur.id) })} />
+                      {lecteur.nom}
+                    </label>)}</div>}
+                </div>
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={alerte.email ?? false} onChange={event => majAlerte({ email: event.target.checked })} />
+                  {t('editeur.email')}
+                </label>
+                {estAdmin
+                  ? <label className="block space-y-1 text-sm">{t('editeur.webhook')}
+                    <Input type="url" maxLength={2048} value={alerte.webhook ?? ''} placeholder={t('editeur.webhookPlaceholder')}
+                      onChange={event => majAlerte({ webhook: event.target.value })} />
+                    <span className="block text-xs text-muted-foreground">{t('editeur.webhookAide')}</span>
+                  </label>
+                  : alerte.webhook && <p className="text-sm text-muted-foreground">{t('editeur.webhookReserve')}</p>}
+              </fieldset>
+            })()}
           </>}
           <Button type="button" variant="outline" size="sm" onClick={() => setTuiles(courantes => courantes.filter(t => t.id !== tuile.id))}>Retirer la tuile</Button>
         </fieldset>
@@ -126,7 +180,13 @@ export function FormulaireTableau({ tableau, options, comptes, analyses }: {
           const coche = lecteurs.includes(compte.id)
           return <label key={compte.id} className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={coche} disabled={!coche && lecteurs.length >= 30}
-              onChange={event => setLecteurs(actuels => event.target.checked ? [...actuels, compte.id] : actuels.filter(id => id !== compte.id))} />
+              onChange={event => {
+                if (event.target.checked) { setLecteurs(actuels => [...actuels, compte.id]); return }
+                setLecteurs(actuels => actuels.filter(id => id !== compte.id))
+                setTuiles(courantes => courantes.map(courante => courante.type === 'mesure' && courante.alerte?.destinataires?.includes(compte.id)
+                  ? { ...courante, alerte: normaliserAlerte({ ...courante.alerte, destinataires: courante.alerte.destinataires.filter(id => id !== compte.id) }) }
+                  : courante))
+              }} />
             {compte.nom || compte.email}
           </label>
         })}

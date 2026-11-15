@@ -27,6 +27,7 @@ export async function EditeurTableau({ id }: { id?: string }) {
       description={id ? 'Ajustez les tuiles, les filtres communs et les personnes qui peuvent consulter ce tableau.' : 'Rassemblez des indicateurs et des analyses sur une même page, puis partagez-la en lecture.'} />
     <FormulaireTableau tableau={tableau} options={options}
       comptes={[...comptes, ...anciensLecteurs].map(c => ({ id: c.id, nom: c.nom, email: c.email }))}
-      analyses={analyses.lignes.map(a => ({ id: a.artefactId, titre: a.titre }))} />
+      analyses={analyses.lignes.map(a => ({ id: a.artefactId, titre: a.titre }))}
+      estAdmin={contexte.roleName === 'TenantAdmin'} />
   </section>
 }
