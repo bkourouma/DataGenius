@@ -4,6 +4,7 @@ import { setTimeout } from 'node:timers/promises'
 import { purgerJournalAudit } from '@/lib/audit/purge'
 import { prisma } from '@/lib/db/client'
 import { ErreurEnvironnement, verifierEnvironnement } from '@/lib/env'
+import { purgerCommentairesOrphelins } from '@/lib/commentaires/commentaires'
 import { journal } from '@/lib/journal'
 import {
   avecBattementPeriodique, enregistrerBattement, hoteCourt, INTERVALLE_BOUCLE_MS, nettoyerInstancesMuettesSiEchu, type ResumeTour,
@@ -35,6 +36,12 @@ async function purger(ponctuelle: boolean) {
     if (supprimees) journal.info('Purge des exécutions', { supprimees })
   } catch (erreur) {
     journal.erreur('Purge des exécutions impossible', { code: 'purge_impossible', ...causeJournal(erreur) })
+  }
+  try {
+    const orphelins = await purgerCommentairesOrphelins()
+    if (orphelins) journal.info('Purge des commentaires orphelins', { supprimes: orphelins })
+  } catch (erreur) {
+    journal.erreur('Purge des commentaires orphelins impossible', { code: 'purge_impossible', ...causeJournal(erreur) })
   }
 }
 

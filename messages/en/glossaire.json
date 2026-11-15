@@ -1,1 +1,89 @@
-{}
+{
+  "page": {
+    "titre": "Glossary",
+    "description": "Find the definition, formula and unit of every metric in the datasets you can access.",
+    "recherche": {
+      "libelle": "Search the glossary",
+      "placeholder": "A metric, a synonym, a dataset…",
+      "bouton": "Search",
+      "effacer": "Clear"
+    },
+    "compte": "{count, plural, one {# metric} other {# metrics}}",
+    "jeuOrigine": "Source dataset",
+    "formule": "Formula",
+    "conditions": "Conditions",
+    "synonymes": "Synonyms",
+    "completer": "Complete",
+    "agregats": {
+      "somme": "Sum of {colonne}",
+      "moyenne": "Average of {colonne}",
+      "min": "Minimum of {colonne}",
+      "max": "Maximum of {colonne}",
+      "nombre": "Count of {colonne}",
+      "nombre_distinct": "Count of distinct values of {colonne}",
+      "rapport": "Ratio of {numerateur} to {denominateur}",
+      "nombreLignes": "Number of rows"
+    },
+    "vide": {
+      "aucunJeuTitre": "No metrics to show",
+      "aucunJeu": "You do not have access to any dataset with metrics yet. Ask an administrator to grant you access.",
+      "aucunResultatTitre": "No results",
+      "aucunResultat": "No metric matches “{q}”. Try another word or a synonym."
+    },
+    "formulaire": {
+      "definition": "Additional definition",
+      "aideDefinition": "Plain text, 600 characters at most. It replaces the catalogue definition; leave it empty to go back to that one.",
+      "synonymes": "Synonyms",
+      "aideSynonymes": "One synonym per line, 10 at most, 60 characters each.",
+      "enregistrer": "Save",
+      "enregistrement": "Saving…",
+      "fermer": "Close",
+      "succes": "Addition saved."
+    },
+    "erreurs": {
+      "session": "Session expired. Please sign in again.",
+      "interdit": "Only an administrator can complete the glossary.",
+      "introuvable": "This metric is no longer available.",
+      "invalide": "Check the definition (600 characters at most) and the synonyms (10 at most, 60 characters each).",
+      "echec": "Could not save. Please try again in a moment."
+    }
+  },
+  "recherche": {
+    "titre": "Search",
+    "description": "Search your dashboards, your analyses, the glossary and, for administrators, the sources.",
+    "champ": "Search everywhere",
+    "placeholder": "A title, a metric, a source…",
+    "bouton": "Search",
+    "accueil": "Enter at least two characters to start searching.",
+    "tropCourt": "The search needs at least 2 characters.",
+    "tropLong": "The search accepts at most 100 characters.",
+    "videTitre": "No results",
+    "vide": "Nothing matches “{q}”. Check the spelling or try a shorter word.",
+    "compte": "{count, plural, one {# result} other {# results}}",
+    "groupes": {
+      "tableau": "Dashboards",
+      "analyse": "Analyses",
+      "glossaire": "Glossary",
+      "source": "Sources"
+    },
+    "palette": "Search everywhere for “{q}”"
+  },
+  "commentaires": {
+    "titre": "Comments",
+    "libelleChamp": "Add a comment",
+    "placeholder": "Write a comment (plain text)",
+    "restants": "{restants} characters left",
+    "envoyer": "Comment",
+    "supprimer": "Delete",
+    "confirmerSuppression": "Delete this comment?",
+    "confirmer": "Yes, delete",
+    "annuler": "Cancel",
+    "vide": "No comments yet.",
+    "auteurLe": "{auteur}, on {date}",
+    "introuvable": "This analysis or comment is not available.",
+    "invalide": "A comment must contain between 1 and 2000 characters.",
+    "interdit": "You cannot delete someone else’s comment.",
+    "limite_debit": "Too many comments in a short time. Try again in a few minutes.",
+    "interne": "Something went wrong. Please try again later."
+  }
+}

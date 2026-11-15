@@ -1,1 +1,89 @@
-{}
+{
+  "page": {
+    "titre": "Glossaire",
+    "description": "Retrouvez la définition, la formule et l’unité de chaque indicateur des jeux de données auxquels vous avez accès.",
+    "recherche": {
+      "libelle": "Rechercher dans le glossaire",
+      "placeholder": "Un indicateur, un synonyme, un jeu…",
+      "bouton": "Rechercher",
+      "effacer": "Effacer"
+    },
+    "compte": "{count, plural, one {# indicateur} other {# indicateurs}}",
+    "jeuOrigine": "Jeu d’origine",
+    "formule": "Formule",
+    "conditions": "Conditions",
+    "synonymes": "Synonymes",
+    "completer": "Compléter",
+    "agregats": {
+      "somme": "Somme de {colonne}",
+      "moyenne": "Moyenne de {colonne}",
+      "min": "Minimum de {colonne}",
+      "max": "Maximum de {colonne}",
+      "nombre": "Nombre de {colonne}",
+      "nombre_distinct": "Nombre de valeurs distinctes de {colonne}",
+      "rapport": "Rapport de {numerateur} sur {denominateur}",
+      "nombreLignes": "Nombre de lignes"
+    },
+    "vide": {
+      "aucunJeuTitre": "Aucun indicateur à afficher",
+      "aucunJeu": "Vous n’avez accès à aucun jeu de données avec indicateurs pour l’instant. Demandez à un administrateur de vous en ouvrir l’accès.",
+      "aucunResultatTitre": "Aucun résultat",
+      "aucunResultat": "Aucun indicateur ne correspond à « {q} ». Essayez un autre mot ou un synonyme."
+    },
+    "formulaire": {
+      "definition": "Définition complémentaire",
+      "aideDefinition": "Texte brut, 600 caractères au maximum. Elle remplace la définition du catalogue ; laissez vide pour revenir à celle-ci.",
+      "synonymes": "Synonymes",
+      "aideSynonymes": "Un synonyme par ligne, 10 au maximum, 60 caractères chacun.",
+      "enregistrer": "Enregistrer",
+      "enregistrement": "Enregistrement…",
+      "fermer": "Fermer",
+      "succes": "Complément enregistré."
+    },
+    "erreurs": {
+      "session": "Session expirée. Reconnectez-vous.",
+      "interdit": "Seul un administrateur peut compléter le glossaire.",
+      "introuvable": "Cet indicateur n’est plus disponible.",
+      "invalide": "Vérifiez la définition (600 caractères au maximum) et les synonymes (10 au maximum, 60 caractères chacun).",
+      "echec": "Enregistrement impossible. Réessayez dans un instant."
+    }
+  },
+  "recherche": {
+    "titre": "Recherche",
+    "description": "Cherchez dans vos tableaux de bord, vos analyses, le glossaire et, pour les administrateurs, les sources.",
+    "champ": "Rechercher partout",
+    "placeholder": "Un titre, un indicateur, une source…",
+    "bouton": "Rechercher",
+    "accueil": "Saisissez au moins deux caractères pour lancer la recherche.",
+    "tropCourt": "La recherche demande au moins 2 caractères.",
+    "tropLong": "La recherche accepte 100 caractères au plus.",
+    "videTitre": "Aucun résultat",
+    "vide": "Rien ne correspond à « {q} ». Vérifiez l’orthographe ou essayez un mot plus court.",
+    "compte": "{count, plural, one {# résultat} other {# résultats}}",
+    "groupes": {
+      "tableau": "Tableaux de bord",
+      "analyse": "Analyses",
+      "glossaire": "Glossaire",
+      "source": "Sources"
+    },
+    "palette": "Rechercher « {q} » partout"
+  },
+  "commentaires": {
+    "titre": "Commentaires",
+    "libelleChamp": "Ajouter un commentaire",
+    "placeholder": "Écrire un commentaire (texte simple)",
+    "restants": "{restants} caractères restants",
+    "envoyer": "Commenter",
+    "supprimer": "Supprimer",
+    "confirmerSuppression": "Supprimer ce commentaire ?",
+    "confirmer": "Oui, supprimer",
+    "annuler": "Annuler",
+    "vide": "Aucun commentaire pour le moment.",
+    "auteurLe": "{auteur}, le {date}",
+    "introuvable": "Cette analyse ou ce commentaire n’est pas disponible.",
+    "invalide": "Le commentaire doit contenir entre 1 et 2000 caractères.",
+    "interdit": "Vous ne pouvez pas supprimer le commentaire d’une autre personne.",
+    "limite_debit": "Trop de commentaires en peu de temps. Réessayez dans quelques minutes.",
+    "interne": "Une erreur est survenue. Réessayez plus tard."
+  }
+}

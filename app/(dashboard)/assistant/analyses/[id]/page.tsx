@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
+import { CommentairesAnalyse } from '@/components/commentaires/commentaires-analyse';
 import { EnTetePage } from '@/components/ui/en-tete-page';
 import { VueArtefactSuivi } from '@/components/medic-assist/suivi/vue-artefact-suivi';
 
@@ -20,6 +21,7 @@ export default async function AnalysePage({ params }: Props) {
         titre={t('titreRepli')}
       />
       <VueArtefactSuivi artefactId={id} />
+      <CommentairesAnalyse artefactId={id} />
     </div>
   );
 }
