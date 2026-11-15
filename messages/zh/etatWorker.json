@@ -1,1 +1,39 @@
-{}
+{
+  "statut": {
+    "marche": "运行中",
+    "enRetard": "延迟",
+    "arrete": "已停止",
+    "jamaisVu": "从未出现"
+  },
+  "bandeau": {
+    "titre": "同步工作进程",
+    "ouvrir": "工作进程详情",
+    "alerte": "工作进程已停止运行 {duree}。",
+    "detail": "查看详情",
+    "jamaisVuAide": "工作进程尚未报告过它的存在。"
+  },
+  "page": {
+    "retour": "数据源",
+    "titre": "同步工作进程状态",
+    "description": "检查工作进程是否在运行，并查看它的最近一轮以及最近失败的同步。",
+    "etat": "当前状态",
+    "silence": "已静默",
+    "hote": "主机",
+    "version": "版本",
+    "demarreA": "启动于",
+    "dernierSigne": "最近一次心跳",
+    "dernierTour": "最近一轮",
+    "dateTour": "结束于",
+    "duree": "时长",
+    "jeux": "已处理的数据集",
+    "erreurs": "错误",
+    "aucunTour": "目前尚未记录任何一轮。",
+    "echecs": "最近失败的执行",
+    "aucunEchec": "没有失败的执行。",
+    "colJeu": "数据集",
+    "colCode": "代码",
+    "colDate": "日期",
+    "colDuree": "时长",
+    "indisponible": "无法获取工作进程状态。请检查数据库和迁移。"
+  }
+}

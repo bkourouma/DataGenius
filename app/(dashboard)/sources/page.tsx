@@ -8,6 +8,7 @@ import { dependancesJeu, listerSources } from '@/lib/warehouse/sources-admin'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
 import { EnTetePage, EtatVide } from '@/components/ui/en-tete-page'
+import { BandeauEtatWorker } from '@/components/etat-worker/bandeau-etat-worker'
 import { FormulaireActualiser } from './formulaires'
 import { FormulaireGestionJeu, FormulaireSupprimerCombinaison } from './formulaires-gestion'
 import { BoutonAjouterSource } from './ajouter-source'
@@ -35,6 +36,7 @@ export default async function Sources() {
 
   return (
     <section className="mx-auto max-w-4xl space-y-8">
+      <BandeauEtatWorker />
       <EnTetePage
         titre="Sources et synchronisation"
         description="Connectez vos bases, API et fichiers, puis suivez la publication de chaque jeu de données."

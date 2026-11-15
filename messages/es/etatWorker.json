@@ -1,1 +1,39 @@
-{}
+{
+  "statut": {
+    "marche": "En funcionamiento",
+    "enRetard": "Con retraso",
+    "arrete": "Detenido",
+    "jamaisVu": "Nunca visto"
+  },
+  "bandeau": {
+    "titre": "Proceso de sincronización",
+    "ouvrir": "Detalles del proceso",
+    "alerte": "El proceso lleva {duree} sin funcionar.",
+    "detail": "Ver el detalle",
+    "jamaisVuAide": "El proceso aún no ha dado señales de vida."
+  },
+  "page": {
+    "retour": "Fuentes",
+    "titre": "Estado del proceso de sincronización",
+    "description": "Compruebe que el proceso está en marcha y consulte su último ciclo y las últimas sincronizaciones fallidas.",
+    "etat": "Estado actual",
+    "silence": "Sin actividad desde hace",
+    "hote": "Servidor",
+    "version": "Versión",
+    "demarreA": "Iniciado el",
+    "dernierSigne": "Última señal de vida",
+    "dernierTour": "Último ciclo",
+    "dateTour": "Finalizado el",
+    "duree": "Duración",
+    "jeux": "Conjuntos procesados",
+    "erreurs": "Errores",
+    "aucunTour": "Aún no se ha registrado ningún ciclo.",
+    "echecs": "Últimas ejecuciones fallidas",
+    "aucunEchec": "Ninguna ejecución fallida.",
+    "colJeu": "Conjunto",
+    "colCode": "Código",
+    "colDate": "Fecha",
+    "colDuree": "Duración",
+    "indisponible": "El estado del proceso no está disponible. Compruebe la base de datos y las migraciones."
+  }
+}
