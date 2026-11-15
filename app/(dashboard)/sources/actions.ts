@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { enregistrerAuditSession } from '@/lib/audit/session'
 import { journal } from '@/lib/journal'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { synchroniserEntrepot } from '@/lib/warehouse/synchronisation'
@@ -40,6 +41,7 @@ export async function ajouterConnexion(_etat: Etat, formulaire: FormData): Promi
   } catch {
     return { erreur: 'Connexion impossible. Vérifiez les paramètres, le compte de lecture et la configuration du serveur.' }
   }
+  await enregistrerAuditSession({ action: 'source.creation', cible: { type: 'source', id, libelle: String(formulaire.get('titre') ?? '') }, details: { moteur: String(formulaire.get('moteur') ?? 'postgresql') } })
   revalidatePath('/sources')
   redirect('/sources/' + id)
 }
@@ -55,6 +57,7 @@ export async function ajouterConnexionRest(_etat: Etat, formulaire: FormData): P
   } catch {
     return { erreur: 'API indisponible. Vérifiez l’URL autorisée, le jeton et le chemin vers le tableau JSON.' }
   }
+  await enregistrerAuditSession({ action: 'source.creation', cible: { type: 'source', id, libelle: String(formulaire.get('titre') ?? '') }, details: { moteur: 'rest' } })
   revalidatePath('/sources')
   redirect('/sources/' + id)
 }
@@ -76,6 +79,7 @@ export async function importerFichierSource(_etat: Etat, formulaire: FormData): 
   } catch {
     return { erreur: 'Fichier non enregistré. Vérifiez son format et la présence d’au moins une feuille importable de 5 000 lignes au plus.' }
   }
+  await enregistrerAuditSession({ action: typeof source === 'string' ? 'source.modification' : 'source.creation', cible: { type: 'source', id, libelle: typeof source === 'string' ? undefined : String(formulaire.get('titre') ?? '') }, details: { moteur: 'fichier' } })
   revalidatePath('/sources')
   if (typeof source === 'string') {
     revalidatePath('/sources/' + id)
@@ -133,6 +137,7 @@ export async function actualiserJeu(_etat: Etat, formulaire: FormData): Promise<
   revalidatePath('/sources')
   const resultat = resultats[0]
   if (!resultat) return { erreur: 'Jeu introuvable.' }
+  await enregistrerAuditSession({ action: 'source.synchronisation', cible: { type: 'jeu', id: jeu }, resultat: resultat.statut === 'echec' ? 'echec' : 'succes', details: { statut: resultat.statut, code: resultat.code ?? null } })
   // Sans code dans le résultat (lot de fiabilité non fusionné), relit le dernier code enregistré.
   let code: string | null | undefined = resultat.code
   if (resultat.statut === 'echec' && !code) code = await dernierCodeExecution(jeu).catch(() => null)
@@ -166,6 +171,7 @@ export async function modifierConnexion(_etat: Etat, formulaire: FormData): Prom
         'Modification refusée : la connexion n’a pas pu être testée. Les paramètres actuels sont conservés.',
     }
   }
+  await enregistrerAuditSession({ action: 'source.modification', cible: { type: 'source', id }, details: { moteur: 'connexion' } })
   revalidatePath('/sources')
   revalidatePath('/sources/' + id)
   return { succes: 'Connexion modifiée et testée.' }
@@ -182,6 +188,7 @@ export async function supprimerConnexion(_etat: Etat, formulaire: FormData): Pro
   } catch (erreur) {
     return { erreur: erreur instanceof ErreurAdministrationSource ? erreur.message : 'Suppression impossible. Réessayez dans un instant.' }
   }
+  await enregistrerAuditSession({ action: 'source.suppression', cible: { type: 'source', id } })
   revalidatePath('/sources')
   redirect('/sources')
 }

@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { enregistrerAudit } from '@/lib/audit/enregistrer'
 import { prisma } from '@/lib/db/client'
 import { doitRehacher, hashPassword, verifierFauxMotDePasse, verifyPassword } from './password'
 import { extraireIp, reinitialiser, reserverTentative, sautsProxyDeConfiance } from './limite-connexion'
@@ -18,17 +19,25 @@ export async function autoriserConnexion(credentials: Identifiants, req?: Requet
   const ip = extraireIp(req?.headers, sautsProxyDeConfiance())
   // La tentative est réservée (incrément atomique) AVANT tout hachage : des requêtes simultanées ne
   // peuvent pas dépasser le seuil. Contrat avec l'écran de connexion : cette erreur exacte signale un blocage.
-  if (!await reserverTentative({ email, ip })) throw new Error('trop_de_tentatives')
+  if (!await reserverTentative({ email, ip })) {
+    await enregistrerAudit({ action: 'connexion.bloquee', cible: { type: 'utilisateur' }, resultat: 'refuse', ip })
+    throw new Error('trop_de_tentatives')
+  }
   const user = await prisma.user.findFirst({
     where: { email, status: 'active', deletedAt: null },
   })
   if (!user) {
     // Même coût qu'un vrai compte ; la tentative réservée reste comptée comme un échec.
     await verifierFauxMotDePasse(password)
+    await enregistrerAudit({ action: 'connexion.echec', cible: { type: 'utilisateur' }, resultat: 'echec', details: { motif: 'compte_inconnu' }, ip })
     return null
   }
-  if (!await verifyPassword(password, user.passwordHash)) return null
+  if (!await verifyPassword(password, user.passwordHash)) {
+    await enregistrerAudit({ acteurId: user.id, action: 'connexion.echec', cible: { type: 'utilisateur', id: user.id }, resultat: 'echec', details: { motif: 'mot_de_passe' }, ip })
+    return null
+  }
   await reinitialiser({ email, ip })
+  await enregistrerAudit({ acteurId: user.id, action: 'connexion.reussie', cible: { type: 'utilisateur', id: user.id }, ip })
   if (doitRehacher(user.passwordHash)) {
     try {
       await prisma.user.update({ where: { id: user.id }, data: { passwordHash: await hashPassword(password) } })

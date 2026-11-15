@@ -1,4 +1,5 @@
 import { setTimeout } from 'node:timers/promises'
+import { purgerJournalAudit } from '@/lib/audit/purge'
 import { prisma } from '@/lib/db/client'
 import { ErreurEnvironnement, verifierEnvironnement } from '@/lib/env'
 import { journal } from '@/lib/journal'
@@ -60,6 +61,7 @@ async function main() {
       if (!boucle) process.exitCode = 1
     }
     await purger(!boucle)
+    await purgerJournalAudit({ forcer: !boucle })
     if (boucle && !arret.signal.aborted) {
       await setTimeout(15_000, undefined, { signal: arret.signal }).catch(() => undefined)
     }

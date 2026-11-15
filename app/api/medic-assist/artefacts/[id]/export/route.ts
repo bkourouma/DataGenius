@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { enregistrerAudit } from '@/lib/audit/enregistrer'
 import { journal } from '@/lib/journal'
 
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
@@ -228,6 +229,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       flux: true,
     })
     if (estFlux(resultat)) {
+      await enregistrerAudit({ acteurId: contexte.userId, action: 'export.artefact', cible: { type: 'artefact', id: id.data }, details: { format: lecture.data.format, version: lecture.data.version ?? null } })
       const flux = envelopperFlux(resultat.flux, liberer)
       placeTransmise = true
       try {
@@ -245,6 +247,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         throw erreur
       }
     }
+    await enregistrerAudit({ acteurId: contexte.userId, action: 'export.artefact', cible: { type: 'artefact', id: id.data }, details: { format: lecture.data.format, version: lecture.data.version ?? null } })
     const corps = new Uint8Array(
       resultat.buffer.buffer,
       resultat.buffer.byteOffset,

@@ -1,1 +1,102 @@
-{}
+{
+  "titre": "Audit log",
+  "introduction": "See who did what, and when: sources, exports, shares, sign-ins, accounts and permissions. Only administrators can view this log.",
+  "retention": "Events are kept for {jours} days, then deleted automatically.",
+  "fuseau": "Times shown in {fuseau}.",
+  "filtres": {
+    "legende": "Filter the log",
+    "du": "From",
+    "au": "To",
+    "acteur": "Actor",
+    "acteurAide": "Account ID, name or part of the email address.",
+    "famille": "Action type",
+    "action": "Action",
+    "cible": "Target",
+    "toutes": "All types",
+    "tous": "All actions",
+    "appliquer": "Filter",
+    "reinitialiser": "Reset"
+  },
+  "tableau": {
+    "legende": "Audit log events, newest first"
+  },
+  "colonnes": {
+    "date": "Date",
+    "acteur": "Actor",
+    "action": "Action",
+    "cible": "Target",
+    "resultat": "Result",
+    "ip": "IP address",
+    "details": "Details"
+  },
+  "familles": {
+    "source": "Sources",
+    "export": "Exports",
+    "partage": "Shares",
+    "connexion": "Sign-ins",
+    "utilisateur": "Users",
+    "droits": "Access rights",
+    "journal": "Audit log"
+  },
+  "actions": {
+    "source_creation": "Source created",
+    "source_modification": "Source modified",
+    "source_suppression": "Source deleted",
+    "source_synchronisation": "Source synchronised",
+    "export_artefact": "Artefact exported",
+    "partage_creation": "Share created",
+    "partage_retrait": "Share removed",
+    "connexion_reussie": "Successful sign-in",
+    "connexion_echec": "Failed sign-in",
+    "connexion_bloquee": "Sign-in blocked",
+    "utilisateur_invitation": "User invited",
+    "utilisateur_invitation_renvoyee": "Invitation resent",
+    "utilisateur_role_modifie": "User role changed",
+    "utilisateur_desactivation": "Account deactivated",
+    "utilisateur_reactivation": "Account reactivated",
+    "droits_modification": "Permissions changed",
+    "journal_export": "Audit log exported"
+  },
+  "resultats": {
+    "succes": "Succeeded",
+    "echec": "Failed",
+    "refuse": "Denied"
+  },
+  "cibles": {
+    "source": "Source",
+    "jeu": "Import",
+    "utilisateur": "User",
+    "artefact": "Artefact",
+    "conversation": "Conversation",
+    "partage": "Share",
+    "droits": "Permissions",
+    "journal": "Log"
+  },
+  "acteurInconnu": "Unknown",
+  "vide": "No events match these filters.",
+  "detailsAfficher": "Show details",
+  "aucunDetail": "No details",
+  "pagination": {
+    "navigation": "Log pagination",
+    "precedent": "Previous",
+    "suivant": "Next",
+    "page": "Page {page} of {pages}",
+    "total": "{total} events in total"
+  },
+  "export": {
+    "lien": "Export as CSV",
+    "mention": "The export is limited to the {max} most recent events matching the filters.",
+    "colonnes": {
+      "date": "Date (UTC)",
+      "acteur": "Actor",
+      "acteurId": "Actor ID",
+      "action": "Action",
+      "cibleType": "Target type",
+      "cibleId": "Target ID",
+      "cibleLibelle": "Target label",
+      "resultat": "Result",
+      "ip": "IP address",
+      "details": "Details (JSON)"
+    }
+  }
+}
