@@ -43,10 +43,10 @@
   "alerteAuDessous": "por debajo de {seuil}",
   "inexistant": "{cle} (ya no existe)",
   "artefact": "Artefacto",
-  "lecteursNonAffiches": "Las personas con acceso al tablero no se muestran en esta vista previa. No cambian al restaurar una versión.",
+  "lecteursNonAffiches": "Las personas con acceso al panel no se muestran en esta vista previa. No cambian al restaurar una versión.",
   "incompatible": "Esta versión ya no es compatible con el panel actual: no se puede restaurar.",
   "restaurerCetteVersion": "Restaurar esta versión",
-  "explicationRestauration": "Se restaurará el contenido de la versión {n} (título, mosaicos, alertas); las personas con acceso al tablero no cambian. Se crea una nueva versión y no se pierde nada: la versión actual permanece en el historial.",
+  "explicationRestauration": "Se restaurará el contenido de la versión {n} (título, tarjetas, alertas); las personas con acceso al panel no cambian. Se crea una nueva versión y no se pierde nada: la versión actual permanece en el historial.",
   "restaurationEnCours": "Restaurando…",
   "erreurIncompatible": "Esta versión ya no es compatible con el panel actual: no se puede restaurar.",
   "erreurGenerique": "No se pudo restaurar. Inténtelo de nuevo en unos instantes."
