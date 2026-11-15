@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useId, useState, type ReactNode } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
 import { useFormState, useFormStatus } from 'react-dom'
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -9,6 +10,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { toIntlTag } from '@/i18n/config'
 import type { CompteListe } from '@/lib/auth/comptes'
 import { changerRole, desactiver, inviter, reactiver, renvoyer, type EtatUtilisateurs } from './actions'
 
@@ -16,14 +18,12 @@ export type CompteAffiche = Omit<CompteListe, 'invitationExpireA'> & { invitatio
 type ActionServeur = (etat: EtatUtilisateurs, formulaire: FormData) => Promise<EtatUtilisateurs>
 
 const choix = 'min-h-10 rounded-md border border-input bg-background px-3 text-sm [@media(pointer:coarse)]:min-h-11'
-const dateCourte = new Intl.DateTimeFormat('fr', { dateStyle: 'short', timeStyle: 'short', timeZone: 'UTC' })
 
-function formaterDate(iso: string | null): string | null {
-  return iso ? `${dateCourte.format(new Date(iso))} UTC` : null
-}
-
-function libelleRole(role: string) {
-  return role === 'TenantAdmin' ? 'Administrateur' : 'Membre'
+/** Date courte en UTC, dans la langue de l'interface (l'arabe garde les chiffres latins, voir i18n/config). */
+function useFormaterDate() {
+  const locale = useLocale()
+  const dateCourte = new Intl.DateTimeFormat(toIntlTag(locale), { dateStyle: 'short', timeStyle: 'short', timeZone: 'UTC' })
+  return (iso: string | null): string | null => (iso ? `${dateCourte.format(new Date(iso))} UTC` : null)
 }
 
 function Soumettre({ texte, attente }: { texte: string; attente: string }) {
@@ -34,6 +34,8 @@ function Soumettre({ texte, attente }: { texte: string; attente: string }) {
 export function LienInvitation({ lien, expireA }: { lien: string; expireA?: string | null }) {
   const [copie, setCopie] = useState(false)
   const id = useId()
+  const t = useTranslations('ecrans.utilisateurs.lien')
+  const formaterDate = useFormaterDate()
   async function copier() {
     try {
       await navigator.clipboard.writeText(lien)
@@ -45,13 +47,13 @@ export function LienInvitation({ lien, expireA }: { lien: string; expireA?: stri
   }
   const echeance = formaterDate(expireA ?? null)
   return <div className="space-y-2 rounded-md border p-3">
-    <label htmlFor={id} className="block text-sm font-medium">Lien d’invitation</label>
+    <label htmlFor={id} className="block text-sm font-medium">{t('titre')}</label>
     <div className="flex flex-col gap-2 sm:flex-row">
       <Input id={id} readOnly value={lien} onFocus={e => e.currentTarget.select()} />
-      <Button type="button" size="sm" variant="outline" onClick={copier}>{copie ? 'Copié' : 'Copier'}</Button>
+      <Button type="button" size="sm" variant="outline" onClick={copier}>{copie ? t('copie') : t('copier')}</Button>
     </div>
     <p className="text-sm text-muted-foreground">
-      Ce lien donne accès à la création du mot de passe : ne le partagez qu’avec la personne invitée ; il expire à la date indiquée{echeance ? ` (${echeance})` : ' dans la liste des comptes'}.
+      {echeance ? t('avertissementDate', { date: echeance }) : t('avertissementListe')}
     </p>
   </div>
 }
@@ -65,20 +67,21 @@ function Retour({ etat, expireA }: { etat: EtatUtilisateurs; expireA?: string | 
 }
 
 export function FormulaireInvitation() {
+  const t = useTranslations('ecrans.utilisateurs')
   const [etat, action] = useFormState(inviter, {})
   return <form action={action} className="space-y-3 rounded-md border p-4">
     <div className="grid gap-3 sm:grid-cols-2">
-      <label className="block text-sm">Adresse e-mail<Input name="email" type="email" autoComplete="off" required maxLength={254} /></label>
-      <label className="flex flex-col gap-1 text-sm">Rôle
+      <label className="block text-sm">{t('formulaire.email')}<Input name="email" type="email" autoComplete="off" required maxLength={254} /></label>
+      <label className="flex flex-col gap-1 text-sm">{t('formulaire.role')}
         <select className={choix} name="role" defaultValue="Member">
-          <option value="Member">Membre</option>
-          <option value="TenantAdmin">Administrateur</option>
+          <option value="Member">{t('role.membre')}</option>
+          <option value="TenantAdmin">{t('role.admin')}</option>
         </select>
       </label>
-      <label className="block text-sm">Prénom<Input name="prenom" autoComplete="off" required maxLength={80} /></label>
-      <label className="block text-sm">Nom<Input name="nom" autoComplete="off" required maxLength={80} /></label>
+      <label className="block text-sm">{t('formulaire.prenom')}<Input name="prenom" autoComplete="off" required maxLength={80} /></label>
+      <label className="block text-sm">{t('formulaire.nom')}<Input name="nom" autoComplete="off" required maxLength={80} /></label>
     </div>
-    <Soumettre texte="Envoyer l’invitation" attente="Envoi…" />
+    <Soumettre texte={t('formulaire.envoyer')} attente={t('formulaire.envoi')} />
     <Retour etat={etat} />
   </form>
 }
@@ -103,6 +106,7 @@ function ActionConfirmee({ action, compte, role, bouton, titre, description, con
   onEtat: (etat: EtatUtilisateurs) => void
 }) {
   const formId = useId()
+  const t = useTranslations('ecrans.utilisateurs.actions')
   const [etat, soumettre] = useFormState(action, {})
   useRemonter(etat, onEtat)
   return <>
@@ -118,7 +122,7 @@ function ActionConfirmee({ action, compte, role, bouton, titre, description, con
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Annuler</AlertDialogCancel>
+          <AlertDialogCancel>{t('annuler')}</AlertDialogCancel>
           <AlertDialogAction type="submit" form={formId}>{confirmation}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -149,62 +153,64 @@ function ActionSimple({ action, compte, email, bouton, attente, onEtat }: {
 }
 
 export function ActionsCompte({ compte, utilisateurCourantId }: { compte: CompteAffiche; utilisateurCourantId: string }) {
+  const t = useTranslations('ecrans.utilisateurs.actions')
   const [retour, setRetour] = useState<EtatUtilisateurs>({})
   if (compte.id === utilisateurCourantId) {
-    return <p className="text-sm text-muted-foreground">Vous ne pouvez pas modifier votre propre compte ici.</p>
+    return <p className="text-sm text-muted-foreground">{t('propreCompte')}</p>
   }
   const nom = `${compte.prenom} ${compte.nom}`.trim() || compte.email
   const admin = compte.roleName === 'TenantAdmin'
   return <div className="space-y-2">
     <div className="flex flex-wrap gap-2">
-      {compte.statut === 'invite' && <ActionSimple action={renvoyer} compte={compte.id} email={compte.email} bouton="Renvoyer l’invitation" attente="Renvoi…" onEtat={setRetour} />}
-      {compte.statut === 'desactive' && <ActionSimple action={reactiver} compte={compte.id} bouton="Réactiver" attente="Réactivation…" onEtat={setRetour} />}
+      {compte.statut === 'invite' && <ActionSimple action={renvoyer} compte={compte.id} email={compte.email} bouton={t('renvoyer')} attente={t('renvoi')} onEtat={setRetour} />}
+      {compte.statut === 'desactive' && <ActionSimple action={reactiver} compte={compte.id} bouton={t('reactiver')} attente={t('reactivation')} onEtat={setRetour} />}
       {compte.statut !== 'desactive' && <ActionConfirmee
-        action={desactiver} compte={compte.id} bouton="Désactiver" variant="destructive" onEtat={setRetour}
-        titre={`Désactiver ${nom} ?`}
-        description="Cette personne ne pourra plus se connecter. Ses données sont conservées. Vous pourrez réactiver le compte plus tard."
-        confirmation="Désactiver le compte" />}
+        action={desactiver} compte={compte.id} bouton={t('desactiver')} variant="destructive" onEtat={setRetour}
+        titre={t('desactiverTitre', { nom })}
+        description={t('desactiverDescription')}
+        confirmation={t('desactiverConfirmer')} />}
       <ActionConfirmee
         action={changerRole} compte={compte.id} role={admin ? 'Member' : 'TenantAdmin'} onEtat={setRetour}
-        bouton={admin ? 'Passer membre' : 'Passer administrateur'}
-        titre={admin ? `Passer ${nom} en membre ?` : `Passer ${nom} administrateur ?`}
-        description={admin
-          ? 'Cette personne perdra l’accès à l’administration (utilisateurs, sources, paramètres) et ne verra plus que les données autorisées à ses groupes.'
-          : 'Cette personne pourra gérer les utilisateurs, les sources et les paramètres, et verra toutes les données.'}
-        confirmation={admin ? 'Passer membre' : 'Passer administrateur'} />
+        bouton={admin ? t('passerMembre') : t('passerAdmin')}
+        titre={admin ? t('passerMembreTitre', { nom }) : t('passerAdminTitre', { nom })}
+        description={admin ? t('passerMembreDescription') : t('passerAdminDescription')}
+        confirmation={admin ? t('passerMembre') : t('passerAdmin')} />
     </div>
     <Retour etat={retour} expireA={compte.invitationExpireA} />
   </div>
 }
 
 function BadgeStatut({ compte }: { compte: CompteAffiche }) {
-  if (compte.statut === 'actif') return <Badge variant="success">Actif</Badge>
-  if (compte.statut === 'desactive') return <Badge variant="secondary">Désactivé</Badge>
+  const t = useTranslations('ecrans.utilisateurs.statut')
+  const formaterDate = useFormaterDate()
+  if (compte.statut === 'actif') return <Badge variant="success">{t('actif')}</Badge>
+  if (compte.statut === 'desactive') return <Badge variant="secondary">{t('desactive')}</Badge>
   const date = formaterDate(compte.invitationExpireA)
-  return <Badge variant="warning">Invité{date ? ` · expire le ${date}` : ''}</Badge>
+  return <Badge variant="warning">{date ? t('inviteExpire', { date }) : t('invite')}</Badge>
 }
 
 export function ListeComptes({ comptes, utilisateurCourantId }: { comptes: CompteAffiche[]; utilisateurCourantId: string }) {
-  if (comptes.length === 0) return <p className="text-sm text-muted-foreground">Aucun compte.</p>
+  const t = useTranslations('ecrans.utilisateurs')
+  if (comptes.length === 0) return <p className="text-sm text-muted-foreground">{t('aucunCompte')}</p>
   return <ul className="divide-y rounded-md border">
     {comptes.map(c => <li key={c.id} className="space-y-3 p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="font-medium">
             {`${c.prenom} ${c.nom}`.trim() || c.email}
-            {c.id === utilisateurCourantId && <span className="ml-2 text-sm font-normal text-muted-foreground">(Vous)</span>}
+            {c.id === utilisateurCourantId && <span className="ms-2 text-sm font-normal text-muted-foreground">{t('vous')}</span>}
           </p>
           <p className="break-all text-sm text-muted-foreground">{c.email}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="outline">{libelleRole(c.roleName)}</Badge>
+          <Badge variant="outline">{c.roleName === 'TenantAdmin' ? t('role.admin') : t('role.membre')}</Badge>
           <BadgeStatut compte={c} />
-          {c.oidc && <Badge variant="info">Connexion entreprise</Badge>}
+          {c.oidc && <Badge variant="info">{t('connexionEntreprise')}</Badge>}
         </div>
       </div>
       <p className="text-sm">
-        <span className="text-muted-foreground">Groupes : </span>
-        {c.groupes.length ? c.groupes.join(', ') : 'Aucun groupe'}
+        <span className="text-muted-foreground">{t('groupes')}</span>
+        {c.groupes.length ? c.groupes.join(', ') : t('aucunGroupe')}
       </p>
       <ActionsCompte compte={c} utilisateurCourantId={utilisateurCourantId} />
     </li>)}
