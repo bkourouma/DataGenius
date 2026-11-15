@@ -1,1 +1,36 @@
-{}
+{
+  "cloche": {
+    "titre": "Notificaciones",
+    "ouvrir": "Notificaciones, {nombre, plural, =0 {ninguna sin leer} one {# sin leer} other {# sin leer}}",
+    "vide": "Todavía no hay notificaciones.",
+    "toutLu": "Marcar todo como leído",
+    "marquerLu": "Marcar como leída",
+    "ouvrirLien": "Abrir",
+    "nonLue": "Sin leer",
+    "erreur": "No se pudieron cargar las notificaciones.",
+    "reessayer": "Reintentar",
+    "chargement": "Cargando…"
+  },
+  "alerte": {
+    "titre": "Umbral alcanzado: {mesure}",
+    "message": "En «{tableau}», «{mesure}» vale {valeur}. El umbral de {seuil} se ha {sens, select, au_dessus {alcanzado o superado} other {alcanzado o cruzado a la baja}}."
+  },
+  "email": {
+    "sujet": "Alerta del panel «{tableau}»: {mesure}",
+    "salutation": "Hola, {nom}:",
+    "lien": "Abrir el panel",
+    "pied": "Recibes este mensaje porque eres destinatario de una alerta de panel. Mensaje automático, por favor no respondas."
+  },
+  "editeur": {
+    "legende": "Notificaciones de la alerta",
+    "destinatairesTitre": "Destinatarios",
+    "destinatairesAide": "Siempre recibes la notificación en la aplicación. Marca también a los lectores del panel que deban recibirla: cada uno recibe el valor calculado con sus propios derechos de acceso.",
+    "moi": "Tú (propietario)",
+    "aucunLecteur": "Comparte primero el panel con lectores para poder notificarlos.",
+    "email": "Enviar también un correo electrónico a los destinatarios",
+    "webhook": "Webhook HTTPS (administrador)",
+    "webhookAide": "Dirección https:// pública, sin credenciales ni puerto. Recibe un mensaje JSON sin cifras cuando se alcanza el umbral; las direcciones internas se rechazan.",
+    "webhookPlaceholder": "https://ejemplo.org/alerta",
+    "webhookReserve": "Esta alerta tiene un webhook configurado; solo un administrador puede modificarlo."
+  }
+}

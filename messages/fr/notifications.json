@@ -1,1 +1,36 @@
-{}
+{
+  "cloche": {
+    "titre": "Notifications",
+    "ouvrir": "Notifications, {nombre, plural, =0 {aucune non lue} one {# non lue} other {# non lues}}",
+    "vide": "Aucune notification pour l’instant.",
+    "toutLu": "Tout marquer comme lu",
+    "marquerLu": "Marquer comme lue",
+    "ouvrirLien": "Ouvrir",
+    "nonLue": "Non lue",
+    "erreur": "Impossible de charger les notifications.",
+    "reessayer": "Réessayer",
+    "chargement": "Chargement…"
+  },
+  "alerte": {
+    "titre": "Seuil atteint : {mesure}",
+    "message": "Dans « {tableau} », « {mesure} » vaut {valeur}. Le seuil de {seuil} est {sens, select, au_dessus {atteint ou dépassé} other {atteint ou franchi à la baisse}}."
+  },
+  "email": {
+    "sujet": "Alerte du tableau « {tableau} » : {mesure}",
+    "salutation": "Bonjour {nom},",
+    "lien": "Ouvrir le tableau",
+    "pied": "Vous recevez ce message parce que vous êtes destinataire d’une alerte de tableau de bord. Message automatique, merci de ne pas y répondre."
+  },
+  "editeur": {
+    "legende": "Notifications de l’alerte",
+    "destinatairesTitre": "Destinataires",
+    "destinatairesAide": "Vous êtes toujours notifié dans l’application. Cochez les lecteurs du tableau à notifier aussi : chacun reçoit la valeur calculée avec ses propres droits.",
+    "moi": "Vous (propriétaire)",
+    "aucunLecteur": "Partagez d’abord le tableau avec des lecteurs pour pouvoir les notifier.",
+    "email": "Envoyer aussi un e-mail aux destinataires",
+    "webhook": "Webhook HTTPS (administrateur)",
+    "webhookAide": "Adresse https:// publique, sans identifiant ni port. Elle reçoit un message JSON sans valeur chiffrée quand le seuil est atteint ; les adresses internes sont refusées.",
+    "webhookPlaceholder": "https://exemple.org/alerte",
+    "webhookReserve": "Un webhook est configuré sur cette alerte ; seul un administrateur peut le modifier."
+  }
+}
