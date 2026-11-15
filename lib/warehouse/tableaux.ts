@@ -8,6 +8,7 @@ import { registrePostgres } from '@/lib/medic-assist/donnees/catalogue/registre'
 import type { Registre } from '@/lib/medic-assist/donnees/catalogue/types'
 import { calculerSemantique } from '@/lib/medic-assist/donnees/moteur/calculer'
 import { chargerComptesAvecAcces } from '@/lib/medic-assist/suivi/comptes'
+import { ARCHIVES_CONSERVEES, resumerChangements, type ResumeChangements } from './tableaux-historique'
 import { DefinitionTableauSchema, type DefinitionTableau, type FiltreTableau, type TuileMesure } from './tableaux-modeles'
 
 export class ErreurTableau extends Error {}
@@ -75,11 +76,27 @@ export async function enregistrerTableau(contexte: ContexteExecution, entree: un
   const stockee = JSON.stringify({ ...definition, lecteurs })
   await prisma.$transaction(async tx => {
     if (edition) {
+      const [precedente] = await tx.$queryRaw<{ version: number; definition: unknown; modifie_a: Date; proprietaire_id: string }[]>`
+        SELECT version, definition, modifie_a, proprietaire_id FROM warehouse.tableaux
+        WHERE id = ${id}::uuid AND proprietaire_id = ${contexte.userId} AND version = ${edition.version}
+        FOR UPDATE
+      `
+      if (!precedente) throw new ErreurTableau('Ce tableau a été modifié depuis son ouverture. Rechargez-le.')
+      await tx.$executeRaw`
+        INSERT INTO warehouse.tableaux_versions (tableau_id, version, definition, auteur_id, cree_a)
+        VALUES (${id}::uuid, ${precedente.version}, ${JSON.stringify(precedente.definition)}::jsonb,
+          ${precedente.proprietaire_id}, ${precedente.modifie_a})
+      `
       const nombre = await tx.$executeRaw`
         UPDATE warehouse.tableaux SET definition = ${stockee}::jsonb, version = version + 1, modifie_a = clock_timestamp()
         WHERE id = ${id}::uuid AND proprietaire_id = ${contexte.userId} AND version = ${edition.version}
       `
       if (!nombre) throw new ErreurTableau('Ce tableau a été modifié depuis son ouverture. Rechargez-le.')
+      // La nouvelle courante est edition.version + 1 : on garde les ARCHIVES_CONSERVEES archives les plus récentes.
+      await tx.$executeRaw`
+        DELETE FROM warehouse.tableaux_versions
+        WHERE tableau_id = ${id}::uuid AND version <= ${edition.version - ARCHIVES_CONSERVEES}
+      `
       await tx.$executeRaw`DELETE FROM warehouse.lecteurs_tableaux WHERE tableau_id = ${id}::uuid`
     } else {
       await tx.$executeRaw`
@@ -164,4 +181,106 @@ export async function dupliquerTableau(contexte: ContexteExecution, id: string) 
     lecteurs: [],
     tuiles: tuiles.map(tuile => ({ ...tuile, id: randomUUID() })),
   })
+}
+
+export class ErreurVersionIncompatible extends ErreurTableau {}
+
+export type VersionTableau = { version: number; datee: Date; auteur: string; courante: boolean; resume: ResumeChangements | null }
+
+type LigneVersion = { version: number; definition: unknown; datee: Date; auteur: string | null }
+
+const ResumeVide: ResumeChangements = { ajoutees: 0, retirees: 0, modifiees: 0, titreModifie: false, lecteursModifies: false }
+
+// Lecture tolérante d'une définition JSON brute (peut ne plus valider le schéma courant).
+function definitionTolerante(brut: unknown): DefinitionTableau {
+  const valide = DefinitionTableauSchema.safeParse(brut)
+  if (valide.success) return valide.data
+  const b = (brut ?? {}) as { titre?: unknown; lecteurs?: unknown; tuiles?: unknown }
+  const tuiles = Array.isArray(b.tuiles) ? b.tuiles : []
+  return {
+    titre: typeof b.titre === 'string' ? b.titre : '',
+    lecteurs: Array.isArray(b.lecteurs) ? b.lecteurs.filter((l): l is string => typeof l === 'string') : [],
+    tuiles: tuiles.map((t, i) => {
+      const id = (t as { id?: unknown } | null)?.id
+      return typeof t === 'object' && t && typeof id === 'string' ? t : { id: `?${i}` }
+    }) as unknown as DefinitionTableau['tuiles'],
+  }
+}
+
+// Contrat : `null` = résumé non calculable (version > 1 dont la précédente n'est plus en archive) ; `avant = null` seulement pour la version 1.
+function resumeVersion(toutes: LigneVersion[], ligne: LigneVersion): ResumeChangements | null {
+  if (ligne.version === 1) return resumeSur(null, ligne.definition)
+  const precedente = toutes.find(l => l.version === ligne.version - 1)
+  return precedente ? resumeSur(precedente.definition, ligne.definition) : null
+}
+
+function resumeSur(avant: unknown, apres: unknown): ResumeChangements {
+  try {
+    return resumerChangements(avant === null ? null : definitionTolerante(avant), definitionTolerante(apres))
+  } catch { return ResumeVide }
+}
+
+const nomAuteur = (ligne: { auteur: string | null }) => ligne.auteur?.trim() || 'Compte supprimé'
+
+async function lireVersions(contexte: ContexteExecution, id: string) {
+  if (!FormatUuid.test(id)) return null
+  const [courante] = await prisma.$queryRaw<LigneVersion[]>`
+    SELECT t.version, t.definition, t.modifie_a AS datee,
+      COALESCE(NULLIF(btrim(concat_ws(' ', u."firstName", u."lastName")), ''), u.email) AS auteur
+    FROM warehouse.tableaux AS t LEFT JOIN public.users AS u ON u.id = t.proprietaire_id
+    WHERE t.id = ${id}::uuid AND t.proprietaire_id = ${contexte.userId}
+  `
+  if (!courante) return null
+  const archivees = await prisma.$queryRaw<LigneVersion[]>`
+    SELECT v.version, v.definition, v.cree_a AS datee,
+      COALESCE(NULLIF(btrim(concat_ws(' ', u."firstName", u."lastName")), ''), u.email) AS auteur
+    FROM warehouse.tableaux_versions AS v LEFT JOIN public.users AS u ON u.id = v.auteur_id
+    WHERE v.tableau_id = ${id}::uuid ORDER BY v.version DESC
+  `
+  return { courante, archivees }
+}
+
+export async function listerVersions(contexte: ContexteExecution, id: string): Promise<{ courante: number; versions: VersionTableau[] } | null> {
+  const lecture = await lireVersions(contexte, id)
+  if (!lecture) return null
+  const toutes = [lecture.courante, ...lecture.archivees]
+  const versions = toutes.map((ligne, i) => ({
+    version: ligne.version, datee: ligne.datee, auteur: nomAuteur(ligne), courante: i === 0,
+    resume: resumeVersion(toutes, ligne),
+  }))
+  return { courante: lecture.courante.version, versions }
+}
+
+export async function chargerVersion(contexte: ContexteExecution, id: string, version: number) {
+  if (!Number.isInteger(version) || version < 1) return null
+  const lecture = await lireVersions(contexte, id)
+  if (!lecture) return null
+  const toutes = [lecture.courante, ...lecture.archivees]
+  const ligne = toutes.find(l => l.version === version)
+  if (!ligne) return null
+  const valide = DefinitionTableauSchema.safeParse(ligne.definition)
+  return {
+    version: ligne.version, datee: ligne.datee, auteur: nomAuteur(ligne), courante: ligne === lecture.courante,
+    versionCourante: lecture.courante.version,
+    resume: resumeVersion(toutes, ligne),
+    definition: valide.success ? valide.data : null,
+  }
+}
+
+export async function restaurerVersion(contexte: ContexteExecution, id: string, version: number, versionCourante: number) {
+  if (!FormatUuid.test(id) || !Number.isInteger(version) || version < 1 || !Number.isInteger(versionCourante) || versionCourante < 1) {
+    throw new ErreurTableau('Tableau indisponible.')
+  }
+  const lecture = await lireVersions(contexte, id)
+  if (!lecture) throw new ErreurTableau('Tableau indisponible.')
+  if (version === lecture.courante.version) throw new ErreurTableau('Cette version est déjà la version actuelle.')
+  const cible = lecture.archivees.find(l => l.version === version)
+  if (!cible) throw new ErreurTableau('Version introuvable.')
+  const valide = DefinitionTableauSchema.safeParse(cible.definition)
+  if (!valide.success) {
+    throw new ErreurVersionIncompatible('Cette version n’est plus compatible avec le tableau actuel : elle ne peut pas être restaurée.')
+  }
+  // Le contenu est restauré, mais les lecteurs restent ceux de la version courante (pas de réouverture d'accès).
+  const lecteurs = definitionTolerante(lecture.courante.definition).lecteurs
+  return enregistrerTableau(contexte, { ...valide.data, lecteurs }, { id, version: versionCourante })
 }

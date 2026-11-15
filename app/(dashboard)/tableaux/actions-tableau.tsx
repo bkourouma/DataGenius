@@ -1,12 +1,16 @@
 'use client'
 
 import { useId } from 'react'
+import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useFormState } from 'react-dom'
+import { Button } from '@/components/ui/button'
 import { Retour, Soumettre } from '../sources/formulaires'
 import { dupliquer, supprimer } from './actions'
 
 export function ActionsTableau({ id, titre }: { id: string; titre: string }) {
   const idCase = useId()
+  const th = useTranslations('historique')
   const [etatDup, actionDup] = useFormState(dupliquer, {})
   const [etatSup, actionSup] = useFormState(supprimer, {})
   return (
@@ -16,6 +20,7 @@ export function ActionsTableau({ id, titre }: { id: string; titre: string }) {
         <Soumettre texte="Dupliquer" attente="Duplication…" variant="outline" />
         <Retour {...etatDup} />
       </form>
+      <Button asChild variant="outline" size="sm"><Link href={`/tableaux/${id}/historique`}>{th('lien')}</Link></Button>
       <details className="rounded-md border p-2">
         <summary className="cursor-pointer text-sm">Supprimer<span className="sr-only"> {titre}</span></summary>
         <form action={actionSup} className="mt-2 space-y-2">

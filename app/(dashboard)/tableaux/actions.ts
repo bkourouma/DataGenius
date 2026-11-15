@@ -2,8 +2,10 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
+import { journal } from '@/lib/journal'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
-import { dupliquerTableau, enregistrerTableau, ErreurTableau, supprimerTableau } from '@/lib/warehouse/tableaux'
+import { dupliquerTableau, enregistrerTableau, ErreurTableau, ErreurVersionIncompatible, restaurerVersion, supprimerTableau } from '@/lib/warehouse/tableaux'
 
 export async function enregistrer(edition: { id: string; version: number } | null, _etat: { erreur?: string }, formulaire: FormData): Promise<{ erreur?: string }> {
   const acces = await exigerMedicAssist()
@@ -51,4 +53,29 @@ export async function supprimer(_etat: EtatAction, formulaire: FormData): Promis
   }
   revalidatePath('/tableaux')
   redirect('/tableaux')
+}
+
+export async function restaurer(_etat: EtatAction, formulaire: FormData): Promise<EtatAction> {
+  const acces = await exigerMedicAssist()
+  if (!acces.ok) return { erreur: 'Session expirée. Reconnectez-vous.' }
+  const id = formulaire.get('id')
+  if (typeof id !== 'string' || !id || id.length > 64) return { erreur: 'Tableau introuvable.' }
+  const version = Number(formulaire.get('version'))
+  const versionCourante = Number(formulaire.get('versionCourante'))
+  if (!Number.isSafeInteger(version) || version < 1 || !Number.isSafeInteger(versionCourante) || versionCourante < 1) {
+    return { erreur: 'Version introuvable.' }
+  }
+  try {
+    await restaurerVersion(acces.contexte, id, version, versionCourante)
+  } catch (erreur) {
+    const t = await getTranslations('historique')
+    if (erreur instanceof ErreurVersionIncompatible) return { erreur: t('erreurIncompatible') }
+    if (erreur instanceof ErreurTableau) return { erreur: erreur.message }
+    journal.erreur('Restauration de version impossible', { domaine: 'tableaux', erreur: erreur instanceof Error ? erreur.name : 'inconnue' })
+    return { erreur: t('erreurGenerique') }
+  }
+  revalidatePath('/tableaux')
+  revalidatePath(`/tableaux/${id}`)
+  revalidatePath(`/tableaux/${id}/historique`)
+  redirect(`/tableaux/${id}`)
 }
