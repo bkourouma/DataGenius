@@ -4,24 +4,27 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
 import { chargerCatalogueMetier, ErreurCatalogueMetier, publierCatalogueMetier } from '@/lib/warehouse/catalogue-metier'
+import { getTranslations } from 'next-intl/server'
 import { ZodError } from 'zod'
+import { messageErreurLib } from '../../erreurs-lib'
 
 export async function publier(
   cle: string, version: number, _etat: { erreur?: string }, donnees: FormData,
 ): Promise<{ erreur?: string }> {
   const garde = await exigerAdminMedicAssist()
-  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
-  if (!/^[a-z][a-z0-9_]{0,59}$/.test(cle)) return { erreur: 'Jeu introuvable.' }
+  const t = await getTranslations('sources.catalogue.actions')
+  if (!garde.ok) return { erreur: (await getTranslations('sources.commun'))('acces') }
+  if (!/^[a-z][a-z0-9_]{0,59}$/.test(cle)) return { erreur: t('introuvable') }
 
   try {
     const catalogue = await chargerCatalogueMetier(cle)
-    if (!catalogue) return { erreur: 'Jeu introuvable.' }
+    if (!catalogue) return { erreur: t('introuvable') }
     const lire = (champ: string) => String(donnees.get(champ) ?? '').trim()
     const facultatif = (champ: string) => lire(champ) || undefined
     const ids = (champ: string, maximum: number) => {
       const valeurs = donnees.getAll(champ).map(String)
       if (valeurs.length > maximum || new Set(valeurs).size !== valeurs.length || valeurs.some(id => !/^\d{1,5}$/.test(id))) {
-        throw new Error('Sélection invalide.')
+        throw new Error('invalid selection')
       }
       return valeurs
     }
@@ -51,9 +54,9 @@ export async function publier(
       colonnes, mesures,
     }, garde.contexte.userId)
   } catch (erreur) {
-    if (erreur instanceof ErreurCatalogueMetier) return { erreur: erreur.message }
-    if (erreur instanceof ZodError) return { erreur: 'Vérifiez les champs du catalogue et les colonnes des indicateurs.' }
-    return { erreur: 'La publication du catalogue a échoué.' }
+    if (erreur instanceof ErreurCatalogueMetier) return { erreur: await messageErreurLib(erreur.message) }
+    if (erreur instanceof ZodError) return { erreur: t('verifier') }
+    return { erreur: t('echec') }
   }
   revalidatePath('/sources/catalogue/' + cle)
   redirect('/sources/catalogue/' + cle + '?publication=ok')

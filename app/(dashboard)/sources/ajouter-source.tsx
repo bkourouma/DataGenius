@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Database, FileSpreadsheet, Globe, Plus, Server } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogBody, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -8,29 +9,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { FormulaireConnexion, FormulaireConnexionRest, FormulaireFichierSource } from './formulaires'
 
 const tuiles = [
-  { valeur: 'postgresql', libelle: 'PostgreSQL', aide: 'Base relationnelle en lecture seule', Icone: Database },
-  { valeur: 'mysql', libelle: 'MySQL', aide: 'Base MySQL ou MariaDB en lecture seule', Icone: Server },
-  { valeur: 'rest', libelle: 'API REST', aide: 'Service web qui renvoie du JSON', Icone: Globe },
-  { valeur: 'fichier', libelle: 'Fichier CSV ou Excel', aide: 'Import ponctuel depuis votre poste', Icone: FileSpreadsheet },
+  { valeur: 'postgresql', Icone: Database },
+  { valeur: 'mysql', Icone: Server },
+  { valeur: 'rest', Icone: Globe },
+  { valeur: 'fichier', Icone: FileSpreadsheet },
 ] as const
 
 export function AjouterSource() {
+  const t = useTranslations('sources.ajout')
   const [type, setType] = useState('')
   return (
     <Tabs value={type} onValueChange={setType} className="space-y-3">
       <TabsList
-        aria-label="Type de source à ajouter"
+        aria-label={t('typeAjouter')}
         className="grid h-auto w-full grid-cols-2 gap-2 border-0 bg-transparent p-0 sm:grid-cols-4"
       >
-        {tuiles.map(({ valeur, libelle, aide, Icone }) => (
+        {tuiles.map(({ valeur, Icone }) => (
           <TabsTrigger
             key={valeur}
             value={valeur}
             className="h-auto flex-col items-start gap-1 whitespace-normal rounded-md border bg-card p-3 text-start text-foreground hover:border-primary/60 data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:shadow-none"
           >
             <Icone className="size-5 text-primary" aria-hidden />
-            <span className="text-sm font-semibold">{libelle}</span>
-            <span className="text-xs font-normal text-muted-foreground">{aide}</span>
+            <span className="text-sm font-semibold">{t('tuile.' + valeur + '.libelle')}</span>
+            <span className="text-xs font-normal text-muted-foreground">{t('tuile.' + valeur + '.aide')}</span>
           </TabsTrigger>
         ))}
       </TabsList>
@@ -44,17 +46,18 @@ export function AjouterSource() {
 
 /** Déclencheur réutilisable : ouvre le dialogue d’ajout de source. */
 export function BoutonAjouterSource({ variant = 'default' }: { variant?: 'default' | 'outline' }) {
+  const t = useTranslations('sources.ajout')
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant={variant}>
-          <Plus className="size-4" aria-hidden />Ajouter une source
+          <Plus className="size-4" aria-hidden />{t('ajouter')}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Ajouter une source</DialogTitle>
-          <DialogDescription>Choisissez le type de source, puis renseignez sa connexion.</DialogDescription>
+          <DialogTitle>{t('ajouter')}</DialogTitle>
+          <DialogDescription>{t('description')}</DialogDescription>
         </DialogHeader>
         <DialogBody><AjouterSource /></DialogBody>
       </DialogContent>
