@@ -233,7 +233,7 @@
     "depIndisponibles": "Dependencias no disponibles por el momento: la eliminación está desactivada.",
     "impossibleJeuxCombines": "No se puede eliminar mientras haya conjuntos combinados que usen esta importación. Elimínelos o modifíquelos primero:",
     "donneesSupprimees": "Los datos publicados y su historial se eliminarán. Esta acción es definitiva.",
-    "tuilesIndisponibles": "Los mosaicos de estos paneles dejarán de estar disponibles:",
+    "tuilesIndisponibles": "Las tarjetas de estos paneles dejarán de estar disponibles:",
     "confirmerJeu": "Confirmo la eliminación definitiva de «{titre}»",
     "supprimer": "Eliminar",
     "impossibleAutresCombines": "No se puede eliminar mientras otros conjuntos combinados usen este conjunto:",

@@ -37,7 +37,7 @@
     "utilisateur": "用户",
     "droits": "访问权限",
     "journal": "审计日志",
-    "tableau": "看板"
+    "tableau": "仪表板"
   },
   "actions": {
     "source_creation": "创建数据源",
@@ -57,9 +57,9 @@
     "utilisateur_reactivation": "重新启用账户",
     "droits_modification": "修改权限",
     "journal_export": "导出审计日志",
-    "tableau_restauration": "恢复看板版本",
-    "tableau_suppression": "删除看板",
-    "tableau_duplication": "复制看板"
+    "tableau_restauration": "恢复仪表板版本",
+    "tableau_suppression": "删除仪表板",
+    "tableau_duplication": "复制仪表板"
   },
   "resultats": {
     "succes": "成功",
@@ -75,7 +75,7 @@
     "partage": "共享",
     "droits": "权限",
     "journal": "日志",
-    "tableau": "看板"
+    "tableau": "仪表板"
   },
   "acteurInconnu": "未知",
   "vide": "没有符合这些筛选条件的事件。",

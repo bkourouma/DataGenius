@@ -34,8 +34,8 @@ export default async function Autoriser({ searchParams }: { searchParams: Record
       <p className="mb-6 mt-3 text-sm text-muted-foreground">{t.rich('description', {
         origine,
         titre: lisible.definition.titre,
-        app: chunks => <strong className="break-all text-foreground">{chunks}</strong>,
-        nom: chunks => <strong className="text-foreground">{chunks}</strong>,
+        app: chunks => <strong className="break-all text-foreground"><bdi dir="ltr">{chunks}</bdi></strong>,
+        nom: chunks => <strong className="text-foreground"><bdi>{chunks}</bdi></strong>,
       })}</p>
       <Consentement tableau={tableau.data} origine={origine} nonce={nonce.data} />
     </section>
