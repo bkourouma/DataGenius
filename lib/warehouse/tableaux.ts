@@ -8,6 +8,7 @@ import { registrePostgres } from '@/lib/medic-assist/donnees/catalogue/registre'
 import type { Registre } from '@/lib/medic-assist/donnees/catalogue/types'
 import { calculerSemantique } from '@/lib/medic-assist/donnees/moteur/calculer'
 import { chargerComptesAvecAcces } from '@/lib/medic-assist/suivi/comptes'
+import { ErreurAlerte, verifierAlertesDefinition } from './tableaux-alertes'
 import { ARCHIVES_CONSERVEES, resumerChangements, type ResumeChangements } from './tableaux-historique'
 import { DefinitionTableauSchema, type DefinitionTableau, type FiltreTableau, type TuileMesure } from './tableaux-modeles'
 
@@ -39,7 +40,19 @@ export async function chargerTableau(id: string, contexte: ContexteExecution) {
   if (!tableau) return null
   const editable = tableau.proprietaire_id === contexte.userId
   const definition = DefinitionTableauSchema.parse(tableau.definition)
-  return { id, version: tableau.version, editable, definition: editable ? definition : { ...definition, lecteurs: [] } }
+  return { id, version: tableau.version, editable, definition: editable ? definition : masquerPourLecteur(definition) }
+}
+
+/** Un lecteur non propriétaire ne reçoit ni la liste des lecteurs, ni les webhooks et destinataires des alertes. */
+function masquerPourLecteur(definition: DefinitionTableau): DefinitionTableau {
+  return {
+    ...definition, lecteurs: [],
+    tuiles: definition.tuiles.map(tuile => {
+      if (tuile.type !== 'mesure' || !tuile.alerte) return tuile
+      const { webhook: _webhook, destinataires: _destinataires, ...alerte } = tuile.alerte
+      return { ...tuile, alerte }
+    }),
+  }
 }
 
 export async function optionsTableau(contexte: ContexteExecution) {
@@ -72,6 +85,17 @@ export async function enregistrerTableau(contexte: ContexteExecution, entree: un
   }
   const ancienne = edition ? await chargerTableau(edition.id, contexte) : null
   if (edition && !ancienne?.editable) throw new ErreurTableau('Tableau indisponible.')
+  try {
+    verifierAlertesDefinition(contexte, definition, ancienne?.definition)
+  } catch (erreur) {
+    if (erreur instanceof ErreurAlerte) throw new ErreurTableau(erreur.message)
+    throw erreur
+  }
+  for (const tuile of definition.tuiles) {
+    if (tuile.type === 'mesure' && tuile.alerte?.destinataires?.some(d => d !== contexte.userId && !lecteurs.includes(d))) {
+      throw new ErreurTableau('Chaque destinataire d’une alerte doit être lecteur du tableau.')
+    }
+  }
   const id = edition?.id ?? randomUUID()
   const stockee = JSON.stringify({ ...definition, lecteurs })
   await prisma.$transaction(async tx => {
@@ -179,7 +203,13 @@ export async function dupliquerTableau(contexte: ContexteExecution, id: string) 
   return enregistrerTableau(contexte, {
     titre: ('Copie de ' + titre).slice(0, 120).trim(),
     lecteurs: [],
-    tuiles: tuiles.map(tuile => ({ ...tuile, id: randomUUID() })),
+    tuiles: tuiles.map(tuile => {
+      const copie = { ...tuile, id: randomUUID() }
+      if (copie.type !== 'mesure' || !copie.alerte) return copie
+      // La copie n'a aucun lecteur : pas de destinataires. Le webhook reste réservé au TenantAdmin.
+      const { destinataires: _destinataires, webhook, ...alerte } = copie.alerte
+      return { ...copie, alerte: contexte.roleName === 'TenantAdmin' && webhook ? { ...alerte, webhook } : alerte }
+    }),
   })
 }
 
@@ -282,5 +312,14 @@ export async function restaurerVersion(contexte: ContexteExecution, id: string, 
   }
   // Le contenu est restauré, mais les lecteurs restent ceux de la version courante (pas de réouverture d'accès).
   const lecteurs = definitionTolerante(lecture.courante.definition).lecteurs
-  return enregistrerTableau(contexte, { ...valide.data, lecteurs }, { id, version: versionCourante })
+  // Un destinataire d'alerte qui n'est plus lecteur est retiré plutôt que de faire échouer la restauration.
+  const tuiles = valide.data.tuiles.map(tuile => {
+    const destinataires = tuile.type === 'mesure' ? tuile.alerte?.destinataires : undefined
+    if (tuile.type !== 'mesure' || !tuile.alerte || !destinataires) return tuile
+    const gardes = destinataires.filter(d => d === contexte.userId || lecteurs.includes(d))
+    if (gardes.length === destinataires.length) return tuile
+    const { destinataires: _retires, ...alerte } = tuile.alerte
+    return { ...tuile, alerte: gardes.length ? { ...alerte, destinataires: gardes } : alerte }
+  })
+  return enregistrerTableau(contexte, { ...valide.data, tuiles, lecteurs }, { id, version: versionCourante })
 }
