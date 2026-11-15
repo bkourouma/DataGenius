@@ -47,8 +47,10 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Comptes : invitat
     return compte
   }
   const jetonDuLien = (lien: string) => new URL(lien).searchParams.get('jeton')!
-  async function jetonEnvoye(email: string) {
-    await vi.waitFor(() => expect(courriels.some(c => c.to === email)).toBe(true))
+  // `apres` = nombre de courriels déjà présents : l'envoi de réinitialisation est asynchrone
+  // (langue du compte lue en base), il faut attendre un NOUVEAU message, pas l'invitation précédente.
+  async function jetonEnvoye(email: string, apres = 0) {
+    await vi.waitFor(() => expect(courriels.filter(c => c.to === email).length).toBeGreaterThan(apres))
     const dernier = [...courriels].reverse().find(c => c.to === email)!
     return /jeton=([\w-]+)/.exec(dernier.text)![1]
   }
@@ -120,8 +122,9 @@ describe.skipIf(process.env.DATAGENIUS_TEST_POSTGRES !== '1')('Comptes : invitat
     const admin = await creerCompte('TenantAdmin')
     const { compte, jeton: invitation } = await enregistrerInvite(admin.id, unique('reinit'))
     await definirMotDePasse(invitation, MDP_1)
+    const dejaEnvoyes = courriels.filter(c => c.to === compte.email).length
     await expect(demanderReinitialisation(compte.email.toUpperCase())).resolves.toBeUndefined()
-    const reinit = await jetonEnvoye(compte.email)
+    const reinit = await jetonEnvoye(compte.email, dejaEnvoyes)
     await expect(verifierJeton(reinit)).resolves.toEqual({ valide: true, type: 'reinitialisation', prenom: 'Awa' })
     await expect(verifierJeton(invitation)).resolves.toEqual({ valide: false })
     await definirMotDePasse(reinit, MDP_2)
