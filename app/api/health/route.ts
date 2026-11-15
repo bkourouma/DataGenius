@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/client'
 import { journal } from '@/lib/journal'
+import { lireEtatWorker } from '@/lib/warehouse/etat-worker'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,14 +39,34 @@ async function ageSynchronisation(): Promise<number | null> {
   }
 }
 
+type SanteWorker = {
+  statut: 'marche' | 'en_retard' | 'arrete' | 'jamais_vu' | null
+  ageSecondes: number | null
+}
+
+// Ni hôte, ni version, ni instance : seulement l'état et l'âge du dernier signe de vie.
+async function santeWorker(): Promise<SanteWorker> {
+  try {
+    const etat = await lireEtatWorker()
+    return {
+      statut: etat.statut,
+      ageSecondes: etat.silenceMs === null ? null : Math.max(0, Math.floor(etat.silenceMs / 1000)),
+    }
+  } catch {
+    return { statut: null, ageSecondes: null }
+  }
+}
+
 export async function GET() {
   const baseOk = await verifierBase()
   const ageSecondes = baseOk ? await ageSynchronisation() : null
+  const worker: SanteWorker = baseOk ? await santeWorker() : { statut: null, ageSecondes: null }
   return NextResponse.json(
     {
       statut: baseOk ? 'ok' : 'degrade',
       base: baseOk ? 'ok' : 'ko',
       synchronisation: { ageSecondes },
+      worker,
     },
     { status: baseOk ? 200 : 503, headers: { 'Cache-Control': 'no-store' } }
   )

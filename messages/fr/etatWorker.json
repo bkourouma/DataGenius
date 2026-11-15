@@ -1,1 +1,39 @@
-{}
+{
+  "statut": {
+    "marche": "En marche",
+    "enRetard": "En retard",
+    "arrete": "Arrêté",
+    "jamaisVu": "Jamais vu"
+  },
+  "bandeau": {
+    "titre": "Worker de synchronisation",
+    "ouvrir": "Détails du worker",
+    "alerte": "Le worker ne tourne plus depuis {duree}.",
+    "detail": "Voir le détail",
+    "jamaisVuAide": "Le worker n’a pas encore signalé sa présence."
+  },
+  "page": {
+    "retour": "Sources",
+    "titre": "État du worker de synchronisation",
+    "description": "Vérifiez que le worker tourne, consultez son dernier tour et les dernières synchronisations en échec.",
+    "etat": "État actuel",
+    "silence": "Silence depuis",
+    "hote": "Hôte",
+    "version": "Version",
+    "demarreA": "Démarré le",
+    "dernierSigne": "Dernier signe de vie",
+    "dernierTour": "Dernier tour",
+    "dateTour": "Terminé le",
+    "duree": "Durée",
+    "jeux": "Jeux traités",
+    "erreurs": "Erreurs",
+    "aucunTour": "Aucun tour enregistré pour le moment.",
+    "echecs": "Dernières exécutions en échec",
+    "aucunEchec": "Aucune exécution en échec.",
+    "colJeu": "Jeu",
+    "colCode": "Code",
+    "colDate": "Date",
+    "colDuree": "Durée",
+    "indisponible": "L’état du worker est indisponible. Vérifiez la base de données et les migrations."
+  }
+}
