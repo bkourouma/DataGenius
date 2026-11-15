@@ -1,9 +1,12 @@
 import {
   BookMarked,
+  BookOpen,
   Boxes,
   LayoutDashboard,
   MessagesSquare,
   PlugZap,
+  ScrollText,
+  Search,
   Settings2,
   ShieldCheck,
   TrendingUp,
@@ -34,6 +37,8 @@ const TRAVAIL: GroupeNavigation = {
     { href: '/tableaux', libelle: 'Tableaux de bord', icone: LayoutDashboard, motsCles: 'dashboard indicateurs alertes' },
     { href: '/tendances', libelle: 'Tendances', icone: TrendingUp, motsCles: 'evolution courbe periode' },
     { href: '/espaces', libelle: 'Espaces', icone: Boxes, motsCles: 'jeux donnees domaines' },
+    { href: '/recherche', libelle: 'Recherche', icone: Search, motsCles: 'trouver chercher retrouver' },
+    { href: '/glossaire', libelle: 'Glossaire', icone: BookOpen, motsCles: 'definitions termes lexique' },
   ],
 }
 
@@ -45,6 +50,7 @@ const ADMINISTRATION: GroupeNavigation = {
     { href: '/utilisateurs', libelle: 'Utilisateurs', icone: Users, motsCles: 'comptes membres invitations roles' },
     { href: '/sources/droits', libelle: 'Droits d’accès', icone: ShieldCheck, motsCles: 'groupes membres permissions' },
     { href: '/dashboard/admin/assistant', libelle: 'Paramètres', icone: Settings2, motsCles: 'configuration fournisseur ia usages avis' },
+    { href: '/journal', libelle: 'Journal d’audit', icone: ScrollText, motsCles: 'audit historique trace evenements connexions' },
   ],
 }
 
