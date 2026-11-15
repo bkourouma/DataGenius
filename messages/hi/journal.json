@@ -36,7 +36,8 @@
     "connexion": "साइन-इन",
     "utilisateur": "उपयोगकर्ता",
     "droits": "पहुँच अधिकार",
-    "journal": "ऑडिट लॉग"
+    "journal": "ऑडिट लॉग",
+    "tableau": "डैशबोर्ड"
   },
   "actions": {
     "source_creation": "स्रोत बनाया गया",
@@ -55,7 +56,10 @@
     "utilisateur_desactivation": "खाता निष्क्रिय किया गया",
     "utilisateur_reactivation": "खाता फिर से सक्रिय किया गया",
     "droits_modification": "अनुमतियाँ बदली गईं",
-    "journal_export": "ऑडिट लॉग निर्यात किया गया"
+    "journal_export": "ऑडिट लॉग निर्यात किया गया",
+    "tableau_restauration": "डैशबोर्ड के संस्करण की पुनर्स्थापना",
+    "tableau_suppression": "डैशबोर्ड हटाया गया",
+    "tableau_duplication": "डैशबोर्ड की प्रतिलिपि बनाई गई"
   },
   "resultats": {
     "succes": "सफल",
@@ -70,7 +74,8 @@
     "conversation": "बातचीत",
     "partage": "साझाकरण",
     "droits": "अनुमतियाँ",
-    "journal": "लॉग"
+    "journal": "लॉग",
+    "tableau": "डैशबोर्ड"
   },
   "acteurInconnu": "अज्ञात",
   "vide": "इन फ़िल्टरों से कोई घटना मेल नहीं खाती।",

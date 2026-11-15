@@ -33,6 +33,9 @@ const intl = vi.hoisted(() => ({
 }))
 vi.mock('next-intl/server', () => intl)
 
+vi.mock('@/lib/audit/enregistrer', () => ({ enregistrerAudit: vi.fn(async () => undefined) }))
+vi.mock('@/app/(dashboard)/tableaux/erreurs-lib', () => ({ messageErreurTableau: async (message: string) => message }))
+
 import { restaurer } from '@/app/(dashboard)/tableaux/actions'
 
 function formulaire(champs: Record<string, string>) {

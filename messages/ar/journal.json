@@ -36,7 +36,8 @@
     "connexion": "تسجيلات الدخول",
     "utilisateur": "المستخدمون",
     "droits": "حقوق الوصول",
-    "journal": "سجل التدقيق"
+    "journal": "سجل التدقيق",
+    "tableau": "اللوحات"
   },
   "actions": {
     "source_creation": "إنشاء مصدر",
@@ -55,7 +56,10 @@
     "utilisateur_desactivation": "تعطيل حساب",
     "utilisateur_reactivation": "إعادة تفعيل حساب",
     "droits_modification": "تعديل الصلاحيات",
-    "journal_export": "تصدير سجل التدقيق"
+    "journal_export": "تصدير سجل التدقيق",
+    "tableau_restauration": "استعادة إصدار لوحة",
+    "tableau_suppression": "حذف لوحة",
+    "tableau_duplication": "تكرار لوحة"
   },
   "resultats": {
     "succes": "نجح",
@@ -70,7 +74,8 @@
     "conversation": "محادثة",
     "partage": "مشاركة",
     "droits": "صلاحيات",
-    "journal": "سجل"
+    "journal": "سجل",
+    "tableau": "لوحة"
   },
   "acteurInconnu": "غير معروف",
   "vide": "لا توجد أحداث مطابقة لهذه المرشّحات.",
