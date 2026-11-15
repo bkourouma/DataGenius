@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { enregistrerAudit } from '@/lib/audit/enregistrer'
+import { ipRequeteCourante } from '@/lib/audit/ip'
 import { journal } from '@/lib/journal'
 
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
@@ -78,7 +79,8 @@ function estFlux(
  */
 function envelopperFlux(
   source: ReadableStream<Uint8Array>,
-  liberer: () => void
+  liberer: () => void,
+  auSucces?: () => void
 ): ReadableStream<Uint8Array> {
   const lecteur = source.getReader()
   let termine = false
@@ -110,6 +112,8 @@ function envelopperFlux(
         if (done) {
           controleur.close()
           finir()
+          // Fin réussie du flux seulement (jamais sur erreur, délai ou annulation).
+          auSucces?.()
         } else {
           controleur.enqueue(value)
         }
@@ -229,8 +233,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       flux: true,
     })
     if (estFlux(resultat)) {
-      await enregistrerAudit({ acteurId: contexte.userId, action: 'export.artefact', cible: { type: 'artefact', id: id.data }, details: { format: lecture.data.format, version: lecture.data.version ?? null } })
-      const flux = envelopperFlux(resultat.flux, liberer)
+      // IP lue maintenant : à la fin du flux, le contexte de la requête n'est plus garanti.
+      const ip = ipRequeteCourante()
+      const flux = envelopperFlux(resultat.flux, liberer, () => {
+        void enregistrerAudit({ acteurId: contexte.userId, action: 'export.artefact', cible: { type: 'artefact', id: id.data }, details: { format: lecture.data.format, version: lecture.data.version ?? null }, ip })
+      })
       placeTransmise = true
       try {
         return new NextResponse(flux as BodyInit, {
@@ -247,7 +254,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         throw erreur
       }
     }
-    await enregistrerAudit({ acteurId: contexte.userId, action: 'export.artefact', cible: { type: 'artefact', id: id.data }, details: { format: lecture.data.format, version: lecture.data.version ?? null } })
+    // Sans attendre : un journal lent ne retarde pas le téléchargement (enregistrerAudit ne rejette jamais).
+    void enregistrerAudit({ acteurId: contexte.userId, action: 'export.artefact', cible: { type: 'artefact', id: id.data }, details: { format: lecture.data.format, version: lecture.data.version ?? null } })
     const corps = new Uint8Array(
       resultat.buffer.buffer,
       resultat.buffer.byteOffset,

@@ -10,7 +10,7 @@ export const LIMITES_DETAILS = {
   longueurChaine: 200,
   elementsTableau: 10,
   longueurChaineTableau: 100,
-  /** Taille maximale du JSON final, en caractères (la base accepte 4096 octets). */
+  /** Taille maximale du JSON final, en OCTETS UTF-8 (le CHECK de la migration accepte 4096). */
   tailleJson: 2000,
 } as const
 
@@ -31,6 +31,11 @@ const estSensible = (cle: string) => {
 
 function chaineSure(valeur: string, maximum: number): string {
   return FORME_EMAIL.test(valeur) ? MASQUE : valeur.slice(0, maximum)
+}
+
+/** Texte libre (libellé de cible) : tronqué, et entièrement masqué s'il contient une adresse e-mail. */
+export function texteSur(valeur: string, maximum: number): string {
+  return chaineSure(valeur, maximum)
 }
 
 function primitive(valeur: unknown, maximumChaine: number): { valeur: Primitive } | undefined {
@@ -64,7 +69,7 @@ export function borner(details: Record<string, unknown> | undefined): Record<str
   }
   // Taille totale : on retire les dernières clés jusqu'à tenir dans la limite.
   const cles = Object.keys(resultat)
-  while (cles.length > 0 && JSON.stringify(resultat).length > LIMITES_DETAILS.tailleJson) {
+  while (cles.length > 0 && Buffer.byteLength(JSON.stringify(resultat), 'utf8') > LIMITES_DETAILS.tailleJson) {
     delete resultat[cles.pop() as string]
   }
   return resultat

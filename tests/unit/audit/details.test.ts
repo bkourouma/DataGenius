@@ -57,4 +57,11 @@ describe('borner', () => {
     expect(cles.length).toBeLessThan(20)
     expect(cles[0]).toBe('k00')
   })
+
+  it.each(['é', '漢'])('borne en octets UTF-8 : 20 chaînes multi-octets (%s) tiennent dans la limite', (c) => {
+    const details = Object.fromEntries(Array.from({ length: 20 }, (_, i) => [`k${i}`, c.repeat(200)]))
+    const octets = Buffer.byteLength(JSON.stringify(borner(details)), 'utf8')
+    expect(octets).toBeLessThanOrEqual(LIMITES_DETAILS.tailleJson)
+    expect(octets).toBeLessThanOrEqual(2000)
+  })
 })

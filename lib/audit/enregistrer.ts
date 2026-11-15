@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db/client'
 import { journal } from '@/lib/journal'
-import { borner } from './details'
+import { borner, texteSur } from './details'
 import { ipRequeteCourante } from './ip'
 import type { EntreeAudit } from './types'
 
@@ -17,7 +17,7 @@ export async function enregistrerAudit(entree: EntreeAudit): Promise<void> {
     const ip = entree.ip ?? ipRequeteCourante() ?? null
     const details = JSON.stringify(borner(entree.details))
     const cibleId = entree.cible?.id?.slice(0, LONGUEUR_ID_CIBLE) ?? null
-    const cibleLibelle = entree.cible?.libelle?.slice(0, LONGUEUR_LIBELLE_CIBLE) ?? null
+    const cibleLibelle = entree.cible?.libelle ? texteSur(entree.cible.libelle, LONGUEUR_LIBELLE_CIBLE) : null
     await prisma.$executeRaw`
       INSERT INTO warehouse.journal_audit
         (acteur_id, action, cible_type, cible_id, cible_libelle, resultat, details, ip)

@@ -47,4 +47,30 @@ describe('enregistrerAudit', () => {
     cycle.soi = cycle
     await expect(enregistrerAudit({ action: 'source.creation', details: cycle })).resolves.toBeUndefined()
   })
+
+  describe('libellé de cible', () => {
+    const valeursInterpolees = () => mocks.executeRaw.mock.calls[0].slice(1) as unknown[]
+
+    it('un libellé contenant une adresse e-mail est écrit masqué', async () => {
+      mocks.executeRaw.mockResolvedValue(1)
+      await enregistrerAudit({
+        acteurId: 'u1', action: 'source.creation',
+        cible: { type: 'utilisateur', id: 'x1', libelle: 'Compte de jean.dupont@example.test (Abidjan)' },
+      })
+      const valeurs = valeursInterpolees()
+      expect(valeurs).toContain('[masqué]')
+      expect(valeurs.filter((v) => typeof v === 'string' && v.includes('@'))).toEqual([])
+    })
+
+    it('un libellé normal reste intact, et est tronqué à 200 caractères', async () => {
+      mocks.executeRaw.mockResolvedValue(1)
+      await enregistrerAudit({ action: 'source.creation', cible: { type: 'source', id: 's1', libelle: 'Source ventes' } })
+      expect(valeursInterpolees()).toContain('Source ventes')
+
+      mocks.executeRaw.mockClear()
+      await enregistrerAudit({ action: 'source.creation', cible: { type: 'source', id: 's1', libelle: 'x'.repeat(500) } })
+      expect(valeursInterpolees()).toContain('x'.repeat(200))
+      expect(valeursInterpolees()).not.toContain('x'.repeat(201))
+    })
+  })
 })

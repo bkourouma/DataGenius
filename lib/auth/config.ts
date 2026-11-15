@@ -1,9 +1,10 @@
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { doitTracerBlocage } from '@/lib/audit/blocage'
 import { enregistrerAudit } from '@/lib/audit/enregistrer'
 import { prisma } from '@/lib/db/client'
 import { doitRehacher, hashPassword, verifierFauxMotDePasse, verifyPassword } from './password'
-import { extraireIp, reinitialiser, reserverTentative, sautsProxyDeConfiance } from './limite-connexion'
+import { cleEmail, extraireIp, reinitialiser, reserverTentative, sautsProxyDeConfiance } from './limite-connexion'
 import { configurationOidc, FOURNISSEUR_OIDC, fournisseurOidc, trouverUtilisateurOidc } from './oidc'
 
 const oidc = configurationOidc()
@@ -20,7 +21,8 @@ export async function autoriserConnexion(credentials: Identifiants, req?: Requet
   // La tentative est réservée (incrément atomique) AVANT tout hachage : des requêtes simultanées ne
   // peuvent pas dépasser le seuil. Contrat avec l'écran de connexion : cette erreur exacte signale un blocage.
   if (!await reserverTentative({ email, ip })) {
-    await enregistrerAudit({ action: 'connexion.bloquee', cible: { type: 'utilisateur' }, resultat: 'refuse', ip })
+    // Une seule ligne par e-mail et par fenêtre de blocage (pas une par tentative refusée).
+    if (doitTracerBlocage(cleEmail(email))) await enregistrerAudit({ action: 'connexion.bloquee', cible: { type: 'utilisateur' }, resultat: 'refuse', ip })
     throw new Error('trop_de_tentatives')
   }
   const user = await prisma.user.findFirst({
