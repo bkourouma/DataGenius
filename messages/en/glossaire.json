@@ -56,6 +56,7 @@
     "bouton": "Search",
     "accueil": "Enter at least two characters to start searching.",
     "tropCourt": "The search needs at least 2 characters.",
+    "tropLong": "The search accepts at most 100 characters.",
     "videTitre": "No results",
     "vide": "Nothing matches “{q}”. Check the spelling or try a shorter word.",
     "compte": "{count, plural, one {# result} other {# results}}",
@@ -64,7 +65,8 @@
       "analyse": "Analyses",
       "glossaire": "Glossary",
       "source": "Sources"
-    }
+    },
+    "palette": "Search everywhere for “{q}”"
   },
   "commentaires": {
     "titre": "Comments",

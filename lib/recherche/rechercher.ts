@@ -19,6 +19,9 @@ export interface ResultatRecherche {
 export const LONGUEUR_MIN = 2
 export const LONGUEUR_MAX = 100
 export const MAX_PAR_TYPE = 10
+/** Analyses : pages de 40 lignes lues au plus (200 lignes) pour atteindre 10 résultats dans le périmètre. */
+const TAILLE_PAGE_ANALYSES = 40
+const PAGES_ANALYSES_MAX = 5
 
 /** Requête exploitable : texte trimé de 2 à 100 caractères, sinon null. */
 export function requeteValide(q: string): string | null {
@@ -42,30 +45,33 @@ async function tableaux(contexte: ContexteExecution, q: string): Promise<Resulta
 async function analyses(contexte: ContexteExecution, q: string): Promise<ResultatRecherche[]> {
   // Mêmes artefacts que « Analyses » : enregistrés par l'utilisateur, ou partagés directement avec lui.
   // Titre et description sont ceux de la dernière version de la racine.
-  const lignes = await prisma.$queryRaw<{ racine: string; titre: string; description: string | null }[]>`
-    WITH visibles AS (
-      SELECT "racineId" AS racine FROM assistant_artefacts WHERE "userId" = ${contexte.userId} AND enregistre = true
-      UNION
-      SELECT "ressourceId" AS racine FROM assistant_partages
-      WHERE "aUserId" = ${contexte.userId} AND "ressourceType" = 'artefact'
-    ), dernieres AS (
-      SELECT DISTINCT ON (a."racineId") a."racineId" AS racine, a.titre, a.description, a."createdAt"
-      FROM assistant_artefacts AS a JOIN visibles AS v ON v.racine = a."racineId"
-      ORDER BY a."racineId", a.version DESC
-    )
-    SELECT racine, titre, description FROM dernieres
-    WHERE ${contient(Prisma.sql`titre`, q)} OR ${contient(Prisma.sql`description`, q)}
-    ORDER BY "createdAt" DESC LIMIT ${MAX_PAR_TYPE * 4}
-  `
   const resultats: ResultatRecherche[] = []
-  for (const ligne of lignes) {
-    if (resultats.length >= MAX_PAR_TYPE) break
-    if (!(await ressourceDansPerimetre(contexte, 'artefact', ligne.racine))) continue
-    resultats.push({
-      type: 'analyse', id: ligne.racine, titre: ligne.titre,
-      ...(ligne.description ? { detail: ligne.description.slice(0, 200) } : {}),
-      href: `/assistant/analyses/${encodeURIComponent(ligne.racine)}`,
-    })
+  for (let page = 0; page < PAGES_ANALYSES_MAX && resultats.length < MAX_PAR_TYPE; page++) {
+    const lignes = await prisma.$queryRaw<{ racine: string; titre: string; description: string | null }[]>`
+      WITH visibles AS (
+        SELECT "racineId" AS racine FROM assistant_artefacts WHERE "userId" = ${contexte.userId} AND enregistre = true
+        UNION
+        SELECT "ressourceId" AS racine FROM assistant_partages
+        WHERE "aUserId" = ${contexte.userId} AND "ressourceType" = 'artefact'
+      ), dernieres AS (
+        SELECT DISTINCT ON (a."racineId") a."racineId" AS racine, a.titre, a.description, a."createdAt"
+        FROM assistant_artefacts AS a JOIN visibles AS v ON v.racine = a."racineId"
+        ORDER BY a."racineId", a.version DESC
+      )
+      SELECT racine, titre, description FROM dernieres
+      WHERE ${contient(Prisma.sql`titre`, q)} OR ${contient(Prisma.sql`description`, q)}
+      ORDER BY "createdAt" DESC, racine LIMIT ${TAILLE_PAGE_ANALYSES} OFFSET ${page * TAILLE_PAGE_ANALYSES}
+    `
+    for (const ligne of lignes) {
+      if (resultats.length >= MAX_PAR_TYPE) break
+      if (!(await ressourceDansPerimetre(contexte, 'artefact', ligne.racine))) continue
+      resultats.push({
+        type: 'analyse', id: ligne.racine, titre: ligne.titre,
+        ...(ligne.description ? { detail: ligne.description.slice(0, 200) } : {}),
+        href: `/assistant/analyses/${encodeURIComponent(ligne.racine)}`,
+      })
+    }
+    if (lignes.length < TAILLE_PAGE_ANALYSES) break
   }
   return resultats
 }

@@ -16,6 +16,11 @@ export const SANS_ACCENT = GROUPES.map(([accentuees, lettre]) => lettre.repeat(a
  * Condition « la colonne contient la requête », insensible à la casse et aux accents,
  * sans extension PostgreSQL ni joker : `position` sur un texte normalisé. Toutes les
  * valeurs sont des paramètres liés. `colonne` est un fragment écrit en dur dans le code.
+ *
+ * Limite de translate() : seules les lettres latines accentuées listées ci-dessus sont repliées. Les
+ * ligatures (œ, æ), les lettres d'autres alphabets latins (ł, ø, ß...) et les écritures arabe, hindi et
+ * chinoise ne sont comparées qu'à l'identique ; lower() PostgreSQL suit la locale de la base, donc la
+ * casse des écritures non latines n'est pas garantie. Étendre ACCENTS/SANS_ACCENT si un besoin apparaît.
  */
 export function contient(colonne: Prisma.Sql, requete: string): Prisma.Sql {
   return Prisma.sql`position(${normaliser(requete)}::text in lower(translate(coalesce(${colonne}, ''), ${ACCENTS}::text, ${SANS_ACCENT}::text))) > 0`

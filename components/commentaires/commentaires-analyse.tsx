@@ -1,5 +1,6 @@
 import { exigerMedicAssist } from '@/lib/medic-assist/acces';
-import { listerCommentaires } from '@/lib/commentaires/commentaires';
+import { ErreurCommentaire, listerCommentaires } from '@/lib/commentaires/commentaires';
+import { journal } from '@/lib/journal';
 
 import { CommentairesClient } from './commentaires-client';
 
@@ -10,8 +11,14 @@ export async function CommentairesAnalyse({ artefactId }: { artefactId: string }
   try {
     const commentaires = await listerCommentaires(acces.contexte, artefactId);
     return <CommentairesClient artefactId={artefactId} commentaires={commentaires} />;
-  } catch {
-    // « introuvable » ou erreur de lecture : l'analyse reste affichée sans commentaires.
+  } catch (erreur) {
+    // « introuvable » : analyse non visible, rien à signaler. Autre erreur : journalisée par son nom
+    // seulement, l'analyse reste affichée sans commentaires.
+    if (!(erreur instanceof ErreurCommentaire && erreur.code === 'introuvable')) {
+      journal.erreur('Lecture des commentaires impossible', {
+        domaine: 'commentaires', erreur: erreur instanceof Error ? erreur.name : 'inconnue',
+      });
+    }
     return null;
   }
 }

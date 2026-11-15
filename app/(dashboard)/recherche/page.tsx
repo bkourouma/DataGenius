@@ -40,7 +40,7 @@ export default async function RecherchePage({ searchParams }: Props) {
           <Input
             type="search"
             name="q"
-            defaultValue={q}
+            defaultValue={q.slice(0, 100)}
             maxLength={100}
             placeholder={t('placeholder')}
             aria-label={t('champ')}
@@ -51,7 +51,7 @@ export default async function RecherchePage({ searchParams }: Props) {
       </form>
 
       {!q && <p className="text-sm text-muted-foreground">{t('accueil')}</p>}
-      {q && !valide && <p role="status" className="text-sm text-muted-foreground">{t('tropCourt')}</p>}
+      {q && !valide && <p role="status" className="text-sm text-muted-foreground">{q.length > 100 ? t('tropLong') : t('tropCourt')}</p>}
       {valide && !resultats.length && (
         <EtatVide icone={<Search />} titre={t('videTitre')}>{t('vide', { q: valide })}</EtatVide>
       )}

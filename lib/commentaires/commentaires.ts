@@ -97,15 +97,19 @@ export async function ajouterCommentaire(
   const propre = normaliserTexte(texte)
   const id = randomUUID()
   // Insertion conditionnelle : la limite de débit est comptée dans la même instruction.
-  const inseres = await prisma.$queryRaw<{ id: string }[]>`
-    INSERT INTO warehouse.commentaires_analyses (id, artefact_id, auteur_id, texte)
-    SELECT ${id}, ${artefactId}, ${contexte.userId}, ${propre}
-    WHERE (
-      SELECT count(*) FROM warehouse.commentaires_analyses
-      WHERE auteur_id = ${contexte.userId}
-        AND cree_a > clock_timestamp() - make_interval(mins => ${FENETRE_LIMITE_MINUTES}::int)
-    ) < ${LIMITE_COMMENTAIRES}::int
-    RETURNING id`
+  // Verrou transactionnel par auteur : deux ajouts simultanés sont sérialisés, le quota est exact.
+  const inseres = await prisma.$transaction(async tx => {
+    await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${'datagenius:commentaires:' + contexte.userId}, 0))::text`
+    return tx.$queryRaw<{ id: string }[]>`
+      INSERT INTO warehouse.commentaires_analyses (id, artefact_id, auteur_id, texte)
+      SELECT ${id}, ${artefactId}, ${contexte.userId}, ${propre}
+      WHERE (
+        SELECT count(*) FROM warehouse.commentaires_analyses
+        WHERE auteur_id = ${contexte.userId}
+          AND cree_a > clock_timestamp() - make_interval(mins => ${FENETRE_LIMITE_MINUTES}::int)
+      ) < ${LIMITE_COMMENTAIRES}::int
+      RETURNING id`
+  })
   if (inseres.length === 0) throw new ErreurCommentaire('limite_debit')
   journal.info('Commentaire ajouté', { artefactId, commentaireId: id })
   return { id }
@@ -127,4 +131,14 @@ export async function supprimerCommentaire(
   await prisma.$executeRaw`DELETE FROM warehouse.commentaires_analyses WHERE id = ${commentaireId}`
   journal.info('Commentaire supprimé', { artefactId: commentaire.artefact_id, commentaireId })
   return { artefactId: commentaire.artefact_id }
+}
+
+/**
+ * Supprime les commentaires dont l'analyse n'existe plus (suppression d'un compte, d'une conversation
+ * par une autre voie). Appelée par le worker avec les autres purges ; renvoie le nombre de lignes retirées.
+ */
+export async function purgerCommentairesOrphelins(): Promise<number> {
+  return prisma.$executeRaw`
+    DELETE FROM warehouse.commentaires_analyses AS c
+    WHERE NOT EXISTS (SELECT 1 FROM assistant_artefacts AS a WHERE a."racineId" = c.artefact_id)`
 }

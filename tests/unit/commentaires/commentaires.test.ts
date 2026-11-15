@@ -7,7 +7,13 @@ const { requeteBrute, executionBrute, ressourceDansPerimetre, trouverArtefactVis
   trouverArtefactVisible: vi.fn(),
 }))
 
-vi.mock('@/lib/db/client', () => ({ prisma: { $queryRaw: requeteBrute, $executeRaw: executionBrute } }))
+vi.mock('@/lib/db/client', () => ({
+  prisma: {
+    $queryRaw: requeteBrute,
+    $executeRaw: executionBrute,
+    $transaction: (f: (tx: unknown) => unknown) => f({ $queryRaw: requeteBrute }),
+  },
+}))
 vi.mock('@/lib/journal', () => ({ journal: { info: vi.fn(), avertissement: vi.fn(), erreur: vi.fn() } }))
 vi.mock('@/lib/medic-assist/suivi/depot-prisma', () => ({ obtenirDepot: () => ({ trouverArtefactVisible }) }))
 vi.mock('@/lib/medic-assist/suivi/perimetre-ressource', () => ({ ressourceDansPerimetre }))
@@ -132,6 +138,16 @@ describe('services', () => {
     const appel = vi.mocked(journal.info).mock.calls[0]
     expect(appel[1]).toEqual({ artefactId: 'a', commentaireId: id })
     expect(JSON.stringify(appel)).not.toContain('secret de test')
+  })
+
+  it('sérialise l’ajout par un verrou transactionnel d’auteur posé avant l’insertion', async () => {
+    requeteBrute.mockResolvedValue([{ id: 'x' }])
+    await ajouterCommentaire(contexte('u7'), 'a', 'bonjour', voit)
+    expect(requeteBrute).toHaveBeenCalledTimes(2)
+    const [verrou, insertion] = requeteBrute.mock.calls
+    expect((verrou[0] as string[]).join('?')).toContain('pg_advisory_xact_lock')
+    expect(verrou).toContain('datagenius:commentaires:u7')
+    expect((insertion[0] as string[]).join('?')).toContain('INSERT INTO warehouse.commentaires_analyses')
   })
 
   it('signale « limite_debit » quand l’insertion conditionnelle ne renvoie rien', async () => {

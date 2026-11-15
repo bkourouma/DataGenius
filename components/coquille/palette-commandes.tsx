@@ -37,6 +37,7 @@ export function PaletteCommandes({
   tableaux?: { id: string; titre: string }[]
 }) {
   const t = useTranslations('ecrans.coquille')
+  const tRecherche = useTranslations('glossaire.recherche')
   const router = useRouter()
   const chemin = usePathname()
   const [requete, setRequete] = useState('')
@@ -141,11 +142,12 @@ export function PaletteCommandes({
       })
     }
 
-    if (question.length >= 2) {
+    // Plafond de 100 caractères : au-delà, la page /recherche refuse la requête.
+    if (question.length >= 2 && question.length <= 100) {
       liste.push({
         id: 'recherche-globale',
-        section: 'Aller à',
-        libelle: `Rechercher « ${question} » partout`,
+        section: 'aller',
+        libelle: tRecherche('palette', { q: question }),
         icone: Search,
         executer: () => {
           fermer()
@@ -181,7 +183,7 @@ export function PaletteCommandes({
     }
 
     return liste
-  }, [requete, groupes, chemin, router, onOuverteChange, analyses, tableaux, t])
+  }, [requete, groupes, chemin, router, onOuverteChange, analyses, tableaux, t, tRecherche])
 
   useEffect(() => {
     setIndexActif(0)

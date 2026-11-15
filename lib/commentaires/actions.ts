@@ -12,7 +12,9 @@ export type ResultatCommentaire =
 
 function enErreur(erreur: unknown, action: string): ResultatCommentaire {
   if (erreur instanceof ErreurCommentaire) return { erreur: erreur.code }
-  journal.erreur('Échec de l’action sur un commentaire', { action, erreur })
+  journal.erreur('Échec de l’action sur un commentaire', {
+    domaine: 'commentaires', action, erreur: erreur instanceof Error ? erreur.name : 'inconnue',
+  })
   return { erreur: 'interne' }
 }
 
