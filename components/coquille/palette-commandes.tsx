@@ -137,6 +137,19 @@ export function PaletteCommandes({
       })
     }
 
+    if (question.length >= 2) {
+      liste.push({
+        id: 'recherche-globale',
+        section: 'Aller à',
+        libelle: `Rechercher « ${question} » partout`,
+        icone: Search,
+        executer: () => {
+          fermer()
+          router.push('/recherche?q=' + encodeURIComponent(question))
+        },
+      })
+    }
+
     // La question vient apres les pages : « tableaux » + Entree ouvre la page.
     if (question) {
       liste.push({
