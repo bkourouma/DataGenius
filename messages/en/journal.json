@@ -36,7 +36,8 @@
     "connexion": "Sign-ins",
     "utilisateur": "Users",
     "droits": "Access rights",
-    "journal": "Audit log"
+    "journal": "Audit log",
+    "tableau": "Dashboards"
   },
   "actions": {
     "source_creation": "Source created",
@@ -55,7 +56,10 @@
     "utilisateur_desactivation": "Account deactivated",
     "utilisateur_reactivation": "Account reactivated",
     "droits_modification": "Permissions changed",
-    "journal_export": "Audit log exported"
+    "journal_export": "Audit log exported",
+    "tableau_restauration": "Dashboard version restored",
+    "tableau_suppression": "Dashboard deleted",
+    "tableau_duplication": "Dashboard duplicated"
   },
   "resultats": {
     "succes": "Succeeded",
@@ -70,7 +74,8 @@
     "conversation": "Conversation",
     "partage": "Share",
     "droits": "Permissions",
-    "journal": "Log"
+    "journal": "Log",
+    "tableau": "Dashboard"
   },
   "acteurInconnu": "Unknown",
   "vide": "No events match these filters.",

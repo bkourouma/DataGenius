@@ -36,7 +36,8 @@
     "connexion": "Inicios de sesión",
     "utilisateur": "Usuarios",
     "droits": "Derechos de acceso",
-    "journal": "Registro de auditoría"
+    "journal": "Registro de auditoría",
+    "tableau": "Paneles"
   },
   "actions": {
     "source_creation": "Creación de una fuente",
@@ -55,7 +56,10 @@
     "utilisateur_desactivation": "Desactivación de una cuenta",
     "utilisateur_reactivation": "Reactivación de una cuenta",
     "droits_modification": "Modificación de permisos",
-    "journal_export": "Exportación del registro de auditoría"
+    "journal_export": "Exportación del registro de auditoría",
+    "tableau_restauration": "Restauración de una versión de un panel",
+    "tableau_suppression": "Eliminación de un panel",
+    "tableau_duplication": "Duplicación de un panel"
   },
   "resultats": {
     "succes": "Correcto",
@@ -70,7 +74,8 @@
     "conversation": "Conversación",
     "partage": "Compartición",
     "droits": "Permisos",
-    "journal": "Registro"
+    "journal": "Registro",
+    "tableau": "Panel"
   },
   "acteurInconnu": "Desconocido",
   "vide": "Ningún evento coincide con estos filtros.",

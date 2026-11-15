@@ -6,7 +6,7 @@
  */
 
 export const FAMILLES_AUDIT = [
-  'source', 'export', 'partage', 'connexion', 'utilisateur', 'droits', 'journal',
+  'source', 'export', 'partage', 'connexion', 'utilisateur', 'droits', 'journal', 'tableau',
 ] as const
 export type FamilleAudit = (typeof FAMILLES_AUDIT)[number]
 
@@ -28,6 +28,9 @@ export const ACTIONS_AUDIT = [
   'utilisateur.reactivation',
   'droits.modification',
   'journal.export',
+  'tableau.restauration',
+  'tableau.suppression',
+  'tableau.duplication',
 ] as const
 export type ActionAudit = (typeof ACTIONS_AUDIT)[number]
 
@@ -35,7 +38,7 @@ export const RESULTATS_AUDIT = ['succes', 'echec', 'refuse'] as const
 export type ResultatAudit = (typeof RESULTATS_AUDIT)[number]
 
 export const TYPES_CIBLE_AUDIT = [
-  'source', 'jeu', 'utilisateur', 'artefact', 'conversation', 'partage', 'droits', 'journal',
+  'source', 'jeu', 'utilisateur', 'artefact', 'conversation', 'partage', 'droits', 'journal', 'tableau',
 ] as const
 export type TypeCibleAudit = (typeof TYPES_CIBLE_AUDIT)[number]
 

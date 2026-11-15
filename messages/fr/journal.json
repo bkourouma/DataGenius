@@ -36,7 +36,8 @@
     "connexion": "Connexions",
     "utilisateur": "Utilisateurs",
     "droits": "Droits d’accès",
-    "journal": "Journal d’audit"
+    "journal": "Journal d’audit",
+    "tableau": "Tableaux"
   },
   "actions": {
     "source_creation": "Création d’une source",
@@ -55,7 +56,10 @@
     "utilisateur_desactivation": "Désactivation d’un compte",
     "utilisateur_reactivation": "Réactivation d’un compte",
     "droits_modification": "Modification des droits",
-    "journal_export": "Export du journal d’audit"
+    "journal_export": "Export du journal d’audit",
+    "tableau_restauration": "Restauration d’une version de tableau",
+    "tableau_suppression": "Suppression d’un tableau",
+    "tableau_duplication": "Duplication d’un tableau"
   },
   "resultats": {
     "succes": "Réussi",
@@ -70,7 +74,8 @@
     "conversation": "Conversation",
     "partage": "Partage",
     "droits": "Droits",
-    "journal": "Journal"
+    "journal": "Journal",
+    "tableau": "Tableau"
   },
   "acteurInconnu": "Inconnu",
   "vide": "Aucun événement ne correspond à ces filtres.",

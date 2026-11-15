@@ -36,7 +36,8 @@
     "connexion": "登录",
     "utilisateur": "用户",
     "droits": "访问权限",
-    "journal": "审计日志"
+    "journal": "审计日志",
+    "tableau": "看板"
   },
   "actions": {
     "source_creation": "创建数据源",
@@ -55,7 +56,10 @@
     "utilisateur_desactivation": "停用账户",
     "utilisateur_reactivation": "重新启用账户",
     "droits_modification": "修改权限",
-    "journal_export": "导出审计日志"
+    "journal_export": "导出审计日志",
+    "tableau_restauration": "恢复看板版本",
+    "tableau_suppression": "删除看板",
+    "tableau_duplication": "复制看板"
   },
   "resultats": {
     "succes": "成功",
@@ -70,7 +74,8 @@
     "conversation": "对话",
     "partage": "共享",
     "droits": "权限",
-    "journal": "日志"
+    "journal": "日志",
+    "tableau": "看板"
   },
   "acteurInconnu": "未知",
   "vide": "没有符合这些筛选条件的事件。",

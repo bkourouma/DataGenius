@@ -35,6 +35,7 @@ export function FormulaireTableau({ tableau, options, comptes, analyses, estAdmi
   estAdmin: boolean
 }) {
   const t = useTranslations('notifications')
+  const tf = useTranslations('tableaux.formulaire')
   const [tuiles, setTuiles] = useState(tableau?.definition.tuiles ?? [])
   const [lecteurs, setLecteurs] = useState(tableau?.definition.lecteurs ?? [])
   const [etat, action] = useFormState(enregistrer.bind(null, tableau ? { id: tableau.id, version: tableau.version } : null), {})
@@ -51,24 +52,24 @@ export function FormulaireTableau({ tableau, options, comptes, analyses, estAdmi
 
   return <form action={action} className="space-y-5">
     <input type="hidden" name="configuration" value={JSON.stringify({ tuiles, lecteurs })} />
-    <label className="block space-y-1 text-sm font-medium">Nom du tableau
+    <label className="block space-y-1 text-sm font-medium">{tf('nom')}
       <Input name="titre" required maxLength={120} defaultValue={tableau?.definition.titre} />
     </label>
     <section className="space-y-4" aria-labelledby="tuiles-titre">
-      <h2 id="tuiles-titre" className="text-lg font-semibold">Tuiles</h2>
+      <h2 id="tuiles-titre" className="text-lg font-semibold">{tf('tuiles')}</h2>
       {tuiles.map((tuile, index) => {
         const jeu = tuile.type === 'mesure' ? options.find(o => o.cle === tuile.jeu) : undefined
         return <fieldset key={tuile.id} className="space-y-3 rounded-lg border bg-card p-4">
-          <legend className="px-1 font-medium">{tuile.type === 'mesure' ? 'Indicateur' : 'Artefact'} {index + 1}</legend>
+          <legend className="px-1 font-medium">{tuile.type === 'mesure' ? tf('indicateurNumero', { n: index + 1 }) : tf('artefactNumero', { n: index + 1 })}</legend>
           {tuile.type === 'artefact' ? <>
-            {analyses.length > 0 && <label className="block space-y-1 text-sm">Choisir dans Mes analyses
+            {analyses.length > 0 && <label className="block space-y-1 text-sm">{tf('choisirAnalyse')}
               <select className={selection} value={analyses.some(a => a.id === tuile.artefact) ? tuile.artefact : ''}
                 onChange={event => modifier({ ...tuile, artefact: event.target.value })}>
-                <option value="">Sélectionner une analyse</option>
+                <option value="">{tf('selectionnerAnalyse')}</option>
                 {analyses.map(a => <option key={a.id} value={a.id}>{a.titre}</option>)}
               </select>
             </label>}
-            <label className="block space-y-1 text-sm">Identifiant ou lien de l’analyse
+            <label className="block space-y-1 text-sm">{tf('identifiantAnalyse')}
               <Input required maxLength={300} value={tuile.artefact}
                 onChange={event => {
                   const texte = event.target.value.trim()
@@ -78,25 +79,25 @@ export function FormulaireTableau({ tableau, options, comptes, analyses, estAdmi
             </label>
           </> : <>
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="block space-y-1 text-sm">Jeu de données
+              <label className="block space-y-1 text-sm">{tf('jeu')}
                 <select required className={selection} value={tuile.jeu}
                   onChange={event => modifier({ ...tuile, jeu: event.target.value, mesure: '', dimensions: [] })}>
-                  <option value="">Choisir un jeu</option>
-                  {tuile.jeu && !jeu && <option value={tuile.jeu}>Jeu indisponible</option>}
+                  <option value="">{tf('choisirJeu')}</option>
+                  {tuile.jeu && !jeu && <option value={tuile.jeu}>{tf('jeuIndisponible')}</option>}
                   {options.map(o => <option key={o.cle} value={o.cle}>{o.libelle}</option>)}
                 </select>
               </label>
-              <label className="block space-y-1 text-sm">Mesure
+              <label className="block space-y-1 text-sm">{tf('mesure')}
                 <select required className={selection} value={tuile.mesure}
                   onChange={event => modifier({ ...tuile, mesure: event.target.value })}>
-                  <option value="">Choisir une mesure</option>
-                  {tuile.mesure && !jeu?.mesures.some(m => m.cle === tuile.mesure) && <option value={tuile.mesure}>Mesure indisponible</option>}
+                  <option value="">{tf('choisirMesure')}</option>
+                  {tuile.mesure && !jeu?.mesures.some(m => m.cle === tuile.mesure) && <option value={tuile.mesure}>{tf('mesureIndisponible')}</option>}
                   {jeu?.mesures.map(m => <option key={m.cle} value={m.cle}>{m.libelle}</option>)}
                 </select>
               </label>
             </div>
             {Boolean(jeu?.dimensions.length) && <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">Dimensions de détail (3 maximum)</legend>
+              <legend className="text-sm font-medium">{tf('dimensions')}</legend>
               <div className="flex flex-wrap gap-3">{jeu?.dimensions.map(d => {
                 const selectionnee = tuile.dimensions.includes(d.cle)
                 return <label key={d.cle} className="flex items-center gap-1.5 text-sm">
@@ -107,18 +108,18 @@ export function FormulaireTableau({ tableau, options, comptes, analyses, estAdmi
               })}</div>
             </fieldset>}
             <div className="grid gap-3 sm:grid-cols-3">
-              <label className="block space-y-1 text-sm">Objectif (facultatif)
+              <label className="block space-y-1 text-sm">{tf('objectif')}
                 <Input inputMode="decimal" value={tuile.objectif ?? ''} onChange={event => modifier({ ...tuile, objectif: event.target.value.replace(',', '.') || undefined })} />
               </label>
-              <label className="block space-y-1 text-sm">Alerte
+              <label className="block space-y-1 text-sm">{tf('alerte')}
                 <select className={selection} value={tuile.alerte?.sens ?? ''} onChange={event => {
                   const sens = event.target.value
                   modifier({ ...tuile, alerte: sens === 'au_dessus' || sens === 'au_dessous' ? normaliserAlerte({ ...tuile.alerte, sens, seuil: tuile.alerte?.seuil ?? '' }) : undefined })
                 }}>
-                  <option value="">Désactivée</option><option value="au_dessus">Au seuil ou au-dessus</option><option value="au_dessous">Au seuil ou en dessous</option>
+                  <option value="">{tf('alerteDesactivee')}</option><option value="au_dessus">{tf('alerteAuDessus')}</option><option value="au_dessous">{tf('alerteAuDessous')}</option>
                 </select>
               </label>
-              {tuile.alerte && <label className="block space-y-1 text-sm">Seuil
+              {tuile.alerte && <label className="block space-y-1 text-sm">{tf('seuil')}
                 <Input inputMode="decimal" required value={tuile.alerte.seuil} onChange={event => {
                   if (tuile.alerte) modifier({ ...tuile, alerte: normaliserAlerte({ ...tuile.alerte, seuil: event.target.value.replace(',', '.') }) })
                 }} />
@@ -128,7 +129,7 @@ export function FormulaireTableau({ tableau, options, comptes, analyses, estAdmi
               const alerte = tuile.alerte
               const lecteursCoches = lecteurs.map(id => {
                 const compte = comptes.find(c => c.id === id)
-                return { id, nom: compte ? compte.nom || compte.email : 'Compte indisponible' }
+                return { id, nom: compte ? compte.nom || compte.email : tf('compteIndisponible') }
               })
               const majAlerte = (reglages: Partial<Pick<AlerteTuile, 'destinataires' | 'email' | 'webhook'>>) =>
                 modifier({ ...tuile, alerte: normaliserAlerte({ ...alerte, ...reglages }) })
@@ -163,20 +164,20 @@ export function FormulaireTableau({ tableau, options, comptes, analyses, estAdmi
               </fieldset>
             })()}
           </>}
-          <Button type="button" variant="outline" size="sm" onClick={() => setTuiles(courantes => courantes.filter(t => t.id !== tuile.id))}>Retirer la tuile</Button>
+          <Button type="button" variant="outline" size="sm" onClick={() => setTuiles(courantes => courantes.filter(t => t.id !== tuile.id))}>{tf('retirerTuile')}</Button>
         </fieldset>
       })}
       <div className="flex flex-wrap gap-2">
-        <Button type="button" variant="outline" disabled={!options.length || tuiles.length >= 12} onClick={() => ajouter('mesure')}>Ajouter un indicateur</Button>
-        <Button type="button" variant="outline" disabled={tuiles.length >= 12} onClick={() => ajouter('artefact')}>Ajouter un artefact</Button>
+        <Button type="button" variant="outline" disabled={!options.length || tuiles.length >= 12} onClick={() => ajouter('mesure')}>{tf('ajouterIndicateur')}</Button>
+        <Button type="button" variant="outline" disabled={tuiles.length >= 12} onClick={() => ajouter('artefact')}>{tf('ajouterArtefact')}</Button>
       </div>
-      {!options.length && <p className="text-sm text-muted-foreground">Aucun indicateur publié dans vos jeux accessibles.</p>}
+      {!options.length && <p className="text-sm text-muted-foreground">{tf('aucunIndicateur')}</p>}
     </section>
     {(comptes.length > 0 || lecteurs.length > 0) && <fieldset className="space-y-2 rounded-lg border bg-card p-4">
-      <legend className="px-1 font-medium">Partager avec des lecteurs</legend>
-      <p className="text-sm text-muted-foreground">Chaque lecteur conserve ses droits d’accès aux données et aux artefacts.</p>
+      <legend className="px-1 font-medium">{tf('partagerTitre')}</legend>
+      <p className="text-sm text-muted-foreground">{tf('partagerAide')}</p>
       <div className="grid max-h-48 gap-2 overflow-auto sm:grid-cols-2">
-        {[...comptes, ...lecteurs.filter(id => !comptes.some(c => c.id === id)).map(id => ({ id, nom: 'Compte indisponible', email: '' }))].map(compte => {
+        {[...comptes, ...lecteurs.filter(id => !comptes.some(c => c.id === id)).map(id => ({ id, nom: tf('compteIndisponible'), email: '' }))].map(compte => {
           const coche = lecteurs.includes(compte.id)
           return <label key={compte.id} className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={coche} disabled={!coche && lecteurs.length >= 30}
@@ -193,6 +194,6 @@ export function FormulaireTableau({ tableau, options, comptes, analyses, estAdmi
       </div>
     </fieldset>}
     {etat.erreur && <p role="alert" className="text-sm text-destructive">{etat.erreur}</p>}
-    <Soumettre texte="Enregistrer le tableau" attente="Enregistrement…" />
+    <Soumettre texte={tf('enregistrer')} attente={tf('enregistrement')} />
   </form>
 }
