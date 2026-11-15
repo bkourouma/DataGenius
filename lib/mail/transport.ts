@@ -8,7 +8,7 @@
  *   SMTP_USER      identifiant, si le serveur demande une authentification
  *   SMTP_PASSWORD  mot de passe associe
  *   SMTP_SECURE    "true" force le TLS implicite ; sinon deduit du port
- *   MAIL_FROM      expediteur affiche, ex. MedicPro <no-reply@ilapharm.com>
+ *   MAIL_FROM      expediteur affiche, ex. Data Genius <no-reply@localhost>
  *
  * Tant que SMTP_HOST est absent, l'application fonctionne normalement : chaque
  * message est journalise et rien ne part. C'est ce qui permet de developper et
@@ -20,6 +20,7 @@
  */
 
 import nodemailer, { type Transporter } from "nodemailer"
+import { journal } from "@/lib/journal"
 
 export interface MessageMail {
   to: string | string[]
@@ -59,6 +60,9 @@ function construireTransporteur(): Transporter | null {
     host,
     port,
     secure,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 30_000,
     // Un relais interne accepte souvent les envois sans authentification.
     ...(user ? { auth: { user, pass } } : {}),
   })
@@ -68,16 +72,14 @@ function obtenirTransporteur(): Transporter | null {
   if (transporteur === undefined) {
     transporteur = construireTransporteur()
     if (!transporteur) {
-      console.warn(
-        "[mail] SMTP_HOST absent : les e-mails sont journalises mais ne sont pas envoyes."
-      )
+      journal.avertissement("SMTP absent : les e-mails ne partiront pas")
     }
   }
   return transporteur
 }
 
 function expediteur(): string {
-  return process.env.MAIL_FROM?.trim() || "MedicPro <no-reply@localhost>"
+  return process.env.MAIL_FROM?.trim() || "Data Genius <no-reply@localhost>"
 }
 
 /** Indique si un relais est configure — utile pour les diagnostics. */
@@ -96,9 +98,9 @@ export async function envoyerMail(message: MessageMail): Promise<boolean> {
   const relais = obtenirTransporteur()
 
   if (!relais) {
-    console.info(
-      `[mail] (non configure) destinataire=${destinataires.join(", ")} sujet=${message.subject}`
-    )
+    journal.info("Mail non envoyé : SMTP non configuré", {
+      destinataires: destinataires.length,
+    })
     return false
   }
 
@@ -117,10 +119,10 @@ export async function envoyerMail(message: MessageMail): Promise<boolean> {
     return true
   } catch (error) {
     // Journalise sans interrompre : l'appelant a deja accompli son action.
-    console.error(
-      `[mail] Echec de l'envoi a ${destinataires.join(", ")} (${message.subject}) :`,
-      error
-    )
+    const e = error as { code?: unknown; responseCode?: unknown }
+    journal.erreur("Échec de l'envoi d'un e-mail", {
+      code: String(e?.code ?? e?.responseCode ?? "inconnu"),
+    })
     return false
   }
 }

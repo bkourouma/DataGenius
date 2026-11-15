@@ -88,7 +88,7 @@ export function PaletteCommandes({
         icone: Plus,
         executer: () => {
           fermer()
-          router.push('/medic-assist')
+          router.push('/assistant')
         },
       })
     }
@@ -132,7 +132,7 @@ export function PaletteCommandes({
         icone: BookMarked,
         executer: () => {
           fermer()
-          router.push('/medic-assist/analyses/' + encodeURIComponent(analyse.artefactId))
+          router.push('/assistant/analyses/' + encodeURIComponent(analyse.artefactId))
         },
       })
     }
@@ -148,7 +148,7 @@ export function PaletteCommandes({
         executer: () => {
           // Hors du chat, la page d'ou part la question l'accompagne comme contexte.
           const contexte =
-            chemin && chemin !== '/medic-assist'
+            chemin && chemin !== '/assistant'
               ? construireContexteEcran(
                   chemin,
                   window.location.search,
@@ -158,7 +158,7 @@ export function PaletteCommandes({
               : undefined
           useContexteEcranMedicAssist.getState().deposerDemande({ question: question.slice(0, 4000), contexte })
           fermer()
-          router.push('/medic-assist')
+          router.push('/assistant')
         },
       })
     }

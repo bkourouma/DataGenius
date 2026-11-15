@@ -20,7 +20,7 @@
  * bascule branchée ; la variante sombre est fournie par cohérence (le contexte porte `theme`).
  */
 
-import { SEUIL_TAUX_ALERTE, SEUIL_TAUX_ATTEINT } from '@/lib/reports/seuils-objectifs'
+import { SEUIL_TAUX_ALERTE, SEUIL_TAUX_ATTEINT } from '@/lib/donnees/seuils-taux'
 
 export type ThemeGraphique = 'clair' | 'sombre'
 

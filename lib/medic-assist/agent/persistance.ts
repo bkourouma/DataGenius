@@ -9,7 +9,10 @@
  * Aucune fonction ne journalise le contenu d'un message : seulement des noms d'erreur.
  */
 
+import { Prisma } from '@prisma/client'
+
 import { prisma } from '@/lib/db/client'
+import { journal } from '@/lib/journal'
 import type {
   ContexteEcran,
   MessageMedicAssist,
@@ -18,7 +21,7 @@ import type {
   UsageTokens,
 } from '@/lib/medic-assist/contrats'
 
-import { TITRE_PAR_DEFAUT_CONVERSATION, creerConversation } from './conversations'
+import { TITRE_PAR_DEFAUT_CONVERSATION } from './conversations'
 
 // ---------------------------------------------------------------------------
 // Conversation
@@ -41,10 +44,37 @@ export async function lireConversationProprietaire(
   })
 }
 
-/** Crée la conversation côté serveur, au titre par défaut. */
-export async function creerConversationChat(userId: string): Promise<ConversationChat> {
-  const cree = await creerConversation({ userId }, {})
-  return { id: cree.id, titre: TITRE_PAR_DEFAUT_CONVERSATION }
+/**
+ * Crée la conversation côté serveur, au titre par défaut. `tourEnCoursJusqua` pose le verrou du
+ * tour dès la création (verrou.ts) : aucune autre requête ne peut y lancer un tour concurrent.
+ */
+export async function creerConversationChat(
+  userId: string,
+  tourEnCoursJusqua?: Date
+): Promise<ConversationChat> {
+  const cree = await prisma.assistantConversation.create({
+    data: {
+      userId,
+      titre: TITRE_PAR_DEFAUT_CONVERSATION,
+      ...(tourEnCoursJusqua ? { tourEnCoursJusqua } : {}),
+    },
+    select: { id: true, titre: true },
+  })
+  return { id: cree.id, titre: cree.titre }
+}
+
+/**
+ * Supprime une conversation que cette requête vient de créer et qui n'a encore AUCUN message
+ * (refus du verrou après création). Propriétaire et absence de message dans le même `where`.
+ */
+export async function supprimerConversationVide(
+  userId: string,
+  conversationId: string
+): Promise<boolean> {
+  const resultat = await prisma.assistantConversation.deleteMany({
+    where: { id: conversationId, userId, messages: { none: {} } },
+  })
+  return resultat.count > 0
 }
 
 /**
@@ -138,6 +168,31 @@ export async function lireHistorique(
   }))
 }
 
+/**
+ * Message de la conversation (du propriétaire) qui porte déjà cet id client : idempotence de
+ * l'envoi. `null` si aucun.
+ */
+export async function trouverMessageParIdClient(
+  userId: string,
+  conversationId: string,
+  idClient: string
+): Promise<{ id: string; role: string } | null> {
+  return prisma.assistantMessage.findFirst({
+    where: { conversationId, idClient, conversation: { userId } },
+    select: { id: true, role: true },
+  })
+}
+
+/** Vrai si l'erreur est la violation d'une contrainte unique (code Prisma P2002). */
+export function estViolationUnicite(erreur: unknown): boolean {
+  if (erreur instanceof Prisma.PrismaClientKnownRequestError) return erreur.code === 'P2002'
+  return (
+    typeof erreur === 'object' &&
+    erreur !== null &&
+    (erreur as { code?: unknown }).code === 'P2002'
+  )
+}
+
 /** Supprime un message ASSISTANT de la conversation du propriétaire (régénération). */
 export async function supprimerMessageAssistant(
   userId: string,
@@ -163,10 +218,15 @@ export interface MetadonneesMessageUtilisateur {
   contexte?: ContexteEcran
 }
 
+/**
+ * Enregistre le message utilisateur. `idClient` (id du UIMessage du client) est soumis à la
+ * contrainte unique (conversationId, idClient) : un doublon lève une erreur P2002
+ * (`estViolationUnicite`), que l'appelant traduit en 409 `message_deja_recu`.
+ */
 export async function enregistrerMessageUtilisateur(
   userId: string,
   conversationId: string,
-  message: { id: string; parts: MessageMedicAssist['parts'] },
+  message: { id: string; parts: MessageMedicAssist['parts']; idClient?: string },
   metadonnees: MetadonneesMessageUtilisateur
 ): Promise<void> {
   await prisma.assistantMessage.create({
@@ -176,6 +236,7 @@ export async function enregistrerMessageUtilisateur(
       role: 'user',
       parts: message.parts as object[],
       metadonnees: metadonnees as unknown as object,
+      ...(message.idClient ? { idClient: message.idClient } : {}),
     },
   })
   await toucherConversation(userId, conversationId)
@@ -229,29 +290,33 @@ export interface LigneUsage {
   erreur?: string | null
 }
 
+function donneesUsage(ligne: LigneUsage) {
+  return {
+    userId: ligne.userId,
+    conversationId: ligne.conversationId,
+    messageId: ligne.messageId,
+    fournisseur: ligne.fournisseur,
+    modele: ligne.modele,
+    mode: ligne.mode,
+    tokensEntree: ligne.usage.entree,
+    tokensSortie: ligne.usage.sortie,
+    tokensCacheLecture: ligne.usage.cacheLecture ?? 0,
+    tokensCacheEcriture: ligne.usage.cacheEcriture ?? 0,
+    coutUsd: Number.isFinite(ligne.coutUsd) ? Math.max(0, ligne.coutUsd) : 0,
+    dureeMs: Math.max(0, Math.round(ligne.dureeMs)),
+    erreur: ligne.erreur ?? null,
+  }
+}
+
 export async function enregistrerUsage(ligne: LigneUsage): Promise<void> {
-  await prisma.assistantUsage.create({
-    data: {
-      userId: ligne.userId,
-      conversationId: ligne.conversationId,
-      messageId: ligne.messageId,
-      fournisseur: ligne.fournisseur,
-      modele: ligne.modele,
-      mode: ligne.mode,
-      tokensEntree: ligne.usage.entree,
-      tokensSortie: ligne.usage.sortie,
-      tokensCacheLecture: ligne.usage.cacheLecture ?? 0,
-      tokensCacheEcriture: ligne.usage.cacheEcriture ?? 0,
-      coutUsd: Number.isFinite(ligne.coutUsd) ? Math.max(0, ligne.coutUsd) : 0,
-      dureeMs: Math.max(0, Math.round(ligne.dureeMs)),
-      erreur: ligne.erreur ?? null,
-    },
-  })
+  await prisma.assistantUsage.create({ data: donneesUsage(ligne) })
 }
 
 // ---------------------------------------------------------------------------
 // Fin de tour
 // ---------------------------------------------------------------------------
+
+export type UsageDeTour = Omit<LigneUsage, 'userId' | 'conversationId' | 'messageId'>
 
 export interface FinDeTour {
   userId: string
@@ -262,9 +327,15 @@ export interface FinDeTour {
     parts: MessageMedicAssist['parts']
     metadonnees: MetadonneesMessage
   }
-  usage: Omit<LigneUsage, 'userId' | 'conversationId' | 'messageId'>
+  /** Usage principal du tour (rattaché au message s'il est enregistré). */
+  usage: UsageDeTour
+  /**
+   * Usages des autres modèles du même tour (modèle de secours après bascule), une ligne par
+   * modèle, rattachées au message comme l'usage principal.
+   */
+  usagesModeles?: UsageDeTour[]
   /** Usages annexes (titre, mode rapide), sans message rattaché. */
-  usagesAnnexes?: Omit<LigneUsage, 'userId' | 'conversationId' | 'messageId'>[]
+  usagesAnnexes?: UsageDeTour[]
 }
 
 export interface ResultatFinDeTour {
@@ -278,72 +349,97 @@ function nomErreur(erreur: unknown): string {
 }
 
 /**
- * Persiste la fin d'un tour : message assistant, usage (toujours, même en erreur), usages
- * annexes, rattachement des actions et `dernierMessageA`. Chaque écriture est isolée : un échec
- * est journalisé (nom d'erreur seulement) et n'empêche ni les suivantes ni la fin du flux.
+ * Persiste la fin d'un tour dans UNE transaction : message assistant, usage principal, usages
+ * des autres modèles, usages annexes, rattachement des actions et `dernierMessageA`. Tout ou
+ * rien : jamais de message sans usage ni d'actions rattachées à un message absent.
+ *
+ * Le verrou du tour n'est PAS libéré ici : l'appelant le libère après les dernières écritures
+ * du tour (suppression de l'ancienne réponse d'une régénération), voir executer.ts.
+ *
+ * Si la transaction échoue, l'échec est journalisé (nom d'erreur seulement) et SEULS les usages
+ * sont retentés hors transaction, sans message rattaché : le coût ne doit pas se perdre (quota
+ * journalier, suivi des coûts). Ne lève jamais : la fin du flux n'est pas bloquée.
  */
 export async function enregistrerFinDeTour(fin: FinDeTour): Promise<ResultatFinDeTour> {
   const { userId, conversationId } = fin
-  const resultat: ResultatFinDeTour = {
-    messageEnregistre: false,
-    usageEnregistre: false,
-    actionsRattachees: 0,
-  }
-
-  if (fin.message) {
-    try {
-      await prisma.assistantMessage.create({
-        data: {
-          id: fin.message.id,
-          conversationId,
-          role: 'assistant',
-          parts: fin.message.parts as object[],
-          metadonnees: fin.message.metadonnees as object,
-        },
-      })
-      resultat.messageEnregistre = true
-    } catch (erreur) {
-      console.error('[medic-assist/chat] message assistant non enregistré', nomErreur(erreur))
-    }
-  }
-
-  const messageId = resultat.messageEnregistre && fin.message ? fin.message.id : null
+  const lignesTour = [fin.usage, ...(fin.usagesModeles ?? [])]
+  const annexes = fin.usagesAnnexes ?? []
 
   try {
-    await enregistrerUsage({ ...fin.usage, userId, conversationId, messageId })
-    resultat.usageEnregistre = true
-  } catch (erreur) {
-    console.error('[medic-assist/chat] usage non enregistré', nomErreur(erreur))
-  }
-
-  for (const annexe of fin.usagesAnnexes ?? []) {
-    try {
-      await enregistrerUsage({ ...annexe, userId, conversationId, messageId: null })
-    } catch (erreur) {
-      console.error('[medic-assist/chat] usage annexe non enregistré', nomErreur(erreur))
-    }
-  }
-
-  if (messageId && fin.message) {
-    const ids = idsActionsProposees(fin.message.parts)
-    if (ids.length > 0) {
-      try {
-        const maj = await prisma.assistantAction.updateMany({
-          where: { id: { in: ids }, userId, conversationId },
-          data: { messageId },
-        })
-        resultat.actionsRattachees = maj.count
-      } catch (erreur) {
-        console.error('[medic-assist/chat] actions non rattachées', nomErreur(erreur))
+    return await prisma.$transaction(async tx => {
+      const resultat: ResultatFinDeTour = {
+        messageEnregistre: false,
+        usageEnregistre: false,
+        actionsRattachees: 0,
       }
+      let messageId: string | null = null
+      if (fin.message) {
+        await tx.assistantMessage.create({
+          data: {
+            id: fin.message.id,
+            conversationId,
+            role: 'assistant',
+            parts: fin.message.parts as object[],
+            metadonnees: fin.message.metadonnees as object,
+          },
+        })
+        resultat.messageEnregistre = true
+        messageId = fin.message.id
+      }
+
+      for (const ligne of lignesTour) {
+        await tx.assistantUsage.create({
+          data: donneesUsage({ ...ligne, userId, conversationId, messageId }),
+        })
+      }
+      resultat.usageEnregistre = true
+
+      for (const annexe of annexes) {
+        await tx.assistantUsage.create({
+          data: donneesUsage({ ...annexe, userId, conversationId, messageId: null }),
+        })
+      }
+
+      if (messageId && fin.message) {
+        const ids = idsActionsProposees(fin.message.parts)
+        if (ids.length > 0) {
+          const maj = await tx.assistantAction.updateMany({
+            where: { id: { in: ids }, userId, conversationId },
+            data: { messageId },
+          })
+          resultat.actionsRattachees = maj.count
+        }
+      }
+
+      await tx.assistantConversation.updateMany({
+        where: { id: conversationId, userId },
+        data: { dernierMessageA: new Date() },
+      })
+      return resultat
+    })
+  } catch (erreur) {
+    journal.erreur('chat : fin de tour non enregistrée', {
+      domaine: 'chat',
+      conversationId,
+      evenement: 'fin_de_tour_non_enregistree',
+      erreur: nomErreur(erreur),
+    })
+  }
+
+  // Repli : usages seuls, hors transaction, sans message rattaché.
+  let usageEnregistre = false
+  for (const [index, ligne] of [...lignesTour, ...annexes].entries()) {
+    try {
+      await enregistrerUsage({ ...ligne, userId, conversationId, messageId: null })
+      if (index < lignesTour.length) usageEnregistre = true
+    } catch (erreur) {
+      journal.erreur('chat : usage non enregistré', {
+        domaine: 'chat',
+        conversationId,
+        evenement: 'usage_non_enregistre',
+        erreur: nomErreur(erreur),
+      })
     }
   }
-
-  try {
-    await toucherConversation(userId, conversationId)
-  } catch (erreur) {
-    console.error('[medic-assist/chat] conversation non mise à jour', nomErreur(erreur))
-  }
-
-  return resultat
+  return { messageEnregistre: false, usageEnregistre, actionsRattachees: 0 }
 }

@@ -1,21 +1,22 @@
 /**
- * Exercice budgetaire ILAPHARM : avril N -> mars N+1.
+ * Exercice : douze periodes consecutives, calees sur le mois de debut de l'exercice.
  *
- * L'exercice N couvre douze periodes consecutives, d'avril de l'annee N a mars de
- * l'annee N+1. La table `budget_ventes` reste en annee civile (`annee` + `mois`) :
- * les neuf premiers mois de l'exercice N tombent donc sur l'annee N, les trois
- * derniers sur l'annee N+1. Deux exercices consecutifs ne se recouvrent jamais.
+ * Par defaut l'exercice suit l'annee civile (janvier N -> decembre N). Un
+ * administrateur peut regler un autre mois de debut par jeu dans le catalogue metier ;
+ * ces fonctions utilitaires s'appliquent au mois par defaut. Pour un exercice decale
+ * (par exemple avril), l'exercice N va d'avril N a mars N+1 et deux exercices
+ * consecutifs ne se recouvrent jamais.
  */
 
-/** Premier mois de l'exercice (avril). */
-export const MOIS_DEBUT_EXERCICE = 4;
+/** Premier mois de l'exercice par defaut (janvier : annee civile). */
+export const MOIS_DEBUT_EXERCICE = 1;
 
 /** Nombre de mois d'un exercice. */
 export const NB_MOIS_EXERCICE = 12;
 
 /** Une case mensuelle de l'exercice, avec sa position en annee civile. */
 export interface MoisExercice {
-  /** Rang dans l'exercice, de 0 (avril) a 11 (mars). */
+  /** Rang dans l'exercice, de 0 (premier mois) a 11 (dernier mois). */
   rang: number;
   /** Annee civile de ce mois. */
   annee: number;
@@ -25,10 +26,10 @@ export interface MoisExercice {
   period: string;
 }
 
-/** Les douze mois de l'exercice `annee`, d'avril a mars. */
+/** Les douze mois de l'exercice `annee`, du mois de debut au mois precedent. */
 export function moisExercice(annee: number): MoisExercice[] {
   return Array.from({ length: NB_MOIS_EXERCICE }, (_, rang) => {
-    const moisAbsolu = MOIS_DEBUT_EXERCICE + rang; // 4..15
+    const moisAbsolu = MOIS_DEBUT_EXERCICE + rang;
     const decalageAnnee = moisAbsolu > 12 ? 1 : 0;
     const mois = moisAbsolu > 12 ? moisAbsolu - 12 : moisAbsolu;
     const anneeCivile = annee + decalageAnnee;
@@ -54,13 +55,19 @@ export function periodesExercices(annees: number[]): string[] {
 
 /**
  * Clause Prisma qui selectionne les lignes `budget_ventes` d'un exercice.
- * Deux blocs : avril-decembre sur l'annee N, janvier-mars sur l'annee N+1.
+ * Exercice civil : une seule annee. Exercice decale : un bloc sur l'annee N
+ * (du mois de debut a decembre) et un bloc sur l'annee N+1 (janvier a la veille).
  */
 export function clauseExerciceBudget(annee: number) {
+  if (MOIS_DEBUT_EXERCICE === 1) return { annee }
+
+  const moisAnneeN = Array.from({ length: 13 - MOIS_DEBUT_EXERCICE }, (_, i) => MOIS_DEBUT_EXERCICE + i);
+  const moisAnneeSuivante = Array.from({ length: MOIS_DEBUT_EXERCICE - 1 }, (_, i) => i + 1);
+
   return {
     OR: [
-      { annee, mois: { in: [4, 5, 6, 7, 8, 9, 10, 11, 12] } },
-      { annee: annee + 1, mois: { in: [1, 2, 3] } },
+      { annee, mois: { in: moisAnneeN } },
+      { annee: annee + 1, mois: { in: moisAnneeSuivante } },
     ],
   };
 }
@@ -84,19 +91,18 @@ export function exerciceDePeriode(period: string): number {
 }
 
 /**
- * Rang d'un mois civil dans son exercice, de 0 (avril) a 11 (mars).
- * Sert a ordonner un axe mensuel : un rapport d'exercice commence en avril et
- * se termine en mars, jamais en janvier.
+ * Rang d'un mois civil dans son exercice, de 0 (premier mois) a 11 (dernier).
+ * Sert a ordonner un axe mensuel : un rapport d'exercice commence au mois de debut.
  */
 export function rangDansExercice(mois: number): number {
   return (mois - MOIS_DEBUT_EXERCICE + 12) % 12;
 }
 
-/** Bornes de dates d'un exercice : du 1er avril N au 31 mars N+1 inclus. */
+/** Bornes de dates d'un exercice : du 1er jour du mois de debut au dernier instant de l'exercice. */
 export function bornesExercice(annee: number): { debut: Date; fin: Date } {
   return {
     debut: new Date(Date.UTC(annee, MOIS_DEBUT_EXERCICE - 1, 1)),
-    // Dernier instant du 31 mars N+1 : la milliseconde qui precede le 1er avril.
+    // Dernier instant de l'exercice : la milliseconde qui precede le debut du suivant.
     fin: new Date(Date.UTC(annee + 1, MOIS_DEBUT_EXERCICE - 1, 1) - 1),
   };
 }
@@ -142,9 +148,12 @@ export function exercicesDePeriodes(periodes: string[]): number[] {
   return Array.from(exercices).sort((a, b) => b - a);
 }
 
-/** Libelle d'un exercice, par exemple `2026/2027`. */
-export function libelleExercice(annee: number): string {
-  return `${annee}/${annee + 1}`;
+/**
+ * Libelle d'un exercice : `2026` pour un exercice civil (janvier a decembre 2026),
+ * `2026/2027` pour un exercice decale.
+ */
+export function libelleExercice(annee: number, moisDebut: number = MOIS_DEBUT_EXERCICE): string {
+  return moisDebut === 1 ? String(annee) : `${annee}/${annee + 1}`;
 }
 
 /** Exercice en cours a une date donnee (par defaut aujourd'hui). */
@@ -155,10 +164,7 @@ export function exerciceCourant(date: Date = new Date()): number {
 
 /**
  * Cumul depuis le debut de l'exercice : l'exercice en cours et la liste des mois
- * civils deja ecoules, d'avril jusqu'au mois de la date.
- *
- * Un « cumul annuel » calcule de janvier a aujourd'hui n'aurait aucun sens face
- * a un budget qui demarre en avril.
+ * civils deja ecoules, du mois de debut jusqu'au mois de la date.
  */
 export function cumulExerciceADate(date: Date = new Date()): { exercice: number; mois: number[] } {
   const exercice = exerciceCourant(date);

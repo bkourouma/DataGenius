@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
 const vide = 'text-sm text-muted-foreground'
 
 export default async function DroitsSourcesPage() {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   const { groupes, membres, regles, jeux, audit } = await configurationDroits()
   const noms = new Map<string, string>([
     ...groupes.map(g => [g.id, g.nom] as const), ...jeux.map(j => [j.cle, j.titre] as const),

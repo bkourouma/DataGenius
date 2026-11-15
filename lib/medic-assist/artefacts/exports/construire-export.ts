@@ -37,6 +37,21 @@ export interface OptionsExport {
   deps?: DependancesArtefacts;
 }
 
+/** Options d'un export dont le fichier peut être rendu en flux (la route HTTP). */
+export interface OptionsExportFlux extends OptionsExport {
+  flux: true;
+  /** Nombre de lignes au-delà duquel un xlsx est écrit en flux ; défaut `SEUIL_XLSX_FLUX`. */
+  seuilFlux?: number;
+}
+
+/** Export rendu en flux : les octets arrivent au fil de l'écriture, il n'y a pas de buffer. */
+export interface ResultatExportFlux {
+  flux: ReadableStream<Uint8Array>;
+  buffer?: undefined;
+  nomFichier: string;
+  typeMime: string;
+}
+
 export function estFormatExport(valeur: unknown): valeur is FormatExport {
   return typeof valeur === 'string' && (FORMATS_EXPORT as readonly string[]).includes(valeur);
 }
@@ -49,8 +64,20 @@ export async function construireExport(
   contexte: ContexteExecution,
   artefactId: string,
   format: FormatExport,
-  options: OptionsExport = {}
-): Promise<ResultatExport> {
+  options: OptionsExportFlux
+): Promise<ResultatExport | ResultatExportFlux>;
+export async function construireExport(
+  contexte: ContexteExecution,
+  artefactId: string,
+  format: FormatExport,
+  options?: OptionsExport
+): Promise<ResultatExport>;
+export async function construireExport(
+  contexte: ContexteExecution,
+  artefactId: string,
+  format: FormatExport,
+  options: OptionsExport | OptionsExportFlux = {}
+): Promise<ResultatExport | ResultatExportFlux> {
   try {
     return await executer(contexte, artefactId, format, options);
   } catch (erreur) {
@@ -92,8 +119,8 @@ async function executer(
   contexte: ContexteExecution,
   artefactId: string,
   format: FormatExport,
-  options: OptionsExport
-): Promise<ResultatExport> {
+  options: OptionsExport | OptionsExportFlux
+): Promise<ResultatExport | ResultatExportFlux> {
   if (!estFormatExport(format)) throw new ErreurExport('format_non_supporte');
   const deps = options.deps ?? dependancesParDefaut;
   const artefact = await deps.chargerArtefact(artefactId, contexte, options.version);
@@ -148,6 +175,21 @@ async function executer(
     exportePar: options.exportePar,
   });
 
+  const nomFichier = nomFichierExport(
+    artefact.titre,
+    format,
+    exporteLe,
+    traduire('exports.fichierSansTitre')
+  );
+
+  // Gros xlsx demandé en flux : sondes et largeurs sont calculées ici, avant le premier octet
+  // (une erreur reste une `ErreurExport` typée). Sinon, repli sur le buffer ci-dessous.
+  if (format === 'xlsx' && 'flux' in options && options.flux) {
+    const { planifierXlsxFlux, SEUIL_XLSX_FLUX } = await import('./xlsx');
+    const plan = planifierXlsxFlux(prep, options.seuilFlux ?? SEUIL_XLSX_FLUX);
+    if (plan) return { flux: plan.creerFlux(), nomFichier, typeMime: TYPES_MIME[format] };
+  }
+
   let buffer: Buffer;
   switch (format) {
     case 'xlsx':
@@ -164,14 +206,5 @@ async function executer(
       break;
   }
 
-  return {
-    buffer,
-    nomFichier: nomFichierExport(
-      artefact.titre,
-      format,
-      exporteLe,
-      traduire('exports.fichierSansTitre')
-    ),
-    typeMime: TYPES_MIME[format],
-  };
+  return { buffer, nomFichier, typeMime: TYPES_MIME[format] };
 }

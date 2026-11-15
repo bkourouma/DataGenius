@@ -3,7 +3,7 @@
  * Le serveur raisonne en fuseau Europe/Paris : « aujourd'hui » l'est aussi.
  */
 
-import type { AgregatUsage } from './imports-lot0';
+import type { AgregatUsage } from './dependances';
 
 const JOUR_MS = 24 * 60 * 60 * 1000;
 /** Garde-fou : une periode n'est jamais deroulee au-dela de ce nombre de jours. */

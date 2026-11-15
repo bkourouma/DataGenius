@@ -13,7 +13,7 @@
       "border": { "role": "neutral", "displayName": "Filet", "canonical": "hsl(213 20% 86%)" },
       "input": { "role": "neutral", "displayName": "Bord de champ", "canonical": "hsl(215 14% 57%)" },
       "shell": { "role": "neutral", "displayName": "Mur marine", "canonical": "hsl(218 62% 13%)", "tonalRamp": ["hsl(218 62% 9%)", "hsl(218 62% 13%)", "hsl(218 40% 24%)", "hsl(218 35% 36%)", "hsl(214 24% 52%)", "hsl(214 24% 68%)", "hsl(212 30% 84%)", "hsl(212 30% 92%)"] },
-      "success": { "role": "secondary", "displayName": "Vert MedicPro", "canonical": "hsl(140 56% 28%)", "tonalRamp": ["#0A2713", "#123E20", "#1B612C", "#217A35", "#2C9442", "#48B05C", "#AEE0B7", "#EDF8EF"] },
+      "success": { "role": "secondary", "displayName": "Vert Data Genius", "canonical": "hsl(140 56% 28%)", "tonalRamp": ["#0A2713", "#123E20", "#1B612C", "#217A35", "#2C9442", "#48B05C", "#AEE0B7", "#EDF8EF"] },
       "warning": { "role": "secondary", "displayName": "Ocre", "canonical": "hsl(40 92% 46%)", "tonalRamp": ["#2F1E07", "#583A12", "#865810", "#AD740B", "#D49510", "#EFB11A", "#FCDD84", "#FFF8E6"] },
       "destructive": { "role": "secondary", "displayName": "Rouge oxyde", "canonical": "hsl(6 72% 42%)", "tonalRamp": ["#3A0F09", "#5C1D13", "#8F2A19", "#B0341F", "#CC4430", "#E06550", "#F6C0B5", "#FDF2EF"] },
       "info": { "role": "secondary", "displayName": "Sarcelle", "canonical": "hsl(188 72% 26%)", "tonalRamp": ["hsl(188 72% 12%)", "hsl(188 72% 18%)", "hsl(188 72% 26%)", "hsl(188 60% 36%)", "hsl(188 55% 48%)", "hsl(188 50% 62%)", "hsl(188 50% 80%)", "hsl(188 50% 92%)"] }

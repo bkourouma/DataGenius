@@ -224,7 +224,7 @@ export function OngletRapports() {
                 <div className="flex flex-wrap gap-2">
                   <Button asChild variant="outline" className="min-h-11 sm:min-h-10">
                     <Link
-                      href={`/medic-assist/analyses/${encodeURIComponent(r.artefactId)}`}
+                      href={`/assistant/analyses/${encodeURIComponent(r.artefactId)}`}
                       prefetch={false}
                     >
                       {t('ouvrirAnalyse')}

@@ -4,7 +4,7 @@
  * Fonctions pures, sans acces disque ni base.
  */
 
-import type { Cellule, ColonneJeu, LigneJeu, TypeColonne } from '../imports-lot0'
+import type { Cellule, ColonneJeu, LigneJeu, TypeColonne } from '../dependances'
 import { PLAFONDS, type FeuilleExtraite } from '../types'
 
 /**

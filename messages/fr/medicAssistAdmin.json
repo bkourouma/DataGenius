@@ -65,6 +65,7 @@
     "feuilleIntrouvable": "Cette feuille est introuvable dans le classeur.",
     "plageInvalide": "La plage de cellules demandée est invalide.",
     "fichierStockeIntrouvable": "Le fichier n'est plus disponible. Joignez-le de nouveau.",
+    "quota_pieces_jointes": "Limite de pièces jointes atteinte (100 fichiers ou 200 Mo). Supprimez d'anciennes conversations pour libérer de la place.",
     "transcriptionIndisponible": "La dictée par le serveur n'est pas activée. Utilisez la dictée du navigateur.",
     "transcriptionEchec": "La transcription a échoué. Réessayez ou saisissez votre message.",
     "audioAbsent": "Aucun enregistrement audio n'a été reçu.",
@@ -282,6 +283,22 @@
       "regleTypesInferes": "Types de colonnes (texte, nombre, date, pourcentage) déduits du contenu du fichier.",
       "reglePourcentage": "Pourcentages exprimés en points (85 = 85 %).",
       "regleTronque": "Feuille tronquée : {max, number} premières lignes lues sur {total, number}."
+    }
+  },
+  "gardeFous": {
+    "titre": "Garde-fous",
+    "plafond": {
+      "libelle": "Plafond de coût IA par utilisateur et par jour (USD)",
+      "aide": "Montant maximal de coût IA qu'un utilisateur peut consommer en une journée. 0 désactive le plafond. Valeur par défaut : {defaut} USD.",
+      "invalide": "Saisissez un nombre compris entre 0 et {max}."
+    },
+    "secours": {
+      "libelle": "Modèle de secours",
+      "aide": "Facultatif. Utilisé automatiquement si le modèle principal échoue. Le fournisseur doit avoir une clé sur le serveur.",
+      "aucun": "Aucun",
+      "aucunDescription": "Pas de modèle de secours.",
+      "modele": "Modèle de secours (identifiant)",
+      "modeleAide": "Modèles connus proposés dans la liste. Suggestion : {modele}."
     }
   }
 }

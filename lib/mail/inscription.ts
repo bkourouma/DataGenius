@@ -27,11 +27,11 @@ export async function envoyerAccuseInscription(demandeur: Demandeur): Promise<bo
 
   return envoyerMail({
     to: demandeur.email,
-    subject: "Votre demande de compte MedicPro a bien été reçue",
+    subject: "Votre demande de compte Data Genius a bien été reçue",
     text: [
       `Bonjour ${demandeur.firstName},`,
       "",
-      "Nous avons bien reçu votre demande de compte sur MedicPro.",
+      "Nous avons bien reçu votre demande de compte sur Data Genius.",
       "Un administrateur doit la valider avant votre première connexion : vous recevrez un e-mail dès que ce sera fait.",
       "",
       "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.",
@@ -40,7 +40,7 @@ export async function envoyerAccuseInscription(demandeur: Demandeur): Promise<bo
       titre: "Demande bien reçue",
       corps: [
         `Bonjour ${prenom},`,
-        "Nous avons bien reçu votre demande de compte sur MedicPro.",
+        "Nous avons bien reçu votre demande de compte sur Data Genius.",
         "Un administrateur doit la valider avant votre première connexion. Vous recevrez un e-mail dès que ce sera fait.",
         "Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce message.",
       ],
@@ -99,19 +99,19 @@ export async function envoyerDecisionInscription(
   if (decision === "refuser") {
     return envoyerMail({
       to: demandeur.email,
-      subject: "Votre demande de compte MedicPro n'a pas été retenue",
+      subject: "Votre demande de compte Data Genius n'a pas été retenue",
       text: [
         `Bonjour ${demandeur.firstName},`,
         "",
-        "Votre demande de compte sur MedicPro n'a pas été retenue.",
-        "Si vous pensez qu'il s'agit d'une erreur, rapprochez-vous de votre correspondant MedicPro.",
+        "Votre demande de compte sur Data Genius n'a pas été retenue.",
+        "Si vous pensez qu'il s'agit d'une erreur, rapprochez-vous de votre correspondant Data Genius.",
       ].join("\n"),
       html: gabarit({
         titre: "Demande non retenue",
         corps: [
           `Bonjour ${prenom},`,
-          "Votre demande de compte sur MedicPro n'a pas été retenue.",
-          "Si vous pensez qu'il s'agit d'une erreur, rapprochez-vous de votre correspondant MedicPro.",
+          "Votre demande de compte sur Data Genius n'a pas été retenue.",
+          "Si vous pensez qu'il s'agit d'une erreur, rapprochez-vous de votre correspondant Data Genius.",
         ],
       }),
     })
@@ -119,11 +119,11 @@ export async function envoyerDecisionInscription(
 
   return envoyerMail({
     to: demandeur.email,
-    subject: "Votre compte MedicPro est actif",
+    subject: "Votre compte Data Genius est actif",
     text: [
       `Bonjour ${demandeur.firstName},`,
       "",
-      "Votre compte MedicPro vient d'être validé : vous pouvez maintenant vous connecter",
+      "Votre compte Data Genius vient d'être validé : vous pouvez maintenant vous connecter",
       "avec l'adresse e-mail et le mot de passe choisis à l'inscription.",
       "",
       `Se connecter : ${lien}`,
@@ -132,7 +132,7 @@ export async function envoyerDecisionInscription(
       titre: "Votre compte est actif",
       corps: [
         `Bonjour ${prenom},`,
-        "Votre compte MedicPro vient d'être validé. Vous pouvez vous connecter avec l'adresse e-mail et le mot de passe choisis à l'inscription.",
+        "Votre compte Data Genius vient d'être validé. Vous pouvez vous connecter avec l'adresse e-mail et le mot de passe choisis à l'inscription.",
       ],
       lien: { url: lien, libelle: "Se connecter" },
     }),

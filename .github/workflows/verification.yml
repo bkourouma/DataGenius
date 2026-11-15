@@ -20,8 +20,12 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - name: Audit des dépendances
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true
       - run: npm run db:generate
       - run: npm run typecheck
+      - run: npm run lint
       - run: npm test -- --project unit
       - name: Préparer PostgreSQL
         run: |

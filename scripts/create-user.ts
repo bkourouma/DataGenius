@@ -11,7 +11,7 @@ async function main() {
       !['Member', 'TenantAdmin'].includes(roleName)) {
     throw new Error('Indiquez un e-mail, un mot de passe de 12 à 256 caractères et un rôle valide.')
   }
-  await prisma.user.create({ data: { email, firstName, passwordHash: hashPassword(password), roleName } })
+  await prisma.user.create({ data: { email, firstName, passwordHash: await hashPassword(password), roleName } })
   console.log('Compte Data Genius créé.')
 }
 

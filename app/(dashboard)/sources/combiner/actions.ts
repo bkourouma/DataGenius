@@ -3,7 +3,8 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
-import { creerCombinaison, modifierCombinaison, previsualiserCombinaison } from '@/lib/warehouse/combinaisons-admin'
+import { creerCombinaison, modifierCombinaison, previsualiserCombinaison, supprimerCombinaison } from '@/lib/warehouse/combinaisons-admin'
+import { ErreurAdministrationSource } from '@/lib/warehouse/sources-admin'
 import { ErreurDonnees } from '@/lib/medic-assist/donnees/types'
 import { ErreurJointure } from '@/lib/warehouse/jointures'
 
@@ -45,4 +46,19 @@ export async function previsualiserJointure(choix: string) {
     return { erreur: erreur instanceof ErreurJointure || erreur instanceof ErreurDonnees ? erreur.message :
       'Aperçu indisponible. Vérifiez la sélection et l’état des imports, puis réessayez.' }
   }
+}
+
+export async function supprimerJeuCombine(_etat: { erreur?: string; succes?: string }, formulaire: FormData): Promise<{ erreur?: string; succes?: string }> {
+  const garde = await exigerAdminMedicAssist()
+  if (!garde.ok) return { erreur: 'Accès réservé aux administrateurs.' }
+  const cle = formulaire.get('jeu')
+  if (typeof cle !== 'string' || !/^combinaison_[0-9a-f]{32}$/.test(cle)) return { erreur: 'Jeu combiné introuvable.' }
+  if (formulaire.get('confirmation') !== 'on') return { erreur: 'Cochez la case de confirmation pour supprimer le jeu combiné.' }
+  try {
+    await supprimerCombinaison(garde.contexte.userId, cle)
+  } catch (erreur) {
+    return { erreur: erreur instanceof ErreurAdministrationSource || erreur instanceof ErreurJointure ? erreur.message : 'Suppression impossible. Réessayez dans un instant.' }
+  }
+  revalidatePath('/sources')
+  return { succes: 'Jeu combiné supprimé.' }
 }

@@ -1,6 +1,6 @@
 /**
  * Chargement du SDK IA par import dynamique : UN seul module du lot 6 le touche pour la
- * transcription (le test de modele passe par `creerModele` de imports-lot0-lot1). Les tests
+ * transcription (le test de modele passe par `creerModele` de dependances). Les tests
  * le remplacent par un faux (vi.mock de ce module, ou injection d'un `SdkIa`).
  *
  * API verifiee dans node_modules (ai 7.0.159, @ai-sdk/openai 4.0.106, @ai-sdk/google 4.0.109) :

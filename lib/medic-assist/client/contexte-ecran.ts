@@ -7,7 +7,7 @@
  *   `useEnregistrerContexteMedicAssist(ctx)` ; il est retire au demontage.
  * - Le lanceur (en-tete, Ctrl+K) lit `useContexteEcranMedicAssist` au moment
  *   d'envoyer la question, y ajoute le chemin, les parametres d'URL et le titre
- *   de la page, puis le depose dans `demande` : la page /medic-assist le prend
+ *   de la page, puis le depose dans `demande` : la page /assistant le prend
  *   (`consommerDemande`) et envoie la question automatiquement.
  */
 

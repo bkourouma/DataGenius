@@ -10,7 +10,7 @@
 
 import { MetadonneesMessageSchema } from '@/lib/medic-assist/contrats'
 
-import type { AvisAdminDto, ValeurAvis } from './imports-lot0-lot1'
+import type { AvisAdminDto, ValeurAvis } from './dependances'
 
 export const LONGUEUR_MAX_QUESTION = 500
 export const LONGUEUR_MAX_EXTRAIT = 1000

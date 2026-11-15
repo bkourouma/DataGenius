@@ -6,19 +6,19 @@
     "totaux": "{details} — totaux sur l'ensemble des données"
   },
   "menus": {
-    "pays": "Pays",
-    "produits": "Produits",
-    "grossistes": "Grossistes",
+    "pays": "Champ A",
+    "produits": "Champ B",
+    "grossistes": "Champ C",
     "mesures": "Mesures"
   },
   "cumul": {
     "libelle": "Cumul",
-    "produits": "Détail des produits retiré : une seule ligne de cumul.",
-    "grossistes": "Détail des grossistes retiré : cumul par pays.",
-    "lesDeux": "Produits et grossistes retirés : cumul par pays.",
-    "pays": "Détail des pays retiré : cumul sur tous les pays.",
-    "paysProduits": "Pays et produits retirés : cumul par grossiste.",
-    "paysGrossistes": "Pays et grossistes retirés : cumul par produit.",
+    "produits": "Détail du champ B retiré : une seule ligne de cumul.",
+    "grossistes": "Détail du champ C retiré : cumul par champ A.",
+    "lesDeux": "Champs B et C retirés : cumul par champ A.",
+    "pays": "Détail du champ A retiré : cumul sur toutes les valeurs.",
+    "paysProduits": "Champs A et B retirés : cumul par champ C.",
+    "paysGrossistes": "Champs A et C retirés : cumul par champ B.",
     "champs": "Champs retirés ({champs}) : les chiffres sont cumulés."
   },
   "champs": {
@@ -29,14 +29,14 @@
     "detail": "{affiches} sur {total} affichés",
     "retires": "{count, plural, one {# champ retiré} other {# champs retirés}}",
     "minimum": "Au moins {count, plural, one {# champ doit rester affiché} other {# champs doivent rester affichés}}.",
-    "pays": "Pays",
-    "produit": "Produit",
-    "grossiste": "Grossiste",
-    "agence": "Agence",
+    "pays": "Champ A",
+    "produit": "Champ B",
+    "grossiste": "Champ C",
+    "agence": "Champ D",
     "mois": "Mois",
     "periode": "Période"
   },
   "mesures": {
-    "caSeul": "Produits retirés : seul le chiffre d'affaires (EUR) est affiché."
+    "caSeul": "Détail retiré : seule la mesure principale est affichée."
   }
 }

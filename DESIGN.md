@@ -165,7 +165,7 @@ Neutres froids teintés marine, un seul accent d'action, et une famille d'états
 - **Cobalt d'action** (primary) : boutons primaires, liens, onglet actif, anneau de focus (ring, un cran plus clair), icône de l'entrée active du rail (blue-300 sur marine), fond pâle des pastilles d'état vide (cobalt à 10 %). C'est la couleur « agir », rien d'autre.
 
 ### Secondary
-- **Couleurs d'état** : vert MedicPro (success) pour publié, à jour, achevé ; ocre (warning) pour en attente ; rouge oxyde (destructive) pour échec, bloqué, expiré et actions destructrices ; sarcelle (info) pour l'information. Chacune a sa variante `-soft` pâle qui sert de fond de badge.
+- **Couleurs d'état** : vert Data Genius (success) pour publié, à jour, achevé ; ocre (warning) pour en attente ; rouge oxyde (destructive) pour échec, bloqué, expiré et actions destructrices ; sarcelle (info) pour l'information. Chacune a sa variante `-soft` pâle qui sert de fond de badge.
 
 ### Neutral
 - **Béton froid** (background) : fond de toutes les pages.

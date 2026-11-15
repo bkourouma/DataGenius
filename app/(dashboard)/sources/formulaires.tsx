@@ -6,18 +6,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { ajouterConnexion, ajouterConnexionRest, ajouterImport, changerFrequence, importerFichierSource } from './actions'
+import { ajouterConnexion, ajouterConnexionRest, ajouterImport, changerFrequence, importerFichierSource, actualiserJeu } from './actions'
 
 export function Soumettre({ texte, attente, variant }: {
   texte: string
   attente: string
-  variant?: 'default' | 'outline'
+  variant?: 'default' | 'outline' | 'destructive'
 }) {
   const { pending } = useFormStatus()
   return <Button type="submit" size="sm" variant={variant} disabled={pending}>{pending ? attente : texte}</Button>
 }
 
-function Retour({ erreur, succes }: { erreur?: string; succes?: string }) {
+export function Retour({ erreur, succes }: { erreur?: string; succes?: string }) {
   if (erreur) return <p role="alert" className="text-sm text-destructive">{erreur}</p>
   if (succes) return <p role="status" className="text-sm">{succes}</p>
   return null
@@ -141,6 +141,17 @@ export function FormulaireFrequence({ cle, frequence }: { cle: string; frequence
         <Input id={id} className="max-w-28" name="frequenceMinutes" type="number" min={1} max={10080} defaultValue={frequence} required />
         <Soumettre texte="Enregistrer la fréquence" attente="Enregistrement…" variant="outline" />
       </div>
+      <Retour {...etat} />
+    </form>
+  )
+}
+
+export function FormulaireActualiser({ cle, titre }: { cle: string; titre: string }) {
+  const [etat, action] = useFormState(actualiserJeu, {})
+  return (
+    <form action={action} className="space-y-2">
+      <input type="hidden" name="jeu" value={cle} />
+      <Soumettre texte={'Synchroniser ' + titre} attente="Synchronisation en cours…" variant="outline" />
       <Retour {...etat} />
     </form>
   )

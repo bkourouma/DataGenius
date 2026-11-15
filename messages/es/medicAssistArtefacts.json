@@ -299,6 +299,7 @@
       "introuvable": "No se encuentra este artefacto o no tiene acceso a él.",
       "formatNonSupporte": "Este formato de exportación no está disponible para este artefacto.",
       "formatInvalide": "Formato de exportación desconocido. Formatos aceptados: xlsx, csv, pdf, pptx.",
+      "exportsOccupes": "Demasiadas exportaciones en curso. Inténtelo de nuevo en un momento.",
       "tropDeLignes": "Este artefacto contiene demasiadas filas para exportarse. Afine los filtros e inténtelo de nuevo.",
       "limiteDebit": "Se solicitaron demasiados recálculos de datos. Vuelva a intentar la exportación en {minutes, plural, one {# minuto} other {# minutos}}.",
       "echec": "La exportación ha fallado. Inténtelo de nuevo en un momento."

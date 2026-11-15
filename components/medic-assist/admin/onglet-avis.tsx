@@ -27,7 +27,7 @@ import {
   URL_AVIS,
 } from './constantes';
 import { creerFormats, type Formats } from './format';
-import type { AvisAdminDto, ListeAvisAdminDto } from './imports-lot0';
+import type { AvisAdminDto, ListeAvisAdminDto } from './dependances';
 
 type FiltreAvis = 'negatif' | 'positif' | 'tous';
 const FILTRES: FiltreAvis[] = ['negatif', 'positif', 'tous'];

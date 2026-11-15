@@ -53,7 +53,7 @@ const RE_LIEN_EN_LIGNE = /\]\(\s*<?([^)\s>]*)/g
 const RE_DEFINITION_LIEN = /^[ \t]{0,3}\[[^\]]+\]:[ \t]*<?([^\s>]*)/gm
 
 /**
- * Vrai si `cible` est un chemin interne de MedicPro : un seul « / » en tête, pas de
+ * Vrai si `cible` est un chemin interne de Data Genius : un seul « / » en tête, pas de
  * « // », pas de barre oblique inverse, pas d'espace, hors API.
  */
 export function estCheminInterne(cible: string): boolean {
@@ -106,7 +106,7 @@ const MESSAGES_REFUS: Record<MotifTexteRefuse, string> = {
     'Texte refusé : les références de caractères (« &#… » et « &nom; ») sont interdites.',
   caractere_controle: 'Texte refusé : il contient des caractères de contrôle.',
   lien_non_interne:
-    'Texte refusé : un lien markdown doit viser une page interne de MedicPro, commençant par un seul « / » (ex. /rapports-ventes), hors /api/.',
+    'Texte refusé : un lien markdown doit viser une page interne de Data Genius, commençant par un seul « / » (ex. /tableaux), hors /api/.',
   image_markdown: 'Texte refusé : les images markdown (![...](...)) sont interdites.',
   retour_ligne: 'Texte refusé : ce champ tient sur une seule ligne.',
 }
@@ -170,7 +170,7 @@ export const IdentifiantSchema = z
   .max(64)
   .regex(/^[A-Za-z0-9_-]+$/)
   .describe(
-    'Identifiant technique d’un enregistrement MedicPro (tel que renvoyé par un outil). Ne jamais l’inventer ni l’afficher à l’utilisateur.'
+    'Identifiant technique d’un enregistrement Data Genius (tel que renvoyé par un outil). Ne jamais l’inventer ni l’afficher à l’utilisateur.'
   )
 
 /** Période mensuelle `YYYY-MM`, le format de SortiesLocales.period. */
@@ -209,12 +209,12 @@ export type Cellule = z.infer<typeof CelluleSchema>
 /** Ligne d'un jeu de données : clé de colonne → valeur. */
 export type LigneJeu = Record<string, Cellule>
 
-/** Chemin interne de MedicPro (lien vers un écran), validé par estCheminInterne. */
+/** Chemin interne de Data Genius (lien vers un écran), validé par estCheminInterne. */
 export const CheminInterneSchema = z.string().min(1).max(500).refine(estCheminInterne, {
   error: 'Le lien doit être un chemin interne commençant par un seul « / », hors /api/.',
 })
 
-/** Lien vers un écran de MedicPro. */
+/** Lien vers un écran de Data Genius. */
 export const LienInterneSchema = z.object({
   href: CheminInterneSchema,
   libelle: texteSurSchema(80, 'Libellé du lien.'),

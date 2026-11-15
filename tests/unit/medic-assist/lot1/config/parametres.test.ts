@@ -96,6 +96,8 @@ describe('lireConfigMedicAssist', () => {
         profond: 'claude-opus-5-5',
         rapide: 'claude-haiku-5-5',
       },
+      plafondCoutJournalierUsd: 10,
+      modeleSecours: null,
       transcription: null,
       repliSurClaude: false,
       fournisseurDemande: 'anthropic',

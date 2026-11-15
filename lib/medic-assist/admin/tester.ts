@@ -6,8 +6,9 @@
  */
 
 import { decrireErreurPourJournal, estErreurCertificat, lireCodeReseauCause } from '../agent/erreurs'
+import { journal } from '@/lib/journal'
 import { chargerSdkIa, type SdkIa } from '../transcription/sdk-ia'
-import { creerModele, type Fournisseur } from './imports-lot0-lot1'
+import { creerModele, type Fournisseur } from './dependances'
 import type { CodeErreurTest } from './types'
 
 export const DELAI_TEST_MS = 20_000
@@ -64,9 +65,11 @@ export async function testerModele(
     })
     return { ok: true, latenceMs: Math.max(0, maintenant() - debut) }
   } catch (erreur) {
-    console.error(
-      `[medic-assist] test de modele en echec fournisseur=${fournisseur} ${decrireErreurPourJournal(erreur)}`
-    )
+    journal.erreur('administration : test de modèle en échec', {
+      domaine: 'medic-assist',
+      fournisseur,
+      cause: decrireErreurPourJournal(erreur),
+    })
     return {
       ok: false,
       latenceMs: Math.max(0, maintenant() - debut),

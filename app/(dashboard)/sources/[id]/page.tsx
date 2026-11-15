@@ -2,27 +2,30 @@ import Link from 'next/link'
 import { AlertTriangle } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
-import { IdSourceSchema, TableSchema, listerColonnes, listerTables, trouverSource } from '@/lib/warehouse/sources-admin'
+import { IdSourceSchema, TableSchema, chargerConnexionSource, dependancesSource, listerColonnes, listerTables, trouverSource } from '@/lib/warehouse/sources-admin'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EnTetePage } from '@/components/ui/en-tete-page'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { FormulaireFichierSource, FormulaireImport } from '../formulaires'
+import { FormulaireModifierConnexion, FormulaireSupprimerConnexion } from '../formulaires-gestion'
 
 export const dynamic = 'force-dynamic'
 
 type Parametres = { q?: string; schema?: string; table?: string }
 
 export default async function SourceDetail({ params, searchParams }: { params: { id: string }; searchParams: Parametres }) {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   if (!IdSourceSchema.safeParse(params.id).success) notFound()
   const source = await trouverSource(params.id)
   if (!source) notFound()
 
   const recherche = typeof searchParams.q === 'string' ? searchParams.q.slice(0, 120) : ''
   const choix = TableSchema.safeParse({ schema: searchParams.schema, table: searchParams.table })
-  const [inventaire, colonnes] = await Promise.all([
+  const [connexion, dependances, inventaire, colonnes] = await Promise.all([
+    chargerConnexionSource(source.id).catch(() => null),
+    dependancesSource(source.id).catch(() => null),
     listerTables(source.id, recherche).catch(() => null),
     choix.success ? listerColonnes(source.id, choix.data).catch(() => null) : Promise.resolve(null),
   ])
@@ -46,6 +49,20 @@ export default async function SourceDetail({ params, searchParams }: { params: {
           </div>
         </details>
       )}
+      {connexion && (
+        <details className="rounded-lg border bg-card p-4">
+          <summary className="cursor-pointer font-semibold">Modifier la connexion</summary>
+          <div className="mt-4"><FormulaireModifierConnexion sourceId={source.id} connexion={connexion} /></div>
+        </details>
+      )}
+      <details className="rounded-lg border bg-card p-4">
+        <summary className="cursor-pointer font-semibold">Supprimer la source</summary>
+        <div className="mt-4">
+          {dependances
+            ? <FormulaireSupprimerConnexion sourceId={source.id} imports={dependances.imports} />
+            : <p role="status" className="text-sm">Dépendances indisponibles pour le moment : la suppression est désactivée.</p>}
+        </div>
+      </details>
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(17rem,1fr)_minmax(0,2fr)]">
         <section className="space-y-3 rounded-lg border bg-card p-5">
           <h2 className="text-base font-semibold">{source.type === 'fichier' ? 'Feuilles accessibles' : source.type === 'rest' ? 'Collections accessibles' : 'Tables accessibles'}</h2>

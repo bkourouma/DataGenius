@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { EnTetePage, EtatVide } from '@/components/ui/en-tete-page'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
+import { ActionsTableau } from './actions-tableau'
 import { listerTableaux } from '@/lib/warehouse/tableaux'
 import { listerAlertesTableaux } from '@/lib/warehouse/tableaux-alertes'
 
@@ -32,15 +33,16 @@ export default async function TableauxPage() {
       {tableaux.length > 0 && (
         <ul className="divide-y overflow-hidden rounded-lg border bg-card">
           {tableaux.map(t => (
-            <li key={t.id}>
+            <li key={t.id} className="flex flex-wrap items-start gap-x-3 gap-y-2 px-4 py-3">
               <Link
                 href={`/tableaux/${t.id}`}
-                className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                className="flex min-w-0 flex-1 items-center gap-3 self-center rounded-sm py-1 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <span className="min-w-0 flex-1 truncate font-medium">{t.titre}</span>
                 {!t.editable && <Badge variant="outline" className="shrink-0">Partagé avec vous</Badge>}
                 <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
               </Link>
+              {t.editable && <ActionsTableau id={t.id} titre={t.titre} />}
             </li>
           ))}
         </ul>

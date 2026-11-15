@@ -65,6 +65,7 @@
     "feuilleIntrouvable": "工作簿中找不到此工作表。",
     "plageInvalide": "请求的单元格区域无效。",
     "fichierStockeIntrouvable": "该文件已不可用。请重新添加。",
+    "quota_pieces_jointes": "已达到附件上限（100 个文件或 200 MB）。请删除旧对话以释放空间。",
     "transcriptionIndisponible": "服务器听写未启用。请使用浏览器听写。",
     "transcriptionEchec": "转写失败。请重试或直接输入消息。",
     "audioAbsent": "未收到任何录音。",
@@ -282,6 +283,22 @@
       "regleTypesInferes": "列类型（文本、数字、日期、百分比）根据文件内容推断。",
       "reglePourcentage": "百分比以百分点表示（85 = 85%）。",
       "regleTronque": "工作表已截断：共 {total, number} 行，仅读取前 {max, number} 行。"
+    }
+  },
+  "gardeFous": {
+    "titre": "安全防护",
+    "plafond": {
+      "libelle": "每位用户每日 AI 费用上限（美元）",
+      "aide": "单个用户一天内可产生的 AI 费用上限。填 0 表示关闭上限。默认值：{defaut} 美元。",
+      "invalide": "请输入 0 到 {max} 之间的数字。"
+    },
+    "secours": {
+      "libelle": "备用模型",
+      "aide": "可选。主模型失败时自动使用。该提供商必须在服务器上配置了密钥。",
+      "aucun": "无",
+      "aucunDescription": "不使用备用模型。",
+      "modele": "备用模型（标识符）",
+      "modeleAide": "列表中提供已知模型。建议：{modele}。"
     }
   }
 }

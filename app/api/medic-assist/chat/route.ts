@@ -11,10 +11,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { journal } from '@/lib/journal'
 
 import { LIMITES } from '@/lib/medic-assist/contrats/constantes'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { executerChat } from '@/lib/medic-assist/agent/executer'
+import { genererReference } from '@/lib/medic-assist/agent/reference'
+import { CorpsTropVolumineux, lireTexteBorne } from '@/lib/http/corps-borne'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -39,11 +42,13 @@ export async function POST(request: NextRequest) {
 
   let texte: string
   try {
-    texte = await request.text()
-  } catch {
+    // Lecture en flux avec plafond reel : un envoi fragmente sans content-length est refuse
+    // des que le plafond est depasse, sans charger le reste.
+    texte = await lireTexteBorne(request, LIMITES.tailleMaxRequeteChatOctets, { fatal: false })
+  } catch (erreur) {
+    if (erreur instanceof CorpsTropVolumineux) return tropGros()
     return NextResponse.json({ error: 'validation', message: 'Unreadable body' }, { status: 400 })
   }
-  if (Buffer.byteLength(texte, 'utf8') > LIMITES.tailleMaxRequeteChatOctets) return tropGros()
 
   // 3. JSON (la validation par schéma est faite par executerChat).
   let json: unknown
@@ -53,11 +58,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'validation', message: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const resultat = await executerChat({
-    contexte: garde.contexte,
-    corps: json,
-    signal: request.signal,
-  })
+  let resultat: Awaited<ReturnType<typeof executerChat>>
+  try {
+    resultat = await executerChat({
+      contexte: garde.contexte,
+      corps: json,
+      signal: request.signal,
+    })
+  } catch (erreur) {
+    // Filet : executerChat gere ses erreurs ; seul le nom de l'erreur est journalise.
+    const reference = genererReference()
+    journal.erreur('Échec du chat', { domaine: 'chat', reference, erreur: (erreur as Error)?.name })
+    return NextResponse.json(
+      { error: 'internal', message: 'Internal error', details: { reference } },
+      { status: 500 }
+    )
+  }
   if (resultat.type === 'erreur') {
     return NextResponse.json(resultat.corps, { status: resultat.statut })
   }

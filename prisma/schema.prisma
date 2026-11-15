@@ -29,6 +29,7 @@ model User {
   assistantAvis            AssistantAvis[]             @relation("AssistantAvisUser")
   assistantUsages          AssistantUsage[]            @relation("AssistantUsageUser")
   assistantPiecesJointes   AssistantPieceJointe[]      @relation("AssistantPieceJointeUser")
+  comptesJetons            CompteJeton[]
   @@map("users")
 }
 model AssistantConversation {
@@ -38,6 +39,9 @@ model AssistantConversation {
   epinglee        Boolean  @default(false)
   archivee        Boolean  @default(false)
   dernierMessageA DateTime @default(now())
+  /// Verrou du tour en cours (lib/medic-assist/agent/verrou.ts) : échéance, null si libre.
+  /// Un verrou échu est considéré comme libre (filet si la libération n'a pas eu lieu).
+  tourEnCoursJusqua DateTime?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -59,6 +63,9 @@ model AssistantMessage {
   role           String
   parts          Json
   metadonnees    Json?
+  /// Id du UIMessage fourni par le client (idempotence de l'envoi) ; null pour les réponses
+  /// de l'assistant et les messages antérieurs. La clé primaire reste l'id du serveur.
+  idClient       String?
   createdAt      DateTime @default(now())
 
   conversation AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -66,6 +73,7 @@ model AssistantMessage {
   actions      AssistantAction[]
   usages       AssistantUsage[]
 
+  @@unique([conversationId, idClient])
   @@index([conversationId, createdAt])
   @@map("assistant_messages")
 }
@@ -174,6 +182,9 @@ model AssistantRapportProgramme {
   // 'succes' | 'echec'
   dernierStatut    String?
   dernierErreur    String?
+  // Reprise : essais ratés de l'échéance en cours (0 à 3) et bail de réservation (10 min).
+  essais           Int       @default(0)
+  enCoursJusqua    DateTime?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
@@ -287,6 +298,15 @@ model Task {
   @@index([status])
   @@map("tasks")
 }
+model TentativeConnexion {
+  cle          String    @id
+  echecs       Int
+  fenetreDebut DateTime
+  bloqueJusqua DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  @@map("auth_tentatives")
+}
 model ParametreApplication {
   id        String   @id @default(cuid())
   cle       String   @unique
@@ -316,4 +336,19 @@ model Notification {
   @@index([status])
   @@index([userId, readAt])
   @@map("notifications")
+}
+
+model CompteJeton {
+  id       String    @id @default(cuid())
+  userId   String
+  type     String
+  hash     String    @unique
+  expireA  DateTime
+  utiliseA DateTime?
+  creeA    DateTime  @default(now())
+  creePar  String?
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, creeA])
+  @@map("comptes_jetons")
 }

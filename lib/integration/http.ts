@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { lireTexteBorne } from '@/lib/http/corps-borne'
 import { LimiteurDebit } from '@/lib/medic-assist/donnees/limite-debit'
 
 const limite = new LimiteurDebit({ max: 60, fenetreMs: 60_000 })
@@ -15,23 +16,5 @@ export function limiterIntegration(cle: string) {
 }
 
 export async function lireCorps(request: Request, maximum = 16_384) {
-  const lecteur = request.body?.getReader()
-  if (!lecteur) return ''
-  const decodeur = new TextDecoder('utf-8', { fatal: true })
-  let taille = 0
-  let texte = ''
-  try {
-    while (true) {
-      const { done, value } = await lecteur.read()
-      if (done) return texte + decodeur.decode()
-      taille += value.byteLength
-      if (taille > maximum) {
-        await lecteur.cancel()
-        throw new Error('Corps trop volumineux')
-      }
-      texte += decodeur.decode(value, { stream: true })
-    }
-  } finally {
-    lecteur.releaseLock()
-  }
+  return lireTexteBorne(request, maximum)
 }

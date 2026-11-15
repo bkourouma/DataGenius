@@ -30,7 +30,7 @@ import type {
   ErreurOutil,
   LigneJeu,
   Provenance,
-} from './imports-lot0'
+} from './dependances'
 import { traducteurProvenance, type Traducteur } from './provenance'
 import { extensionDe, lireFichierStocke } from './stockage'
 import {

@@ -262,5 +262,14 @@
   "alerteRaccourci": {
     "creer": "Créer une alerte",
     "titre": "Être prévenu automatiquement, par exemple par une notification et un e-mail"
+  },
+  "erreur": {
+    "titre": "Une erreur est survenue",
+    "description": "Nous n'avons pas pu afficher cette page. Vous pouvez réessayer ou revenir à l'accueil.",
+    "reessayer": "Réessayer",
+    "accueil": "Retour à l'accueil",
+    "reference": "Référence de l'erreur",
+    "introuvableTitre": "Page introuvable",
+    "introuvableDescription": "La page demandée n'existe pas ou a été déplacée."
   }
 }

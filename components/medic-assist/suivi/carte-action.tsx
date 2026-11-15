@@ -82,6 +82,16 @@ function identifiantsDe(action: ActionProposee): string[] {
     : [];
 }
 
+/**
+ * Message libre d'un e-mail propose (R12) : il vient parfois de donnees importees,
+ * donc la personne doit le lire en entier AVANT de confirmer. Chaine non vide sinon null.
+ */
+function messageEmailDe(action: ActionProposee): string | null {
+  if (action.type !== 'envoyer_email') return null;
+  const m = enObjet(action.parametres).message;
+  return typeof m === 'string' && m.trim() ? m : null;
+}
+
 function echeanceDe(action: ActionProposee): string {
   const e = enObjet(action.parametres).echeance;
   return typeof e === 'string' && /^\d{4}-\d{2}-\d{2}/.test(e) ? e.slice(0, 10) : '';
@@ -92,6 +102,7 @@ export function CarteAction({ action: actionRecue, onChange }: CarteActionProps)
   const locale = useLocale();
   const afficherErreur = useAfficherErreur();
   const idTitre = useId();
+  const idMessage = useId();
   const [action, setAction] = useState<ActionProposee>(actionRecue);
   // « Moi » ne sert qu'a une carte encore modifiable : pas d'appel pour les cartes traitees.
   const moi = useMoi(action.statut === 'proposee');
@@ -222,6 +233,7 @@ export function CarteAction({ action: actionRecue, onChange }: CarteActionProps)
   }
 
   const Icone = ICONES[action.type] ?? ListChecks;
+  const messageEmail = messageEmailDe(action);
   const modifiable = lecture === 'ok' && action.statut === 'proposee';
   const occupe = enCours !== null;
   const manqueDestinataire = idsEffectifs.length === 0;
@@ -378,6 +390,24 @@ export function CarteAction({ action: actionRecue, onChange }: CarteActionProps)
           )}
           {etatNoms === 'erreur' && (
             <p className="text-xs text-muted-foreground">{t('carteAction.nomsIndisponibles')}</p>
+          )}
+
+          {messageEmail && (
+            <div className="space-y-1" data-testid="message-envoye">
+              <p id={idMessage} className="text-xs font-medium text-muted-foreground">
+                {t('carteAction.messageEnvoye')}
+              </p>
+              {/* Texte brut uniquement : pas de HTML interprete, pas de lien cliquable. */}
+              <div
+                role="region"
+                tabIndex={0}
+                dir="auto"
+                aria-labelledby={idMessage}
+                className="max-h-48 overflow-y-auto whitespace-pre-wrap break-words rounded-md border bg-muted/40 p-3 text-sm"
+              >
+                {messageEmail}
+              </div>
+            </div>
           )}
 
           {action.type === 'creer_tache' && (

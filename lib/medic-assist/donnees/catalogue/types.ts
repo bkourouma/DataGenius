@@ -108,7 +108,7 @@ export interface DefinitionFiltre {
 /**
  * Temps d'un jeu. Un jeu a `temps` expose OBLIGATOIREMENT dans sa vue les colonnes
  * `periode` (texte 'YYYY-MM'), `annee` (int), `mois` (int, 1-12) et `exercice` (int,
- * annee de depart avril -> mars). Un jeu sans `temps` refuse tout filtre de periode.
+ * annee de depart ; janvier -> decembre par defaut, ou le mois regle par l'administrateur). Un jeu sans `temps` refuse tout filtre de periode.
  */
 export interface TempsJeu {
   /**

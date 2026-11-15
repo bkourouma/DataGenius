@@ -2,12 +2,13 @@
 
 import type { ReactNode } from 'react'
 import { AlertCircle, ArrowDown } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import {
-  cleMessageErreur,
+  descriptionMessageErreur,
   erreurReessayable,
   extraireCodeErreur,
+  extraireDetailsErreur,
 } from '@/lib/medic-assist/client/erreurs-chat'
 import type { MessageUI, StatutChat } from '@/lib/medic-assist/client/types'
 import { useDefilementColle } from '@/lib/medic-assist/client/use-defilement-colle'
@@ -62,6 +63,7 @@ export function FilMessages({
 }: PropsFilMessages) {
   const t = useTranslations('medicAssist.fil')
   const tRacine = useTranslations('medicAssist')
+  const locale = useLocale()
   const lecture = useLectureVocale()
   const { refConteneur, afficherAllerEnBas, allerEnBas, surDefilement } = useDefilementColle({
     dependances: [messages, statut, erreur],
@@ -77,6 +79,10 @@ export function FilMessages({
   }
   const dernier = messages[messages.length - 1]
   const codeErreur = erreur ? extraireCodeErreur(erreur) : null
+  const details = erreur ? extraireDetailsErreur(erreur) : {}
+  const description = codeErreur
+    ? descriptionMessageErreur(codeErreur, details, locale)
+    : { cle: '', valeurs: {} }
 
   let attente: 'reflexion' | 'redaction' | null = null
   if (statut === 'submitted') attente = 'reflexion'
@@ -137,7 +143,14 @@ export function FilMessages({
               <AlertCircle className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden />
               <div className="min-w-0 flex-1">
                 <p className="font-semibold">{t('erreur')}</p>
-                <p className="text-muted-foreground">{tRacine(cleMessageErreur(codeErreur))}</p>
+                <p className="text-muted-foreground">
+                  {tRacine(description.cle as never, description.valeurs as never)}
+                </p>
+                {details.reference ? (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {tRacine('gardeFous.reference', { reference: details.reference })}
+                  </p>
+                ) : null}
               </div>
               {erreurReessayable(codeErreur) ? (
                 <Button type="button" variant="outline" size="sm" onClick={onReessayer}>

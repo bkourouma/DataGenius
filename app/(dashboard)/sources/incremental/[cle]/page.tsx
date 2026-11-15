@@ -19,7 +19,7 @@ const messages = new Map([
 export default async function ImportIncremental({ params, searchParams }: {
   params: { cle: string }; searchParams: { etat?: string }
 }) {
-  if (!(await exigerAdminMedicAssist()).ok) redirect('/medic-assist')
+  if (!(await exigerAdminMedicAssist()).ok) redirect('/assistant')
   if (!/^[a-z][a-z0-9_]{0,59}$/.test(params.cle)) notFound()
   const jeu = await chargerIncremental(params.cle)
   if (!jeu) notFound()

@@ -3,7 +3,7 @@
  * Module pur : les chiffres viennent des jeux de données, rien n'est recalculé ailleurs.
  */
 
-import { SEUIL_TAUX_ATTEINT } from '@/lib/reports/seuils-objectifs'
+import { SEUIL_TAUX_ATTEINT } from '@/lib/donnees/seuils-taux'
 import { estDecimalExact, type NombreAnalytique } from '@/lib/medic-assist/contrats/numerique'
 
 import { creerFormateur, enNombre, formatParDefaut } from './formats'
@@ -16,11 +16,10 @@ import type {
 import type { IndicateurResolu, JeuClient, StatutObjectif } from './types-rendu'
 
 /**
- * Statut d'un objectif, aligné sur la carte KPI du tableau de bord
- * (`components/dashboard/widgets/kpi-card.tsx`) et sur « Suivi des objectifs » :
+ * Statut d'un objectif (cible) d'une carte d'indicateur :
  * - « atteint » quand la valeur est au moins égale à l'objectif (la flèche de tendance
  *   n'intervient pas : règle validée par le métier) ;
- * - « en cours » du seuil `SEUIL_TAUX_ATTEINT` (90 %, importé de `lib/reports/seuils-objectifs`,
+ * - « en cours » du seuil `SEUIL_TAUX_ATTEINT` (90 %, importé de `lib/donnees/seuils-taux`,
  *   inclus) jusqu'à 100 % (exclu) ;
  * - « à risque » en dessous.
  */

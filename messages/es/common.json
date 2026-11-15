@@ -262,5 +262,14 @@
   "alerteRaccourci": {
     "creer": "Crear una alerta",
     "titre": "Recibir un aviso automático, por ejemplo una notificación y un correo"
+  },
+  "erreur": {
+    "titre": "Se ha producido un error",
+    "description": "No hemos podido mostrar esta página. Puede volver a intentarlo o regresar al inicio.",
+    "reessayer": "Reintentar",
+    "accueil": "Volver al inicio",
+    "reference": "Referencia del error",
+    "introuvableTitre": "Página no encontrada",
+    "introuvableDescription": "La página solicitada no existe o se ha movido."
   }
 }

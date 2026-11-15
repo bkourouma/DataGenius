@@ -1,6 +1,6 @@
 # Tendances mensuelles
 
-Publiez un indicateur sur un jeu muni d’un calendrier dans **Catalogue métier**. Dans **Tendances**, choisissez cet indicateur et une période de 36 mois au maximum, jusqu’au dernier mois clos. Les droits du lecteur s’appliquent au catalogue et au calcul. La provenance indique les sources, la définition métier et les avertissements de fraîcheur disponibles.
+Publiez un indicateur sur un jeu muni d’un calendrier dans **Catalogue métier**. Dans **Tendances**, choisissez cet indicateur et une période de 36 mois au maximum, jusqu’au dernier mois complet, c’est-à-dire le mois qui précède le mois en cours : la fenêtre ne dépend que de la date du jour, jamais d’une règle de saisie. Les droits du lecteur s’appliquent au catalogue et au calcul. La provenance indique les sources, la définition métier et les avertissements de fraîcheur disponibles.
 
 Chaque mois apparaît dans le résultat, même si sa valeur est absente. Les mois absents et les valeurs dont la magnitude dépasse la précision des calculs de tendance interrompent la série. Les valeurs exactes restent lisibles dans le tableau.
 

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { analyserSerie, indiceMois, libelleMois } from '@/lib/warehouse/tendances-modele'
+import { bornesTendances } from '@/lib/warehouse/tendances'
+import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 
 const janvier = indiceMois('2025-01')
 const serie = (valeurs: (number | string | null)[]) => new Map(valeurs.map((valeur, i) => [libelleMois(janvier + i), valeur]))
@@ -30,5 +32,19 @@ describe('Analyse des séries mensuelles', () => {
     expect(resultat.observations[7].valeur).toBe('9007199254740993')
     expect(resultat.dernieresObservations).toBe(1)
     expect(resultat.previsions).toEqual([])
+  })
+})
+
+describe('Fenêtre des tendances', () => {
+  const contexte = (maintenant: Date) => ({ maintenant }) as ContexteExecution
+
+  it('se termine au dernier mois complet, quel que soit le jour du mois', () => {
+    expect(bornesTendances(contexte(new Date(2026, 10, 1, 0, 0))).fin).toBe('2026-10')
+    expect(bornesTendances(contexte(new Date(2026, 10, 15, 12, 0))).fin).toBe('2026-10')
+    expect(bornesTendances(contexte(new Date(2026, 10, 30, 23, 59))).fin).toBe('2026-10')
+  })
+
+  it('couvre 24 mois et franchit le changement d’année', () => {
+    expect(bornesTendances(contexte(new Date(2027, 0, 5)))).toEqual({ debut: '2025-01', fin: '2026-12' })
   })
 })

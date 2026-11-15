@@ -6,19 +6,19 @@
     "totaux": "{details} — totals cover all the data"
   },
   "menus": {
-    "pays": "Countries",
-    "produits": "Products",
-    "grossistes": "Wholesalers",
+    "pays": "Field A",
+    "produits": "Field B",
+    "grossistes": "Field C",
     "mesures": "Measures"
   },
   "cumul": {
     "libelle": "Total",
-    "produits": "Product detail removed: a single total row.",
-    "grossistes": "Wholesaler detail removed: totals by country.",
-    "lesDeux": "Products and wholesalers removed: totals by country.",
-    "pays": "Country detail removed: total across all countries.",
-    "paysProduits": "Countries and products removed: total by wholesaler.",
-    "paysGrossistes": "Countries and wholesalers removed: total by product.",
+    "produits": "Field B detail removed: a single total row.",
+    "grossistes": "Field C detail removed: totals by field A.",
+    "lesDeux": "Fields B and C removed: totals by field A.",
+    "pays": "Field A detail removed: total across all values.",
+    "paysProduits": "Fields A and B removed: totals by field C.",
+    "paysGrossistes": "Fields A and C removed: totals by field B.",
     "champs": "Fields removed ({champs}): figures are totalled."
   },
   "champs": {
@@ -29,14 +29,14 @@
     "detail": "{affiches} of {total} shown",
     "retires": "{count, plural, one {# field removed} other {# fields removed}}",
     "minimum": "At least {count, plural, one {# field must stay displayed} other {# fields must stay displayed}}.",
-    "pays": "Country",
-    "produit": "Product",
-    "grossiste": "Wholesaler",
-    "agence": "Agency",
+    "pays": "Field A",
+    "produit": "Field B",
+    "grossiste": "Field C",
+    "agence": "Field D",
     "mois": "Month",
     "periode": "Period"
   },
   "mesures": {
-    "caSeul": "Products removed: only revenue (EUR) is shown."
+    "caSeul": "Detail removed: only the main measure is shown."
   }
 }

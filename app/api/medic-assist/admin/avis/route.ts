@@ -13,7 +13,7 @@ import {
   AvisAdminQuerySchema,
   LIMITES,
   exigerAdminMedicAssist,
-} from '@/lib/medic-assist/admin/imports-lot0-lot1'
+} from '@/lib/medic-assist/admin/dependances'
 import { ENTETES_SANS_CACHE, erreurApi, erreurValidation } from '@/lib/medic-assist/admin/reponses'
 import { ajouterJours, instantDebutJourParis } from '@/lib/medic-assist/admin/usages'
 import type { ListeAvisAdminDto } from '@/lib/medic-assist/contrats'

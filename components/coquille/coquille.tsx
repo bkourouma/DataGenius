@@ -22,7 +22,7 @@ export interface CoquilleProps {
 
 function Marque({ className }: { className?: string }) {
   return (
-    <Link href="/medic-assist" className={cn('flex items-center gap-2.5 font-semibold tracking-tight', className)}>
+    <Link href="/assistant" className={cn('flex items-center gap-2.5 font-semibold tracking-tight', className)}>
       <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
         <Database className="size-4" aria-hidden />
       </span>

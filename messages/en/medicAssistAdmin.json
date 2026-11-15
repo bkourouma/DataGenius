@@ -65,6 +65,7 @@
     "feuilleIntrouvable": "This sheet cannot be found in the workbook.",
     "plageInvalide": "The requested cell range is invalid.",
     "fichierStockeIntrouvable": "The file is no longer available. Attach it again.",
+    "quota_pieces_jointes": "Attachment limit reached (100 files or 200 MB). Delete old conversations to free up space.",
     "transcriptionIndisponible": "Server-side dictation is not enabled. Use your browser's dictation.",
     "transcriptionEchec": "The transcription failed. Try again or type your message.",
     "audioAbsent": "No audio recording was received.",
@@ -282,6 +283,22 @@
       "regleTypesInferes": "Column types (text, number, date, percentage) inferred from the file content.",
       "reglePourcentage": "Percentages expressed in points (85 = 85%).",
       "regleTronque": "Sheet truncated: first {max, number} rows read out of {total, number}."
+    }
+  },
+  "gardeFous": {
+    "titre": "Safeguards",
+    "plafond": {
+      "libelle": "AI cost cap per user per day (USD)",
+      "aide": "Maximum AI cost a user can incur in one day. 0 turns the cap off. Default value: {defaut} USD.",
+      "invalide": "Enter a number between 0 and {max}."
+    },
+    "secours": {
+      "libelle": "Fallback model",
+      "aide": "Optional. Used automatically when the main model fails. The provider must have a key on the server.",
+      "aucun": "None",
+      "aucunDescription": "No fallback model.",
+      "modele": "Fallback model (identifier)",
+      "modeleAide": "Known models are offered in the list. Suggestion: {modele}."
     }
   }
 }

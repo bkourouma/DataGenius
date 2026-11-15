@@ -114,7 +114,7 @@
       "interroger_donnees": "正在查询{jeu}…",
       "interroger_donnees_sans_jeu": "正在查询数据…",
       "requete_sql": "正在根据数据计算…",
-      "resume_mensuel": "正在准备月度汇总…",
+      "resume_mensuel": "正在准备汇总…",
       "lire_piece_jointe": "正在读取附件…",
       "creer_artefact": "正在准备结果…",
       "modifier_artefact": "正在更新结果…",
@@ -124,22 +124,22 @@
       "autre": "正在处理您的请求…"
     },
     "jeux": {
-      "ventes": "销售数据",
-      "budget": "预算数据",
-      "stocks": "库存数据",
-      "rentabilite": "盈利能力数据",
-      "prix": "价格数据",
-      "produits": "产品数据",
-      "pays": "国家数据",
-      "grossistes": "批发商数据",
-      "agences": "机构数据",
-      "molecules": "分子数据",
-      "procedures_amm": "AMM 程序数据",
-      "visas": "Visa 数据",
-      "mep": "MEP（上市启动）数据",
-      "info_pays": "国家信息",
-      "ventes_concurrents": "竞争对手销售数据",
-      "taches": "任务数据"
+      "ventes": "数据",
+      "budget": "数据",
+      "stocks": "数据",
+      "rentabilite": "数据",
+      "prix": "数据",
+      "produits": "数据",
+      "pays": "数据",
+      "grossistes": "数据",
+      "agences": "数据",
+      "molecules": "数据",
+      "procedures_amm": "数据",
+      "visas": "数据",
+      "mep": "数据",
+      "info_pays": "数据",
+      "ventes_concurrents": "数据",
+      "taches": "数据"
     },
     "puceDonnees": "数据：{count, plural, =0 {无数据行} other {# 行}}",
     "puceDonneesPeriode": "数据：{count, plural, =0 {无数据行} other {# 行}} · {periode}",
@@ -220,11 +220,11 @@
       "graviteAttention": "需关注",
       "graviteInfo": "信息",
       "categorie": {
-        "visas": "Visa",
-        "budget": "预算",
-        "saisie": "录入",
-        "stocks": "库存",
-        "amm": "AMM"
+        "visas": "截止日期",
+        "budget": "目标",
+        "saisie": "数据质量",
+        "stocks": "数量",
+        "amm": "合规"
       },
       "voirEcran": "打开页面",
       "voirTout": "查看全部（{count}）",
@@ -251,5 +251,55 @@
     "contexte": "上下文：{ecran}",
     "retirerContexte": "移除屏幕上下文",
     "aide": "按 Enter 发送，按 Esc 关闭"
+  },
+  "demarrage": {
+    "titre": "快速入门",
+    "progression": "已完成 {faites} / {total}",
+    "listeLabel": "入门步骤",
+    "fait": "已完成",
+    "aFaire": "待完成",
+    "masquer": "隐藏此指南",
+    "etapes": {
+      "source": {
+        "libelle": "添加数据源",
+        "description": "Data Genius 可以读取的数据库、文件或 API。",
+        "lien": "添加数据源"
+      },
+      "import": {
+        "libelle": "导入数据集",
+        "description": "选择要开放使用的表或工作表。",
+        "lien": "导入数据集"
+      },
+      "catalogue": {
+        "libelle": "发布业务目录",
+        "description": "说明各列的含义，以获得可靠的回答。",
+        "lien": "打开目录"
+      },
+      "question": {
+        "libelle": "提出第一个问题",
+        "description": "试试下方的起始问题。"
+      },
+      "collegue": {
+        "libelle": "邀请同事",
+        "description": "为团队成员开通访问权限。",
+        "lien": "邀请同事"
+      }
+    },
+    "membreSansJeu": {
+      "titre": "您暂时没有可访问的数据",
+      "texte": "管理员需要先为您开通数据访问权限，您才能提问。请联系管理员申请。"
+    }
+  },
+  "gardeFous": {
+    "erreurs": {
+      "tour_en_cours": "此对话中已有一个回复正在生成。请等待其完成后再重试。",
+      "message_deja_recu": "此消息已收到：正在处理或已处理完毕。请重新加载对话查看回复。"
+    },
+    "quotaEpuiseHeure": "您今天的助手使用额度已用完，将于 {heure} 重置。",
+    "reference": "参考编号：{reference}",
+    "api": {
+      "limiteDebit": "短时间内语音输入过于频繁。请等待几分钟后再试。",
+      "quotaEpuise": "您今天的助手使用额度已用完。请明天再试。"
+    }
   }
 }

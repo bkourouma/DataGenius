@@ -9,7 +9,7 @@ import ExcelJS from 'exceljs'
 import type { Locale } from '@/i18n/config'
 import { classeurEnBuffer, construireFeuille, type OptionsColonne } from '@/lib/excel/mise-en-forme'
 
-import type { AgregatUsage } from './imports-lot0-lot1'
+import type { AgregatUsage } from './dependances'
 import { TEXTES_EXPORT_USAGES, type TextesExportUsages } from './textes-export'
 import type { UsagesReponse } from './types'
 

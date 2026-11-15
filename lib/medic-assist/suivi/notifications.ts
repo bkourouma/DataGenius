@@ -15,9 +15,9 @@ export type TypeNotificationSuivi = (typeof TYPES_NOTIFICATION)[keyof typeof TYP
 
 /**
  * `relatedEntityType` + `relatedEntityId` pilotent le lien de la cloche :
- * - 'conversation' + id : /medic-assist?c=<id>
- * - 'artefact' + id     : /medic-assist/analyses?onglet=partages
- * - 'tache' + id        : /medic-assist/analyses?onglet=taches
+ * - 'conversation' + id : /assistant?c=<id>
+ * - 'artefact' + id     : /assistant/analyses?onglet=partages
+ * - 'tache' + id        : /assistant/analyses?onglet=taches
  */
 export type EntiteNotificationSuivi = 'conversation' | 'artefact' | 'tache'
 

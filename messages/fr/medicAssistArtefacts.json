@@ -299,6 +299,7 @@
       "introuvable": "Cet artefact est introuvable ou vous n'y avez pas accès.",
       "formatNonSupporte": "Ce format d'export n'est pas disponible pour cet artefact.",
       "formatInvalide": "Format d'export inconnu. Formats acceptés : xlsx, csv, pdf, pptx.",
+      "exportsOccupes": "Trop d'exports en cours. Réessayez dans un instant.",
       "tropDeLignes": "Cet artefact contient trop de lignes pour être exporté. Affinez les filtres puis réessayez.",
       "limiteDebit": "Trop de recalculs de données ont été demandés. Réessayez l'export dans {minutes, plural, one {# minute} other {# minutes}}.",
       "echec": "L'export a échoué. Réessayez dans un instant."

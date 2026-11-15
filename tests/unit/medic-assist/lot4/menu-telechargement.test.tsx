@@ -148,7 +148,7 @@ describe('MenuTelechargement', () => {
 describe('nomBaseFichier', () => {
   it('retire les caractères interdits et borne la longueur', () => {
     expect(nomBaseFichier('a<b>:c|d?')).toBe('a b c d')
-    expect(nomBaseFichier('   ')).toBe('Medic Assist')
+    expect(nomBaseFichier('   ')).toBe('Data Genius')
     expect(nomBaseFichier('x'.repeat(200))).toHaveLength(80)
   })
 })

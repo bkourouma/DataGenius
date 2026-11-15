@@ -89,6 +89,7 @@
     "enCours": "Procesando…",
     "nonExecute": "No se ejecuta nada hasta que confirme.",
     "destinataires": "Destinatarios",
+    "messageEnvoye": "Mensaje que se enviará",
     "assigne": "Asignada a",
     "echeance": "Fecha límite",
     "destinatairesRequis": "Elija al menos un destinatario para confirmar.",
@@ -213,6 +214,8 @@
   "notifRapport": {
     "titre": "Informe: «{titre}»",
     "message": "Enviado por {proprietaire}, {frequence}. Abra el análisis para ver las cifras en su ámbito.",
+    "echecTitre": "Informe programado no enviado",
+    "echecMessage": "El informe «{titre}» no se pudo enviar tras {essais} intentos. Se volverá a intentar en la próxima fecha programada.",
     "frequence": {
       "quotidien": "cada día",
       "hebdomadaire": "cada semana",

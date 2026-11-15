@@ -6,7 +6,7 @@ import type {
 } from '@/lib/medic-assist/contrats'
 import { resoudreIndicateurs, statutObjectif } from '@/lib/medic-assist/artefacts/indicateurs'
 import type { JeuClient } from '@/lib/medic-assist/artefacts/types-rendu'
-import { SEUIL_TAUX_ATTEINT } from '@/lib/reports/seuils-objectifs'
+import { SEUIL_TAUX_ATTEINT } from '@/lib/donnees/seuils-taux'
 
 const colonnes: ColonneJeu[] = [
   { cle: 'pays', libelle: 'Pays', type: 'texte' },

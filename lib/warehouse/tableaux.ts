@@ -144,3 +144,24 @@ export async function lireTableau(id: string, contexte: ContexteExecution, filtr
   }))
   return { id, titre: tableau.definition.titre, editable: tableau.editable, filtres, tuiles }
 }
+
+const FormatUuid = /^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/i
+
+export async function supprimerTableau(contexte: ContexteExecution, id: string) {
+  if (!FormatUuid.test(id)) throw new ErreurTableau('Tableau indisponible.')
+  const supprime = contexte.roleName === 'TenantAdmin'
+    ? await prisma.$executeRaw`DELETE FROM warehouse.tableaux WHERE id = ${id}::uuid`
+    : await prisma.$executeRaw`DELETE FROM warehouse.tableaux WHERE id = ${id}::uuid AND proprietaire_id = ${contexte.userId}`
+  if (!supprime) throw new ErreurTableau('Tableau indisponible.')
+}
+
+export async function dupliquerTableau(contexte: ContexteExecution, id: string) {
+  const source = await chargerTableau(id, contexte)
+  if (!source?.editable) throw new ErreurTableau('Tableau indisponible.')
+  const { titre, tuiles } = source.definition
+  return enregistrerTableau(contexte, {
+    titre: ('Copie de ' + titre).slice(0, 120).trim(),
+    lecteurs: [],
+    tuiles: tuiles.map(tuile => ({ ...tuile, id: randomUUID() })),
+  })
+}

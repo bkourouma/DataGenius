@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { dernierMoisClos } from '@/lib/services/revue-mensuelle/calendrier'
+import { dernierMoisComplet } from '@/lib/donnees/periodes'
 import type { ContexteExecution } from '@/lib/medic-assist/contrats'
 import { registreAutorise } from '@/lib/medic-assist/donnees/catalogue/autorisation'
 import { calculerSemantique } from '@/lib/medic-assist/donnees/moteur/calculer'
@@ -16,7 +16,7 @@ const demande = z.object({
 export class ErreurTendances extends Error {}
 
 export function bornesTendances(contexte: ContexteExecution) {
-  const fin = dernierMoisClos(contexte.maintenant, contexte.jourLimite)
+  const fin = dernierMoisComplet(contexte.maintenant)
   return { debut: libelleMois(indiceMois(fin) - 23), fin }
 }
 
@@ -34,7 +34,7 @@ export async function analyserTendance(entree: unknown, contexte: ContexteExecut
   const debut = indiceMois(selection.debut)
   const fin = indiceMois(selection.fin)
   if (fin < debut || fin - debut >= 36 || selection.fin > bornesTendances(contexte).fin) {
-    throw new ErreurTendances('Sélectionnez au plus 36 mois, jusqu’au dernier mois clos.')
+    throw new ErreurTendances('Sélectionnez au plus 36 mois, jusqu’au dernier mois complet.')
   }
   const registre = await registreAutorise(contexte)
   const jeu = registre.find(e => e.jeu.cle === selection.jeu)?.jeu

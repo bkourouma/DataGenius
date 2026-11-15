@@ -19,8 +19,8 @@ import { USAGES_FENETRE_MAX_JOURS, type UsagesReponse } from '@/lib/medic-assist
 import { appelerJson, enregistrerBlob, estAnnulation, telecharger, useMessageErreur } from './api';
 import { URL_USAGES } from './constantes';
 import { creerFormats } from './format';
-import { FOURNISSEURS, MODES } from './imports-lot0';
-import type { AgregatUsage, Fournisseur, Mode } from './imports-lot0';
+import { FOURNISSEURS, MODES } from './dependances';
+import type { AgregatUsage, Fournisseur, Mode } from './dependances';
 import {
   aujourdhuiParis,
   completerPeriodes,

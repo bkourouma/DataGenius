@@ -11,7 +11,7 @@
 
 import type ExcelJS from 'exceljs';
 import { compatibiliserExcel2007Octets } from '@/lib/utils/compatibilite-excel';
-import { SEUIL_TAUX_ALERTE, SEUIL_TAUX_ATTEINT } from '@/lib/reports/seuils-objectifs';
+import { SEUIL_TAUX_ALERTE, SEUIL_TAUX_ATTEINT } from '@/lib/donnees/seuils-taux';
 
 export type FormatColonne =
   | 'texte'
@@ -27,7 +27,7 @@ export interface OptionsColonne {
   format?: FormatColonne;
   largeur?: number;
   /**
-   * Colore les cellules selon les seuils de realisation du suivi des objectifs
+   * Colore les cellules selon les seuils de taux de realisation (SEUIL_TAUX_ALERTE / SEUIL_TAUX_ATTEINT)
    * (rouge, orange, vert). Vrai : toujours ; faux : jamais ; absent : deduit du
    * libelle (colonne de realisation au format pourcentage ou ratio).
    */
@@ -273,7 +273,7 @@ const COULEURS_SEUIL: Record<NiveauSeuil, { fond: string; texte: string }> = {
   haut: { fond: 'FFDCFCE7', texte: 'FF166534' },
 };
 
-/** Meme logique que `niveauTaux` du suivi des objectifs : < 70 bas, < 90 moyen, sinon haut. */
+/** Niveau d'un taux de realisation : < 70 bas, < 90 moyen, sinon haut. */
 function niveauSeuil(valeur: number, format: FormatColonne): NiveauSeuil {
   // Arrondi a 1e-6 : 0.7 * 100 vaut 70.00000000000001, 0.29 * 100 vaut 28.999999999999996.
   const points = format === 'ratio' ? Math.round(valeur * 100 * 1e6) / 1e6 : valeur;
@@ -742,7 +742,7 @@ export function construireFeuille(
   const dateExport = options.dateExport ?? new Date();
   const sousTitres = listeSousTitres(options.sousTitre);
 
-  classeur.creator = 'MedicPro';
+  classeur.creator = 'Data Genius';
   classeur.title = titre;
 
   const feuille = classeur.addWorksheet(nom);

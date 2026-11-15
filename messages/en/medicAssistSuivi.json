@@ -89,6 +89,7 @@
     "enCours": "Processing…",
     "nonExecute": "Nothing is carried out until you confirm.",
     "destinataires": "Recipients",
+    "messageEnvoye": "Message that will be sent",
     "assigne": "Assigned to",
     "echeance": "Due date",
     "destinatairesRequis": "Choose at least one recipient to confirm.",
@@ -213,6 +214,8 @@
   "notifRapport": {
     "titre": "Report: “{titre}”",
     "message": "Sent by {proprietaire}, {frequence}. Open the analysis to see the figures within your scope.",
+    "echecTitre": "Scheduled report not sent",
+    "echecMessage": "The report “{titre}” could not be sent after {essais} attempts. Another attempt will be made at the next scheduled time.",
     "frequence": {
       "quotidien": "every day",
       "hebdomadaire": "every week",

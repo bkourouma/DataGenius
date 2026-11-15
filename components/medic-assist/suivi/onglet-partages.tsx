@@ -32,8 +32,8 @@ type Sens = 'recus' | 'envoyes';
 
 function lienCible(cibleType: 'conversation' | 'artefact', cibleId: string): string {
   return cibleType === 'conversation'
-    ? `/medic-assist?c=${encodeURIComponent(cibleId)}`
-    : `/medic-assist/analyses/${encodeURIComponent(cibleId)}`;
+    ? `/assistant?c=${encodeURIComponent(cibleId)}`
+    : `/assistant/analyses/${encodeURIComponent(cibleId)}`;
 }
 
 /** Liste paginee (« Charger plus ») d'un sens de partage. */

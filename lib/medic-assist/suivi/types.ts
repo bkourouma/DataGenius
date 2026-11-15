@@ -13,7 +13,7 @@ import type {
   TypeAction,
 } from '@/lib/medic-assist/contrats'
 
-/** Compte MedicPro actif qui a acces a Medic Assist (destinataire possible). */
+/** Compte Data Genius actif qui a acces a Medic Assist (destinataire possible). */
 export interface CompteResume {
   id: string
   /** « Prenom Nom » : c'est ce qui s'affiche, jamais l'identifiant. */
@@ -148,6 +148,10 @@ export interface RapportProgrammeRow {
   dernierEnvoiA: Date | null
   dernierStatut: 'ok' | 'partiel' | 'echec' | null
   derniereErreur: string | null
+  /** Essais rates de l'echeance en cours (0 a 3). */
+  essais: number
+  /** Bail de reservation : tant qu'il est dans le futur, une autre execution ne reprend pas le rapport. */
+  enCoursJusqua: Date | null
   creeA: Date
 }
 
@@ -182,6 +186,10 @@ export interface ResultatEnvoiRapport {
   dernierEnvoiA: Date
   statut: 'ok' | 'partiel' | 'echec'
   erreur: string | null
+  /** Essais rates de l'echeance en cours apres ce traitement. */
+  essais: number
+  /** Nouvelle echeance ; absente = inchangee (le rapport reste echu et sera repris). */
+  prochainEnvoiA?: Date
 }
 
 // --------------------------------------------------------------------------- formes JSON des routes
@@ -210,7 +218,7 @@ export interface TacheJson {
   creeParNom: string | null
   /** Vrai si la tache m'est assignee (je peux la marquer terminee). */
   assigneeAMoi: boolean
-  /** Conversation d'origine, si connue (lien /medic-assist?c=...). */
+  /** Conversation d'origine, si connue (lien /assistant?c=...). */
   conversationId: string | null
   /**
    * Vrai seulement si `conversationId` est present ET que la conversation appartient

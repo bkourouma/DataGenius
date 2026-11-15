@@ -82,7 +82,7 @@ function LienNouvelle({ onNouvelle }: { onNouvelle: () => void }) {
   const t = useTranslations('medicAssist')
   return (
     <a
-      href="/medic-assist"
+      href="/assistant"
       onClick={(e) => {
         e.preventDefault()
         onNouvelle()

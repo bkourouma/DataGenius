@@ -266,7 +266,7 @@ export interface DataGridProps<TData> {
  * pages ecrivent `meta: { label, align, ... }` avec l'aide du typage.
  */
 declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line no-unused-vars -- extension de type de TanStack Table, interface volontairement vide
   interface ColumnMeta<TData extends RowData, TValue> extends DataGridColumnMeta<TData> {}
 
   /**

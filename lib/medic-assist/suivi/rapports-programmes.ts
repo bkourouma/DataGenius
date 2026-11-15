@@ -12,6 +12,24 @@
  * HYPOTHESE H8 : programmer un rapport PARTAGE l'artefact avec ses destinataires
  * (lecture seule, sans notification de partage : le rapport en tient lieu).
  * Un rapport dont le proprietaire a perdu l'acces est DESACTIVE (question ouverte).
+ *
+ * REPRISE (durcissement lot D) :
+ * - La reservation pose un BAIL de 10 min (enCoursJusqua) ; prochainEnvoiA n'avance
+ *   qu'a l'enregistrement du resultat. Un plantage laisse le bail expirer : le
+ *   rapport redevient eligible et est repris (ce passage compte comme un essai).
+ * - ok -> echeance suivante, essais 0.
+ * - 'partiel' (au moins un destinataire servi, pas tous, ou destinataires ecartes
+ *   par le perimetre) est TERMINAL : on avance l'echeance sans nouvel essai, pour
+ *   ne pas renvoyer aux destinataires deja servis.
+ * - Echecs reessayables (export_impossible, envoi_impossible = aucun destinataire
+ *   servi, erreur_interne) : essais + 1, l'echeance n'avance pas (le rapport reste
+ *   echu, repris ~15 min plus tard) ; a la 3e erreur on avance l'echeance, essais 0,
+ *   et le proprietaire ainsi que les TenantAdmin actifs recoivent une notification
+ *   in-app (pas d'e-mail).
+ * - Echecs non reessayables (planning_invalide, proprietaire_sans_acces,
+ *   artefact_introuvable, aucun_destinataire) : pas de reprise, l'echeance avance
+ *   (ou le rapport est desactive) ; pas de notification.
+ * - Notification in-app au destinataire : seulement quand son e-mail est parti.
  */
 
 import { prisma } from '@/lib/db/client'
@@ -33,7 +51,9 @@ import { obtenirDepot } from './depot-prisma'
 import { prochainEnvoiA, validerPlanning, type Planning } from './echeances'
 import { composerEmailRapport } from './emails-rapport'
 import { ErreurSuivi, nomErreur } from './erreurs'
+import { defaultLocale, isLocale, type Locale } from '@/i18n/config'
 import { creerNotificationSuivi } from './notifications'
+import { journal } from '@/lib/journal'
 import { traducteurSuivi } from './emails'
 import { exigerExpediteurProprietaire, exigerProprietaireArtefact } from './proprietaire'
 import type { CompteResume, ModificationRapportProgramme, RapportProgrammeRow } from './types'
@@ -41,6 +61,13 @@ import type { CompteResume, ModificationRapportProgramme, RapportProgrammeRow } 
 export interface DependancesRapports {
   depot?: DepotSuivi
 }
+
+/** Duree du bail pose a la reservation : un plantage libere le rapport apres ce delai. */
+const DUREE_BAIL_MS = 10 * 60 * 1000
+/** Essais rates (dont plantages) avant d'abandonner l'echeance et de notifier. */
+const MAX_ESSAIS = 3
+
+const log = journal.enfant({ domaine: 'rapports' })
 
 // ---------------------------------------------------------------------------
 // Formes JSON
@@ -277,6 +304,8 @@ export interface BilanRapports {
   echecs: number
   /** Deja pris par une autre execution. */
   ignores: number
+  /** Rapports echus non traites faute de temps (budgetMs) : repris a l'appel suivant. */
+  restants: number
 }
 
 export interface OptionsTraitementRapports {
@@ -285,11 +314,31 @@ export interface OptionsTraitementRapports {
   depot?: DepotSuivi
   construireExport?: ConstruireExport
   envoyerMail?: typeof envoyerMail
+  /**
+   * Budget de temps (ms) : la boucle ne commence plus de rapport une fois ce temps
+   * ecoule depuis son debut. Un rapport commence va jusqu'au bout ; les autres ne sont
+   * pas reserves et seront repris a l'appel suivant.
+   */
+  budgetMs?: number
+  /** Horloge en ms (tests). Par defaut Date.now. */
+  horloge?: () => number
 }
 
 const LIMITE_PAR_DEFAUT = 50
 
-type Issue = { statut: 'ok' | 'partiel' | 'echec'; erreur: string | null }
+type Issue = {
+  statut: 'ok' | 'partiel' | 'echec'
+  erreur: string | null
+  /** Echec que le rapport peut retenter a l'appel suivant (export, SMTP, erreur interne). */
+  reessayable?: boolean
+}
+
+/** Resultat de traiterUnRapport : l'issue, les essais deja rates et la prochaine echeance (si calculable). */
+interface Traitement {
+  issue: Issue
+  essaisAvant: number
+  nouveau: Date | null
+}
 
 async function nomDuCompte(userId: string): Promise<string> {
   const compte = await prisma.user.findFirst({
@@ -299,27 +348,95 @@ async function nomDuCompte(userId: string): Promise<string> {
   return compte ? `${compte.firstName} ${compte.lastName}`.trim() : ''
 }
 
-async function traiterUnRapport(
+/** Langue de chaque destinataire (User.locale, repli defaultLocale) ; ne leve jamais. */
+async function languesDesDestinataires(ids: string[]): Promise<Map<string, Locale>> {
+  const langues = new Map<string, Locale>()
+  try {
+    const comptes = await prisma.user.findMany({
+      where: { id: { in: ids } },
+      select: { id: true, locale: true },
+    })
+    for (const compte of comptes) {
+      langues.set(compte.id, isLocale(compte.locale) ? compte.locale : defaultLocale)
+    }
+  } catch (error) {
+    log.erreur('Lecture des langues des destinataires impossible', {
+      etape: 'langues_destinataires',
+      nomErreur: nomErreur(error),
+    })
+  }
+  return langues
+}
+
+/** Cree la notification d'echec definitif ; ne leve jamais. */
+async function notifierEchecDefinitif(
+  rapport: RapportProgrammeRow,
+  depot: DepotSuivi
+): Promise<void> {
+  let destinataires: string[] = [rapport.userId]
+  try {
+    const admins = await depot.listerAdministrateursActifs()
+    destinataires = [...new Set([rapport.userId, ...admins])]
+  } catch (error) {
+    log.erreur("Lecture des administrateurs impossible pour la notification d'échec", {
+      rapportId: rapport.id,
+      etape: 'lister_administrateurs',
+      resultat: 'echec',
+      nomErreur: nomErreur(error),
+    })
+  }
+  const langues = await languesDesDestinataires(destinataires)
+  for (const userId of destinataires) {
+    try {
+      const t = await traducteurSuivi(langues.get(userId) ?? defaultLocale)
+      await creerNotificationSuivi({
+        userId,
+        type: TYPES_NOTIFICATION.rapport,
+        titre: t('notifRapport.echecTitre'),
+        message: t('notifRapport.echecMessage', {
+          titre: rapport.artefactTitre,
+          essais: MAX_ESSAIS,
+        }),
+        entite: { type: 'artefact', id: rapport.artefactId },
+      })
+    } catch (error) {
+      log.erreur('Notification de rapport impossible', {
+        rapportId: rapport.id,
+        destinataireId: userId,
+        etape: 'notification',
+        resultat: 'echec',
+        nomErreur: nomErreur(error),
+      })
+    }
+  }
+}
+
+/** Journal par destinataire : ni adresse e-mail, ni sujet, ni message d'erreur brut. */
+function journaliserEnvoi(
+  rapportId: string,
+  destinataireId: string,
+  ok: boolean,
+  essai: number,
+  nom?: string
+): void {
+  const ligne = {
+    rapportId,
+    destinataireId,
+    resultat: ok ? 'ok' : 'echec',
+    essai,
+    ...(nom ? { nomErreur: nom } : {}),
+  }
+  if (ok) log.info('Rapport envoyé à un destinataire', ligne)
+  else log.erreur('Envoi du rapport à un destinataire impossible', ligne)
+}
+
+async function envoyerRapport(
   rapport: RapportProgrammeRow,
   maintenant: Date,
   depot: DepotSuivi,
-  options: OptionsTraitementRapports
-): Promise<Issue | 'ignore'> {
-  // a. Prochaine echeance apres MAINTENANT : un serveur arrete trois jours n'envoie qu'un rapport.
-  let nouveau: Date
-  try {
-    nouveau = prochainEnvoiA(rapport, maintenant)
-  } catch (error) {
-    console.error(`[medic-assist] rapport ${rapport.id} : planning illisible :`, nomErreur(error))
-    await depot.mettreAJourRapport(rapport.id, rapport.userId, { actif: false })
-    return { statut: 'echec', erreur: 'planning_invalide' }
-  }
-  const ancien = rapport.prochainEnvoiA
-  if (!ancien) return 'ignore'
-
-  // b. Reservation atomique : une seule execution envoie.
-  if (!(await depot.reserverRapport(rapport.id, ancien, nouveau))) return 'ignore'
-
+  options: OptionsTraitementRapports,
+  essai: number
+): Promise<Issue> {
   // c. Droits du proprietaire re-verifies maintenant.
   const proprietaire = await contexteDepuisCompte(rapport.userId, maintenant)
   if (!proprietaire) {
@@ -334,7 +451,9 @@ async function traiterUnRapport(
     return { statut: 'echec', erreur: 'artefact_introuvable' }
   }
   const { comptes: actifs } = await validerDestinataires(rapport.destinataires)
-  const autorisations = await Promise.all(actifs.map(compte => destinataireCouvrePerimetre(proprietaire.scope.donnees, compte.id)))
+  const autorisations = await Promise.all(
+    actifs.map(compte => destinataireCouvrePerimetre(proprietaire.scope.donnees, compte.id))
+  )
   const comptes = actifs.filter((_, index) => autorisations[index])
   if (comptes.length === 0) return { statut: 'echec', erreur: 'aucun_destinataire' }
   const ecartes = rapport.destinataires.length - comptes.length
@@ -355,14 +474,22 @@ async function traiterUnRapport(
       })
     }
   } catch (error) {
-    console.error(`[medic-assist] rapport ${rapport.id} : export impossible :`, nomErreur(error))
-    return { statut: 'echec', erreur: 'export_impossible' }
+    log.erreur('Export du rapport impossible', {
+      rapportId: rapport.id,
+      etape: 'export',
+      resultat: 'echec',
+      essai,
+      nomErreur: nomErreur(error),
+    })
+    return { statut: 'echec', erreur: 'export_impossible', reessayable: true }
   }
 
-  // f. Un e-mail et une notification par destinataire, dans sa langue.
+  // f. Un e-mail par destinataire, dans sa langue ; la notification in-app suit
+  // seulement un e-mail parti (sinon chaque reprise la dupliquerait).
   const envoyer = options.envoyerMail ?? envoyerMail
   let partis = 0
   for (const destinataire of comptes) {
+    let parti = false
     try {
       const email = await composerEmailRapport({
         locale: destinataire.locale,
@@ -372,7 +499,7 @@ async function traiterUnRapport(
         frequence: rapport.frequence,
         formats: rapport.formats,
       })
-      const parti = await envoyer({
+      parti = await envoyer({
         to: destinataire.email,
         subject: email.sujet,
         html: email.html,
@@ -380,9 +507,12 @@ async function traiterUnRapport(
         attachments: pieces,
       })
       if (parti) partis += 1
+      journaliserEnvoi(rapport.id, destinataire.id, parti, essai)
     } catch (error) {
-      console.error(`[medic-assist] rapport ${rapport.id} : e-mail non envoye :`, nomErreur(error))
+      parti = false
+      journaliserEnvoi(rapport.id, destinataire.id, false, essai, nomErreur(error))
     }
+    if (!parti) continue
     try {
       const t = await traducteurSuivi(destinataire.locale)
       await creerNotificationSuivi({
@@ -396,27 +526,132 @@ async function traiterUnRapport(
         entite: { type: 'artefact', id: artefact.id },
       })
     } catch (error) {
-      console.error(`[medic-assist] rapport ${rapport.id} : notification non creee :`, nomErreur(error))
+      log.erreur('Notification de rapport impossible', {
+        rapportId: rapport.id,
+        destinataireId: destinataire.id,
+        etape: 'notification',
+        resultat: 'echec',
+        essai,
+        nomErreur: nomErreur(error),
+      })
     }
   }
 
-  if (partis === 0) return { statut: 'echec', erreur: 'envoi_impossible' }
+  if (partis === 0) return { statut: 'echec', erreur: 'envoi_impossible', reessayable: true }
   if (partis < comptes.length || ecartes > 0) {
     return { statut: 'partiel', erreur: ecartes > 0 ? 'destinataires_ecartes' : 'envoi_partiel' }
   }
   return { statut: 'ok', erreur: null }
 }
 
+async function traiterUnRapport(
+  rapport: RapportProgrammeRow,
+  maintenant: Date,
+  depot: DepotSuivi,
+  options: OptionsTraitementRapports
+): Promise<Traitement | 'ignore'> {
+  // a. Prochaine echeance apres MAINTENANT : un serveur arrete trois jours n'envoie qu'un rapport.
+  let nouveau: Date
+  try {
+    nouveau = prochainEnvoiA(rapport, maintenant)
+  } catch (error) {
+    log.erreur("Calcul de l'échéance du rapport impossible", {
+      rapportId: rapport.id,
+      etape: 'planning',
+      resultat: 'echec',
+      nomErreur: nomErreur(error),
+    })
+    await depot.mettreAJourRapport(rapport.id, rapport.userId, { actif: false })
+    return { issue: { statut: 'echec', erreur: 'planning_invalide' }, essaisAvant: 0, nouveau: null }
+  }
+  const ancien = rapport.prochainEnvoiA
+  if (!ancien) return 'ignore'
+
+  // Un bail present mais expire = l'execution precedente s'est arretee en route : ce
+  // passage compte comme un essai rate (borne les plantages repetes a MAX_ESSAIS).
+  const essaisAvant = rapport.enCoursJusqua ? rapport.essais + 1 : rapport.essais
+
+  // b. Reservation atomique = pose du bail : une seule execution envoie.
+  const jusqua = new Date(maintenant.getTime() + DUREE_BAIL_MS)
+  const reserve = await depot.reserverRapport(
+    rapport.id,
+    { prochainEnvoiA: ancien, essais: rapport.essais },
+    maintenant,
+    jusqua,
+    essaisAvant
+  )
+  if (!reserve) return 'ignore'
+
+  if (essaisAvant >= MAX_ESSAIS) {
+    // Plantages repetes : on n'envoie pas, on abandonne cette echeance (essai MAX atteint).
+    return {
+      issue: { statut: 'echec', erreur: 'reprise_abandonnee', reessayable: true },
+      essaisAvant: MAX_ESSAIS - 1,
+      nouveau,
+    }
+  }
+
+  try {
+    const issue = await envoyerRapport(rapport, maintenant, depot, options, essaisAvant + 1)
+    return { issue, essaisAvant, nouveau }
+  } catch (error) {
+    log.erreur('Traitement du rapport en échec', {
+      rapportId: rapport.id,
+      etape: 'traitement',
+      resultat: 'echec',
+      essai: essaisAvant + 1,
+      nomErreur: nomErreur(error),
+    })
+    return {
+      issue: { statut: 'echec', erreur: 'erreur_interne', reessayable: true },
+      essaisAvant,
+      nouveau,
+    }
+  }
+}
+
+/** Enregistre le resultat : avance l'echeance, ou garde le rapport echu pour une reprise. */
+async function terminerRapport(
+  rapport: RapportProgrammeRow,
+  traitement: Traitement,
+  maintenant: Date,
+  depot: DepotSuivi
+): Promise<void> {
+  const { issue, essaisAvant, nouveau } = traitement
+  let essais = 0
+  let prochain: Date | undefined = nouveau ?? undefined
+  let notifier = false
+  if (issue.statut === 'echec' && issue.reessayable) {
+    essais = essaisAvant + 1
+    if (essais >= MAX_ESSAIS) {
+      essais = 0
+      notifier = true
+    } else {
+      prochain = undefined // reste echu : repris au prochain appel de la tache
+    }
+  }
+  await depot.enregistrerResultatRapport(rapport.id, {
+    dernierEnvoiA: maintenant,
+    statut: issue.statut,
+    erreur: issue.erreur,
+    essais,
+    ...(prochain ? { prochainEnvoiA: prochain } : {}),
+  })
+  if (notifier) await notifierEchecDefinitif(rapport, depot)
+}
+
 /**
  * Envoie les rapports echus. Appelee par la tache planifiee (toutes les 15 minutes) ;
  * sans effet quand rien n'est echu, et sans double envoi si deux executions se
- * chevauchent.
+ * chevauchent (bail, puis echeance avancee au succes).
  */
 export async function traiterRapportsEchus(
   options: OptionsTraitementRapports = {}
 ): Promise<BilanRapports> {
   const maintenant = options.maintenant ?? new Date()
   const depot = options.depot ?? obtenirDepot()
+  const horloge = options.horloge ?? Date.now
+  const debut = horloge()
   const rapports = await depot.listerRapportsEchus(maintenant, options.limite ?? LIMITE_PAR_DEFAUT)
   const bilan: BilanRapports = {
     echus: rapports.length,
@@ -424,32 +659,47 @@ export async function traiterRapportsEchus(
     partiels: 0,
     echecs: 0,
     ignores: 0,
+    restants: 0,
   }
 
-  for (const rapport of rapports) {
-    let issue: Issue | 'ignore'
-    try {
-      issue = await traiterUnRapport(rapport, maintenant, depot, options)
-    } catch (error) {
-      // Un rapport en erreur ne bloque pas les suivants.
-      console.error(`[medic-assist] rapport ${rapport.id} : traitement interrompu :`, nomErreur(error))
-      issue = { statut: 'echec', erreur: 'erreur_interne' }
+  for (let index = 0; index < rapports.length; index += 1) {
+    const rapport = rapports[index]
+    if (options.budgetMs !== undefined && horloge() - debut >= options.budgetMs) {
+      bilan.restants = rapports.length - index
+      break
     }
-    if (issue === 'ignore') {
+    let traitement: Traitement | 'ignore'
+    try {
+      traitement = await traiterUnRapport(rapport, maintenant, depot, options)
+    } catch (error) {
+      // Echec avant reservation : rien n'est reserve, le rapport reste echu. Il ne bloque pas les suivants.
+      log.erreur('Réservation du rapport impossible', {
+        rapportId: rapport.id,
+        etape: 'reservation',
+        resultat: 'echec',
+        nomErreur: nomErreur(error),
+      })
+      bilan.echecs += 1
+      continue
+    }
+    if (traitement === 'ignore') {
       bilan.ignores += 1
       continue
     }
     try {
-      await depot.enregistrerResultatRapport(rapport.id, {
-        dernierEnvoiA: maintenant,
-        statut: issue.statut,
-        erreur: issue.erreur,
-      })
+      await terminerRapport(rapport, traitement, maintenant, depot)
     } catch (error) {
-      console.error(`[medic-assist] rapport ${rapport.id} : resultat non enregistre :`, nomErreur(error))
+      // Le bail expirera seul (10 min) et le rapport sera repris.
+      log.erreur('Enregistrement du résultat du rapport impossible', {
+        rapportId: rapport.id,
+        etape: 'resultat',
+        resultat: 'echec',
+        nomErreur: nomErreur(error),
+      })
     }
-    if (issue.statut === 'ok') bilan.envoyes += 1
-    else if (issue.statut === 'partiel') bilan.partiels += 1
+    const { statut } = traitement.issue
+    if (statut === 'ok') bilan.envoyes += 1
+    else if (statut === 'partiel') bilan.partiels += 1
     else bilan.echecs += 1
   }
   return bilan

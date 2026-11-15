@@ -50,10 +50,13 @@ import { obtenirDepot } from './depot-prisma'
 import { finDeJourneeParis } from './echeances'
 import { composerEmailArtefact, listeFormats, traducteurSuivi, type Traducteur } from './emails'
 import { ErreurSuivi, nomErreur } from './erreurs'
+import { journal } from '@/lib/journal'
 import { creerNotificationSuivi } from './notifications'
 import { exigerExpediteurProprietaire, exigerProprietaireArtefact } from './proprietaire'
 import { creerRapportProgramme } from './rapports-programmes'
 import type { ActionRow, ArtefactVisible, CompteNotifiable } from './types'
+
+const log = journal.enfant({ domaine: 'actions' })
 
 export interface DependancesActions {
   depot?: DepotSuivi
@@ -71,8 +74,8 @@ const CHAMPS_MODIFIABLES: Record<TypeAction, readonly string[]> = {
 }
 
 /** Ecran de la liste des taches / rapports de l'utilisateur (onglets de Mes analyses). */
-const HREF_TACHES = '/medic-assist/analyses?onglet=taches'
-const HREF_RAPPORTS = '/medic-assist/analyses?onglet=rapports'
+const HREF_TACHES = '/assistant/analyses?onglet=taches'
+const HREF_RAPPORTS = '/assistant/analyses?onglet=rapports'
 
 /** Codes d'echec qui ont une phrase dediee (actionResultat.echec.<code>). */
 const CODES_ECHEC_DECRITS = [
@@ -149,6 +152,14 @@ async function verifierDroits(
   return { comptes, artefact }
 }
 
+/**
+ * Garde-fou serveur sur le message libre d'un e-mail (R12), INDEPENDANT du schema
+ * Zod : le schema refuse deja > LIMITES.longueurMaxMessageAction (2000) ; ce plafond
+ * plus lache protege si le schema est un jour relache. Le message est affiche en
+ * entier sur la carte avant confirmation, il doit rester lisible.
+ */
+const LONGUEUR_MAX_MESSAGE_EMAIL = 5000
+
 /** Valide avec le schema REEL du type (strictObject : un champ inconnu est refuse). */
 function validerParametres(type: TypeAction, parametres: unknown): ParametresAction {
   const schema = SCHEMAS_PARAMETRES_ACTION[type]
@@ -159,6 +170,12 @@ function validerParametres(type: TypeAction, parametres: unknown): ParametresAct
       'invalide',
       lecture.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ')
     )
+  }
+  if (type === 'envoyer_email') {
+    const message = (lecture.data as ParametresEnvoyerEmail).message
+    if (typeof message === 'string' && message.length > LONGUEUR_MAX_MESSAGE_EMAIL) {
+      throw new ErreurSuivi('invalide', `message: ${LONGUEUR_MAX_MESSAGE_EMAIL} caracteres maximum`)
+    }
   }
   return lecture.data as ParametresAction
 }
@@ -235,6 +252,10 @@ async function composerResume(
     }
     case 'envoyer_email': {
       const p = parametres as ParametresEnvoyerEmail
+      // Le `message` libre n'est PAS dans le resume (il serait duplique) : la carte
+      // de confirmation affiche le texte integral depuis `parametres.message`.
+      // A l'envoi, composerEmailArtefact (emails.ts) l'echappe avec echapper() avant
+      // de l'inserer dans le HTML (retours a la ligne -> <br> apres echappement).
       const principal = t('actionResume.envoyerEmail', {
         titre: titreArtefact,
         destinataires: noms,
@@ -410,7 +431,7 @@ export async function executerAction(
   } catch (error) {
     const code = codeEchec(error)
     if (code === 'execution_impossible') {
-      console.error(`[medic-assist] action ${ligne.type} en echec :`, nomErreur(error))
+      log.erreur('Action en échec', { type: ligne.type, nomErreur: nomErreur(error) })
     }
     const cle = CODES_ECHEC_DECRITS.includes(code) ? code : 'generique'
     await depot.terminerAction(ligne.id, contexte.userId, {
@@ -425,7 +446,10 @@ export async function executerAction(
   try {
     await depot.terminerAction(ligne.id, contexte.userId, { statut: 'executee', resultat })
   } catch (error) {
-    console.error(`[medic-assist] action ${ligne.type} executee, resultat non enregistre :`, nomErreur(error))
+    log.erreur('Action exécutée, résultat non enregistré', {
+      type: ligne.type,
+      nomErreur: nomErreur(error),
+    })
   }
   const relue = await relireEtat(depot, contexte, ligne.id)
   return relue.resultat ? relue : { ...relue, resultat }
@@ -642,7 +666,7 @@ async function executerEnvoyerEmail(
       })
     }
   } catch (error) {
-    console.error('[medic-assist] export impossible :', nomErreur(error))
+    log.erreur('Export impossible', { nomErreur: nomErreur(error) })
     throw new ErreurExecution('export_impossible')
   }
 
@@ -680,7 +704,7 @@ async function executerEnvoyerEmail(
       if (parti) envoyes += 1
       else echecs += 1
     } catch (error) {
-      console.error('[medic-assist] e-mail non envoye :', nomErreur(error))
+      log.erreur('E-mail non envoyé', { nomErreur: nomErreur(error) })
       echecs += 1
     }
   }

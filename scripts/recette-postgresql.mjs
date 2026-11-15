@@ -88,6 +88,8 @@ try {
     DATAGENIUS_TEST_SUPPORT_OWNER_URL: url(administrateur, 'dg_support'),
     DATAGENIUS_CATALOGUE: 'config/demo-postgresql.json',
     DATAGENIUS_SOURCE_KEY: randomBytes(32).toString('hex'),
+    // La recette ajoute des sources sur 127.0.0.1 : le filtre d’hôtes les refuserait sinon.
+    DATAGENIUS_SOURCES_HOTES_AUTORISES: hote,
     DATAGENIUS_TEST_POSTGRES: '1',
   }
   executerNpm(['run', 'db:deploy'], env)
