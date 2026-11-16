@@ -40,7 +40,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.15",
     "@tanstack/react-query": "^5.90.2",
-    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-table": "^9.3.1",
     "ai": "7.0.159",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
