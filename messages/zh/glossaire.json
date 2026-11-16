@@ -1,0 +1,89 @@
+{
+  "page": {
+    "titre": "术语表",
+    "description": "查看您有权访问的数据集中每个指标的定义、公式和单位。",
+    "recherche": {
+      "libelle": "在术语表中搜索",
+      "placeholder": "指标、同义词或数据集…",
+      "bouton": "搜索",
+      "effacer": "清除"
+    },
+    "compte": "{count, plural, other {# 个指标}}",
+    "jeuOrigine": "来源数据集",
+    "formule": "公式",
+    "conditions": "条件",
+    "synonymes": "同义词",
+    "completer": "补充",
+    "agregats": {
+      "somme": "{colonne} 的总和",
+      "moyenne": "{colonne} 的平均值",
+      "min": "{colonne} 的最小值",
+      "max": "{colonne} 的最大值",
+      "nombre": "{colonne} 的数量",
+      "nombre_distinct": "{colonne} 的不同值数量",
+      "rapport": "{numerateur} 与 {denominateur} 的比率",
+      "nombreLignes": "行数"
+    },
+    "vide": {
+      "aucunJeuTitre": "没有可显示的指标",
+      "aucunJeu": "您目前无权访问任何包含指标的数据集。请联系管理员为您开通访问权限。",
+      "aucunResultatTitre": "没有结果",
+      "aucunResultat": "没有与“{q}”匹配的指标。请尝试其他词语或同义词。"
+    },
+    "formulaire": {
+      "definition": "补充定义",
+      "aideDefinition": "纯文本，最多 600 个字符。它将取代目录中的定义；留空则恢复为目录中的定义。",
+      "synonymes": "同义词",
+      "aideSynonymes": "每行一个同义词，最多 10 个，每个最多 60 个字符。",
+      "enregistrer": "保存",
+      "enregistrement": "正在保存…",
+      "fermer": "关闭",
+      "succes": "补充内容已保存。"
+    },
+    "erreurs": {
+      "session": "会话已过期，请重新登录。",
+      "interdit": "只有管理员可以补充术语表。",
+      "introuvable": "该指标已不可用。",
+      "invalide": "请检查定义（最多 600 个字符）和同义词（最多 10 个，每个最多 60 个字符）。",
+      "echec": "无法保存，请稍后重试。"
+    }
+  },
+  "recherche": {
+    "titre": "搜索",
+    "description": "搜索您的仪表板、分析、术语表；管理员还可搜索数据源。",
+    "champ": "全局搜索",
+    "placeholder": "标题、指标或数据源…",
+    "bouton": "搜索",
+    "accueil": "请输入至少两个字符以开始搜索。",
+    "tropCourt": "搜索至少需要 2 个字符。",
+    "tropLong": "搜索最多接受 100 个字符。",
+    "videTitre": "没有结果",
+    "vide": "没有与“{q}”匹配的内容。请检查拼写或尝试更短的词。",
+    "compte": "{count, plural, other {# 条结果}}",
+    "groupes": {
+      "tableau": "仪表板",
+      "analyse": "分析",
+      "glossaire": "术语表",
+      "source": "数据源"
+    },
+    "palette": "在全部内容中搜索“{q}”"
+  },
+  "commentaires": {
+    "titre": "评论",
+    "libelleChamp": "添加评论",
+    "placeholder": "写下评论（纯文本）",
+    "restants": "还可输入 {restants} 个字符",
+    "envoyer": "发表评论",
+    "supprimer": "删除",
+    "confirmerSuppression": "确定删除这条评论吗？",
+    "confirmer": "是，删除",
+    "annuler": "取消",
+    "vide": "暂无评论。",
+    "auteurLe": "{auteur}，{date}",
+    "introuvable": "此分析或评论不可用。",
+    "invalide": "评论必须为 1 至 2000 个字符。",
+    "interdit": "您不能删除他人的评论。",
+    "limite_debit": "短时间内评论过多，请几分钟后再试。",
+    "interne": "出现错误，请稍后再试。"
+  }
+}

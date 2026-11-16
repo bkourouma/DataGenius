@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mocks = vi.hoisted(() => ({ findFirst: vi.fn(), update: vi.fn(), verify: vi.fn(), faux: vi.fn() }))
 
+vi.mock('@/lib/audit/enregistrer', () => ({ enregistrerAudit: vi.fn() }))
 vi.mock('@/lib/db/client', () => ({ prisma: { user: { findFirst: mocks.findFirst, update: mocks.update } } }))
 vi.mock('@/lib/auth/oidc', () => ({
   configurationOidc: () => null, FOURNISSEUR_OIDC: 'oidc', fournisseurOidc: vi.fn(), trouverUtilisateurOidc: vi.fn(),

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('@/lib/audit/enregistrer', () => ({ enregistrerAudit: vi.fn() }))
 vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }))
 vi.mock('@/lib/medic-assist/acces', () => ({ exigerAdminMedicAssist: vi.fn() }))
 vi.mock('@/lib/auth/comptes', () => {

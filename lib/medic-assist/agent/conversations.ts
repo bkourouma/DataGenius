@@ -549,6 +549,11 @@ export async function supprimerConversation(
       await tx.assistantArtefact.deleteMany({
         where: { id: { in: aSupprimer.map(a => a.id) }, userId },
       })
+      // Commentaires des analyses supprimées (sauf si une version de la racine subsiste).
+      await tx.$executeRaw`
+        DELETE FROM warehouse.commentaires_analyses AS c
+        WHERE c.artefact_id = ANY(${racinesSupprimees}::text[])
+          AND NOT EXISTS (SELECT 1 FROM assistant_artefacts AS a WHERE a."racineId" = c.artefact_id)`
     }
     await tx.assistantJeuDeDonnees.deleteMany({
       where: { conversationId: id, userId, id: { notIn: jeuxGardes } },

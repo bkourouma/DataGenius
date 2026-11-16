@@ -1,4 +1,5 @@
 import { notFound, redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { listerAnalyses } from '@/lib/medic-assist/suivi/analyses'
 import { chargerComptesAvecAcces } from '@/lib/medic-assist/suivi/comptes'
@@ -10,6 +11,8 @@ export async function EditeurTableau({ id }: { id?: string }) {
   const acces = await exigerMedicAssist()
   if (!acces.ok) redirect('/login')
   const { contexte } = acces
+  const t = await getTranslations('tableaux.editeur')
+  const tListe = await getTranslations('tableaux.liste')
   const tableau = id ? await chargerTableau(id, contexte) : null
   if (id && !tableau?.editable) notFound()
   const [options, comptes, analyses] = await Promise.all([
@@ -22,11 +25,12 @@ export async function EditeurTableau({ id }: { id?: string }) {
   const anciensLecteurs = manquants.length ? await chargerComptesAvecAcces({ ids: manquants, limite: manquants.length }) : []
   return <section className="mx-auto max-w-4xl space-y-5">
     <EnTetePage
-      retour={id ? { href: `/tableaux/${id}`, libelle: tableau?.definition.titre ?? 'Tableau' } : { href: '/tableaux', libelle: 'Tableaux de bord' }}
-      titre={id ? 'Modifier le tableau' : 'Créer un tableau de bord'}
-      description={id ? 'Ajustez les tuiles, les filtres communs et les personnes qui peuvent consulter ce tableau.' : 'Rassemblez des indicateurs et des analyses sur une même page, puis partagez-la en lecture.'} />
+      retour={id ? { href: `/tableaux/${id}`, libelle: tableau?.definition.titre ?? t('tableauParDefaut') } : { href: '/tableaux', libelle: tListe('titre') }}
+      titre={id ? t('modifierTitre') : t('creerTitre')}
+      description={id ? t('modifierDescription') : t('creerDescription')} />
     <FormulaireTableau tableau={tableau} options={options}
       comptes={[...comptes, ...anciensLecteurs].map(c => ({ id: c.id, nom: c.nom, email: c.email }))}
-      analyses={analyses.lignes.map(a => ({ id: a.artefactId, titre: a.titre }))} />
+      analyses={analyses.lignes.map(a => ({ id: a.artefactId, titre: a.titre }))}
+      estAdmin={contexte.roleName === 'TenantAdmin'} />
   </section>
 }

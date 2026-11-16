@@ -1,0 +1,280 @@
+{
+  "coquille": {
+    "metadata": {
+      "description": "Analice sus datos y cree informes a través de la conversación."
+    },
+    "rechercher": "Buscar",
+    "rechercherOuDemander": "Buscar o preguntar",
+    "espaceDeTravail": "Espacio de trabajo",
+    "seDeconnecter": "Cerrar sesión",
+    "ouvrirMenu": "Abrir el menú",
+    "fermerMenu": "Cerrar el menú",
+    "menu": "Menú",
+    "compte": "Cuenta",
+    "administrateur": "Administrador",
+    "membre": "Miembro",
+    "groupes": {
+      "travail": "Trabajo",
+      "administration": "Administración"
+    },
+    "nav": {
+      "conversations": {
+        "libelle": "Conversaciones",
+        "motsCles": "chat asistente pregunta"
+      },
+      "analyses": {
+        "libelle": "Análisis",
+        "motsCles": "guardados compartidos informes tareas"
+      },
+      "tableaux": {
+        "libelle": "Paneles",
+        "motsCles": "dashboard tableros indicadores alertas"
+      },
+      "tendances": {
+        "libelle": "Tendencias",
+        "motsCles": "evolucion curva periodo"
+      },
+      "espaces": {
+        "libelle": "Espacios",
+        "motsCles": "conjuntos datos dominios"
+      },
+      "recherche": {
+        "libelle": "Búsqueda",
+        "motsCles": "encontrar buscar localizar"
+      },
+      "glossaire": {
+        "libelle": "Glosario",
+        "motsCles": "definiciones terminos lexico"
+      },
+      "sources": {
+        "libelle": "Fuentes",
+        "motsCles": "conexion base importacion sincronizacion postgresql mysql api archivo"
+      },
+      "utilisateurs": {
+        "libelle": "Usuarios",
+        "motsCles": "cuentas miembros invitaciones roles"
+      },
+      "droits": {
+        "libelle": "Permisos de acceso",
+        "motsCles": "grupos miembros permisos"
+      },
+      "parametres": {
+        "libelle": "Ajustes",
+        "motsCles": "configuracion proveedor ia usos opiniones"
+      },
+      "journal": {
+        "libelle": "Registro de auditoría",
+        "motsCles": "auditoria historial traza eventos conexiones"
+      }
+    },
+    "palette": {
+      "placeholder": "Ir a una página o hacer una pregunta…",
+      "echap": "Esc",
+      "entree": "Intro",
+      "commandes": "Comandos",
+      "aucunResultat": "Ninguna página coincide.",
+      "parcourir": "navegar",
+      "valider": "confirmar",
+      "aideQuestion": "Escriba una pregunta para enviarla al asistente",
+      "poserQuestion": "Hacer la pregunta al asistente",
+      "sections": {
+        "aller": "Ir a",
+        "tableaux": "Paneles",
+        "analyses": "Análisis",
+        "demander": "Preguntar"
+      },
+      "nouvelleConversation": {
+        "libelle": "Nueva conversación",
+        "motsCles": "chat pregunta"
+      }
+    }
+  },
+  "connexion": {
+    "titre": "Iniciar sesión",
+    "sousTitre": "Acceda a su espacio de Data Genius.",
+    "accroche": "Consulte sus datos mediante la conversación y encuentre sus análisis y paneles.",
+    "points": {
+      "question": "Haga una pregunta y la respuesta llega con sus cifras.",
+      "tableaux": "Guarde sus análisis en paneles listos para compartir.",
+      "sources": "Trabaje con fuentes de datos actualizadas."
+    },
+    "email": "Correo electrónico",
+    "motDePasse": "Contraseña",
+    "motDePasseOublie": "¿Ha olvidado su contraseña?",
+    "seConnecter": "Iniciar sesión",
+    "enCours": "Iniciando sesión…",
+    "entreprise": "Acceso de empresa",
+    "erreurs": {
+      "tropDeTentatives": "Demasiados intentos. Vuelva a intentarlo en 15 minutos.",
+      "identifiantsInvalides": "Credenciales no válidas.",
+      "connexionImpossible": "No se ha podido iniciar sesión. Compruebe que su cuenta está autorizada.",
+      "indisponible": "Inicio de sesión no disponible. Vuelva a intentarlo.",
+      "entrepriseIndisponible": "Acceso de empresa no disponible. Vuelva a intentarlo."
+    },
+    "succes": {
+      "motDePasseDefini": "Su contraseña ya está definida. Ya puede iniciar sesión."
+    }
+  },
+  "langue": {
+    "libelle": "Idioma de la interfaz"
+  },
+  "motDePasseOublie": {
+    "metaTitre": "Contraseña olvidada",
+    "titre": "Contraseña olvidada",
+    "intro": "Introduce tu dirección de correo electrónico para recibir un enlace de restablecimiento.",
+    "entreprise": "Si tu empresa gestiona tu acceso, usa el acceso de empresa desde la página de inicio de sesión.",
+    "retour": "Volver al inicio de sesión",
+    "adresse": "Dirección de correo electrónico",
+    "envoyer": "Enviar el enlace",
+    "envoi": "Enviando…",
+    "confirmation": "Si existe una cuenta con esta dirección, se acaba de enviar un correo con un enlace de restablecimiento. El enlace es válido durante 1 hora."
+  },
+  "definirMotDePasse": {
+    "metaTitre": "Definir la contraseña",
+    "bienvenue": "Te damos la bienvenida, {prenom}",
+    "nouveauTitre": "Nueva contraseña",
+    "choisir": "Elige tu contraseña",
+    "invalideTitre": "Enlace no válido",
+    "invalide": "Este enlace no es válido o ha caducado.",
+    "nouveauLien": "Solicitar un nuevo enlace",
+    "retour": "Volver al inicio de sesión",
+    "nouveauMotDePasse": "Nueva contraseña",
+    "aide": "Mínimo {min} caracteres",
+    "confirmer": "Confirmar la contraseña",
+    "enregistrer": "Guardar la contraseña",
+    "enregistrement": "Guardando…",
+    "formulaireIncomplet": "Formulario incompleto.",
+    "differents": "Las dos contraseñas no coinciden.",
+    "echec": "No se ha podido definir la contraseña. Inténtalo de nuevo."
+  },
+  "tendances": {
+    "titre": "Tendencias mensuales",
+    "description": "Detecta las desviaciones atípicas de un indicador y obtén una estimación prudente de los próximos meses.",
+    "aucunTitre": "Ningún indicador mensual accesible",
+    "aucunDescription": "Configura un calendario en un conjunto de datos con indicadores para seguir su evolución mes a mes.",
+    "indisponible": "El análisis no está disponible temporalmente.",
+    "jeu": "Conjunto de datos",
+    "choisirJeu": "Elegir un conjunto",
+    "indicateur": "Indicador",
+    "choisirIndicateur": "Elegir un indicador",
+    "premierMois": "Primer mes",
+    "dernierMois": "Último mes",
+    "horizon": "Horizonte en meses",
+    "analyser": "Analizar la tendencia",
+    "observations": "Observaciones y desviaciones atípicas",
+    "observationsAide": "La señal compara cada valor con los seis meses anteriores. Aparece por encima de 3,5 en la puntuación de desviación robusta, o en cuanto el valor cambia si la dispersión mediana es nula.",
+    "manquants": "{count, plural, one {{n} mes sin valor.} other {{n} meses sin valor.}}",
+    "horsPrecision": "{count, plural, one {{n} valor mostrado sin conversión y excluido de las estimaciones.} other {{n} valores mostrados sin conversión y excluidos de las estimaciones.}}",
+    "mois": "Mes",
+    "valeur": "Valor",
+    "ecart": "Desviación",
+    "atypique": "Atípico",
+    "previsions": "Previsiones",
+    "previsionsAide": "La estimación toma la mediana de los tres últimos meses. A partir de doce errores históricos a un mes, la banda suma y resta su percentil 90 en torno a la estimación.",
+    "validation": "{count, plural, one {Error absoluto medio sobre {n} previsión histórica sucesiva · {mae}} other {Error absoluto medio sobre {n} previsiones históricas sucesivas · {mae}}}",
+    "estimation": "Estimación",
+    "bande": "Banda histórica",
+    "bandeValeurs": "{bas} a {haut}",
+    "serieInsuffisante": "{count, plural, one {Se requieren seis meses consecutivos utilizables al final del periodo. Serie actual · {n} mes.} other {Se requieren seis meses consecutivos utilizables al final del periodo. Serie actual · {n} meses.}}",
+    "provenance": "Procedencia"
+  },
+  "espaces": {
+    "titre": "Espacios de datos",
+    "description": "Los espacios agrupan los conjuntos de datos por equipo o por tema. Ves aquellos a los que tienes acceso.",
+    "gerer": "Gestionar los espacios",
+    "aucunTitre": "Ningún espacio accesible",
+    "aucunAdmin": "Crea un espacio para agrupar conjuntos de datos y elegir quién puede consultarlos.",
+    "aucunMembre": "Pide a un administrador que te dé acceso a un espacio.",
+    "nbJeux": "{count, plural, one {{n} conjunto} other {{n} conjuntos}}",
+    "listeJeux": "Conjuntos de datos",
+    "aucunJeu": "Ningún conjunto de datos en este espacio."
+  },
+  "utilisateurs": {
+    "titre": "Usuarios",
+    "description": "Invita a personas, gestiona su rol y desactiva las cuentas que ya no necesitan acceder a Data Genius.",
+    "inviterTitre": "Invitar a un usuario",
+    "comptes": "Cuentas ({n})",
+    "aucunCompte": "Ninguna cuenta.",
+    "vous": "(Tú)",
+    "groupes": "Grupos: ",
+    "aucunGroupe": "Ningún grupo",
+    "connexionEntreprise": "Acceso de empresa",
+    "role": {
+      "admin": "Administrador",
+      "membre": "Miembro"
+    },
+    "statut": {
+      "actif": "Activa",
+      "desactive": "Desactivada",
+      "invite": "Invitada",
+      "inviteExpire": "Invitada · caduca el {date}"
+    },
+    "lien": {
+      "titre": "Enlace de invitación",
+      "copier": "Copiar",
+      "copie": "Copiado",
+      "avertissementDate": "Este enlace da acceso a la creación de la contraseña: compártelo solo con la persona invitada; caduca en la fecha indicada ({date}).",
+      "avertissementListe": "Este enlace da acceso a la creación de la contraseña: compártelo solo con la persona invitada; caduca en la fecha indicada en la lista de cuentas."
+    },
+    "formulaire": {
+      "email": "Dirección de correo electrónico",
+      "role": "Rol",
+      "prenom": "Nombre",
+      "nom": "Apellidos",
+      "envoyer": "Enviar la invitación",
+      "envoi": "Enviando…"
+    },
+    "actions": {
+      "propreCompte": "No puedes modificar aquí tu propia cuenta.",
+      "renvoyer": "Reenviar la invitación",
+      "renvoi": "Reenviando…",
+      "reactiver": "Reactivar",
+      "reactivation": "Reactivando…",
+      "desactiver": "Desactivar",
+      "desactiverTitre": "¿Desactivar a {nom}?",
+      "desactiverDescription": "Esta persona ya no podrá iniciar sesión. Sus datos se conservan. Podrás reactivar la cuenta más adelante.",
+      "desactiverConfirmer": "Desactivar la cuenta",
+      "passerMembre": "Pasar a miembro",
+      "passerAdmin": "Pasar a administrador",
+      "passerMembreTitre": "¿Cambiar a {nom} a miembro?",
+      "passerAdminTitre": "¿Hacer administrador a {nom}?",
+      "passerMembreDescription": "Esta persona perderá el acceso a la administración (usuarios, fuentes, ajustes) y solo verá los datos autorizados para sus grupos.",
+      "passerAdminDescription": "Esta persona podrá gestionar los usuarios, las fuentes y los ajustes, y verá todos los datos.",
+      "annuler": "Cancelar"
+    },
+    "serveur": {
+      "refus": "Acceso reservado a los administradores.",
+      "echec": "Operación imposible por el momento. Inténtalo de nuevo más tarde.",
+      "courrierNonParti": "No se ha podido enviar el correo (SMTP sin configurar o con fallos). Transmite tú mismo este enlace:",
+      "invitationEnvoyee": "Invitación enviada a {adresse}.",
+      "personneInvitee": "la persona invitada",
+      "desactive": "Cuenta desactivada.",
+      "reactive": "Cuenta reactivada.",
+      "roleModifie": "Rol modificado."
+    }
+  },
+  "mails": {
+    "pied": "Mensaje automático: por favor, no respondas.",
+    "bonjour": "Hola {prenom}:",
+    "invitation": {
+      "sujet": "Tu invitación a Data Genius",
+      "introPar": "{par} te invita a unirte a Data Genius.",
+      "introAdmin": "Un administrador te invita a unirte a Data Genius.",
+      "choisir": "Elige tu contraseña para activar tu cuenta:",
+      "validite": "Este enlace es válido durante 7 días y solo puede usarse una vez.",
+      "titre": "Activa tu cuenta",
+      "corps": "Elige tu contraseña para activar tu cuenta. Este enlace es válido durante 7 días y solo puede usarse una vez.",
+      "bouton": "Elegir mi contraseña"
+    },
+    "reinitialisation": {
+      "sujet": "Restablecimiento de tu contraseña de Data Genius",
+      "intro": "Se ha solicitado restablecer tu contraseña. Para elegir una nueva:",
+      "validite": "Este enlace es válido durante 1 hora.",
+      "ignorer": "Si no has hecho esta solicitud, ignora este mensaje: tu contraseña no cambiará.",
+      "titre": "Restablece tu contraseña",
+      "corps": "Se ha solicitado restablecer tu contraseña. Este enlace es válido durante 1 hora.",
+      "ignorerHtml": "Si no has hecho esta solicitud, ignora este mensaje: tu contraseña no cambiará.",
+      "bouton": "Elegir una nueva contraseña"
+    }
+  }
+}

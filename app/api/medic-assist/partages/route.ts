@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
+import { enregistrerAudit } from '@/lib/audit/enregistrer'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { IdentifiantSchema, LIMITES, OBJETS_PARTAGE } from '@/lib/medic-assist/contrats'
 import { ErreurSuivi, lirePagination, reponseErreur } from '@/lib/medic-assist/suivi/erreurs'
@@ -51,7 +52,9 @@ export async function POST(request: NextRequest) {
     const garde = await exigerMedicAssist()
     if (!garde.ok) return garde.reponse
     const corps = schemaCorps.parse(await request.json().catch(() => null))
-    const resultat = await partager(garde.contexte, demandeDepuisCorps(corps))
+    const demande = demandeDepuisCorps(corps)
+    const resultat = await partager(garde.contexte, demande)
+    await enregistrerAudit({ acteurId: garde.contexte.userId, action: 'partage.creation', cible: { type: demande.cible.type, id: demande.cible.id }, details: { destinataires: demande.destinataires.length, nouveaux: resultat.partages } })
     return NextResponse.json({ data: resultat }, { status: 201 })
   } catch (error) {
     return reponseErreur(error, 'POST /api/medic-assist/partages')

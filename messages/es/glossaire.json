@@ -1,0 +1,89 @@
+{
+  "page": {
+    "titre": "Glosario",
+    "description": "Consulte la definición, la fórmula y la unidad de cada indicador de los conjuntos de datos a los que tiene acceso.",
+    "recherche": {
+      "libelle": "Buscar en el glosario",
+      "placeholder": "Un indicador, un sinónimo, un conjunto…",
+      "bouton": "Buscar",
+      "effacer": "Borrar"
+    },
+    "compte": "{count, plural, one {# indicador} other {# indicadores}}",
+    "jeuOrigine": "Conjunto de origen",
+    "formule": "Fórmula",
+    "conditions": "Condiciones",
+    "synonymes": "Sinónimos",
+    "completer": "Completar",
+    "agregats": {
+      "somme": "Suma de {colonne}",
+      "moyenne": "Promedio de {colonne}",
+      "min": "Mínimo de {colonne}",
+      "max": "Máximo de {colonne}",
+      "nombre": "Número de {colonne}",
+      "nombre_distinct": "Número de valores distintos de {colonne}",
+      "rapport": "Razón de {numerateur} entre {denominateur}",
+      "nombreLignes": "Número de filas"
+    },
+    "vide": {
+      "aucunJeuTitre": "Ningún indicador que mostrar",
+      "aucunJeu": "Todavía no tiene acceso a ningún conjunto de datos con indicadores. Pida a un administrador que le dé acceso.",
+      "aucunResultatTitre": "Sin resultados",
+      "aucunResultat": "Ningún indicador coincide con «{q}». Pruebe con otra palabra o un sinónimo."
+    },
+    "formulaire": {
+      "definition": "Definición complementaria",
+      "aideDefinition": "Texto sin formato, 600 caracteres como máximo. Sustituye la definición del catálogo; déjela vacía para volver a esta.",
+      "synonymes": "Sinónimos",
+      "aideSynonymes": "Un sinónimo por línea, 10 como máximo, 60 caracteres cada uno.",
+      "enregistrer": "Guardar",
+      "enregistrement": "Guardando…",
+      "fermer": "Cerrar",
+      "succes": "Complemento guardado."
+    },
+    "erreurs": {
+      "session": "Sesión caducada. Vuelva a iniciar sesión.",
+      "interdit": "Solo un administrador puede completar el glosario.",
+      "introuvable": "Este indicador ya no está disponible.",
+      "invalide": "Revise la definición (600 caracteres como máximo) y los sinónimos (10 como máximo, 60 caracteres cada uno).",
+      "echec": "No se pudo guardar. Inténtelo de nuevo en un momento."
+    }
+  },
+  "recherche": {
+    "titre": "Búsqueda",
+    "description": "Busque en sus paneles, sus análisis, el glosario y, para los administradores, las fuentes.",
+    "champ": "Buscar en todo",
+    "placeholder": "Un título, un indicador, una fuente…",
+    "bouton": "Buscar",
+    "accueil": "Escriba al menos dos caracteres para iniciar la búsqueda.",
+    "tropCourt": "La búsqueda requiere al menos 2 caracteres.",
+    "tropLong": "La búsqueda admite 100 caracteres como máximo.",
+    "videTitre": "Sin resultados",
+    "vide": "Nada coincide con «{q}». Revise la ortografía o pruebe con una palabra más corta.",
+    "compte": "{count, plural, one {# resultado} other {# resultados}}",
+    "groupes": {
+      "tableau": "Paneles",
+      "analyse": "Análisis",
+      "glossaire": "Glosario",
+      "source": "Fuentes"
+    },
+    "palette": "Buscar «{q}» en todas partes"
+  },
+  "commentaires": {
+    "titre": "Comentarios",
+    "libelleChamp": "Añadir un comentario",
+    "placeholder": "Escribe un comentario (texto sin formato)",
+    "restants": "Quedan {restants} caracteres",
+    "envoyer": "Comentar",
+    "supprimer": "Eliminar",
+    "confirmerSuppression": "¿Eliminar este comentario?",
+    "confirmer": "Sí, eliminar",
+    "annuler": "Cancelar",
+    "vide": "Aún no hay comentarios.",
+    "auteurLe": "{auteur}, el {date}",
+    "introuvable": "Este análisis o comentario no está disponible.",
+    "invalide": "El comentario debe tener entre 1 y 2000 caracteres.",
+    "interdit": "No puedes eliminar el comentario de otra persona.",
+    "limite_debit": "Demasiados comentarios en poco tiempo. Inténtalo de nuevo en unos minutos.",
+    "interne": "Se ha producido un error. Inténtalo de nuevo más tarde."
+  }
+}

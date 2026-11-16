@@ -1,0 +1,39 @@
+{
+  "statut": {
+    "marche": "Running",
+    "enRetard": "Late",
+    "arrete": "Stopped",
+    "jamaisVu": "Never seen"
+  },
+  "bandeau": {
+    "titre": "Sync worker",
+    "ouvrir": "Worker details",
+    "alerte": "The worker has not been running for {duree}.",
+    "detail": "View details",
+    "jamaisVuAide": "The worker has not reported in yet."
+  },
+  "page": {
+    "retour": "Sources",
+    "titre": "Sync worker status",
+    "description": "Check that the worker is running, and review its last cycle and the most recent failed syncs.",
+    "etat": "Current status",
+    "silence": "Silent for",
+    "hote": "Host",
+    "version": "Version",
+    "demarreA": "Started on",
+    "dernierSigne": "Last heartbeat",
+    "dernierTour": "Last cycle",
+    "dateTour": "Finished on",
+    "duree": "Duration",
+    "jeux": "Datasets processed",
+    "erreurs": "Errors",
+    "aucunTour": "No cycle recorded yet.",
+    "echecs": "Latest failed runs",
+    "aucunEchec": "No failed runs.",
+    "colJeu": "Dataset",
+    "colCode": "Code",
+    "colDate": "Date",
+    "colDuree": "Duration",
+    "indisponible": "The worker status is unavailable. Check the database and migrations."
+  }
+}

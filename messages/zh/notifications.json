@@ -1,0 +1,36 @@
+{
+  "cloche": {
+    "titre": "通知",
+    "ouvrir": "通知，{nombre, plural, =0 {没有未读} other {# 条未读}}",
+    "vide": "暂时没有通知。",
+    "toutLu": "全部标为已读",
+    "marquerLu": "标为已读",
+    "ouvrirLien": "打开",
+    "nonLue": "未读",
+    "erreur": "无法加载通知。",
+    "reessayer": "重试",
+    "chargement": "加载中…"
+  },
+  "alerte": {
+    "titre": "已达到阈值：{mesure}",
+    "message": "在“{tableau}”中，“{mesure}”的值为 {valeur}。{sens, select, au_dessus {已达到或超过阈值 {seuil}。} other {已达到或低于阈值 {seuil}。}}"
+  },
+  "email": {
+    "sujet": "仪表板“{tableau}”的提醒：{mesure}",
+    "salutation": "{nom}，您好：",
+    "lien": "打开仪表板",
+    "pied": "您收到此邮件是因为您是某个仪表板提醒的接收人。这是自动发送的邮件，请勿回复。"
+  },
+  "editeur": {
+    "legende": "提醒通知",
+    "destinatairesTitre": "接收人",
+    "destinatairesAide": "您始终会在应用内收到通知。请勾选也需要通知的仪表板读者：每位读者收到的是按其自身权限计算的数值。",
+    "moi": "您（所有者）",
+    "aucunLecteur": "请先与读者共享仪表板，才能通知他们。",
+    "email": "同时向接收人发送电子邮件",
+    "webhook": "HTTPS Webhook（管理员）",
+    "webhookAide": "公开的 https:// 地址，不含凭据和端口。达到阈值时，它会收到不含任何数值的 JSON 消息；内部地址会被拒绝。",
+    "webhookPlaceholder": "https://example.org/alert",
+    "webhookReserve": "此提醒已设置 Webhook；只有管理员可以修改。"
+  }
+}

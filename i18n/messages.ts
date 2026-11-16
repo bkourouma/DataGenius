@@ -1,13 +1,36 @@
 import type { Locale } from './config'
 
 export async function loadMessages(locale: Locale) {
-  const [chat, artefacts, suivi, admin, common, mobilePivots] = await Promise.all([
+  const [
+    chat,
+    artefacts,
+    suivi,
+    admin,
+    common,
+    mobilePivots,
+    sources,
+    ecrans,
+    tableaux,
+    notifications,
+    journal,
+    historique,
+    etatWorker,
+    glossaire,
+  ] = await Promise.all([
     import(`../messages/${locale}/medicAssist.json`),
     import(`../messages/${locale}/medicAssistArtefacts.json`),
     import(`../messages/${locale}/medicAssistSuivi.json`),
     import(`../messages/${locale}/medicAssistAdmin.json`),
     import(`../messages/${locale}/common.json`),
     import(`../messages/${locale}/mobilePivots.json`),
+    import(`../messages/${locale}/sources.json`),
+    import(`../messages/${locale}/ecrans.json`),
+    import(`../messages/${locale}/tableaux.json`),
+    import(`../messages/${locale}/notifications.json`),
+    import(`../messages/${locale}/journal.json`),
+    import(`../messages/${locale}/historique.json`),
+    import(`../messages/${locale}/etatWorker.json`),
+    import(`../messages/${locale}/glossaire.json`),
   ])
   return {
     medicAssist: chat.default,
@@ -16,5 +39,13 @@ export async function loadMessages(locale: Locale) {
     medicAssistAdmin: admin.default,
     common: common.default,
     mobilePivots: mobilePivots.default,
+    sources: sources.default,
+    ecrans: ecrans.default,
+    tableaux: tableaux.default,
+    notifications: notifications.default,
+    journal: journal.default,
+    historique: historique.default,
+    etatWorker: etatWorker.default,
+    glossaire: glossaire.default,
   }
 }

@@ -1,9 +1,12 @@
 import {
   BookMarked,
+  BookOpen,
   Boxes,
   LayoutDashboard,
   MessagesSquare,
   PlugZap,
+  ScrollText,
+  Search,
   Settings2,
   ShieldCheck,
   TrendingUp,
@@ -11,40 +14,53 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
+/** Clé d'une entrée dans messages ecrans.coquille.nav : libellé et mots-clés de la palette y sont traduits. */
+export type CleNavigation =
+  | 'conversations'
+  | 'analyses'
+  | 'tableaux'
+  | 'tendances'
+  | 'espaces'
+  | 'recherche'
+  | 'glossaire'
+  | 'sources'
+  | 'utilisateurs'
+  | 'droits'
+  | 'parametres'
+  | 'journal'
+
 export interface EntreeNavigation {
   href: string
-  libelle: string
+  cle: CleNavigation
   icone: LucideIcon
-  /** Mots supplementaires reconnus par la palette de commandes. */
-  motsCles?: string
 }
 
 export interface GroupeNavigation {
   id: 'travail' | 'administration'
-  libelle: string
   entrees: EntreeNavigation[]
 }
 
 const TRAVAIL: GroupeNavigation = {
   id: 'travail',
-  libelle: 'Travail',
   entrees: [
-    { href: '/assistant', libelle: 'Conversations', icone: MessagesSquare, motsCles: 'chat assistant question' },
-    { href: '/assistant/analyses', libelle: 'Analyses', icone: BookMarked, motsCles: 'enregistrees partages rapports taches' },
-    { href: '/tableaux', libelle: 'Tableaux de bord', icone: LayoutDashboard, motsCles: 'dashboard indicateurs alertes' },
-    { href: '/tendances', libelle: 'Tendances', icone: TrendingUp, motsCles: 'evolution courbe periode' },
-    { href: '/espaces', libelle: 'Espaces', icone: Boxes, motsCles: 'jeux donnees domaines' },
+    { href: '/assistant', cle: 'conversations', icone: MessagesSquare },
+    { href: '/assistant/analyses', cle: 'analyses', icone: BookMarked },
+    { href: '/tableaux', cle: 'tableaux', icone: LayoutDashboard },
+    { href: '/tendances', cle: 'tendances', icone: TrendingUp },
+    { href: '/espaces', cle: 'espaces', icone: Boxes },
+    { href: '/recherche', cle: 'recherche', icone: Search },
+    { href: '/glossaire', cle: 'glossaire', icone: BookOpen },
   ],
 }
 
 const ADMINISTRATION: GroupeNavigation = {
   id: 'administration',
-  libelle: 'Administration',
   entrees: [
-    { href: '/sources', libelle: 'Sources', icone: PlugZap, motsCles: 'connexion base import synchronisation postgresql mysql api fichier' },
-    { href: '/utilisateurs', libelle: 'Utilisateurs', icone: Users, motsCles: 'comptes membres invitations roles' },
-    { href: '/sources/droits', libelle: 'Droits d’accès', icone: ShieldCheck, motsCles: 'groupes membres permissions' },
-    { href: '/dashboard/admin/assistant', libelle: 'Paramètres', icone: Settings2, motsCles: 'configuration fournisseur ia usages avis' },
+    { href: '/sources', cle: 'sources', icone: PlugZap },
+    { href: '/utilisateurs', cle: 'utilisateurs', icone: Users },
+    { href: '/sources/droits', cle: 'droits', icone: ShieldCheck },
+    { href: '/dashboard/admin/assistant', cle: 'parametres', icone: Settings2 },
+    { href: '/journal', cle: 'journal', icone: ScrollText },
   ],
 }
 

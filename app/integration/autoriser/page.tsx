@@ -1,5 +1,6 @@
 import { Database } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { exigerMedicAssist } from '@/lib/medic-assist/acces'
 import { nonceIntegration, origineAutorisee, tableauId } from '@/lib/integration/embarquement'
 import { chargerTableau } from '@/lib/warehouse/tableaux'
@@ -20,6 +21,7 @@ export default async function Autoriser({ searchParams }: { searchParams: Record
   }
   const lisible = await chargerTableau(tableau.data, acces.contexte)
   if (!lisible) notFound()
+  const t = await getTranslations('tableaux.integration')
   return <main className="grid min-h-dvh place-items-center bg-muted/50 px-4 py-10">
     <section className="w-full max-w-md rounded-xl border bg-card p-7 shadow-sm">
       <div className="mb-6 flex items-center gap-2.5 font-semibold">
@@ -28,8 +30,13 @@ export default async function Autoriser({ searchParams }: { searchParams: Record
         </span>
         Data Genius
       </div>
-      <h1 className="text-xl font-semibold">Autoriser l’affichage d’un tableau</h1>
-      <p className="mb-6 mt-3 text-sm text-muted-foreground">L’application <strong className="break-all text-foreground">{origine}</strong> souhaite afficher le tableau <strong className="text-foreground">{lisible.definition.titre}</strong> avec vos droits Data Genius.</p>
+      <h1 className="text-xl font-semibold">{t('titre')}</h1>
+      <p className="mb-6 mt-3 text-sm text-muted-foreground">{t.rich('description', {
+        origine,
+        titre: lisible.definition.titre,
+        app: chunks => <strong className="break-all text-foreground"><bdi dir="ltr">{chunks}</bdi></strong>,
+        nom: chunks => <strong className="text-foreground"><bdi>{chunks}</bdi></strong>,
+      })}</p>
       <Consentement tableau={tableau.data} origine={origine} nonce={nonce.data} />
     </section>
   </main>

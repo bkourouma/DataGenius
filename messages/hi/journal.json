@@ -1,0 +1,107 @@
+{
+  "titre": "ऑडिट लॉग",
+  "introduction": "देखें कि किसने क्या और कब किया: स्रोत, निर्यात, साझाकरण, साइन-इन, खाते और अनुमतियाँ। इस लॉग को केवल प्रशासक ही देख सकते हैं।",
+  "retention": "घटनाएँ {jours} दिनों तक सुरक्षित रखी जाती हैं, फिर अपने-आप हटा दी जाती हैं।",
+  "fuseau": "समय {fuseau} में दिखाया गया है।",
+  "filtres": {
+    "legende": "लॉग फ़िल्टर करें",
+    "du": "से",
+    "au": "तक",
+    "acteur": "कर्ता",
+    "acteurAide": "खाते की पहचान, नाम या ईमेल पते का कोई अंश।",
+    "famille": "कार्रवाई का प्रकार",
+    "action": "कार्रवाई",
+    "cible": "लक्ष्य",
+    "toutes": "सभी प्रकार",
+    "tous": "सभी कार्रवाइयाँ",
+    "appliquer": "फ़िल्टर करें",
+    "reinitialiser": "रीसेट करें"
+  },
+  "tableau": {
+    "legende": "ऑडिट लॉग की घटनाएँ, नवीनतम से पुरानी तक"
+  },
+  "colonnes": {
+    "date": "तारीख़",
+    "acteur": "कर्ता",
+    "action": "कार्रवाई",
+    "cible": "लक्ष्य",
+    "resultat": "परिणाम",
+    "ip": "आईपी पता",
+    "details": "विवरण"
+  },
+  "familles": {
+    "source": "स्रोत",
+    "export": "निर्यात",
+    "partage": "साझाकरण",
+    "connexion": "साइन-इन",
+    "utilisateur": "उपयोगकर्ता",
+    "droits": "पहुँच अधिकार",
+    "journal": "ऑडिट लॉग",
+    "tableau": "डैशबोर्ड"
+  },
+  "actions": {
+    "source_creation": "स्रोत बनाया गया",
+    "source_modification": "स्रोत बदला गया",
+    "source_suppression": "स्रोत हटाया गया",
+    "source_synchronisation": "स्रोत सिंक किया गया",
+    "export_artefact": "आर्टिफ़ैक्ट निर्यात किया गया",
+    "partage_creation": "साझाकरण बनाया गया",
+    "partage_retrait": "साझाकरण हटाया गया",
+    "connexion_reussie": "साइन-इन सफल",
+    "connexion_echec": "साइन-इन विफल",
+    "connexion_bloquee": "साइन-इन रोका गया",
+    "utilisateur_invitation": "उपयोगकर्ता को आमंत्रित किया गया",
+    "utilisateur_invitation_renvoyee": "आमंत्रण दोबारा भेजा गया",
+    "utilisateur_role_modifie": "उपयोगकर्ता की भूमिका बदली गई",
+    "utilisateur_desactivation": "खाता निष्क्रिय किया गया",
+    "utilisateur_reactivation": "खाता फिर से सक्रिय किया गया",
+    "droits_modification": "अनुमतियाँ बदली गईं",
+    "journal_export": "ऑडिट लॉग निर्यात किया गया",
+    "tableau_restauration": "डैशबोर्ड के संस्करण की पुनर्स्थापना",
+    "tableau_suppression": "डैशबोर्ड हटाया गया",
+    "tableau_duplication": "डैशबोर्ड की प्रतिलिपि बनाई गई"
+  },
+  "resultats": {
+    "succes": "सफल",
+    "echec": "विफल",
+    "refuse": "अस्वीकृत"
+  },
+  "cibles": {
+    "source": "स्रोत",
+    "jeu": "आयात",
+    "utilisateur": "उपयोगकर्ता",
+    "artefact": "आर्टिफ़ैक्ट",
+    "conversation": "बातचीत",
+    "partage": "साझाकरण",
+    "droits": "अनुमतियाँ",
+    "journal": "लॉग",
+    "tableau": "डैशबोर्ड"
+  },
+  "acteurInconnu": "अज्ञात",
+  "vide": "इन फ़िल्टरों से कोई घटना मेल नहीं खाती।",
+  "detailsAfficher": "विवरण दिखाएँ",
+  "aucunDetail": "कोई विवरण नहीं",
+  "pagination": {
+    "navigation": "लॉग का पृष्ठ-क्रम",
+    "precedent": "पिछला",
+    "suivant": "अगला",
+    "page": "पृष्ठ {page} / {pages}",
+    "total": "कुल {total} घटनाएँ"
+  },
+  "export": {
+    "lien": "CSV में निर्यात करें",
+    "mention": "निर्यात फ़िल्टर से मेल खाने वाली सबसे हाल की {max} घटनाओं तक सीमित है।",
+    "colonnes": {
+      "date": "तारीख़ (UTC)",
+      "acteur": "कर्ता",
+      "acteurId": "कर्ता की पहचान",
+      "action": "कार्रवाई",
+      "cibleType": "लक्ष्य का प्रकार",
+      "cibleId": "लक्ष्य की पहचान",
+      "cibleLibelle": "लक्ष्य का नाम",
+      "resultat": "परिणाम",
+      "ip": "आईपी पता",
+      "details": "विवरण (JSON)"
+    }
+  }
+}

@@ -1,6 +1,8 @@
 import { AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { notFound, redirect } from 'next/navigation'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { exigerAdminMedicAssist } from '@/lib/medic-assist/acces'
+import { toIntlTag } from '@/i18n/config'
 import { chargerIncremental } from '@/lib/warehouse/incremental-admin'
 import { Badge } from '@/components/ui/badge'
 import { EnTetePage } from '@/components/ui/en-tete-page'
@@ -8,12 +10,13 @@ import { FormulaireIncremental } from './formulaire'
 
 export const dynamic = 'force-dynamic'
 
-const messages = new Map([
-  ['enregistre', 'Configuration enregistrée.'],
-  ['publie', 'Copie publiée.'],
-  ['identique', 'Synchronisation réussie. La copie publiée est inchangée.'],
-  ['en_cours', 'Une synchronisation est déjà en cours.'],
-  ['echec', 'La synchronisation a échoué. Consultez le suivi de l’import.'],
+/** Paramètre `etat` de l'URL -> clé `sources.incremental.page.messages.<clé>`. */
+const CLES_MESSAGE = new Map([
+  ['enregistre', 'enregistre'],
+  ['publie', 'publie'],
+  ['identique', 'identique'],
+  ['en_cours', 'enCours'],
+  ['echec', 'echec'],
 ])
 
 export default async function ImportIncremental({ params, searchParams }: {
@@ -23,21 +26,23 @@ export default async function ImportIncremental({ params, searchParams }: {
   if (!/^[a-z][a-z0-9_]{0,59}$/.test(params.cle)) notFound()
   const jeu = await chargerIncremental(params.cle)
   if (!jeu) notFound()
-  const date = jeu.etat?.reconcilie_a?.toLocaleString('fr', { timeZone: 'UTC' })
-  const message = messages.get(searchParams.etat ?? '')
+  const [t, locale] = await Promise.all([getTranslations('sources.incremental.page'), getLocale()])
+  const date = jeu.etat?.reconcilie_a?.toLocaleString(toIntlTag(locale), { timeZone: 'UTC' })
+  const cleMessage = CLES_MESSAGE.get(searchParams.etat ?? '')
+  const message = cleMessage ? t('messages.' + cleMessage) : undefined
   return (
     <section className="mx-auto max-w-4xl space-y-6">
       <EnTetePage
-        retour={{ href: '/sources/qualite/' + jeu.cle, libelle: 'Qualité et suivi' }}
-        titre={'Synchronisation incrémentale · ' + jeu.titre}
-        description="La source doit mettre à jour l’horodatage à chaque modification. Une réconciliation relit toutes les lignes pour détecter les suppressions."
+        retour={{ href: '/sources/qualite/' + jeu.cle, libelle: t('retour') }}
+        titre={t('titre', { titre: jeu.titre })}
+        description={t('description')}
       />
       <section className="space-y-4 rounded-lg border bg-card p-5">
-        <h2 className="text-base font-semibold">État actuel</h2>
+        <h2 className="text-base font-semibold">{t('etatActuel')}</h2>
         <dl className="grid gap-3 text-sm sm:grid-cols-2">
-          <div><dt className="text-muted-foreground">Mode</dt><dd className="mt-0.5">{jeu.etat ? <Badge variant="success">Incrémental activé</Badge> : <Badge variant="outline">Lecture complète</Badge>}</dd></div>
-          <div><dt className="text-muted-foreground">Dernière réconciliation</dt><dd>{date ? date + ' UTC' : '—'}</dd></div>
-          {jeu.etat?.curseur && <div><dt className="text-muted-foreground">Dernier horodatage lu</dt><dd>{jeu.etat.curseur}</dd></div>}
+          <div><dt className="text-muted-foreground">{t('mode')}</dt><dd className="mt-0.5">{jeu.etat ? <Badge variant="success">{t('modeActive')}</Badge> : <Badge variant="outline">{t('modeComplet')}</Badge>}</dd></div>
+          <div><dt className="text-muted-foreground">{t('derniereReconciliation')}</dt><dd>{date ? date + ' UTC' : '—'}</dd></div>
+          {jeu.etat?.curseur && <div><dt className="text-muted-foreground">{t('dernierHorodatage')}</dt><dd>{jeu.etat.curseur}</dd></div>}
         </dl>
       </section>
       {message && (searchParams.etat === 'echec'

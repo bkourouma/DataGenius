@@ -1,21 +1,23 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogBody, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { FormulaireFrequence } from './formulaires'
 
 export function FrequenceDialogue({ cle, titre, frequence }: { cle: string; titre: string; frequence: number }) {
+  const t = useTranslations('sources.formulaires')
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
-          Modifier la fréquence<span className="sr-only"> de {titre}</span>
+          {t('modifierFrequence')}<span className="sr-only">{' '}{t('modifierFrequenceSr', { titre })}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Fréquence de synchronisation</DialogTitle>
-          <DialogDescription>{titre} · actuellement toutes les {frequence} min</DialogDescription>
+          <DialogTitle>{t('frequenceTitre')}</DialogTitle>
+          <DialogDescription>{t('frequenceActuelle', { titre, frequence })}</DialogDescription>
         </DialogHeader>
         <DialogBody><FormulaireFrequence cle={cle} frequence={frequence} /></DialogBody>
       </DialogContent>

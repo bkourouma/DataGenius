@@ -1,0 +1,280 @@
+{
+  "coquille": {
+    "metadata": {
+      "description": "Analysez vos données et créez des rapports par la conversation."
+    },
+    "rechercher": "Rechercher",
+    "rechercherOuDemander": "Rechercher ou demander",
+    "espaceDeTravail": "Espace de travail",
+    "seDeconnecter": "Se déconnecter",
+    "ouvrirMenu": "Ouvrir le menu",
+    "fermerMenu": "Fermer le menu",
+    "menu": "Menu",
+    "compte": "Compte",
+    "administrateur": "Administrateur",
+    "membre": "Membre",
+    "groupes": {
+      "travail": "Travail",
+      "administration": "Administration"
+    },
+    "nav": {
+      "conversations": {
+        "libelle": "Conversations",
+        "motsCles": "chat assistant question"
+      },
+      "analyses": {
+        "libelle": "Analyses",
+        "motsCles": "enregistrees partages rapports taches"
+      },
+      "tableaux": {
+        "libelle": "Tableaux de bord",
+        "motsCles": "dashboard indicateurs alertes"
+      },
+      "tendances": {
+        "libelle": "Tendances",
+        "motsCles": "evolution courbe periode"
+      },
+      "espaces": {
+        "libelle": "Espaces",
+        "motsCles": "jeux donnees domaines"
+      },
+      "recherche": {
+        "libelle": "Recherche",
+        "motsCles": "trouver chercher retrouver"
+      },
+      "glossaire": {
+        "libelle": "Glossaire",
+        "motsCles": "definitions termes lexique"
+      },
+      "sources": {
+        "libelle": "Sources",
+        "motsCles": "connexion base import synchronisation postgresql mysql api fichier"
+      },
+      "utilisateurs": {
+        "libelle": "Utilisateurs",
+        "motsCles": "comptes membres invitations roles"
+      },
+      "droits": {
+        "libelle": "Droits d’accès",
+        "motsCles": "groupes membres permissions"
+      },
+      "parametres": {
+        "libelle": "Paramètres",
+        "motsCles": "configuration fournisseur ia usages avis"
+      },
+      "journal": {
+        "libelle": "Journal d’audit",
+        "motsCles": "audit historique trace evenements connexions"
+      }
+    },
+    "palette": {
+      "placeholder": "Aller à une page ou poser une question…",
+      "echap": "Échap",
+      "entree": "Entrée",
+      "commandes": "Commandes",
+      "aucunResultat": "Aucune page ne correspond.",
+      "parcourir": "parcourir",
+      "valider": "valider",
+      "aideQuestion": "Tapez une question pour l’envoyer à l’assistant",
+      "poserQuestion": "Poser la question à l’assistant",
+      "sections": {
+        "aller": "Aller à",
+        "tableaux": "Tableaux",
+        "analyses": "Analyses",
+        "demander": "Demander"
+      },
+      "nouvelleConversation": {
+        "libelle": "Nouvelle conversation",
+        "motsCles": "chat question"
+      }
+    }
+  },
+  "connexion": {
+    "titre": "Connexion",
+    "sousTitre": "Accédez à votre espace Data Genius.",
+    "accroche": "Interrogez vos données par la conversation, retrouvez vos analyses et tableaux de bord.",
+    "points": {
+      "question": "Posez une question en français, la réponse arrive avec ses chiffres.",
+      "tableaux": "Gardez vos analyses dans des tableaux de bord prêts à partager.",
+      "sources": "Travaillez sur des sources de données à jour."
+    },
+    "email": "Adresse e-mail",
+    "motDePasse": "Mot de passe",
+    "motDePasseOublie": "Mot de passe oublié ?",
+    "seConnecter": "Se connecter",
+    "enCours": "Connexion…",
+    "entreprise": "Connexion entreprise",
+    "erreurs": {
+      "tropDeTentatives": "Trop de tentatives. Réessayez dans 15 minutes.",
+      "identifiantsInvalides": "Identifiants invalides.",
+      "connexionImpossible": "Connexion impossible. Vérifiez que votre compte est autorisé.",
+      "indisponible": "Connexion indisponible. Réessayez.",
+      "entrepriseIndisponible": "Connexion entreprise indisponible. Réessayez."
+    },
+    "succes": {
+      "motDePasseDefini": "Votre mot de passe est défini. Vous pouvez vous connecter."
+    }
+  },
+  "langue": {
+    "libelle": "Langue de l’interface"
+  },
+  "motDePasseOublie": {
+    "metaTitre": "Mot de passe oublié",
+    "titre": "Mot de passe oublié",
+    "intro": "Saisissez votre adresse e-mail pour recevoir un lien de réinitialisation.",
+    "entreprise": "Si votre entreprise gère votre connexion, utilisez la connexion entreprise depuis la page de connexion.",
+    "retour": "Retour à la connexion",
+    "adresse": "Adresse e-mail",
+    "envoyer": "Envoyer le lien",
+    "envoi": "Envoi…",
+    "confirmation": "Si un compte correspond à cette adresse, un e-mail contenant un lien de réinitialisation vient d'être envoyé. Le lien est valable 1 heure."
+  },
+  "definirMotDePasse": {
+    "metaTitre": "Définir le mot de passe",
+    "bienvenue": "Bienvenue, {prenom}",
+    "nouveauTitre": "Nouveau mot de passe",
+    "choisir": "Choisissez votre mot de passe",
+    "invalideTitre": "Lien invalide",
+    "invalide": "Ce lien est invalide ou a expiré.",
+    "nouveauLien": "Demander un nouveau lien",
+    "retour": "Retour à la connexion",
+    "nouveauMotDePasse": "Nouveau mot de passe",
+    "aide": "{min} caractères minimum",
+    "confirmer": "Confirmer le mot de passe",
+    "enregistrer": "Enregistrer le mot de passe",
+    "enregistrement": "Enregistrement…",
+    "formulaireIncomplet": "Formulaire incomplet.",
+    "differents": "Les deux mots de passe ne sont pas identiques.",
+    "echec": "Impossible de définir le mot de passe. Réessayez."
+  },
+  "tendances": {
+    "titre": "Tendances mensuelles",
+    "description": "Repérez les écarts atypiques d’un indicateur et obtenez une estimation prudente des prochains mois.",
+    "aucunTitre": "Aucun indicateur mensuel accessible",
+    "aucunDescription": "Configurez un calendrier sur un jeu doté d’indicateurs pour suivre son évolution mois par mois.",
+    "indisponible": "L’analyse est temporairement indisponible.",
+    "jeu": "Jeu de données",
+    "choisirJeu": "Choisir un jeu",
+    "indicateur": "Indicateur",
+    "choisirIndicateur": "Choisir un indicateur",
+    "premierMois": "Premier mois",
+    "dernierMois": "Dernier mois",
+    "horizon": "Horizon en mois",
+    "analyser": "Analyser la tendance",
+    "observations": "Observations et écarts atypiques",
+    "observationsAide": "Le signal compare chaque valeur aux six mois précédents. Il apparaît au-delà de 3,5 sur le score d’écart robuste, ou dès que la valeur change si la dispersion médiane est nulle.",
+    "manquants": "{count, plural, one {{n} mois sans valeur.} other {{n} mois sans valeur.}}",
+    "horsPrecision": "{count, plural, one {{n} valeur affichée sans conversion et exclue des estimations.} other {{n} valeurs affichées sans conversion et exclues des estimations.}}",
+    "mois": "Mois",
+    "valeur": "Valeur",
+    "ecart": "Écart",
+    "atypique": "Atypique",
+    "previsions": "Prévisions",
+    "previsionsAide": "L’estimation reprend la médiane des trois derniers mois. À partir de douze erreurs historiques à un mois, la bande ajoute et retranche leur 90e centile autour de l’estimation.",
+    "validation": "{count, plural, one {Erreur absolue moyenne sur {n} prévision historique successive · {mae}} other {Erreur absolue moyenne sur {n} prévisions historiques successives · {mae}}}",
+    "estimation": "Estimation",
+    "bande": "Bande historique",
+    "bandeValeurs": "{bas} à {haut}",
+    "serieInsuffisante": "{count, plural, one {Six mois consécutifs exploitables sont requis en fin de période. Série actuelle · {n} mois.} other {Six mois consécutifs exploitables sont requis en fin de période. Série actuelle · {n} mois.}}",
+    "provenance": "Provenance"
+  },
+  "espaces": {
+    "titre": "Espaces de données",
+    "description": "Les espaces regroupent les jeux de données par équipe ou par sujet. Vous voyez ceux auxquels vous avez accès.",
+    "gerer": "Gérer les espaces",
+    "aucunTitre": "Aucun espace accessible",
+    "aucunAdmin": "Créez un espace pour y regrouper des jeux de données et choisir qui peut les consulter.",
+    "aucunMembre": "Demandez à un administrateur de vous donner accès à un espace.",
+    "nbJeux": "{count, plural, one {{n} jeu} other {{n} jeux}}",
+    "listeJeux": "Jeux de données",
+    "aucunJeu": "Aucun jeu dans cet espace."
+  },
+  "utilisateurs": {
+    "titre": "Utilisateurs",
+    "description": "Invitez des personnes, gérez leur rôle et désactivez les comptes qui n’ont plus besoin d’accéder à Data Genius.",
+    "inviterTitre": "Inviter un utilisateur",
+    "comptes": "Comptes ({n})",
+    "aucunCompte": "Aucun compte.",
+    "vous": "(Vous)",
+    "groupes": "Groupes : ",
+    "aucunGroupe": "Aucun groupe",
+    "connexionEntreprise": "Connexion entreprise",
+    "role": {
+      "admin": "Administrateur",
+      "membre": "Membre"
+    },
+    "statut": {
+      "actif": "Actif",
+      "desactive": "Désactivé",
+      "invite": "Invité",
+      "inviteExpire": "Invité · expire le {date}"
+    },
+    "lien": {
+      "titre": "Lien d’invitation",
+      "copier": "Copier",
+      "copie": "Copié",
+      "avertissementDate": "Ce lien donne accès à la création du mot de passe : ne le partagez qu’avec la personne invitée ; il expire à la date indiquée ({date}).",
+      "avertissementListe": "Ce lien donne accès à la création du mot de passe : ne le partagez qu’avec la personne invitée ; il expire à la date indiquée dans la liste des comptes."
+    },
+    "formulaire": {
+      "email": "Adresse e-mail",
+      "role": "Rôle",
+      "prenom": "Prénom",
+      "nom": "Nom",
+      "envoyer": "Envoyer l’invitation",
+      "envoi": "Envoi…"
+    },
+    "actions": {
+      "propreCompte": "Vous ne pouvez pas modifier votre propre compte ici.",
+      "renvoyer": "Renvoyer l’invitation",
+      "renvoi": "Renvoi…",
+      "reactiver": "Réactiver",
+      "reactivation": "Réactivation…",
+      "desactiver": "Désactiver",
+      "desactiverTitre": "Désactiver {nom} ?",
+      "desactiverDescription": "Cette personne ne pourra plus se connecter. Ses données sont conservées. Vous pourrez réactiver le compte plus tard.",
+      "desactiverConfirmer": "Désactiver le compte",
+      "passerMembre": "Passer membre",
+      "passerAdmin": "Passer administrateur",
+      "passerMembreTitre": "Passer {nom} en membre ?",
+      "passerAdminTitre": "Passer {nom} administrateur ?",
+      "passerMembreDescription": "Cette personne perdra l’accès à l’administration (utilisateurs, sources, paramètres) et ne verra plus que les données autorisées à ses groupes.",
+      "passerAdminDescription": "Cette personne pourra gérer les utilisateurs, les sources et les paramètres, et verra toutes les données.",
+      "annuler": "Annuler"
+    },
+    "serveur": {
+      "refus": "Accès réservé aux administrateurs.",
+      "echec": "Opération impossible pour le moment. Réessayez plus tard.",
+      "courrierNonParti": "Le courrier n'a pas pu être envoyé (SMTP non configuré ou en échec). Transmettez ce lien vous-même :",
+      "invitationEnvoyee": "Invitation envoyée à {adresse}.",
+      "personneInvitee": "la personne invitée",
+      "desactive": "Compte désactivé.",
+      "reactive": "Compte réactivé.",
+      "roleModifie": "Rôle modifié."
+    }
+  },
+  "mails": {
+    "pied": "Message automatique — merci de ne pas y répondre.",
+    "bonjour": "Bonjour {prenom},",
+    "invitation": {
+      "sujet": "Votre invitation à Data Genius",
+      "introPar": "{par} vous invite à rejoindre Data Genius.",
+      "introAdmin": "Un administrateur vous invite à rejoindre Data Genius.",
+      "choisir": "Choisissez votre mot de passe pour activer votre compte :",
+      "validite": "Ce lien est valable 7 jours et ne peut servir qu'une fois.",
+      "titre": "Activez votre compte",
+      "corps": "Choisissez votre mot de passe pour activer votre compte. Ce lien est valable 7 jours et ne peut servir qu’une fois.",
+      "bouton": "Choisir mon mot de passe"
+    },
+    "reinitialisation": {
+      "sujet": "Réinitialisation de votre mot de passe Data Genius",
+      "intro": "Une réinitialisation de votre mot de passe a été demandée. Pour en choisir un nouveau :",
+      "validite": "Ce lien est valable 1 heure.",
+      "ignorer": "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message : votre mot de passe reste inchangé.",
+      "titre": "Réinitialiser votre mot de passe",
+      "corps": "Une réinitialisation de votre mot de passe a été demandée. Ce lien est valable 1 heure.",
+      "ignorerHtml": "Si vous n’êtes pas à l’origine de cette demande, ignorez ce message : votre mot de passe reste inchangé.",
+      "bouton": "Choisir un nouveau mot de passe"
+    }
+  }
+}

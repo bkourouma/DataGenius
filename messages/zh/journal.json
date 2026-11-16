@@ -1,0 +1,107 @@
+{
+  "titre": "审计日志",
+  "introduction": "查看谁在何时做了什么：数据源、导出、共享、登录、账户和权限。只有管理员可以查看此日志。",
+  "retention": "事件保留 {jours} 天，之后自动删除。",
+  "fuseau": "时间以 {fuseau} 显示。",
+  "filtres": {
+    "legende": "筛选日志",
+    "du": "起始日期",
+    "au": "截止日期",
+    "acteur": "操作者",
+    "acteurAide": "账户标识、姓名或电子邮件地址的一部分。",
+    "famille": "操作类型",
+    "action": "操作",
+    "cible": "对象",
+    "toutes": "所有类型",
+    "tous": "所有操作",
+    "appliquer": "筛选",
+    "reinitialiser": "重置"
+  },
+  "tableau": {
+    "legende": "审计日志事件，按时间从新到旧排列"
+  },
+  "colonnes": {
+    "date": "日期",
+    "acteur": "操作者",
+    "action": "操作",
+    "cible": "对象",
+    "resultat": "结果",
+    "ip": "IP 地址",
+    "details": "详情"
+  },
+  "familles": {
+    "source": "数据源",
+    "export": "导出",
+    "partage": "共享",
+    "connexion": "登录",
+    "utilisateur": "用户",
+    "droits": "访问权限",
+    "journal": "审计日志",
+    "tableau": "仪表板"
+  },
+  "actions": {
+    "source_creation": "创建数据源",
+    "source_modification": "修改数据源",
+    "source_suppression": "删除数据源",
+    "source_synchronisation": "同步数据源",
+    "export_artefact": "导出成果",
+    "partage_creation": "创建共享",
+    "partage_retrait": "取消共享",
+    "connexion_reussie": "登录成功",
+    "connexion_echec": "登录失败",
+    "connexion_bloquee": "登录被阻止",
+    "utilisateur_invitation": "邀请用户",
+    "utilisateur_invitation_renvoyee": "重新发送邀请",
+    "utilisateur_role_modifie": "修改用户角色",
+    "utilisateur_desactivation": "停用账户",
+    "utilisateur_reactivation": "重新启用账户",
+    "droits_modification": "修改权限",
+    "journal_export": "导出审计日志",
+    "tableau_restauration": "恢复仪表板版本",
+    "tableau_suppression": "删除仪表板",
+    "tableau_duplication": "复制仪表板"
+  },
+  "resultats": {
+    "succes": "成功",
+    "echec": "失败",
+    "refuse": "已拒绝"
+  },
+  "cibles": {
+    "source": "数据源",
+    "jeu": "导入",
+    "utilisateur": "用户",
+    "artefact": "成果",
+    "conversation": "对话",
+    "partage": "共享",
+    "droits": "权限",
+    "journal": "日志",
+    "tableau": "仪表板"
+  },
+  "acteurInconnu": "未知",
+  "vide": "没有符合这些筛选条件的事件。",
+  "detailsAfficher": "显示详情",
+  "aucunDetail": "无详情",
+  "pagination": {
+    "navigation": "日志分页",
+    "precedent": "上一页",
+    "suivant": "下一页",
+    "page": "第 {page} 页，共 {pages} 页",
+    "total": "共 {total} 条事件"
+  },
+  "export": {
+    "lien": "导出为 CSV",
+    "mention": "导出仅限符合筛选条件的最近 {max} 条事件。",
+    "colonnes": {
+      "date": "日期 (UTC)",
+      "acteur": "操作者",
+      "acteurId": "操作者标识",
+      "action": "操作",
+      "cibleType": "对象类型",
+      "cibleId": "对象标识",
+      "cibleLibelle": "对象名称",
+      "resultat": "结果",
+      "ip": "IP 地址",
+      "details": "详情 (JSON)"
+    }
+  }
+}

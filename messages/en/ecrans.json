@@ -1,0 +1,280 @@
+{
+  "coquille": {
+    "metadata": {
+      "description": "Analyse your data and build reports through conversation."
+    },
+    "rechercher": "Search",
+    "rechercherOuDemander": "Search or ask",
+    "espaceDeTravail": "Workspace",
+    "seDeconnecter": "Sign out",
+    "ouvrirMenu": "Open menu",
+    "fermerMenu": "Close menu",
+    "menu": "Menu",
+    "compte": "Account",
+    "administrateur": "Administrator",
+    "membre": "Member",
+    "groupes": {
+      "travail": "Work",
+      "administration": "Administration"
+    },
+    "nav": {
+      "conversations": {
+        "libelle": "Conversations",
+        "motsCles": "chat assistant question"
+      },
+      "analyses": {
+        "libelle": "Analyses",
+        "motsCles": "saved shared reports tasks"
+      },
+      "tableaux": {
+        "libelle": "Dashboards",
+        "motsCles": "tableaux indicators alerts"
+      },
+      "tendances": {
+        "libelle": "Trends",
+        "motsCles": "evolution curve period"
+      },
+      "espaces": {
+        "libelle": "Spaces",
+        "motsCles": "datasets data domains"
+      },
+      "recherche": {
+        "libelle": "Search",
+        "motsCles": "find look up retrieve"
+      },
+      "glossaire": {
+        "libelle": "Glossary",
+        "motsCles": "definitions terms lexicon"
+      },
+      "sources": {
+        "libelle": "Sources",
+        "motsCles": "connection database import synchronisation postgresql mysql api file"
+      },
+      "utilisateurs": {
+        "libelle": "Users",
+        "motsCles": "accounts members invitations roles"
+      },
+      "droits": {
+        "libelle": "Access rights",
+        "motsCles": "groups members permissions"
+      },
+      "parametres": {
+        "libelle": "Settings",
+        "motsCles": "configuration provider ai usage feedback"
+      },
+      "journal": {
+        "libelle": "Audit log",
+        "motsCles": "audit history trace events sign-ins"
+      }
+    },
+    "palette": {
+      "placeholder": "Go to a page or ask a question…",
+      "echap": "Esc",
+      "entree": "Enter",
+      "commandes": "Commands",
+      "aucunResultat": "No page matches.",
+      "parcourir": "browse",
+      "valider": "select",
+      "aideQuestion": "Type a question to send it to the assistant",
+      "poserQuestion": "Ask the assistant this question",
+      "sections": {
+        "aller": "Go to",
+        "tableaux": "Dashboards",
+        "analyses": "Analyses",
+        "demander": "Ask"
+      },
+      "nouvelleConversation": {
+        "libelle": "New conversation",
+        "motsCles": "chat question"
+      }
+    }
+  },
+  "connexion": {
+    "titre": "Sign in",
+    "sousTitre": "Access your Data Genius workspace.",
+    "accroche": "Ask your data questions through conversation, and find your analyses and dashboards.",
+    "points": {
+      "question": "Ask a question and the answer arrives with its figures.",
+      "tableaux": "Keep your analyses in dashboards ready to share.",
+      "sources": "Work on up-to-date data sources."
+    },
+    "email": "Email address",
+    "motDePasse": "Password",
+    "motDePasseOublie": "Forgot your password?",
+    "seConnecter": "Sign in",
+    "enCours": "Signing in…",
+    "entreprise": "Company sign-in",
+    "erreurs": {
+      "tropDeTentatives": "Too many attempts. Try again in 15 minutes.",
+      "identifiantsInvalides": "Invalid credentials.",
+      "connexionImpossible": "Sign-in failed. Check that your account is authorised.",
+      "indisponible": "Sign-in is unavailable. Try again.",
+      "entrepriseIndisponible": "Company sign-in is unavailable. Try again."
+    },
+    "succes": {
+      "motDePasseDefini": "Your password has been set. You can now sign in."
+    }
+  },
+  "langue": {
+    "libelle": "Interface language"
+  },
+  "motDePasseOublie": {
+    "metaTitre": "Forgot password",
+    "titre": "Forgot password",
+    "intro": "Enter your email address to receive a reset link.",
+    "entreprise": "If your company manages your sign-in, use company sign-in from the login page.",
+    "retour": "Back to sign-in",
+    "adresse": "Email address",
+    "envoyer": "Send the link",
+    "envoi": "Sending…",
+    "confirmation": "If an account matches this address, an email containing a reset link has just been sent. The link is valid for 1 hour."
+  },
+  "definirMotDePasse": {
+    "metaTitre": "Set your password",
+    "bienvenue": "Welcome, {prenom}",
+    "nouveauTitre": "New password",
+    "choisir": "Choose your password",
+    "invalideTitre": "Invalid link",
+    "invalide": "This link is invalid or has expired.",
+    "nouveauLien": "Request a new link",
+    "retour": "Back to sign-in",
+    "nouveauMotDePasse": "New password",
+    "aide": "At least {min} characters",
+    "confirmer": "Confirm password",
+    "enregistrer": "Save password",
+    "enregistrement": "Saving…",
+    "formulaireIncomplet": "Incomplete form.",
+    "differents": "The two passwords do not match.",
+    "echec": "Unable to set the password. Please try again."
+  },
+  "tendances": {
+    "titre": "Monthly trends",
+    "description": "Spot unusual deviations in an indicator and get a cautious estimate of the coming months.",
+    "aucunTitre": "No monthly indicator available",
+    "aucunDescription": "Set up a calendar on a dataset that has indicators to follow its evolution month by month.",
+    "indisponible": "The analysis is temporarily unavailable.",
+    "jeu": "Dataset",
+    "choisirJeu": "Choose a dataset",
+    "indicateur": "Indicator",
+    "choisirIndicateur": "Choose an indicator",
+    "premierMois": "First month",
+    "dernierMois": "Last month",
+    "horizon": "Horizon in months",
+    "analyser": "Analyse the trend",
+    "observations": "Observations and unusual deviations",
+    "observationsAide": "The signal compares each value with the previous six months. It appears above 3.5 on the robust deviation score, or as soon as the value changes if the median dispersion is zero.",
+    "manquants": "{count, plural, one {{n} month without a value.} other {{n} months without a value.}}",
+    "horsPrecision": "{count, plural, one {{n} value shown without conversion and excluded from the estimates.} other {{n} values shown without conversion and excluded from the estimates.}}",
+    "mois": "Month",
+    "valeur": "Value",
+    "ecart": "Deviation",
+    "atypique": "Unusual",
+    "previsions": "Forecasts",
+    "previsionsAide": "The estimate uses the median of the last three months. Once there are twelve historical one-month errors, the band adds and subtracts their 90th percentile around the estimate.",
+    "validation": "{count, plural, one {Mean absolute error over {n} successive historical forecast · {mae}} other {Mean absolute error over {n} successive historical forecasts · {mae}}}",
+    "estimation": "Estimate",
+    "bande": "Historical band",
+    "bandeValeurs": "{bas} to {haut}",
+    "serieInsuffisante": "{count, plural, one {Six consecutive usable months are required at the end of the period. Current series · {n} month.} other {Six consecutive usable months are required at the end of the period. Current series · {n} months.}}",
+    "provenance": "Source"
+  },
+  "espaces": {
+    "titre": "Data spaces",
+    "description": "Spaces group datasets by team or by topic. You see the ones you have access to.",
+    "gerer": "Manage spaces",
+    "aucunTitre": "No accessible space",
+    "aucunAdmin": "Create a space to group datasets together and choose who can view them.",
+    "aucunMembre": "Ask an administrator to give you access to a space.",
+    "nbJeux": "{count, plural, one {{n} dataset} other {{n} datasets}}",
+    "listeJeux": "Datasets",
+    "aucunJeu": "No dataset in this space."
+  },
+  "utilisateurs": {
+    "titre": "Users",
+    "description": "Invite people, manage their role and deactivate accounts that no longer need access to Data Genius.",
+    "inviterTitre": "Invite a user",
+    "comptes": "Accounts ({n})",
+    "aucunCompte": "No accounts.",
+    "vous": "(You)",
+    "groupes": "Groups: ",
+    "aucunGroupe": "No group",
+    "connexionEntreprise": "Company sign-in",
+    "role": {
+      "admin": "Administrator",
+      "membre": "Member"
+    },
+    "statut": {
+      "actif": "Active",
+      "desactive": "Deactivated",
+      "invite": "Invited",
+      "inviteExpire": "Invited · expires on {date}"
+    },
+    "lien": {
+      "titre": "Invitation link",
+      "copier": "Copy",
+      "copie": "Copied",
+      "avertissementDate": "This link gives access to password creation: share it only with the invited person; it expires on the date shown ({date}).",
+      "avertissementListe": "This link gives access to password creation: share it only with the invited person; it expires on the date shown in the account list."
+    },
+    "formulaire": {
+      "email": "Email address",
+      "role": "Role",
+      "prenom": "First name",
+      "nom": "Last name",
+      "envoyer": "Send the invitation",
+      "envoi": "Sending…"
+    },
+    "actions": {
+      "propreCompte": "You cannot modify your own account here.",
+      "renvoyer": "Resend the invitation",
+      "renvoi": "Resending…",
+      "reactiver": "Reactivate",
+      "reactivation": "Reactivating…",
+      "desactiver": "Deactivate",
+      "desactiverTitre": "Deactivate {nom}?",
+      "desactiverDescription": "This person will no longer be able to sign in. Their data is kept. You can reactivate the account later.",
+      "desactiverConfirmer": "Deactivate the account",
+      "passerMembre": "Make member",
+      "passerAdmin": "Make administrator",
+      "passerMembreTitre": "Change {nom} to member?",
+      "passerAdminTitre": "Make {nom} an administrator?",
+      "passerMembreDescription": "This person will lose access to administration (users, sources, settings) and will only see the data authorised for their groups.",
+      "passerAdminDescription": "This person will be able to manage users, sources and settings, and will see all the data.",
+      "annuler": "Cancel"
+    },
+    "serveur": {
+      "refus": "Access restricted to administrators.",
+      "echec": "Operation not possible at the moment. Please try again later.",
+      "courrierNonParti": "The email could not be sent (SMTP not configured or failing). Pass this link on yourself:",
+      "invitationEnvoyee": "Invitation sent to {adresse}.",
+      "personneInvitee": "the invited person",
+      "desactive": "Account deactivated.",
+      "reactive": "Account reactivated.",
+      "roleModifie": "Role updated."
+    }
+  },
+  "mails": {
+    "pied": "Automated message — please do not reply.",
+    "bonjour": "Hello {prenom},",
+    "invitation": {
+      "sujet": "Your invitation to Data Genius",
+      "introPar": "{par} invites you to join Data Genius.",
+      "introAdmin": "An administrator invites you to join Data Genius.",
+      "choisir": "Choose your password to activate your account:",
+      "validite": "This link is valid for 7 days and can only be used once.",
+      "titre": "Activate your account",
+      "corps": "Choose your password to activate your account. This link is valid for 7 days and can only be used once.",
+      "bouton": "Choose my password"
+    },
+    "reinitialisation": {
+      "sujet": "Reset your Data Genius password",
+      "intro": "A password reset has been requested. To choose a new one:",
+      "validite": "This link is valid for 1 hour.",
+      "ignorer": "If you did not make this request, ignore this message: your password remains unchanged.",
+      "titre": "Reset your password",
+      "corps": "A password reset has been requested. This link is valid for 1 hour.",
+      "ignorerHtml": "If you did not make this request, ignore this message: your password remains unchanged.",
+      "bouton": "Choose a new password"
+    }
+  }
+}

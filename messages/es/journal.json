@@ -1,0 +1,107 @@
+{
+  "titre": "Registro de auditoría",
+  "introduction": "Consulte quién hizo qué y cuándo: fuentes, exportaciones, comparticiones, inicios de sesión, cuentas y permisos. Solo los administradores pueden ver este registro.",
+  "retention": "Los eventos se conservan durante {jours} días y después se eliminan automáticamente.",
+  "fuseau": "Horas mostradas en {fuseau}.",
+  "filtres": {
+    "legende": "Filtrar el registro",
+    "du": "Desde",
+    "au": "Hasta",
+    "acteur": "Autor",
+    "acteurAide": "Identificador, nombre o parte del correo electrónico de la cuenta.",
+    "famille": "Tipo de acción",
+    "action": "Acción",
+    "cible": "Destino",
+    "toutes": "Todos los tipos",
+    "tous": "Todas las acciones",
+    "appliquer": "Filtrar",
+    "reinitialiser": "Restablecer"
+  },
+  "tableau": {
+    "legende": "Eventos del registro de auditoría, del más reciente al más antiguo"
+  },
+  "colonnes": {
+    "date": "Fecha",
+    "acteur": "Autor",
+    "action": "Acción",
+    "cible": "Destino",
+    "resultat": "Resultado",
+    "ip": "Dirección IP",
+    "details": "Detalles"
+  },
+  "familles": {
+    "source": "Fuentes",
+    "export": "Exportaciones",
+    "partage": "Comparticiones",
+    "connexion": "Inicios de sesión",
+    "utilisateur": "Usuarios",
+    "droits": "Derechos de acceso",
+    "journal": "Registro de auditoría",
+    "tableau": "Paneles"
+  },
+  "actions": {
+    "source_creation": "Creación de una fuente",
+    "source_modification": "Modificación de una fuente",
+    "source_suppression": "Eliminación de una fuente",
+    "source_synchronisation": "Sincronización de una fuente",
+    "export_artefact": "Exportación de un artefacto",
+    "partage_creation": "Creación de una compartición",
+    "partage_retrait": "Retirada de una compartición",
+    "connexion_reussie": "Inicio de sesión correcto",
+    "connexion_echec": "Inicio de sesión fallido",
+    "connexion_bloquee": "Inicio de sesión bloqueado",
+    "utilisateur_invitation": "Invitación de un usuario",
+    "utilisateur_invitation_renvoyee": "Invitación reenviada",
+    "utilisateur_role_modifie": "Rol de un usuario modificado",
+    "utilisateur_desactivation": "Desactivación de una cuenta",
+    "utilisateur_reactivation": "Reactivación de una cuenta",
+    "droits_modification": "Modificación de permisos",
+    "journal_export": "Exportación del registro de auditoría",
+    "tableau_restauration": "Restauración de una versión de un panel",
+    "tableau_suppression": "Eliminación de un panel",
+    "tableau_duplication": "Duplicación de un panel"
+  },
+  "resultats": {
+    "succes": "Correcto",
+    "echec": "Fallido",
+    "refuse": "Denegado"
+  },
+  "cibles": {
+    "source": "Fuente",
+    "jeu": "Importación",
+    "utilisateur": "Usuario",
+    "artefact": "Artefacto",
+    "conversation": "Conversación",
+    "partage": "Compartición",
+    "droits": "Permisos",
+    "journal": "Registro",
+    "tableau": "Panel"
+  },
+  "acteurInconnu": "Desconocido",
+  "vide": "Ningún evento coincide con estos filtros.",
+  "detailsAfficher": "Mostrar los detalles",
+  "aucunDetail": "Sin detalles",
+  "pagination": {
+    "navigation": "Paginación del registro",
+    "precedent": "Anterior",
+    "suivant": "Siguiente",
+    "page": "Página {page} de {pages}",
+    "total": "{total} eventos en total"
+  },
+  "export": {
+    "lien": "Exportar a CSV",
+    "mention": "La exportación se limita a los {max} eventos más recientes que cumplan los filtros.",
+    "colonnes": {
+      "date": "Fecha (UTC)",
+      "acteur": "Autor",
+      "acteurId": "Identificador del autor",
+      "action": "Acción",
+      "cibleType": "Tipo de destino",
+      "cibleId": "Identificador del destino",
+      "cibleLibelle": "Etiqueta del destino",
+      "resultat": "Resultado",
+      "ip": "Dirección IP",
+      "details": "Detalles (JSON)"
+    }
+  }
+}

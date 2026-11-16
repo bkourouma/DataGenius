@@ -1,0 +1,107 @@
+{
+  "titre": "سجل التدقيق",
+  "introduction": "اطّلع على من قام بماذا ومتى: المصادر والتصدير والمشاركات وتسجيلات الدخول والحسابات والصلاحيات. لا يستطيع الاطلاع على هذا السجل سوى المسؤولين.",
+  "retention": "تُحفظ الأحداث لمدة {jours} يومًا ثم تُحذف تلقائيًا.",
+  "fuseau": "الأوقات معروضة بتوقيت {fuseau}.",
+  "filtres": {
+    "legende": "تصفية السجل",
+    "du": "من",
+    "au": "إلى",
+    "acteur": "المنفّذ",
+    "acteurAide": "معرّف الحساب أو الاسم أو جزء من عنوان البريد الإلكتروني.",
+    "famille": "نوع الإجراء",
+    "action": "الإجراء",
+    "cible": "الهدف",
+    "toutes": "كل الأنواع",
+    "tous": "كل الإجراءات",
+    "appliquer": "تصفية",
+    "reinitialiser": "إعادة ضبط"
+  },
+  "tableau": {
+    "legende": "أحداث سجل التدقيق، من الأحدث إلى الأقدم"
+  },
+  "colonnes": {
+    "date": "التاريخ",
+    "acteur": "المنفّذ",
+    "action": "الإجراء",
+    "cible": "الهدف",
+    "resultat": "النتيجة",
+    "ip": "عنوان IP",
+    "details": "التفاصيل"
+  },
+  "familles": {
+    "source": "المصادر",
+    "export": "عمليات التصدير",
+    "partage": "المشاركات",
+    "connexion": "تسجيلات الدخول",
+    "utilisateur": "المستخدمون",
+    "droits": "حقوق الوصول",
+    "journal": "سجل التدقيق",
+    "tableau": "اللوحات"
+  },
+  "actions": {
+    "source_creation": "إنشاء مصدر",
+    "source_modification": "تعديل مصدر",
+    "source_suppression": "حذف مصدر",
+    "source_synchronisation": "مزامنة مصدر",
+    "export_artefact": "تصدير عنصر",
+    "partage_creation": "إنشاء مشاركة",
+    "partage_retrait": "إلغاء مشاركة",
+    "connexion_reussie": "تسجيل دخول ناجح",
+    "connexion_echec": "فشل تسجيل الدخول",
+    "connexion_bloquee": "تسجيل دخول محظور",
+    "utilisateur_invitation": "دعوة مستخدم",
+    "utilisateur_invitation_renvoyee": "إعادة إرسال دعوة",
+    "utilisateur_role_modifie": "تعديل دور مستخدم",
+    "utilisateur_desactivation": "تعطيل حساب",
+    "utilisateur_reactivation": "إعادة تفعيل حساب",
+    "droits_modification": "تعديل الصلاحيات",
+    "journal_export": "تصدير سجل التدقيق",
+    "tableau_restauration": "استعادة إصدار لوحة",
+    "tableau_suppression": "حذف لوحة",
+    "tableau_duplication": "تكرار لوحة"
+  },
+  "resultats": {
+    "succes": "نجح",
+    "echec": "فشل",
+    "refuse": "مرفوض"
+  },
+  "cibles": {
+    "source": "مصدر",
+    "jeu": "استيراد",
+    "utilisateur": "مستخدم",
+    "artefact": "عنصر",
+    "conversation": "محادثة",
+    "partage": "مشاركة",
+    "droits": "صلاحيات",
+    "journal": "سجل",
+    "tableau": "لوحة"
+  },
+  "acteurInconnu": "غير معروف",
+  "vide": "لا توجد أحداث مطابقة لهذه المرشّحات.",
+  "detailsAfficher": "عرض التفاصيل",
+  "aucunDetail": "لا توجد تفاصيل",
+  "pagination": {
+    "navigation": "التنقّل بين صفحات السجل",
+    "precedent": "السابق",
+    "suivant": "التالي",
+    "page": "الصفحة {page} من {pages}",
+    "total": "الإجمالي: {total} حدثًا"
+  },
+  "export": {
+    "lien": "تصدير بصيغة CSV",
+    "mention": "يقتصر التصدير على أحدث {max} حدثًا مطابقًا للمرشّحات.",
+    "colonnes": {
+      "date": "التاريخ (UTC)",
+      "acteur": "المنفّذ",
+      "acteurId": "معرّف المنفّذ",
+      "action": "الإجراء",
+      "cibleType": "نوع الهدف",
+      "cibleId": "معرّف الهدف",
+      "cibleLibelle": "تسمية الهدف",
+      "resultat": "النتيجة",
+      "ip": "عنوان IP",
+      "details": "التفاصيل (JSON)"
+    }
+  }
+}

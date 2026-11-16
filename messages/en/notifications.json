@@ -1,0 +1,36 @@
+{
+  "cloche": {
+    "titre": "Notifications",
+    "ouvrir": "Notifications, {nombre, plural, =0 {none unread} one {# unread} other {# unread}}",
+    "vide": "No notifications yet.",
+    "toutLu": "Mark all as read",
+    "marquerLu": "Mark as read",
+    "ouvrirLien": "Open",
+    "nonLue": "Unread",
+    "erreur": "Notifications could not be loaded.",
+    "reessayer": "Try again",
+    "chargement": "Loading…"
+  },
+  "alerte": {
+    "titre": "Threshold reached: {mesure}",
+    "message": "In “{tableau}”, “{mesure}” is {valeur}. The threshold of {seuil} has been {sens, select, au_dessus {reached or exceeded} other {reached or crossed downward}}."
+  },
+  "email": {
+    "sujet": "Dashboard alert “{tableau}”: {mesure}",
+    "salutation": "Hello {nom},",
+    "lien": "Open the dashboard",
+    "pied": "You are receiving this message because you are a recipient of a dashboard alert. This is an automated message, please do not reply."
+  },
+  "editeur": {
+    "legende": "Alert notifications",
+    "destinatairesTitre": "Recipients",
+    "destinatairesAide": "You are always notified in the app. Tick the dashboard readers to notify as well: each one receives the value calculated with their own access rights.",
+    "moi": "You (owner)",
+    "aucunLecteur": "Share the dashboard with readers first to be able to notify them.",
+    "email": "Also send an e-mail to the recipients",
+    "webhook": "HTTPS webhook (administrator)",
+    "webhookAide": "Public https:// address, without credentials or port. It receives a JSON message without any figure when the threshold is reached; internal addresses are refused.",
+    "webhookPlaceholder": "https://example.org/alert",
+    "webhookReserve": "A webhook is set on this alert; only an administrator can change it."
+  }
+}
